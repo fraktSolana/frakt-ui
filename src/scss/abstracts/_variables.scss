@@ -1,0 +1,37 @@
+:root {
+  --black-color: #000000;
+  --white-color: #ffffff;
+  --accent-color-1: #5d5fef;
+  --accent-color-2: #7b61ff;
+  --accent-color-3: #7879f1;
+  --yellow-color: #b5d307;
+  --red-color: #f83e3e;
+
+  --gray-color-1: #373737;
+  --gray-color-2: rgba(255, 255, 255, 0.15);
+  --gray-color-3: rgba(255, 255, 255, 0.3);
+
+  --font-family-oxanium: 'Oxanium', 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-family-inter: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  --font-smallest: 700 10px var(--font-family-oxanium);
+  --font-secondary: 700 14px var(--font-family-oxanium);
+
+  --font-btn-small: 400 18px var(--font-family-oxanium);
+  --font-btn-mid: 400 24px var(--font-family-oxanium);
+  --font-btn-large: 400 32px var(--font-family-oxanium);
+
+  --font-subtitle: 400 32px var(--font-family-oxanium);
+  --font-subtitle-2: 400 24px var(--font-family-oxanium);
+
+  --font-h1: 600 96px var(--font-family-oxanium);
+  --font-h2: 600 64px var(--font-family-oxanium);
+  --font-h3: 600 56px var(--font-family-oxanium);
+  --font-h4: 600 48px var(--font-family-oxanium);
+
+  --font-body-small: 400 18px var(--font-family-inter);
+  --font-body-large: 400 24px var(--font-family-inter);
+
+  --font-link: 18px 700 var(--font-family-inter);
+}

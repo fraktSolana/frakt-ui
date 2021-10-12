@@ -1,0 +1,26 @@
+@import './base/reset.scss';
+@import './base/scrollBar.scss';
+@import './abstracts/fonts.scss';
+@import './abstracts/variables.scss';
+
+body {
+  background: var(--black-color);
+  color: var(--white-color);
+  font: var(--font-body-small);
+}
+
+// .frakt__notification {
+//   svg {
+//     fill: $color-gray-4;
+//   }
+
+//   background: $color-black !important;
+//   border: 1px solid $color-gray-1;
+//   border-radius: 0 !important;
+
+//   :global {
+//     .ant-notification-notice-message {
+//       color: $color-white;
+//     }
+//   }
+// }
