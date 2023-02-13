@@ -1,5 +1,6 @@
 .tab {
   flex-wrap: nowrap;
+  background: transparent;
 
   button {
     border: 0;
@@ -15,6 +16,7 @@
 }
 
 .content {
+  background: var(--primary-background);
   border: 1px solid var(--primary-border);
 }
 

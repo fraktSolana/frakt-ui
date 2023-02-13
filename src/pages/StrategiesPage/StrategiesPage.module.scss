@@ -1,0 +1,16 @@
+.sortWrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+
+  @media screen and (max-width: 650px) {
+    margin-bottom: 24px;
+  }
+}
+
+.searchInput {
+  max-width: 256px;
+  margin-right: 20px;
+}
+

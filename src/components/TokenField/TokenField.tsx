@@ -2,16 +2,15 @@ import React, { FC, useState } from 'react';
 import classNames from 'classnames';
 import { TokenInfo } from '@frakt-protocol/frakt-sdk';
 
-import { ChevronDown, Solana } from '@frakt/icons';
 import NumericInput from '../NumericInput';
+import Tooltip from '../Tooltip';
+import { ChevronDown, Solana } from '@frakt/icons';
 import styles from './styles.module.scss';
-import { Tooltip } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
 
 export interface TokenFieldProps {
   tokensList?: TokenInfo[];
   onTokenChange?: (nextToken: TokenInfo) => void;
-  currentToken?: TokenInfo;
+  currentToken?: any;
   value: string;
   onValueChange: (nextValue: string) => void;
   modalTitle?: string;
@@ -51,7 +50,7 @@ const TokenField: FC<TokenFieldProps> = ({
   return (
     <div
       style={style}
-      className={classNames([
+      className={classNames(styles.wrapper, [
         { [styles.focused]: isFocused },
         { [styles.error]: error },
       ])}
@@ -71,12 +70,10 @@ const TokenField: FC<TokenFieldProps> = ({
           >
             {label}
             {toolTipText && (
-              <Tooltip placement="bottom" overlay={toolTipText}>
-                <QuestionCircleOutlined className={styles.questionIcon} />
-              </Tooltip>
+              <Tooltip placement="bottom" overlay={toolTipText} />
             )}
             {!!lpBalance && (
-              <span>
+              <span className={styles.balance}>
                 {lpBalance} {currentToken?.symbol}
               </span>
             )}

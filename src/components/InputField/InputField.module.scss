@@ -1,0 +1,128 @@
+.wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.root {
+  background: var(--secondary-background);
+  display: flex;
+  justify-content: flex-end;
+
+  border-bottom: 1px solid var(--primary-border);
+
+  //? Remove arrows from number input
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+
+  transition: border-color var(--transition-1);
+}
+
+.focused {
+  .root {
+    border-bottom: 1px solid var(--secondary-border);
+  }
+}
+
+.error {
+  .root {
+    border-color: var(--red-color);
+  }
+}
+
+.valueInput {
+  flex-grow: 1;
+  padding-left: 24px;
+  font: var(--font-btn-mid);
+  min-width: 48px;
+
+  &_disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+}
+
+.disabled {
+  pointer-events: none;
+  flex-grow: 2;
+  flex-shrink: 1;
+  max-width: 60%;
+
+  @media screen and (max-width: 380px) {
+    max-width: 55%;
+  }
+}
+
+body input.valueInput {
+  &,
+  &:hover,
+  &:active,
+  &:focus,
+  &:not(.styles_ant-input):hover {
+    background: none;
+    border: none;
+    outline: none;
+  }
+}
+
+.label {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  font: var(--font-text-6);
+  text-transform: uppercase;
+  transition: var(--transition-1);
+  color: var(--gray-color-2);
+}
+
+.labelName {
+  font: var(--font-text-6);
+  text-transform: uppercase;
+  color: var(--gray-color-2);
+}
+
+.disabledTokens {
+  &,
+  &:focus {
+    cursor: unset;
+  }
+}
+
+.disabledTokens .arrowDownIcon {
+  display: none;
+}
+
+:global .ant-form-item-has-error {
+  :local {
+    .root {
+      border-color: var(--red-color);
+    }
+  }
+}
+
+.unitField {
+  height: 48px;
+  padding: 0 12px 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  @media screen and (max-width: 440px) {
+    padding-left: 2px;
+    padding-right: 10px;
+  }
+}
+
+.unitName {
+  font: var(--font-text-4);
+  white-space: nowrap;
+}

@@ -1,0 +1,10 @@
+.inputWrapper {
+  width: 100%;
+}
+
+.input {
+  &::placeholder {
+    font: var(--font-text-4);
+    color: var(--gray-color-2);
+  }
+}

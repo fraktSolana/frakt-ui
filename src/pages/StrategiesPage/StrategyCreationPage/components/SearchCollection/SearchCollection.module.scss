@@ -1,0 +1,79 @@
+.searchCollection {
+  height: unset;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 16px !important;
+  height: 100% !important;
+}
+
+.label {
+  font: var(--font-text-6);
+  color: var(--gray-color-2);
+  text-transform: uppercase;
+}
+
+.collections {
+  position: absolute;
+  top: 86px;
+  left: 0;
+  z-index: 1;
+
+  padding: 16px;
+  height: 216px;
+  width: 100%;
+  max-width: 788px;
+
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, 176px);
+
+  border: 1px solid var(--secondary-border);
+  background: var(--primary-background);
+  box-shadow: rgb(0 0 0 / 1%) 0px 0px 0px,
+    var(--secondary-border) 4px 4px 0px 0px;
+
+  overflow-y: scroll;
+}
+
+.item {
+  display: flex;
+  gap: 8px;
+
+  cursor: pointer;
+}
+
+.image {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-shrink: 0;
+
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.selected {
+  position: relative;
+
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--light-green-color) !important;
+  border: var(--border-black-1);
+}
+
+.title {
+  font: var(--font-text-8);
+}

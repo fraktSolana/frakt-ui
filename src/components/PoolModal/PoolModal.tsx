@@ -1,13 +1,12 @@
 import { FC } from 'react';
 
 import { usePoolModal } from './hooks/usePoolModal';
-import { CloseModal } from '@frakt/icons';
-import styles from './PoolModal.module.scss';
 import WithdrawTab from './WithdrawTab';
 import DepositTab from './DepositTab';
 import { Tabs } from '../Tabs';
-import { Modal } from '../Modal';
 import { TabsNames } from './types';
+import ModalPortal from '../ModalPortal';
+import styles from './PoolModal.module.scss';
 
 interface PoolModalProps {
   visible: string;
@@ -32,27 +31,8 @@ export const PoolModal: FC<PoolModalProps> = ({
   });
 
   return (
-    <Modal
-      visible={!!visible}
-      centered
-      onCancel={onCancel}
-      width={500}
-      footer={false}
-      closable={false}
-      className={styles.modal}
-    >
-      <div className={styles.closeModalSection}>
-        <div className={styles.closeModalIcon} onClick={onCancel}>
-          <CloseModal className={styles.closeIcon} />
-        </div>
-      </div>
-
-      <Tabs
-        className={styles.tabs}
-        tabs={poolTabs}
-        value={tabValue}
-        setValue={setTabValue}
-      />
+    <ModalPortal visible={!!visible} onCancel={onCancel}>
+      <Tabs tabs={poolTabs} value={tabValue} setValue={setTabValue} />
       <div className={styles.content}>
         {tabValue === TabsNames.DEPOSIT && (
           <DepositTab
@@ -71,6 +51,6 @@ export const PoolModal: FC<PoolModalProps> = ({
           />
         )}
       </div>
-    </Modal>
+    </ModalPortal>
   );
 };

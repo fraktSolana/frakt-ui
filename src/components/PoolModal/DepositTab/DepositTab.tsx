@@ -49,31 +49,30 @@ const DepositTab: FC<DepositTabProps> = ({
 
   return (
     <div className={styles.wrapper}>
-      <div>
-        <TokenFieldWithBalance
-          className={styles.input}
-          value={depositValue}
-          onValueChange={onDepositValueChange}
-          currentToken={SOL_TOKEN}
-          label={`BALANCE:`}
-          lpBalance={solWalletBalanceNumber}
-          error={notEnoughBalanceError}
-          showMaxButton
-          labelRight
-        />
-        <div className={styles.errors}>
-          {notEnoughBalanceError && <p>Not enough SOL</p>}
-        </div>
-        <Slider
-          value={percentValue}
-          setValue={solWalletBalance && onDepositPercentChange}
-          className={styles.slider}
-          marks={marks}
-          withTooltip
-          step={1}
-        />
+      <TokenFieldWithBalance
+        className={styles.input}
+        value={depositValue}
+        onValueChange={onDepositValueChange}
+        currentToken={SOL_TOKEN}
+        label={`BALANCE:`}
+        lpBalance={solWalletBalanceNumber}
+        error={notEnoughBalanceError}
+        showMaxButton
+        labelRight
+      />
+      <div className={styles.errors}>
+        {notEnoughBalanceError && <p>Not enough SOL</p>}
       </div>
-      <div>
+      <Slider
+        value={percentValue}
+        setValue={solWalletBalance && onDepositPercentChange}
+        className={styles.slider}
+        marks={marks}
+        withTooltip
+        step={1}
+      />
+
+      <div className={styles.infoWrapper}>
         <div className={styles.info}>
           <span className={styles.infoTitle}>Deposit yield</span>
           <span className={styles.infoValue}>{apr.toFixed(2)} %</span>
@@ -84,18 +83,24 @@ const DepositTab: FC<DepositTabProps> = ({
             {(utilizationRate || 0).toFixed(2)} %
           </span>
         </div>
-        <Button
-          onClick={() => {
-            depositLiquidity();
-            sendAmplitudeData('loans-confirm-deposit');
-          }}
-          className={styles.btn}
-          type="secondary"
-          disabled={isDisabledDepositBtn}
-        >
-          Deposit
-        </Button>
       </div>
+
+      <div className={styles.estimated}>
+        <div className={styles.earnings}>18.5 SOL/month</div>
+        <div className={styles.estimatedTitle}>estimated earnings</div>
+      </div>
+
+      <Button
+        onClick={() => {
+          depositLiquidity();
+          sendAmplitudeData('loans-confirm-deposit');
+        }}
+        className={styles.btn}
+        type="secondary"
+        disabled={isDisabledDepositBtn}
+      >
+        Deposit
+      </Button>
     </div>
   );
 };

@@ -24,6 +24,8 @@ import {
   BondsDark,
   Staking,
   StakingDark,
+  Strategies,
+  StrategiesDark,
 } from '@frakt/icons';
 
 export const community = [
@@ -79,7 +81,6 @@ export const NAVIGATION_LINKS = [
     icon: Borrow,
     iconDark: BorrowDark,
   },
-
   {
     pathname: PATHS.LEND,
     to: PATHS.LEND,
@@ -87,6 +88,14 @@ export const NAVIGATION_LINKS = [
     event: 'navigation-lend',
     icon: Lending,
     iconDark: LendingDark,
+  },
+  {
+    pathname: PATHS.STRATEGIES,
+    to: PATHS.STRATEGIES,
+    label: 'Strategies',
+    event: 'navigation-strategies',
+    icon: Strategies,
+    iconDark: StrategiesDark,
   },
   {
     pathname: PATHS.LIQUIDATIONS,
