@@ -1,8 +1,3 @@
-// import { helpers } from 'fbonds-core/lib/cross-mint-amm';
-// import {
-//   BondingCurveType,
-//   OrderType,
-// } from 'fbonds-core/lib/cross-mint-amm/types';
 import { helpers } from 'fbonds-core/lib/fbond-protocol';
 import {
   BondingCurveType,
@@ -38,8 +33,6 @@ const usePriceGraph: UsePriceGraph = ({
     counter: mathCounter,
   }) as { array: number[]; total: number };
 
-  console.log('priceArray', priceArray);
-
   const points = priceArray.map((price, i) => {
     const newPrice = price / 1e9;
     return {
@@ -47,8 +40,6 @@ const usePriceGraph: UsePriceGraph = ({
       price: newPrice,
     };
   }) as Point[];
-
-  console.log('points', points);
 
   return points;
 };

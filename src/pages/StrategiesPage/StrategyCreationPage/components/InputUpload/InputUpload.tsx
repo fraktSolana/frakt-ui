@@ -3,10 +3,11 @@ import { FC, useRef } from 'react';
 import { useDrag } from './useDrag';
 import { Trash, UploadImg } from '@frakt/icons';
 import styles from './InputUpload.module.scss';
+import { FormValues } from '../../types';
 
 interface InputUploadProps {
   imageUrl: string;
-  setImageUrl: (val: string) => void;
+  setImageUrl: any;
 }
 
 const InputUpload: FC<InputUploadProps> = ({ imageUrl, setImageUrl }) => {
@@ -19,12 +20,18 @@ const InputUpload: FC<InputUploadProps> = ({ imageUrl, setImageUrl }) => {
     e.stopPropagation();
 
     if (e.target?.files?.length) {
-      setImageUrl(URL.createObjectURL(e.target.files[0]));
+      setImageUrl((prev: FormValues) => ({
+        ...prev,
+        imageUrl: URL.createObjectURL(e.target.files[0]),
+      }));
     }
 
     if (e.dataTransfer?.files?.length) {
       const { files } = e.dataTransfer;
-      setImageUrl(URL.createObjectURL(files[0]));
+      setImageUrl((prev: FormValues) => ({
+        ...prev,
+        imageUrl: URL.createObjectURL(files[0]),
+      }));
     }
   };
 
@@ -32,7 +39,7 @@ const InputUpload: FC<InputUploadProps> = ({ imageUrl, setImageUrl }) => {
     e.preventDefault();
     e.stopPropagation();
     URL.revokeObjectURL(imageUrl);
-    setImageUrl('');
+    setImageUrl((prev) => ({ ...prev, imageUrl: '' }));
   };
 
   return (

@@ -7,18 +7,13 @@ import { SOL_TOKEN } from '@frakt/utils';
 import Chart from '@frakt/components/Chart';
 import usePriceGraph from '@frakt/components/Chart/hooks/usePriceGraph';
 import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
+import { FormValues } from '../../../types';
 
 interface StepThreeProps {
   className: string;
-  bondingCurve: BondingCurveType;
-  setBondingCurve: (val: BondingCurveType) => void;
-  spotPrice: string;
-  setSpotPrice: (val: string) => void;
-  bidCap: string;
-  setBidCap: (val: string) => void;
-  delta: string;
-  setDelta: (val: string) => void;
-  deltaType: '%' | 'sec' | 'SOL';
+  formValues: FormValues;
+  setFormValues: (prev) => void;
+  unit: '%' | 'sec' | 'SOL';
 }
 
 export interface Point {
@@ -28,43 +23,42 @@ export interface Point {
 
 const StepThree: FC<StepThreeProps> = ({
   className,
-  bondingCurve,
-  setBondingCurve,
-  spotPrice,
-  setSpotPrice,
-  bidCap,
-  setBidCap,
-  delta,
-  setDelta,
-  deltaType,
+  formValues,
+  setFormValues,
+  unit,
 }) => {
-  const handleSolFee = (value: string) => setSpotPrice(value);
-  const handleBidCap = (value: string) => setBidCap(value);
-  const handleDuration = (e: ChangeEvent<HTMLInputElement>) => {
-    setBondingCurve(e.target.value as BondingCurveType);
-  };
-  const handleDelta = (value: string) => {
-    setDelta(value);
+  const handleSpotPice = (value: string) =>
+    setFormValues((prev: FormValues) => ({ ...prev, spotPrice: value }));
+
+  const handleBidCap = (value: string) => {
+    setFormValues((prev: FormValues) => ({ ...prev, bidCap: value }));
   };
 
-  const data = [
-    { price: 20, order: 1 },
-    { price: 27, order: 2 },
-    { price: 34, order: 3 },
-  ] as Point[];
+  const handleDuration = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormValues((prev: FormValues) => ({
+      ...prev,
+      bondingCurve: e.target.value,
+    }));
+  };
+
+  const handleDelta = (value: string) => {
+    setFormValues((prev: FormValues) => ({
+      ...prev,
+      delta: value,
+    }));
+  };
 
   const points = usePriceGraph({
-    spotPrice: Number(spotPrice),
-    delta: Number(delta),
-    bondingCurve,
+    spotPrice: Number(formValues.spotPrice),
+    delta: Number(formValues.delta),
+    bondingCurve: formValues.bondingCurve,
   });
 
-  console.log('points steps', points);
   return (
     <div className={className}>
       <TokenField
-        value={spotPrice}
-        onValueChange={handleSolFee}
+        value={formValues.spotPrice}
+        onValueChange={handleSpotPice}
         label="starting spot price"
         currentToken={SOL_TOKEN}
         toolTipText="Yearly rewards based on the current utilization rate and borrow interest"
@@ -72,7 +66,7 @@ const StepThree: FC<StepThreeProps> = ({
       <RadioButton
         labelName="bonding curve"
         tooltipText="bonding curve"
-        current={bondingCurve}
+        current={formValues.bondingCurve}
         onChange={handleDuration}
         buttons={[
           { value: BondingCurveType.Linear, name: 'Linear' },
@@ -81,10 +75,10 @@ const StepThree: FC<StepThreeProps> = ({
         ]}
       />
       <InputField
-        unit={deltaType}
+        unit={unit}
         label="delta"
         toolTipText="delta"
-        value={delta}
+        value={formValues.delta}
         onValueChange={handleDelta}
       />
 
@@ -92,7 +86,7 @@ const StepThree: FC<StepThreeProps> = ({
         unit="fSOL"
         label="bid capacity"
         toolTipText="Yearly rewards based on the current utilization rate and borrow interest"
-        value={bidCap}
+        value={formValues.bidCap}
         onValueChange={handleBidCap}
       />
 

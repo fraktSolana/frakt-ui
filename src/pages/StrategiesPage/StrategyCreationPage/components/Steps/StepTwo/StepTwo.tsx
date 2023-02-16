@@ -3,36 +3,49 @@ import { ChangeEvent, FC } from 'react';
 import RadioButton from '@frakt/components/RadioButton';
 import SliderGradient from '@frakt/components/SliderGradient';
 import SearchCollection from '../../SearchCollection';
+import { useMarkets } from '@frakt/utils/bonds';
+import { FormValues } from '../../../types';
 
 interface StepTwoProps {
   className: string;
-  duration: string;
-  setDuration: (val: string) => void;
-  maxLTV: number;
-  setMaxLTV: (val: number) => void;
+  formValues: FormValues;
+  setFormValues: (prev) => void;
 }
 
 const StepTwo: FC<StepTwoProps> = ({
   className,
-  duration,
-  setDuration,
-  maxLTV,
-  setMaxLTV,
+  formValues,
+  setFormValues,
 }) => {
+  const { markets, isLoading } = useMarkets();
+
   const handleDuration = (e: ChangeEvent<HTMLInputElement>) => {
-    setDuration(e.target.value);
+    setFormValues((prev: FormValues) => ({
+      ...prev,
+      duration: e.target.value,
+    }));
   };
 
-  const handleMaxLTV = (value: number) => setMaxLTV(value);
+  const handleMaxLTV = (value: number) => {
+    setFormValues((prev: FormValues) => ({
+      ...prev,
+      maxLTV: value,
+    }));
+  };
 
   return (
     <div className={className}>
-      <SearchCollection />
-      <SliderGradient value={maxLTV} onChange={handleMaxLTV} />
+      <SearchCollection
+        markets={markets}
+        isLoading={isLoading}
+        formValues={formValues}
+        setFormValues={setFormValues}
+      />
+      <SliderGradient value={formValues.maxLTV} onChange={handleMaxLTV} />
       <RadioButton
         labelName="duration"
         tooltipText="duration duration duration"
-        current={duration}
+        current={formValues.duration}
         onChange={handleDuration}
         buttons={[
           { value: '7', name: '7 days' },
