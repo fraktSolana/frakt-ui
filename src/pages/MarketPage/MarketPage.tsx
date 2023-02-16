@@ -26,6 +26,7 @@ import styles from './MarketPage.module.scss';
 import OrderBook from './components/OrderBook/OrderBook';
 import { BondsList } from './components/BondsList';
 import { MarketInfo } from './components/MarketInfo';
+import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
 
 export const MarketPage: FC = () => {
   const wallet = useWallet();
@@ -37,7 +38,11 @@ export const MarketPage: FC = () => {
     marketPubkey,
   });
 
-  const { bonds, isLoading: bondsLoanding } = useWalletBonds({
+  const {
+    bonds,
+    isLoading: bondsLoanding,
+    hideBond,
+  } = useWalletBonds({
     walletPubkey: wallet.publicKey,
     marketPubkey: new web3.PublicKey(marketPubkey),
   });
@@ -51,17 +56,24 @@ export const MarketPage: FC = () => {
     ({ assetReceiver }) => assetReceiver !== wallet?.publicKey?.toBase58(),
   );
 
-  const loading = marketLoading || bondsLoanding || pairsLoading;
+  const loading =
+    marketLoading || pairsLoading || (wallet.connected && bondsLoanding);
 
   const onClaimAll = async () => {
     try {
       const bondsAvailableToRedeem = filter(bonds, isBondAvailableToRedeem);
 
-      await redeemAllBonds({
+      const result = await redeemAllBonds({
         bonds: bondsAvailableToRedeem,
         wallet,
         connection,
       });
+
+      if (result) {
+        bondsAvailableToRedeem.forEach(({ fbond }) => {
+          hideBond?.(fbond?.publicKey);
+        });
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.warn(error?.logs?.join('\n'));
@@ -71,11 +83,15 @@ export const MarketPage: FC = () => {
 
   const onRedeem = async (bond: Bond) => {
     try {
-      await redeemBond({
+      const result = await redeemBond({
         bond,
         wallet,
         connection,
       });
+
+      if (result) {
+        hideBond(bond?.fbond?.publicKey);
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.warn(error?.logs?.join('\n'));
@@ -85,13 +101,17 @@ export const MarketPage: FC = () => {
 
   const onExit = async ({ bond, pair }: { bond: Bond; pair: Pair }) => {
     try {
-      await exitBond({
+      const result = await exitBond({
         bond,
         pair,
         market,
         wallet,
         connection,
       });
+
+      if (result) {
+        hideBond(bond?.fbond?.publicKey);
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.warn(error?.logs?.join('\n'));
@@ -111,6 +131,9 @@ export const MarketPage: FC = () => {
 
             <MarketInfo market={market} bonds={bonds} onClaimAll={onClaimAll} />
           </div>
+          {!wallet.connected && (
+            <ConnectWalletSection text="Connect your wallet to see your bonds" />
+          )}
           <BondsList
             market={market}
             bonds={bonds}

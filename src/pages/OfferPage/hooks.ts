@@ -2,9 +2,12 @@ import { useCallback, useState } from 'react';
 import { web3 } from 'fbonds-core';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useHistory, useParams } from 'react-router-dom';
+import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import {
+  getPairAccount,
   makeCreatePairTransaction,
   makeRemoveOrderTransaction,
   useMarket,
@@ -16,8 +19,9 @@ import { NotifyType } from '@frakt/utils/solanaUtils';
 import { useConnection } from '@frakt/hooks';
 import { useNativeAccount } from '@frakt/utils/accounts';
 import { PATHS } from '@frakt/constants';
+import { Pair } from '@frakt/api/bonds';
+
 import { RBOption } from './components/RadioButton';
-import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 
 export const useOfferPage = () => {
   const history = useHistory();
@@ -35,6 +39,8 @@ export const useOfferPage = () => {
     pairPubkey,
   });
 
+  const queryClient = useQueryClient();
+
   const wallet = useWallet();
   const connection = useConnection();
 
@@ -42,9 +48,8 @@ export const useOfferPage = () => {
   const [duration, setDuration] = useState<number>(7);
   const [interest, setInterest] = useState<string>('0');
   const [offerSize, setOfferSize] = useState<string>('0');
-  const [bondFeature, setBondFeature] = useState<BondFeatures>(
-    BondFeatures.None,
-  );
+  const [autocompound, setAutocompound] = useState(false);
+  const [receiveLiquidatedNfts, setReceiveLiquidatedNfts] = useState(false);
 
   const onLtvChange = useCallback((value: number) => setLtv(value), []);
   const onDurationChange = (nextOption: RBOption<number>) => {
@@ -55,8 +60,11 @@ export const useOfferPage = () => {
   const onOfferSizeChange = (value: string) => {
     setOfferSize(value);
   };
-  const onBondFeatureChange = (nextOption: RBOption<BondFeatures>) => {
-    setBondFeature(nextOption.value);
+  const toggleAutocompound = () => {
+    setAutocompound((prev) => !prev);
+  };
+  const toggleReceiveLiquidatedNfts = () => {
+    setReceiveLiquidatedNfts((prev) => !prev);
   };
 
   const {
@@ -69,23 +77,27 @@ export const useOfferPage = () => {
     history.goBack();
   };
 
-  const isValid = Number(offerSize) && Number(interest) !== 0;
+  const isValid =
+    Number(offerSize) && Number(interest) !== 0 && wallet.connected;
 
   const onCreateOffer = async () => {
     if (marketPubkey && wallet.publicKey) {
       try {
         openLoadingModal();
 
-        const { transaction, signers } = await makeCreatePairTransaction({
-          marketPubkey: new web3.PublicKey(marketPubkey),
-          maxDuration: duration,
-          maxLTV: ltv,
-          solDeposit: parseFloat(offerSize),
-          interest: parseFloat(interest),
-          bondFeature,
-          connection,
-          wallet,
-        });
+        const { transaction, signers, accountsPublicKeys } =
+          await makeCreatePairTransaction({
+            marketPubkey: new web3.PublicKey(marketPubkey),
+            maxDuration: duration,
+            maxLTV: ltv,
+            solDeposit: parseFloat(offerSize),
+            interest: parseFloat(interest),
+            bondFeature: receiveLiquidatedNfts
+              ? BondFeatures.ReceiveNftOnLiquidation
+              : BondFeatures.None,
+            connection,
+            wallet,
+          });
 
         await signAndConfirmTransaction({
           transaction,
@@ -93,6 +105,19 @@ export const useOfferPage = () => {
           wallet,
           connection,
         });
+
+        const newPair = await getPairAccount({
+          accountsPublicKeys,
+          connection,
+        });
+
+        newPair &&
+          queryClient.setQueryData(
+            ['marketPairs', marketPubkey],
+            (pairs: Pair[]) => {
+              return [...pairs, newPair];
+            },
+          );
 
         notify({
           message: 'Transaction successful!',
@@ -219,7 +244,9 @@ export const useOfferPage = () => {
     walletSolBalance: account?.lamports ?? 0,
     market,
     isLoading,
-    bondFeature,
-    onBondFeatureChange,
+    autocompound,
+    toggleAutocompound,
+    receiveLiquidatedNfts,
+    toggleReceiveLiquidatedNfts,
   };
 };
