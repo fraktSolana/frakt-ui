@@ -1,27 +1,20 @@
+import { createTradePools, updateTradePools } from '@frakt/api/strategies';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { PATHS } from '@frakt/constants';
 import { useConnection } from '@frakt/hooks';
-import { initialTokenListState } from '@frakt/state/stats/reducers';
 import { notify } from '@frakt/utils';
-import { makeCreatePairTransaction } from '@frakt/utils/bonds';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { signAndConfirmTransaction } from '@frakt/utils/transactions';
 import { useWallet } from '@solana/wallet-adapter-react';
-import {
-  changeTradeSettings,
-  initializeTradePool,
-} from 'fbonds-core/lib/bonds_trade_pool/functions/pool-factory';
 import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
 import { useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+
+import { useHistory } from 'react-router-dom';
 import { FormValues } from '../types';
 import { makeCreateStrategy } from './makeCreateStrategy';
+import { makeUpdateStrategy } from './makeUpdateStrategy';
 
 export const useStrategyCreation = () => {
-  //1 initializeTradePool
-  //2 changeTradeSettings
-  // initializeTradePool;
-  // changeTradeSettings;
   const history = useHistory();
 
   const wallet = useWallet();
@@ -43,12 +36,32 @@ export const useStrategyCreation = () => {
     spotPrice: '',
     bidCap: '',
     delta: '',
-    maxTradeAmount: '',
     utilizationRate: '',
+    maxTradeAmount: '',
     tradeDuration: '',
-    tradeAmountRatio: '',
+    remainingSolRatioToFinishTrade: '',
     minTimeBetweenTrades: '',
   });
+
+  const secret = '36LiwBuWy3TvNrl4';
+
+  const setNewTradePools = async (tradePoolPubkey) => {
+    await createTradePools({
+      tradePoolPubkey,
+      name: formValues.strategyName,
+      imageUrl: formValues.imageUrl,
+      secret,
+    });
+  };
+
+  const setUpdateTradePools = async (tradePoolPubkey) => {
+    await updateTradePools({
+      tradePoolPubkey,
+      name: formValues.strategyName,
+      imageUrl: formValues.imageUrl,
+      secret,
+    });
+  };
 
   const checkDisabled = {
     0: formValues.strategyName && formValues.imageUrl,
@@ -62,7 +75,7 @@ export const useStrategyCreation = () => {
       formValues.maxTradeAmount &&
       formValues.utilizationRate &&
       formValues.tradeDuration &&
-      formValues.tradeAmountRatio &&
+      formValues.remainingSolRatioToFinishTrade &&
       formValues.minTimeBetweenTrades,
   };
 
@@ -72,12 +85,12 @@ export const useStrategyCreation = () => {
     open: openLoadingModal,
   } = useLoadingModal();
 
-  const onCreateOffer = async () => {
-    if (wallet.publicKey) {
+  const onCreateStrategy = async () => {
+    if (wallet?.publicKey?.toBase58()) {
       try {
         openLoadingModal();
 
-        const { transaction, signers } = await makeCreateStrategy({
+        const { transaction, signers, tradePool } = await makeCreateStrategy({
           connection,
           wallet,
           formValues,
@@ -90,12 +103,58 @@ export const useStrategyCreation = () => {
           connection,
         });
 
+        setNewTradePools(tradePool);
+
         notify({
           message: 'Transaction successful!',
           type: NotifyType.SUCCESS,
         });
 
-        // history.push(`${PATHS.BOND}/${marketPubkey}`);
+        history.push(`${PATHS.MY_STRATEGIES}`);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn(error?.logs);
+        console.error(error);
+
+        notify({
+          message: 'The transaction just failed :( Give it another try',
+          type: NotifyType.ERROR,
+        });
+      } finally {
+        closeLoadingModal();
+      }
+    }
+  };
+
+  const onUpdateStrategy = async () => {
+    if (wallet?.publicKey?.toBase58()) {
+      try {
+        openLoadingModal();
+
+        const tradePool = 'tradePool';
+
+        const { transaction, signers } = await makeUpdateStrategy({
+          connection,
+          wallet,
+          formValues,
+          tradePool,
+        });
+
+        await signAndConfirmTransaction({
+          transaction,
+          signers,
+          wallet,
+          connection,
+        });
+
+        setUpdateTradePools(tradePool);
+
+        notify({
+          message: 'Transaction successful!',
+          type: NotifyType.SUCCESS,
+        });
+
+        history.push(`${PATHS.MY_STRATEGIES}`);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.warn(error?.logs);
@@ -115,7 +174,8 @@ export const useStrategyCreation = () => {
     formValues,
     setFormValues,
     checkDisabled,
-    onCreateOffer,
+    onCreateStrategy,
+    onUpdateStrategy,
     loadingModalVisible,
     closeLoadingModal,
   };

@@ -16,6 +16,6 @@ export interface FormValues {
   maxTradeAmount: string;
   utilizationRate: string;
   tradeDuration: string;
-  tradeAmountRatio: string;
+  remainingSolRatioToFinishTrade: string;
   minTimeBetweenTrades: string;
 }

@@ -6,8 +6,17 @@ import { SearchInput } from '@frakt/components/SearchInput';
 import Strategies from './components/Strategies';
 
 import styles from './StrategiesPage.module.scss';
+import { useTradePools } from '@frakt/utils/Strategies/hooks';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 const StrategiesPage: FC = () => {
+  const wallet = useWallet();
+  const { tradePools, isLoading } = useTradePools({
+    walletPublicKey: wallet?.publicKey?.toBase58(),
+  });
+
+  console.log('tradePools', tradePools);
+
   return (
     <AppLayout>
       <Titles

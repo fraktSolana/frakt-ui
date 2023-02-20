@@ -23,12 +23,13 @@ const Steps: FC = () => {
     formValues,
     setFormValues,
     checkDisabled,
-    onCreateOffer,
+    onCreateStrategy,
+    onUpdateStrategy,
     loadingModalVisible,
     closeLoadingModal,
   } = useStrategyCreation();
 
-  console.log(formValues);
+  const isManage = false;
 
   const deltaType =
     formValues.bondingCurve === BondingCurveType.Exponential ? '%' : 'SOL';
@@ -85,14 +86,35 @@ const Steps: FC = () => {
               </Button>
             )}
 
-            <Button
-              className={styles.btn}
-              type="secondary"
-              onClick={step === 3 ? onCreateOffer : handleNextStep}
-              // disabled={!checkDisabled[step]}
-            >
-              {step === 3 ? 'Create' : 'Next'}
-            </Button>
+            {isManage && (
+              <Button
+                className={styles.btn}
+                type="secondary"
+                onClick={onUpdateStrategy}
+              >
+                Update
+              </Button>
+            )}
+
+            {!isManage && step === 3 ? (
+              <Button
+                className={styles.btn}
+                type="secondary"
+                onClick={onCreateStrategy}
+              >
+                Create
+              </Button>
+            ) : null}
+
+            {step !== 3 && (
+              <Button
+                className={styles.btn}
+                type={!isManage ? 'secondary' : 'primary'}
+                onClick={handleNextStep}
+              >
+                Next
+              </Button>
+            )}
           </div>
         </div>
       </div>

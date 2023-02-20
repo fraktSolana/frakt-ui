@@ -43,7 +43,7 @@ const StepFour: FC<StepFourProps> = ({
   const handleTradeAmountRatio = (value: string) => {
     setFormValues((prev: FormValues) => ({
       ...prev,
-      tradeAmountRatio: value,
+      remainingSolRatioToFinishTrade: value,
     }));
   };
 
@@ -81,7 +81,7 @@ const StepFour: FC<StepFourProps> = ({
         unit="%"
         label="remaining sol ratio to finish trade"
         toolTipText="Yearly rewards based on the current utilization rate and borrow interest"
-        value={formValues.tradeAmountRatio}
+        value={formValues.remainingSolRatioToFinishTrade}
         onValueChange={handleTradeAmountRatio}
       />
       <InputField
@@ -105,8 +105,8 @@ const StepFour: FC<StepFourProps> = ({
           {' ' + formValues.bidCap}
         </p>
         <p className={styles.infoItem}>
-          It will use {formValues.tradeAmountRatio || '0'}% of deposited funds
-          and every trade considered staled and removed after{' '}
+          It will use {formValues.remainingSolRatioToFinishTrade || '0'}% of
+          deposited funds and every trade considered staled and removed after{' '}
           {formValues.tradeDuration}
         </p>
       </div>

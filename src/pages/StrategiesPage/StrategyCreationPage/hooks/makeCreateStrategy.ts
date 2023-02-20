@@ -1,15 +1,21 @@
-import { PUBKEY_PLACEHOLDER, sendTxnPlaceHolder } from '@frakt/utils';
+import { sendTxnPlaceHolder } from '@frakt/utils';
+import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
 import {
   changeTradeSettings,
   initializeTradePool,
 } from 'fbonds-core/lib/bonds_trade_pool/functions/pool-factory';
+import { FormValues } from '../types';
 
 type MakeCreateStrategy = (params: {
-  connection;
-  wallet;
-  formValues;
-}) => Promise<{ transaction: web3.Transaction; signers: web3.Signer[] }>;
+  connection: web3.Connection;
+  wallet: WalletContextState;
+  formValues: FormValues;
+}) => Promise<{
+  transaction: web3.Transaction;
+  signers: web3.Signer[];
+  tradePool;
+}>;
 
 export const makeCreateStrategy: MakeCreateStrategy = async ({
   connection,
@@ -19,13 +25,9 @@ export const makeCreateStrategy: MakeCreateStrategy = async ({
   const tradeAuthority = '7JxVxxLTDkra9E3y7SZxuunmgeGzL7vzUQj55PFxfguT';
   const programID = '78cc3gsyToWu2dDgDdoLjTkR2j81zCnXnZLAzT8mWVMF';
 
-  const FRAKT_TRADE_AUTHORITY = new web3.PublicKey(
-    tradeAuthority || PUBKEY_PLACEHOLDER,
-  );
+  const FRAKT_TRADE_AUTHORITY = new web3.PublicKey(tradeAuthority);
 
-  const FRAKT_TRADE_PROGRAM_ID = new web3.PublicKey(
-    programID || PUBKEY_PLACEHOLDER,
-  );
+  const FRAKT_TRADE_PROGRAM_ID = new web3.PublicKey(programID);
 
   const {
     tradePool,
@@ -35,10 +37,10 @@ export const makeCreateStrategy: MakeCreateStrategy = async ({
     programId: FRAKT_TRADE_PROGRAM_ID,
     connection: connection,
     args: {
-      reserveFundsRatio: parseFloat(formValues.utilizationRate),
+      reserveFundsRatio: 2000,
     },
     accounts: {
-      userPubkey: wallet.publicKey,
+      userPubkey: wallet?.publicKey,
       tradeAuthority: FRAKT_TRADE_AUTHORITY,
     },
     sendTxn: sendTxnPlaceHolder,
@@ -53,32 +55,31 @@ export const makeCreateStrategy: MakeCreateStrategy = async ({
     connection: connection,
     args: {
       strategyNum: 1,
-      loanToValueFilter: formValues.maxLTV,
-      durationFilter: formValues.duration,
-      delta: formValues.delta,
-      spotPrice: formValues.spotPrice,
-      bidCap: formValues.bidCap,
-      tradeAmountRatio: formValues.tradeAmountRatio,
-      maxTradeAmount: formValues.tradeAmountRatio,
-      minTimeBetweenTrades: formValues.minTimeBetweenTrades,
+      loanToValueFilter: +formValues.maxLTV * 100,
+      durationFilter: +formValues.duration * 86400,
+      delta: +formValues.delta * 1e9,
+      spotPrice: +formValues.spotPrice * 1e9,
+      bidCap: +formValues.bidCap,
+      tradeAmountRatio: +formValues.utilizationRate * 100,
+      maxTradeAmount: +formValues.maxTradeAmount * 1e9,
+      minTimeBetweenTrades: +formValues.minTimeBetweenTrades,
       bondingType: formValues.bondingCurve,
-      tradeDuration: formValues.tradeDuration,
-      remainingSolRatioToFinishTrade: formValues.tradeAmountRatio,
+      tradeDuration: +formValues.tradeDuration,
+      remainingSolRatioToFinishTrade:
+        +formValues.remainingSolRatioToFinishTrade * 100,
     },
     accounts: {
-      userPubkey: wallet.publicKey,
-      hadoMarket: formValues.selectedMarket,
+      userPubkey: wallet?.publicKey,
+      hadoMarket: new web3.PublicKey(formValues.selectedMarket.marketPubkey),
       tradePool: tradePool,
     },
     sendTxn: sendTxnPlaceHolder,
   });
 
-  console.log(tradeSettings);
-
   return {
+    tradePool,
     transaction: new web3.Transaction().add(
-      ...tradePoolTxn,
-      ...tradeSettingTxs,
+      ...[tradePoolTxn, tradeSettingTxs].flat(),
     ),
     signers: [tradePoolSigners, tradeSettingSigners].flat(),
   };

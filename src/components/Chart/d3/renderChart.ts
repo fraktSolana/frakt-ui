@@ -22,8 +22,6 @@ export const renderChart: RenderChart =
     const INNER_WIDTH = canvasSize.x - MARGIN.LEFT - MARGIN.RIGHT;
     const INNER_HEIGHT = canvasSize.y - MARGIN.TOP - MARGIN.BOTTOM;
 
-    console.log('points', points);
-
     const xScale = scaleLinear()
       .domain(extent(points, (d) => d.order))
       .range([0, INNER_WIDTH]);
