@@ -47,7 +47,7 @@ const InputUpload: FC<InputUploadProps> = ({ imageUrl, setImageUrl }) => {
       <div className={styles.title}>strategy pfp</div>
 
       <input
-        accept="image/*"
+        accept=".png, .jpg, .jpeg"
         name="image"
         id="image"
         className={styles.input}
