@@ -18,10 +18,11 @@ export const createTradePools = async (settings) => {
   );
 };
 
-export const setImageTradePools = async (file) => {
-  await axios.post(`https://${process.env.BACKEND_DOMAIN}/image/upload`, {
-    image: file,
-  });
+export const setImageTradePools = async (settings) => {
+  await axios.post(
+    `https://${process.env.BACKEND_DOMAIN}/image/upload`,
+    settings,
+  );
 };
 
 export const updateTradePools = async (settings) => {

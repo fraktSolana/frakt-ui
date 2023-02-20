@@ -2,7 +2,10 @@ import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
 
 export interface FormValues {
   strategyName: string;
-  imageUrl: string;
+  image: {
+    file: File | null;
+    imageUrlBlob: string;
+  };
   duration: string;
   selectedMarket: {
     marketName: string;

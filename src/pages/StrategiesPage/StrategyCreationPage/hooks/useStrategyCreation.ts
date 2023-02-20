@@ -1,4 +1,8 @@
-import { createTradePools, updateTradePools } from '@frakt/api/strategies';
+import {
+  createTradePools,
+  setImageTradePools,
+  updateTradePools,
+} from '@frakt/api/strategies';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { PATHS } from '@frakt/constants';
 import { useConnection } from '@frakt/hooks';
@@ -25,7 +29,10 @@ export const useStrategyCreation = () => {
 
   const [formValues, setFormValues] = useState<FormValues>({
     strategyName: '',
-    imageUrl: '',
+    image: {
+      file: null,
+      imageUrlBlob: '',
+    },
     selectedMarket: {
       marketName: '',
       marketPubkey: '',
@@ -45,26 +52,26 @@ export const useStrategyCreation = () => {
 
   const secret = '36LiwBuWy3TvNrl4';
 
-  const setNewTradePools = async (tradePoolPubkey) => {
+  const setNewTradePools = async (tradePoolPubkey, imageUrl) => {
     await createTradePools({
       tradePoolPubkey,
       name: formValues.strategyName,
-      imageUrl: formValues.imageUrl,
+      imageUrl: imageUrl,
       secret,
     });
   };
 
-  const setUpdateTradePools = async (tradePoolPubkey) => {
+  const setUpdateTradePools = async (tradePoolPubkey, imageUrl) => {
     await updateTradePools({
       tradePoolPubkey,
       name: formValues.strategyName,
-      imageUrl: formValues.imageUrl,
+      imageUrl: imageUrl,
       secret,
     });
   };
 
   const checkDisabled = {
-    0: formValues.strategyName && formValues.imageUrl,
+    0: formValues.strategyName && formValues.image.imageUrlBlob,
     1: formValues.duration && formValues.maxLTV,
     2:
       formValues.bondingCurve &&
@@ -103,7 +110,13 @@ export const useStrategyCreation = () => {
           connection,
         });
 
-        setNewTradePools(tradePool);
+        const imageUrl = await setImageTradePools({
+          image: formValues.image.file,
+        });
+
+        console.log(imageUrl);
+
+        await setNewTradePools(tradePool, imageUrl);
 
         notify({
           message: 'Transaction successful!',
@@ -147,7 +160,11 @@ export const useStrategyCreation = () => {
           connection,
         });
 
-        setUpdateTradePools(tradePool);
+        const imageUrl = await setImageTradePools({
+          image: formValues.image.file,
+        });
+
+        setUpdateTradePools(tradePool, imageUrl);
 
         notify({
           message: 'Transaction successful!',

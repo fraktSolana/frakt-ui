@@ -23,7 +23,7 @@ export const makeCreateStrategy: MakeCreateStrategy = async ({
   formValues,
 }) => {
   const tradeAuthority = '7JxVxxLTDkra9E3y7SZxuunmgeGzL7vzUQj55PFxfguT';
-  const programID = '78cc3gsyToWu2dDgDdoLjTkR2j81zCnXnZLAzT8mWVMF';
+  const programID = 'bondPKoXiaX83eJeCKY2VVDrRygkaFhjqZVbHsdDC4T';
 
   const FRAKT_TRADE_AUTHORITY = new web3.PublicKey(tradeAuthority);
 
@@ -38,6 +38,7 @@ export const makeCreateStrategy: MakeCreateStrategy = async ({
     connection: connection,
     args: {
       reserveFundsRatio: 2000,
+      isPrivate: false,
     },
     accounts: {
       userPubkey: wallet?.publicKey,
@@ -75,6 +76,8 @@ export const makeCreateStrategy: MakeCreateStrategy = async ({
     },
     sendTxn: sendTxnPlaceHolder,
   });
+
+  console.log('tradeSettings', tradeSettings.toBase58());
 
   return {
     tradePool,

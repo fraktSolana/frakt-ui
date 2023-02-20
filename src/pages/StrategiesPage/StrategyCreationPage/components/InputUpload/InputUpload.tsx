@@ -22,7 +22,10 @@ const InputUpload: FC<InputUploadProps> = ({ imageUrl, setImageUrl }) => {
     if (e.target?.files?.length) {
       setImageUrl((prev: FormValues) => ({
         ...prev,
-        imageUrl: URL.createObjectURL(e.target.files[0]),
+        image: {
+          file: e.target.files[0],
+          imageUrl: URL.createObjectURL(e.target.files[0]),
+        },
       }));
     }
 
@@ -30,7 +33,10 @@ const InputUpload: FC<InputUploadProps> = ({ imageUrl, setImageUrl }) => {
       const { files } = e.dataTransfer;
       setImageUrl((prev: FormValues) => ({
         ...prev,
-        imageUrl: URL.createObjectURL(files[0]),
+        image: {
+          file: files[0],
+          imageUrl: URL.createObjectURL(files[0]),
+        },
       }));
     }
   };
@@ -39,7 +45,13 @@ const InputUpload: FC<InputUploadProps> = ({ imageUrl, setImageUrl }) => {
     e.preventDefault();
     e.stopPropagation();
     URL.revokeObjectURL(imageUrl);
-    setImageUrl((prev) => ({ ...prev, imageUrl: '' }));
+    setImageUrl((prev) => ({
+      ...prev,
+      image: {
+        file: null,
+        imageUrl: '',
+      },
+    }));
   };
 
   return (
