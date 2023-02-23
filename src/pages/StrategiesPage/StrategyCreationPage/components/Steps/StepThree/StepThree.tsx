@@ -37,7 +37,7 @@ const StepThree: FC<StepThreeProps> = ({
   const handleDuration = (e: ChangeEvent<HTMLInputElement>) => {
     setFormValues((prev: FormValues) => ({
       ...prev,
-      bondingCurve: e.target.value,
+      bondingType: e.target.value,
     }));
   };
 
@@ -51,7 +51,7 @@ const StepThree: FC<StepThreeProps> = ({
   const points = usePriceGraph({
     spotPrice: Number(formValues.spotPrice),
     delta: Number(formValues.delta),
-    bondingCurve: formValues.bondingCurve,
+    bondingCurve: formValues.bondingType,
   });
 
   return (
@@ -66,7 +66,7 @@ const StepThree: FC<StepThreeProps> = ({
       <RadioButton
         labelName="bonding curve"
         tooltipText="bonding curve"
-        current={formValues.bondingCurve}
+        current={formValues.bondingType}
         onChange={handleDuration}
         buttons={[
           { value: BondingCurveType.Linear, name: 'Linear' },

@@ -22,14 +22,14 @@ const StepTwo: FC<StepTwoProps> = ({
   const handleDuration = (e: ChangeEvent<HTMLInputElement>) => {
     setFormValues((prev: FormValues) => ({
       ...prev,
-      duration: e.target.value,
+      durationFilter: e.target.value,
     }));
   };
 
-  const handleMaxLTV = (value: number) => {
+  const handleLTV = (value: number) => {
     setFormValues((prev: FormValues) => ({
       ...prev,
-      maxLTV: value,
+      loanToValueFilter: value,
     }));
   };
 
@@ -41,11 +41,14 @@ const StepTwo: FC<StepTwoProps> = ({
         formValues={formValues}
         setFormValues={setFormValues}
       />
-      <SliderGradient value={formValues.maxLTV} onChange={handleMaxLTV} />
+      <SliderGradient
+        value={formValues.loanToValueFilter}
+        onChange={handleLTV}
+      />
       <RadioButton
         labelName="duration"
         tooltipText="duration duration duration"
-        current={formValues.duration}
+        current={formValues.durationFilter}
         onChange={handleDuration}
         buttons={[
           { value: '7', name: '7 days' },

@@ -35,7 +35,7 @@ const SearchCollection: FC<SearchCollectionProps> = ({
   const handleSelectedMarkets = (market: Market) => () => {
     setFormValues((prev) => ({
       ...prev,
-      selectedMarket: {
+      hadoMarkets: {
         marketName: market.collectionName,
         marketPubkey: market.marketPubkey,
       },
@@ -88,14 +88,14 @@ const SearchCollection: FC<SearchCollectionProps> = ({
                   <div
                     className={classNames(styles.image, {
                       [styles.selected]:
-                        formValues.selectedMarket.marketPubkey ===
+                        formValues.hadoMarkets.marketPubkey ===
                         market.marketPubkey,
                     })}
                     style={{
                       backgroundImage: `url(${market.collectionImage})`,
                     }}
                   >
-                    {formValues.selectedMarket.marketPubkey ===
+                    {formValues.hadoMarkets.marketPubkey ===
                       market.marketPubkey && <Selected />}
                   </div>
                   <div className={styles.title}>{market.collectionName}</div>

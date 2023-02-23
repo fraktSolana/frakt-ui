@@ -21,7 +21,10 @@ const StepOne: FC<StepOneProps> = ({
 
   return (
     <div className={className}>
-      <InputUpload imageUrl={formValues.imageUrl} setImageUrl={setFormValues} />
+      <InputUpload
+        imageUrl={formValues.image.imageUrl}
+        setImageUrl={setFormValues}
+      />
 
       <TextInput
         wrapperClassName={styles.inputWrapper}

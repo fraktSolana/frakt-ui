@@ -37,7 +37,7 @@ export const makeCreateStrategy: MakeCreateStrategy = async ({
     programId: FRAKT_TRADE_PROGRAM_ID,
     connection: connection,
     args: {
-      reserveFundsRatio: 2000,
+      reserveFundsRatio: +formValues.utilizationRate * 100,
       isPrivate: false,
     },
     accounts: {
@@ -56,22 +56,22 @@ export const makeCreateStrategy: MakeCreateStrategy = async ({
     connection: connection,
     args: {
       strategyNum: 1,
-      loanToValueFilter: +formValues.maxLTV * 100,
-      durationFilter: +formValues.duration * 86400,
+      loanToValueFilter: +formValues.loanToValueFilter * 100,
+      durationFilter: +formValues.durationFilter * 86400,
       delta: +formValues.delta * 1e9,
       spotPrice: +formValues.spotPrice * 1e9,
       bidCap: +formValues.bidCap,
       tradeAmountRatio: +formValues.utilizationRate * 100,
       maxTradeAmount: +formValues.maxTradeAmount * 1e9,
       minTimeBetweenTrades: +formValues.minTimeBetweenTrades,
-      bondingType: formValues.bondingCurve,
+      bondingType: formValues.bondingType,
       tradeDuration: +formValues.tradeDuration,
       remainingSolRatioToFinishTrade:
         +formValues.remainingSolRatioToFinishTrade * 100,
     },
     accounts: {
       userPubkey: wallet?.publicKey,
-      hadoMarket: new web3.PublicKey(formValues.selectedMarket.marketPubkey),
+      hadoMarket: new web3.PublicKey(formValues.hadoMarkets.marketPubkey),
       tradePool: tradePool,
     },
     sendTxn: sendTxnPlaceHolder,

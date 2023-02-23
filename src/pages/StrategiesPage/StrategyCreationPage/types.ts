@@ -4,15 +4,15 @@ export interface FormValues {
   strategyName: string;
   image: {
     file: File | null;
-    imageUrlBlob: string;
+    imageUrl: string;
   };
-  duration: string;
-  selectedMarket: {
+  durationFilter: string;
+  hadoMarkets: {
     marketName: string;
     marketPubkey: string;
   };
-  maxLTV: number;
-  bondingCurve: BondingCurveType;
+  loanToValueFilter: number;
+  bondingType: BondingCurveType;
   spotPrice: string;
   bidCap: string;
   delta: string;

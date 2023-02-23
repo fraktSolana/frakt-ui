@@ -32,7 +32,7 @@ const Steps: FC = () => {
   const isManage = false;
 
   const deltaType =
-    formValues.bondingCurve === BondingCurveType.Exponential ? '%' : 'SOL';
+    formValues.bondingType === BondingCurveType.Exponential ? '%' : 'SOL';
 
   return (
     <>

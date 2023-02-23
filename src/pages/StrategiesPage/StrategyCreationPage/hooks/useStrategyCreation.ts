@@ -31,15 +31,15 @@ export const useStrategyCreation = () => {
     strategyName: '',
     image: {
       file: null,
-      imageUrlBlob: '',
+      imageUrl: '',
     },
-    selectedMarket: {
+    hadoMarkets: {
       marketName: '',
       marketPubkey: '',
     },
-    duration: '7',
-    maxLTV: 10,
-    bondingCurve: BondingCurveType.Linear,
+    durationFilter: '7',
+    loanToValueFilter: 10,
+    bondingType: BondingCurveType.Linear,
     spotPrice: '',
     bidCap: '',
     delta: '',
@@ -71,10 +71,10 @@ export const useStrategyCreation = () => {
   };
 
   const checkDisabled = {
-    0: formValues.strategyName && formValues.image.imageUrlBlob,
-    1: formValues.duration && formValues.maxLTV,
+    0: formValues.strategyName && formValues.image.imageUrl,
+    1: formValues.durationFilter && formValues.loanToValueFilter,
     2:
-      formValues.bondingCurve &&
+      formValues.bondingType &&
       formValues.spotPrice &&
       formValues.bidCap &&
       formValues.delta,
@@ -114,7 +114,7 @@ export const useStrategyCreation = () => {
           image: formValues.image.file,
         });
 
-        console.log(imageUrl);
+        console.log('imageUrl', imageUrl);
 
         await setNewTradePools(tradePool, imageUrl);
 

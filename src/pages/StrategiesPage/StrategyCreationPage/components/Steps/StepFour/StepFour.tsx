@@ -94,9 +94,10 @@ const StepFour: FC<StepFourProps> = ({
 
       <div className={styles.info}>
         <p className={styles.infoItem}>
-          Your strategy lend money to {formValues.selectedMarket.marketName}{' '}
+          Your strategy lend money to {formValues.hadoMarkets.marketName}{' '}
           collections, for up to
-          {' ' + formValues.maxLTV}% LTV and {formValues.duration} days
+          {' ' + formValues.loanToValueFilter}% LTV and{' '}
+          {formValues.durationFilter} days
         </p>
         <p className={styles.infoItem}>
           Your strategy will place orders starting with {formValues.spotPrice}{' '}
