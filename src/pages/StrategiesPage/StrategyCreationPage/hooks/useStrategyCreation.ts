@@ -51,17 +51,9 @@ export const useStrategyCreation = () => {
     minTimeBetweenTrades: '',
   });
 
-  console.log(formValues);
-
   const secret = '36LiwBuWy3TvNrl4';
 
   const setNewTradePools = async (poolPubkey, image) => {
-    console.log({
-      poolPubkey: new PublicKey(poolPubkey).toBase58(),
-      name: formValues.strategyName,
-      image,
-      secret,
-    });
     await createTradePools({
       poolPubkey: new PublicKey(poolPubkey).toBase58(),
       name: formValues.strategyName,

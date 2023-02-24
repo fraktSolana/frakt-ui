@@ -120,11 +120,11 @@ const Strategy: FC<any> = ({
       </div>
 
       <PoolModal
-        onClick={onCreateInvestment}
         visible={poolModalVisible}
         onCancel={() => setPoolModalVisible(null)}
         liquidityPoolPubkey={'liquidityPoolPubkey'}
         apr={depositYield}
+        depositAmount={0}
         utilizationRate={33}
       />
     </>

@@ -23,21 +23,19 @@ const MyStrategiesPage: FC = () => {
 
   console.log('tradePoolsAdmin', tradePoolsAdmin);
 
-  const isAdmin = adminsList.includes(wallet?.publicKey?.toBase58());
+  // const isAdmin = adminsList.includes(wallet?.publicKey?.toBase58());
   return (
-    isAdmin && (
-      <AppLayout>
-        <Titles title="My Strategies" />
-        <AdminButton />
-        <div className={styles.sortWrapper}>
-          <SearchInput
-            className={styles.searchInput}
-            placeholder="Search by strategy name"
-          />
-        </div>
-        <Strategies tradePools={tradePoolsAdmin} />
-      </AppLayout>
-    )
+    <AppLayout>
+      <Titles title="My Strategies" />
+      <AdminButton />
+      <div className={styles.sortWrapper}>
+        <SearchInput
+          className={styles.searchInput}
+          placeholder="Search by strategy name"
+        />
+      </div>
+      <Strategies tradePools={tradePoolsAdmin} />
+    </AppLayout>
   );
 };
 
