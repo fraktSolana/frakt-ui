@@ -73,7 +73,7 @@ const StepFour: FC<StepFourProps> = ({
       <InputField
         unit="sec"
         label="trade duration"
-        toolTipText="Yearly rewards based on the current utilization rate and borrow interest"
+        toolTipText="max: 86400"
         value={formValues.tradeDuration}
         onValueChange={handleTradeDuration}
       />

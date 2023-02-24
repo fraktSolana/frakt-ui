@@ -7,7 +7,6 @@ import { TabsNames } from '@frakt/components/PoolModal/types';
 import { commonActions } from '@frakt/state/common/actions';
 import styles from './Strategies.module.scss';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useAdminTradePools } from '@frakt/utils/Strategies/hooks';
 
 const Strategies: FC<any> = () => {
   const wallet = useWallet();

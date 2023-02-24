@@ -77,8 +77,6 @@ export const makeCreateStrategy: MakeCreateStrategy = async ({
     sendTxn: sendTxnPlaceHolder,
   });
 
-  console.log('tradeSettings', tradeSettings.toBase58());
-
   return {
     tradePool,
     transaction: new web3.Transaction().add(

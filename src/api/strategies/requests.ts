@@ -1,8 +1,10 @@
 import axios from 'axios';
 
+const tetsApi = 'fraktion-monorep-test.herokuapp.com';
+
 export const fetchTradePools = async ({ walletPublicKey }): Promise<any> => {
   const response = await fetch(
-    `https://${process.env.BACKEND_DOMAIN}/trade-pools?wallet=${walletPublicKey}`,
+    `https://${tetsApi}/trade-pools?wallet=${walletPublicKey}`,
   );
 
   if (!response.ok) {
@@ -12,31 +14,22 @@ export const fetchTradePools = async ({ walletPublicKey }): Promise<any> => {
 };
 
 export const createTradePools = async (settings) => {
-  await axios.post(
-    `https://${process.env.BACKEND_DOMAIN}/settings/trade-pools`,
-    settings,
-  );
+  await axios.post(`https://${tetsApi}/settings/trade-pools`, settings);
 };
 
 export const setImageTradePools = async (settings) => {
-  await axios.post(
-    `https://${process.env.BACKEND_DOMAIN}/image/upload`,
-    settings,
-  );
+  await axios.post(`https://${tetsApi}/image/upload`, settings);
 };
 
 export const updateTradePools = async (settings) => {
-  await axios.patch(
-    `https://${process.env.BACKEND_DOMAIN}/settings/trade-pools`,
-    settings,
-  );
+  await axios.patch(`https://${tetsApi}/settings/trade-pools`, settings);
 };
 
 export const fetchAdminTradePools = async ({
   walletPublicKey,
 }): Promise<any> => {
   const response = await fetch(
-    `https://${process.env.BACKEND_DOMAIN}/trade-pools/admin?wallet=${walletPublicKey}`,
+    `https://${tetsApi}/trade-pools/admin?wallet=${walletPublicKey}`,
   );
 
   if (!response.ok) {

@@ -50,6 +50,8 @@ export const useStrategyCreation = () => {
     minTimeBetweenTrades: '',
   });
 
+  console.log(formValues);
+
   const secret = '36LiwBuWy3TvNrl4';
 
   const setNewTradePools = async (tradePoolPubkey, imageUrl) => {

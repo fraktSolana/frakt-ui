@@ -22,10 +22,8 @@ const usePriceGraph: UsePriceGraph = ({
 }) => {
   if (!bondingCurve || !spotPrice) return null;
 
-  const deltaParsed = BondingCurveType.Exponential ? delta * 100 : delta * 1e9;
-
-  console.log('spotPrice:', spotPrice, 'delta:', delta);
-  console.log('deltaParsed', deltaParsed);
+  const deltaParsed =
+    bondingCurve === BondingCurveType.Linear ? delta * 1e9 : delta * 100;
 
   const { array: priceArray } = helpers.calculatePricesArray({
     starting_spot_price: spotPrice * 1e9,
