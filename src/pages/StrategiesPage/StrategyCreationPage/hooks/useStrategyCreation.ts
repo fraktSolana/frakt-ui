@@ -10,6 +10,7 @@ import { notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { signAndConfirmTransaction } from '@frakt/utils/transactions';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { PublicKey } from '@solana/web3.js';
 import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
 import { useState } from 'react';
 
@@ -54,20 +55,26 @@ export const useStrategyCreation = () => {
 
   const secret = '36LiwBuWy3TvNrl4';
 
-  const setNewTradePools = async (tradePoolPubkey, imageUrl) => {
-    await createTradePools({
-      tradePoolPubkey,
+  const setNewTradePools = async (poolPubkey, image) => {
+    console.log({
+      poolPubkey: new PublicKey(poolPubkey).toBase58(),
       name: formValues.strategyName,
-      imageUrl: imageUrl,
+      image,
+      secret,
+    });
+    await createTradePools({
+      poolPubkey: new PublicKey(poolPubkey).toBase58(),
+      name: formValues.strategyName,
+      image,
       secret,
     });
   };
 
-  const setUpdateTradePools = async (tradePoolPubkey, imageUrl) => {
+  const setUpdateTradePools = async (poolPubkey, image) => {
     await updateTradePools({
-      tradePoolPubkey,
+      poolPubkey: new PublicKey(poolPubkey).toBase58(),
       name: formValues.strategyName,
-      imageUrl: imageUrl,
+      image,
       secret,
     });
   };
@@ -99,11 +106,15 @@ export const useStrategyCreation = () => {
       try {
         openLoadingModal();
 
-        const { transaction, signers, tradePool } = await makeCreateStrategy({
-          connection,
-          wallet,
-          formValues,
-        });
+        const { transaction, signers, tradePool, tradeSettings } =
+          await makeCreateStrategy({
+            connection,
+            wallet,
+            formValues,
+          });
+
+        console.log('tradePool', tradePool);
+        console.log('tradeSettings', tradeSettings);
 
         await signAndConfirmTransaction({
           transaction,
@@ -112,13 +123,14 @@ export const useStrategyCreation = () => {
           connection,
         });
 
-        const imageUrl = await setImageTradePools({
-          image: formValues.image.file,
-        });
+        // const imagePool = await setImageTradePools({
+        //   image: formValues.image.file,
+        // });
 
-        console.log('imageUrl', imageUrl);
+        const imagePool =
+          'https://live.staticflickr.com/65535/52708390090_d8f3a22bbc_z.jpg';
 
-        await setNewTradePools(tradePool, imageUrl);
+        await setNewTradePools(tradePool, imagePool);
 
         notify({
           message: 'Transaction successful!',

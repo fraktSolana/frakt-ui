@@ -4,22 +4,19 @@ import { collectionPreview } from './assets/constants';
 
 import styles from './CollectionsPreviews.module.scss';
 
-const CollectionsPreviews: FC = () => {
+const CollectionsPreviews: FC<any> = ({ collections }) => {
   const collectionsLimit = 4;
-  const showLabelCollectionsAmount =
-    collectionPreview.length - collectionsLimit > 0;
+  const showLabelCollectionsAmount = collections.length - collectionsLimit > 0;
 
   return (
     <div
       className={classNames(styles.collections, {
         [styles.labelCollectionsAmount]: showLabelCollectionsAmount,
       })}
-      data-collections-amount={`+${
-        collectionPreview.length - collectionsLimit
-      }`}
+      data-collections-amount={`+${collections.length - collectionsLimit}`}
     >
-      {collectionPreview.slice(0, collectionsLimit).map(({ image, name }) => (
-        <img key={name} className={styles.preview} src={image} alt={name} />
+      {collections.slice(0, collectionsLimit).map(({ name, image }) => (
+        <img key={name} className={styles.preview} src={image} alt="" />
       ))}
     </div>
   );

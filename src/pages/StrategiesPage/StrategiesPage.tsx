@@ -31,7 +31,7 @@ const StrategiesPage: FC = () => {
         />
       </div>
 
-      <Strategies />
+      <Strategies tradePools={tradePools} />
     </AppLayout>
   );
 };

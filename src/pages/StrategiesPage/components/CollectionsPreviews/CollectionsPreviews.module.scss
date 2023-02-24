@@ -4,6 +4,8 @@
   width: 97px;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  padding-right: 5px;
 }
 
 .labelCollectionsAmount {
@@ -34,6 +36,8 @@
   width: 28px;
   height: 28px;
   margin-right: -5px;
+
+  // background-color: #fff;
 
   border-radius: 50%;
 }

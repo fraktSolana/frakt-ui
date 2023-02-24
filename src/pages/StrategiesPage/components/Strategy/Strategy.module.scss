@@ -84,6 +84,14 @@
   white-space: nowrap;
 }
 
+.negative {
+  color: var(--red-color);
+}
+
+.positive {
+  color: var(--light-green-color);
+}
+
 .btnWrapper {
   display: flex;
   flex-direction: column;

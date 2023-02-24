@@ -14,6 +14,7 @@ type MakeCreateStrategy = (params: {
 }) => Promise<{
   transaction: web3.Transaction;
   signers: web3.Signer[];
+  tradeSettings;
   tradePool;
 }>;
 
@@ -79,6 +80,7 @@ export const makeCreateStrategy: MakeCreateStrategy = async ({
 
   return {
     tradePool,
+    tradeSettings,
     transaction: new web3.Transaction().add(
       ...[tradePoolTxn, tradeSettingTxs].flat(),
     ),
