@@ -29,7 +29,7 @@ const WithdrawTab: FC<WithdrawTabProps> = ({
 
   const { onWithdraw } = useWithdraw({
     tradePool,
-    amountToDeposit: withdrawValue,
+    amountToUnstake: withdrawValue,
   });
 
   const notEnoughDepositError = depositAmount < Number(withdrawValue);

@@ -83,7 +83,7 @@ export const useStrategyCreation = (tradePool?) => {
     await updateTradePools({
       poolPubkey: new PublicKey(poolPubkey).toBase58(),
       name: formValues.strategyName,
-      image: image ? image : tradePool?.poolImage,
+      image: image,
       secret,
     });
   };
@@ -111,7 +111,7 @@ export const useStrategyCreation = (tradePool?) => {
   } = useLoadingModal();
 
   const onCreateStrategy = async () => {
-    if (wallet?.publicKey?.toBase58()) {
+    if (wallet?.publicKey) {
       try {
         openLoadingModal();
 
@@ -121,10 +121,6 @@ export const useStrategyCreation = (tradePool?) => {
             wallet,
             formValues,
           });
-
-        console.log('tradeSettings', tradeSettings);
-        console.log('transaction', transaction);
-        console.log('signers', signers);
 
         await signAndConfirmTransaction({
           transaction,
@@ -159,7 +155,7 @@ export const useStrategyCreation = (tradePool?) => {
   };
 
   const onUpdateStrategy = async () => {
-    if (wallet?.publicKey?.toBase58()) {
+    if (wallet?.publicKey) {
       try {
         openLoadingModal();
 
@@ -171,10 +167,6 @@ export const useStrategyCreation = (tradePool?) => {
             tradePool: tradePool?.poolPubkey,
           });
 
-        console.log('tradeSettings', tradeSettings);
-        console.log('transaction', transaction);
-        console.log('signers', signers);
-
         await signAndConfirmTransaction({
           transaction,
           signers,
@@ -184,7 +176,12 @@ export const useStrategyCreation = (tradePool?) => {
 
         if (formValues.image.file) {
           const imagePool = await setImageTradePools(formValues.image.file);
-          await setUpdateTradePools(tradePool, imagePool?.url);
+          await setUpdateTradePools(tradePool?.poolPubkey, imagePool.url);
+        } else {
+          await setUpdateTradePools(
+            tradePool?.poolPubkey,
+            tradePool?.poolImage,
+          );
         }
 
         notify({

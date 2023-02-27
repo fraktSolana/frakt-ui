@@ -111,7 +111,9 @@ const Strategy: FC<any> = ({
           <div className={styles.info}>
             <div className={styles.infoTitle}>your liquidity</div>
             <div className={styles.infoValue}>
-              <span>{tradePool?.wallet?.userLiquidity || 0}</span>
+              <span>
+                {(tradePool?.wallet?.userLiquidity / 1e9 || 0).toFixed(2)}
+              </span>
               <Solana className={styles.solana} />
             </div>
           </div>
@@ -157,7 +159,7 @@ const Strategy: FC<any> = ({
         visible={poolModalVisible}
         onCancel={() => setPoolModalVisible(null)}
         liquidityPoolPubkey={tradePool?.publicKey}
-        depositAmount={tradePool?.wallet?.userLiquidity || 0}
+        depositAmount={tradePool?.wallet?.userLiquidity / 1e9 || 0}
         utilizationRate={tradePool?.utilizationRate}
         depositYield={tradePool?.depositYield}
       />

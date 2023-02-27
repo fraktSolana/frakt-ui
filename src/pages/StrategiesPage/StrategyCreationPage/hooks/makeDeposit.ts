@@ -13,11 +13,14 @@ export const makeDeposit = async ({
 
   const FRAKT_TRADE_PROGRAM_ID = new web3.PublicKey(programID);
 
+  console.log('amountToDeposit', amountToDeposit);
+  console.log('tradePool', tradePool);
+
   const { investment, instructions, signers } = await createInvestment({
     programId: FRAKT_TRADE_PROGRAM_ID,
     connection: connection,
     args: {
-      amountToDeposit: Number(amountToDeposit),
+      amountToDeposit: amountToDeposit * 1e9,
     },
     accounts: {
       userPubkey: wallet?.publicKey,

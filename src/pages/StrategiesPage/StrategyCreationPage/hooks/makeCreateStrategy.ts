@@ -40,7 +40,7 @@ export const makeCreateStrategy: MakeCreateStrategy = async ({
     programId: FRAKT_TRADE_PROGRAM_ID,
     connection: connection,
     args: {
-      reserveFundsRatio: +formValues.utilizationRate * 100,
+      reserveFundsRatio: 20 * 100,
       isPrivate: false,
     },
     accounts: {

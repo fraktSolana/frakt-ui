@@ -33,6 +33,8 @@ export const useWithdraw = ({ tradePool, amountToUnstake }: any) => {
           tradePool,
         });
 
+        console.log(investment);
+
         await signAndConfirmTransaction({
           transaction,
           signers,

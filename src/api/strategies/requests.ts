@@ -30,7 +30,18 @@ export const setImageTradePools = async (file) => {
 };
 
 export const updateTradePools = async (settings) => {
-  await axios.patch(`https://${tetsApi}/trade-pools`, settings);
+  console.log('settings request', settings);
+
+  const response = await axios.patch(
+    `https://${tetsApi}/trade-pools`,
+    settings,
+  );
+
+  console.log(response);
+  if (!response.data) {
+    throw new Error('Network response was not ok');
+  }
+  return response;
 };
 
 export const fetchAdminTradePools = async ({
