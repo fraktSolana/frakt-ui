@@ -9,7 +9,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useHistory } from 'react-router-dom';
 import { makeDeposit } from './makeDeposit';
 
-export const useDeposit = ({ tradePool, amountToDeposit }) => {
+export const useDeposit = ({ tradePool, amountToDeposit, onCancel }) => {
   const history = useHistory();
   const wallet = useWallet();
   const connection = useConnection();
@@ -44,7 +44,9 @@ export const useDeposit = ({ tradePool, amountToDeposit }) => {
           type: NotifyType.SUCCESS,
         });
 
-        history.push(`${PATHS.MY_STRATEGIES}`);
+        onCancel();
+
+        // history.push(`${PATHS.MY_STRATEGIES}`);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.warn(error?.logs);
@@ -54,8 +56,10 @@ export const useDeposit = ({ tradePool, amountToDeposit }) => {
           message: 'The transaction just failed :( Give it another try',
           type: NotifyType.ERROR,
         });
+        onCancel();
       } finally {
         closeLoadingModal();
+        onCancel();
       }
     }
   };

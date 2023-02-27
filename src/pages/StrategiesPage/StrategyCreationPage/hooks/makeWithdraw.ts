@@ -17,7 +17,7 @@ export const makeWithdraw = async ({
     programId: FRAKT_TRADE_PROGRAM_ID,
     connection: connection,
     args: {
-      amountToUnstake: Number(amountToUnstake),
+      amountToUnstake: +amountToUnstake * 1e9,
     },
     accounts: {
       userPubkey: wallet?.publicKey,

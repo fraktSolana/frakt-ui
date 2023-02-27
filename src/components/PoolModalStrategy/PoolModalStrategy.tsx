@@ -14,9 +14,8 @@ interface PoolModalStrategyProps {
   depositYield: number;
   depositAmount: number;
   utilizationRate: number;
-  liquidityPoolPubkey: string;
-  onClick?: () => void;
   tradePool: any;
+  poolModalTab: any;
 }
 
 export const PoolModalStrategy: FC<PoolModalStrategyProps> = ({
@@ -25,11 +24,11 @@ export const PoolModalStrategy: FC<PoolModalStrategyProps> = ({
   depositYield,
   depositAmount = 0,
   utilizationRate,
-  liquidityPoolPubkey,
-  onClick,
   tradePool,
+  poolModalTab,
 }) => {
   const { poolTabs, tabValue, setTabValue } = usePoolModal({
+    poolModalTab,
     visible,
     depositAmount,
   });

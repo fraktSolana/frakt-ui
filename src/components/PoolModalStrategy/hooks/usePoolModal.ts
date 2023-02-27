@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { getCorrectSolWalletBalance, getSolBalanceValue } from '@frakt/utils';
 import { useNativeAccount } from '@frakt/utils/accounts';
 import { Tab, useTabs } from '@frakt/components/Tabs';
-import { InputControlsNames } from '../types';
+import { InputControlsNames, TabsNames } from '../types';
 
 type UsePoolModal = ({
   visible,
@@ -12,6 +12,7 @@ type UsePoolModal = ({
 }: {
   visible?: string;
   depositAmount: number;
+  poolModalTab?: any;
 }) => {
   depositValue: string;
   withdrawValue: string;
@@ -27,7 +28,11 @@ type UsePoolModal = ({
   onClearDepositValue: () => void;
 };
 
-export const usePoolModal: UsePoolModal = ({ visible, depositAmount }) => {
+export const usePoolModal: UsePoolModal = ({
+  poolModalTab,
+  visible,
+  depositAmount,
+}) => {
   const { watch, register, setValue } = useForm({
     defaultValues: {
       [InputControlsNames.DEPOSIT_VALUE]: '',
@@ -49,11 +54,12 @@ export const usePoolModal: UsePoolModal = ({ visible, depositAmount }) => {
     {
       label: 'Deposit',
       value: 'deposit',
+      disabled: poolModalTab === TabsNames.WITHDRAW,
     },
     {
       label: 'Withdraw',
       value: 'withdraw',
-      disabled: !depositAmount,
+      disabled: poolModalTab === TabsNames.DEPOSIT,
     },
   ];
 

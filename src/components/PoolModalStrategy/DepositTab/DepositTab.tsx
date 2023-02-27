@@ -36,6 +36,7 @@ const DepositTab: FC<DepositTabProps> = ({
   const { onCreateInvestment } = useDeposit({
     tradePool,
     amountToDeposit: depositValue,
+    onCancel,
   });
 
   const setDeposit = () => {

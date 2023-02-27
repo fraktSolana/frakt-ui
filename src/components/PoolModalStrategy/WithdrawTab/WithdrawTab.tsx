@@ -30,12 +30,18 @@ const WithdrawTab: FC<WithdrawTabProps> = ({
   const { onWithdraw } = useWithdraw({
     tradePool,
     amountToUnstake: withdrawValue,
+    onCancel,
   });
 
   const notEnoughDepositError = depositAmount < Number(withdrawValue);
 
   const isDisabledWithdrawBtn =
     Number(withdrawValue) === 0 || notEnoughDepositError;
+
+  const unstake = () => {
+    onWithdraw();
+    onClearDepositValue();
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -65,7 +71,7 @@ const WithdrawTab: FC<WithdrawTabProps> = ({
       </div>
 
       <Button
-        onClick={onWithdraw}
+        onClick={unstake}
         className={styles.btn}
         type="secondary"
         disabled={isDisabledWithdrawBtn}

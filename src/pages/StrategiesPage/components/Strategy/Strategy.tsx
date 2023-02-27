@@ -49,6 +49,8 @@ const Strategy: FC<any> = ({
     }
   };
 
+  // console.log(poolModalVisible);
+
   // const { tradePoolsAdmin, isLoading } = useAdminTradePools({
   //   walletPublicKey: wallet?.publicKey?.toBase58(),
   // });
@@ -144,7 +146,7 @@ const Strategy: FC<any> = ({
               className={styles.btn}
               type="primary"
               onClick={() => {
-                openPoolModal(TabsNames.DEPOSIT);
+                openPoolModal(TabsNames.WITHDRAW);
               }}
             >
               Withdraw all
@@ -155,10 +157,9 @@ const Strategy: FC<any> = ({
 
       <PoolModalStrategy
         tradePool={tradePool?.poolPubkey}
-        // onClick={onCreateInvestment}
+        poolModalTab={poolModalVisible}
         visible={poolModalVisible}
         onCancel={() => setPoolModalVisible(null)}
-        liquidityPoolPubkey={tradePool?.publicKey}
         depositAmount={tradePool?.wallet?.userLiquidity / 1e9 || 0}
         utilizationRate={tradePool?.utilizationRate}
         depositYield={tradePool?.depositYield}
