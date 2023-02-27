@@ -1,11 +1,11 @@
 import { FC } from 'react';
 
+import { marks, useDepositTxn, usePoolModal } from '../hooks';
 import { TokenFieldWithBalance } from '../../TokenField';
+import styles from './WithdrawTab.module.scss';
+import { SOL_TOKEN } from '../../../utils';
 import { Slider } from '../../Slider';
 import Button from '../../Button';
-import { SOL_TOKEN } from '../../../utils';
-import { marks, useDepositTxn, usePoolModal } from '../hooks';
-import styles from './WithdrawTab.module.scss';
 
 interface WithdrawTabProps {
   depositAmount: number;
@@ -39,41 +39,38 @@ const WithdrawTab: FC<WithdrawTabProps> = ({
     Number(withdrawValue) === 0 || notEnoughDepositError;
 
   return (
-    <div className={styles.wrapper}>
-      <div>
-        <TokenFieldWithBalance
-          value={withdrawValue}
-          onValueChange={onWithdrawValueChange}
-          currentToken={SOL_TOKEN}
-          label={`Your deposit:`}
-          lpBalance={depositAmount}
-          error={notEnoughDepositError}
-          className={styles.input}
-          showMaxButton
-          labelRight
-        />
-        <div className={styles.errors}>
-          {notEnoughDepositError && <p>Not enough SOL</p>}
-        </div>
-        <Slider
-          value={percentValue}
-          setValue={depositAmount && onWithdrawPercentChange}
-          className={styles.slider}
-          marks={marks}
-          withTooltip
-          step={1}
-        />
+    <>
+      <TokenFieldWithBalance
+        value={withdrawValue}
+        onValueChange={onWithdrawValueChange}
+        currentToken={SOL_TOKEN}
+        label={`Your deposit:`}
+        lpBalance={depositAmount}
+        error={notEnoughDepositError}
+        className={styles.input}
+        showMaxButton
+        labelRight
+      />
+      <div className={styles.errors}>
+        {notEnoughDepositError && <p>Not enough SOL</p>}
       </div>
-
+      <Slider
+        value={percentValue}
+        setValue={depositAmount && onWithdrawPercentChange}
+        className={styles.slider}
+        marks={marks}
+        withTooltip
+        step={1}
+      />
       <Button
         onClick={unstakeLiquidity}
         className={styles.btn}
         type="secondary"
         disabled={isDisabledWithdrawBtn}
       >
-        Withdraw
+        Confirm
       </Button>
-    </div>
+    </>
   );
 };
 

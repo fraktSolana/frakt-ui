@@ -41,18 +41,18 @@ const InputUpload: FC<InputUploadProps> = ({ imageUrl, setImageUrl }) => {
     }
   };
 
-  const closeAndRemoveImg = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    URL.revokeObjectURL(imageUrl);
-    setImageUrl((prev) => ({
-      ...prev,
-      image: {
-        file: null,
-        imageUrl: '',
-      },
-    }));
-  };
+  // const closeAndRemoveImg = (e) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   URL.revokeObjectURL(imageUrl);
+  //   setImageUrl((prev) => ({
+  //     ...prev,
+  //     image: {
+  //       file: null,
+  //       imageUrl: '',
+  //     },
+  //   }));
+  // };
 
   return (
     <div className={styles.inputUpload}>
@@ -64,16 +64,16 @@ const InputUpload: FC<InputUploadProps> = ({ imageUrl, setImageUrl }) => {
         id="image"
         className={styles.input}
         onChange={handleDrop}
-        onClick={(e) => (imageUrl ? e.preventDefault() : null)}
+        // onClick={(e) => (imageUrl ? e.preventDefault() : null)}
         type="file"
       />
-      <label ref={drop} htmlFor="image" className={styles.label} onClick={null}>
+      <label ref={drop} htmlFor="image" className={styles.label}>
         {!!imageUrl && <div className={styles.backdrop}></div>}
-        {!!imageUrl && (
+        {/* {!!imageUrl && (
           <div onClick={closeAndRemoveImg} className={styles.close}>
             <Trash />
           </div>
-        )}
+        )} */}
         <div className={styles.field}>
           {!imageUrl && <UploadImg />}
           {!imageUrl && `сlick here or drag 'n' drop strategy PFP`}

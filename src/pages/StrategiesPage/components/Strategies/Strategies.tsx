@@ -4,29 +4,27 @@ import Strategy from '../Strategy';
 
 import styles from './Strategies.module.scss';
 
-const Strategies: FC<any> = ({ tradePools }) => {
+const Strategies: FC<any> = ({ tradePools, admin }) => {
   return (
     <div className={styles.strategies}>
-      {tradePools?.map(
-        ({
-          poolPubkey,
-          poolImage,
-          poolName,
-          depositYield,
-          collections,
-          totalLiquidity,
-        }) => (
-          <Fragment key={poolPubkey}>
-            <Strategy
-              poolName={poolName}
-              poolImage={poolImage}
-              depositYield={depositYield}
-              collections={collections}
-              totalLiquidity={totalLiquidity}
-            />
-          </Fragment>
-        ),
-      )}
+      {tradePools?.map((tradePool) => (
+        <Fragment key={tradePool.poolPubkey}>
+          <Strategy
+            tradePool={tradePool}
+            admin={admin}
+            // poolPubkey={poolPubkey}
+            // poolName={poolName}
+            // poolImage={poolImage}
+            // depositYield={depositYield}
+            // collections={collections}
+            // totalLiquidity={totalLiquidity}
+            // utilizationRate={utilizationRate}
+            // isCanEdit={isCanEdit}
+            // settings={settings}
+            // userWallet={wallet}
+          />
+        </Fragment>
+      ))}
     </div>
   );
 };

@@ -10,6 +10,7 @@ import styles from './Steps.module.scss';
 import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
 import { useStrategyCreation } from '../../hooks/useStrategyCreation';
 import { LoadingModal } from '@frakt/components/LoadingModal';
+import { useSettingsPool } from '@frakt/pages/StrategiesPage/hooks';
 
 const { Step } = AntSteps;
 
@@ -19,6 +20,10 @@ const Steps: FC = () => {
   const handleNextStep = () => setStep((prev) => prev + 1);
   const handleBackStep = () => setStep((prev) => prev - 1);
 
+  const tradePool = useSettingsPool((state) => state.tradePool);
+
+  console.log('tradePool', tradePool);
+
   const {
     formValues,
     setFormValues,
@@ -27,7 +32,7 @@ const Steps: FC = () => {
     onUpdateStrategy,
     loadingModalVisible,
     closeLoadingModal,
-  } = useStrategyCreation();
+  } = useStrategyCreation(tradePool);
 
   const isManage = false;
 
@@ -86,7 +91,7 @@ const Steps: FC = () => {
               </Button>
             )}
 
-            {isManage && (
+            {!!tradePool && (
               <Button
                 className={styles.btn}
                 type="secondary"
@@ -96,7 +101,7 @@ const Steps: FC = () => {
               </Button>
             )}
 
-            {!isManage && step === 3 ? (
+            {!tradePool && step === 3 ? (
               <Button
                 className={styles.btn}
                 type="secondary"
@@ -109,7 +114,7 @@ const Steps: FC = () => {
             {step !== 3 && (
               <Button
                 className={styles.btn}
-                type={!isManage ? 'secondary' : 'primary'}
+                type={!tradePool ? 'secondary' : 'primary'}
                 onClick={handleNextStep}
               >
                 Next

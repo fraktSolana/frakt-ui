@@ -19,37 +19,54 @@ import { FormValues } from '../types';
 import { makeCreateStrategy } from './makeCreateStrategy';
 import { makeUpdateStrategy } from './makeUpdateStrategy';
 
-export const useStrategyCreation = () => {
+export const useStrategyCreation = (tradePool?) => {
   const history = useHistory();
-
   const wallet = useWallet();
-
   const connection = useConnection();
 
-  ///reserveFundsRatio = utilizationRate
+  // console.log(tradePool);
+
+  const parsedDelta =
+    tradePool?.settings?.[0]?.bondingType === BondingCurveType.Linear
+      ? tradePool?.settings?.[0]?.delta / 1e9
+      : tradePool?.settings?.[0]?.delta / 100;
+
+  // console.log(parsedDelta, 'parsedDelta');
 
   const [formValues, setFormValues] = useState<FormValues>({
-    strategyName: '',
+    strategyName: tradePool?.poolName || '',
     image: {
       file: null,
-      imageUrl: '',
+      imageUrl: tradePool?.poolImage || '',
     },
     hadoMarkets: {
       marketName: '',
-      marketPubkey: '',
+      marketPubkey: tradePool?.settings?.[0]?.hadoMarket || '',
     },
-    durationFilter: '7',
-    loanToValueFilter: 10,
-    bondingType: BondingCurveType.Linear,
-    spotPrice: '',
-    bidCap: '',
-    delta: '',
-    utilizationRate: '',
-    maxTradeAmount: '',
-    tradeDuration: '',
-    remainingSolRatioToFinishTrade: '',
-    minTimeBetweenTrades: '',
+    durationFilter: String(
+      tradePool?.settings?.[0]?.durationFilter / 86400 || '7',
+    ),
+    loanToValueFilter: tradePool?.settings?.[0]?.loanToValueFilter / 100 || 10,
+    bondingType:
+      tradePool?.settings?.[0]?.bondingType || BondingCurveType.Linear,
+    spotPrice: String(tradePool?.settings?.[0]?.spotPrice / 1e9 || ''),
+    bidCap: tradePool?.settings?.[0]?.bidCap || '',
+    delta: String(parsedDelta || ''),
+    utilizationRate: String(
+      tradePool?.settings?.[0]?.tradeAmountRatio / 100 || '',
+    ),
+    maxTradeAmount: String(
+      tradePool?.settings?.[0]?.maxTradeAmount / 1e9 || '',
+    ),
+    tradeDuration: tradePool?.settings?.[0]?.tradeDuration || '',
+    remainingSolRatioToFinishTrade: String(
+      tradePool?.settings?.[0]?.remainingSolRatioToFinishTrade / 100 || '',
+    ),
+    minTimeBetweenTrades: String(
+      tradePool?.settings?.[0]?.minTimeBetweenTrades || '',
+    ),
   });
+  console.log('formValues', formValues);
 
   const secret = '36LiwBuWy3TvNrl4';
 
@@ -66,7 +83,7 @@ export const useStrategyCreation = () => {
     await updateTradePools({
       poolPubkey: new PublicKey(poolPubkey).toBase58(),
       name: formValues.strategyName,
-      image,
+      image: image ? image : tradePool?.poolImage,
       secret,
     });
   };
@@ -105,8 +122,9 @@ export const useStrategyCreation = () => {
             formValues,
           });
 
-        console.log('tradePool', tradePool);
         console.log('tradeSettings', tradeSettings);
+        console.log('transaction', transaction);
+        console.log('signers', signers);
 
         await signAndConfirmTransaction({
           transaction,
@@ -115,14 +133,9 @@ export const useStrategyCreation = () => {
           connection,
         });
 
-        // const imagePool = await setImageTradePools({
-        //   image: formValues.image.file,
-        // });
+        const imagePool = await setImageTradePools(formValues.image.file);
 
-        const imagePool =
-          'https://live.staticflickr.com/65535/52708390090_d8f3a22bbc_z.jpg';
-
-        await setNewTradePools(tradePool, imagePool);
+        await setNewTradePools(tradePool, imagePool?.url);
 
         notify({
           message: 'Transaction successful!',
@@ -150,14 +163,17 @@ export const useStrategyCreation = () => {
       try {
         openLoadingModal();
 
-        const tradePool = 'tradePool';
+        const { transaction, signers, tradeSettings } =
+          await makeUpdateStrategy({
+            connection,
+            wallet,
+            formValues,
+            tradePool: tradePool?.poolPubkey,
+          });
 
-        const { transaction, signers } = await makeUpdateStrategy({
-          connection,
-          wallet,
-          formValues,
-          tradePool,
-        });
+        console.log('tradeSettings', tradeSettings);
+        console.log('transaction', transaction);
+        console.log('signers', signers);
 
         await signAndConfirmTransaction({
           transaction,
@@ -166,11 +182,10 @@ export const useStrategyCreation = () => {
           connection,
         });
 
-        const imageUrl = await setImageTradePools({
-          image: formValues.image.file,
-        });
-
-        setUpdateTradePools(tradePool, imageUrl);
+        if (formValues.image.file) {
+          const imagePool = await setImageTradePools(formValues.image.file);
+          await setUpdateTradePools(tradePool, imagePool?.url);
+        }
 
         notify({
           message: 'Transaction successful!',

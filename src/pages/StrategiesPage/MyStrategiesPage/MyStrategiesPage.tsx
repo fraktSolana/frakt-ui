@@ -10,6 +10,7 @@ import styles from '../StrategiesPage.module.scss';
 import { useHistory } from 'react-router-dom';
 import { useAdminTradePools } from '@frakt/utils/Strategies/hooks';
 import { createTradePools } from '@frakt/api/strategies';
+import { Loader } from '@frakt/components/Loader';
 
 const MyStrategiesPage: FC = () => {
   const wallet = useWallet();
@@ -27,14 +28,15 @@ const MyStrategiesPage: FC = () => {
   return (
     <AppLayout>
       <Titles title="My Strategies" />
-      <AdminButton />
+      {!isLoading && <AdminButton />}
       <div className={styles.sortWrapper}>
         <SearchInput
           className={styles.searchInput}
           placeholder="Search by strategy name"
         />
       </div>
-      <Strategies tradePools={tradePoolsAdmin} />
+      {isLoading && <Loader size="large" />}
+      {!isLoading && <Strategies tradePools={tradePoolsAdmin} admin />}
     </AppLayout>
   );
 };

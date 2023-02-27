@@ -7,9 +7,10 @@ import { signAndConfirmTransaction } from '@frakt/utils/transactions';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { useHistory } from 'react-router-dom';
-import { makeDeposit } from './makeDeposit';
 
-export const useDeposit = ({ tradePool, amountToDeposit }) => {
+import { makeWithdraw } from './makeWithdraw';
+
+export const useWithdraw = ({ tradePool, amountToUnstake }: any) => {
   const history = useHistory();
   const wallet = useWallet();
   const connection = useConnection();
@@ -20,14 +21,14 @@ export const useDeposit = ({ tradePool, amountToDeposit }) => {
     open: openLoadingModal,
   } = useLoadingModal();
 
-  const onCreateInvestment = async () => {
+  const onWithdraw = async () => {
     if (wallet.publicKey) {
       try {
         openLoadingModal();
 
-        const { investment, transaction, signers } = await makeDeposit({
+        const { investment, transaction, signers } = await makeWithdraw({
           connection,
-          amountToDeposit,
+          amountToUnstake,
           wallet,
           tradePool,
         });
@@ -61,6 +62,6 @@ export const useDeposit = ({ tradePool, amountToDeposit }) => {
   };
 
   return {
-    onCreateInvestment,
+    onWithdraw,
   };
 };

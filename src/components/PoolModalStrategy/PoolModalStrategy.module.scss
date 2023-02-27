@@ -6,31 +6,18 @@
   height: 48px;
 }
 
-.modal {
-  :global {
-    z-index: 2;
-
-    .ant-modal-body {
-      padding: 0 !important;
-    }
-  }
-  &::before {
-    content: '';
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    border: 1px solid var(--primary-text);
-    background-color: var(--primary-text);
-    top: 4px;
-    left: 4px;
-  }
-}
-
 .content {
+  background: var(--primary-background);
   padding: 32px;
+  height: 460px;
 
   @media screen and (max-width: 767px) {
     padding: 24px;
+    min-height: 444px;
+  }
+
+  @media screen and (max-width: 550px) {
+    padding: 16px;
   }
 }
 
@@ -123,8 +110,4 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-}
-
-.tabs {
-  margin-top: 0;
 }

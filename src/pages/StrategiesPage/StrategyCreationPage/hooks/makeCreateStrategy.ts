@@ -5,6 +5,7 @@ import {
   changeTradeSettings,
   initializeTradePool,
 } from 'fbonds-core/lib/bonds_trade_pool/functions/pool-factory';
+import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
 import { FormValues } from '../types';
 
 type MakeCreateStrategy = (params: {
@@ -30,6 +31,7 @@ export const makeCreateStrategy: MakeCreateStrategy = async ({
 
   const FRAKT_TRADE_PROGRAM_ID = new web3.PublicKey(programID);
 
+  ///reserveFundsRatio = utilizationRate
   const {
     tradePool,
     instructions: tradePoolTxn,
@@ -48,6 +50,10 @@ export const makeCreateStrategy: MakeCreateStrategy = async ({
     sendTxn: sendTxnPlaceHolder,
   });
 
+  const deltaParsed =
+    formValues.bondingType === BondingCurveType.Linear
+      ? +formValues.delta * 1e9
+      : +formValues.delta * 100;
   const {
     tradeSettings,
     instructions: tradeSettingTxs,
@@ -59,7 +65,7 @@ export const makeCreateStrategy: MakeCreateStrategy = async ({
       strategyNum: 1,
       loanToValueFilter: +formValues.loanToValueFilter * 100,
       durationFilter: +formValues.durationFilter * 86400,
-      delta: +formValues.delta * 1e9,
+      delta: deltaParsed,
       spotPrice: +formValues.spotPrice * 1e9,
       bidCap: +formValues.bidCap,
       tradeAmountRatio: +formValues.utilizationRate * 100,

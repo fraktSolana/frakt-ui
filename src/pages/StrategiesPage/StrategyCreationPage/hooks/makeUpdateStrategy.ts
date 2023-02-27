@@ -2,6 +2,7 @@ import { sendTxnPlaceHolder } from '@frakt/utils';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
 import { changeTradeSettings } from 'fbonds-core/lib/bonds_trade_pool/functions/pool-factory';
+import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
 import { FormValues } from '../types';
 
 type MakeUpdateStrategy = (params: {
@@ -9,7 +10,11 @@ type MakeUpdateStrategy = (params: {
   wallet: WalletContextState;
   formValues: FormValues;
   tradePool;
-}) => Promise<{ transaction: web3.Transaction; signers: web3.Signer[] }>;
+}) => Promise<{
+  transaction: web3.Transaction;
+  signers: web3.Signer[];
+  tradeSettings;
+}>;
 
 export const makeUpdateStrategy: MakeUpdateStrategy = async ({
   connection,
@@ -20,6 +25,18 @@ export const makeUpdateStrategy: MakeUpdateStrategy = async ({
   const programID = 'bondPKoXiaX83eJeCKY2VVDrRygkaFhjqZVbHsdDC4T';
 
   const FRAKT_TRADE_PROGRAM_ID = new web3.PublicKey(programID);
+
+  console.log('new web3.PublicKey(tradePool)', new web3.PublicKey(tradePool));
+
+  // const sendTxnUser = async (txn, signers) =>
+  //   void (await connection
+  //     .sendTransaction(txn, [wallet, ...signers])
+  //     .catch((err) => console.log(err)));
+
+  const deltaParsed =
+    formValues.bondingType === BondingCurveType.Linear
+      ? +formValues.delta * 1e9
+      : +formValues.delta * 100;
 
   const {
     tradeSettings,
@@ -32,7 +49,7 @@ export const makeUpdateStrategy: MakeUpdateStrategy = async ({
       strategyNum: 1,
       loanToValueFilter: +formValues.loanToValueFilter * 100,
       durationFilter: +formValues.durationFilter * 86400,
-      delta: +formValues.delta * 1e9,
+      delta: deltaParsed,
       spotPrice: +formValues.spotPrice * 1e9,
       bidCap: +formValues.bidCap,
       tradeAmountRatio: +formValues.utilizationRate * 100,
@@ -46,12 +63,13 @@ export const makeUpdateStrategy: MakeUpdateStrategy = async ({
     accounts: {
       userPubkey: wallet?.publicKey,
       hadoMarket: new web3.PublicKey(formValues.hadoMarkets.marketPubkey),
-      tradePool: tradePool,
+      tradePool: new web3.PublicKey(tradePool),
     },
     sendTxn: sendTxnPlaceHolder,
   });
 
   return {
+    tradeSettings,
     transaction: new web3.Transaction().add(...[tradeSettingTxs].flat()),
     signers: [tradeSettingSigners].flat(),
   };

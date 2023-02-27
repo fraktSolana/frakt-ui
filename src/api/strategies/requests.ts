@@ -14,26 +14,19 @@ export const fetchTradePools = async ({ walletPublicKey }): Promise<any> => {
 };
 
 export const createTradePools = async (settings) => {
-  const response = await axios.post(`https://${tetsApi}/trade-pools`, settings);
-
-  console.log(response);
-
-  // if (response.status !== 201) {
-  //   throw new Error('Network response was not ok');
-  // }
+  await axios.post(`https://${tetsApi}/trade-pools`, settings);
 };
 
-export const setImageTradePools = async (settings) => {
-  const response = await axios.post(
-    `https://${process.env.BACKEND_DOMAIN}/image/upload`,
-    settings,
-  );
+export const setImageTradePools = async (file) => {
+  const formData = new FormData();
+  formData.append('image', file);
 
-  console.log(response);
+  const response = await fetch('https://api.frakt.xyz/image/upload', {
+    method: 'POST',
+    body: formData,
+  });
 
-  if (response.status !== 200) {
-    throw new Error('Network response was not ok');
-  }
+  return await response.json();
 };
 
 export const updateTradePools = async (settings) => {

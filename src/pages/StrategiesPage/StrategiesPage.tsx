@@ -8,6 +8,7 @@ import Strategies from './components/Strategies';
 import styles from './StrategiesPage.module.scss';
 import { useTradePools } from '@frakt/utils/Strategies/hooks';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { Loader } from '@frakt/components/Loader';
 
 const StrategiesPage: FC = () => {
   const wallet = useWallet();
@@ -31,7 +32,8 @@ const StrategiesPage: FC = () => {
         />
       </div>
 
-      <Strategies tradePools={tradePools} />
+      {isLoading && <Loader size="large" />}
+      {!isLoading && <Strategies tradePools={tradePools} />}
     </AppLayout>
   );
 };
