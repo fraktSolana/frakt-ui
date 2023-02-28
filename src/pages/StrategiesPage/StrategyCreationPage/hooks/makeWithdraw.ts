@@ -13,6 +13,8 @@ export const makeWithdraw = async ({
 
   const FRAKT_TRADE_PROGRAM_ID = new web3.PublicKey(programID);
 
+  console.log(tradePool);
+
   const { investment, instructions, signers } = await unstakeFromPool({
     programId: FRAKT_TRADE_PROGRAM_ID,
     connection: connection,

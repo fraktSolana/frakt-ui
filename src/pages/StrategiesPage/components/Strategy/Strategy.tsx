@@ -4,37 +4,21 @@ import Button from '@frakt/components/Button';
 import Tooltip from '@frakt/components/Tooltip';
 import CollectionsPreviews from '../CollectionsPreviews';
 
-import { QuestionCircleOutlined } from '@ant-design/icons';
-import { Solana } from '@frakt/icons';
-import styles from './Strategy.module.scss';
 import classNames from 'classnames/bind';
 
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { useDispatch } from 'react-redux';
 import { commonActions } from '@frakt/state/common/actions';
-import { useDeposit } from '../../StrategyCreationPage/hooks/useDeposit';
 import { TabsNames } from '@frakt/components/PoolModalStrategy/types';
 import { PoolModalStrategy } from '@frakt/components/PoolModalStrategy';
 import { PATHS } from '@frakt/constants';
 import { useHistory } from 'react-router-dom';
-import { useStrategyCreation } from '../../StrategyCreationPage/hooks/useStrategyCreation';
 import { useSettingsPool } from '../../hooks';
+import { Solana } from '@frakt/icons';
+import styles from './Strategy.module.scss';
 
-const Strategy: FC<any> = ({
-  tradePool,
-  admin,
-  // poolName,
-  // poolImage,
-  // depositYield,
-  // collections,
-  // totalLiquidity,
-  // utilizationRate,
-  // poolPubkey,
-  // isCanEdit,
-  // settings,
-  // userWallet,
-}) => {
+const Strategy: FC<any> = ({ tradePool, admin }) => {
   const history = useHistory();
   const wallet = useWallet();
 
@@ -49,28 +33,10 @@ const Strategy: FC<any> = ({
     }
   };
 
-  // console.log(poolModalVisible);
-
-  // const { tradePoolsAdmin, isLoading } = useAdminTradePools({
-  //   walletPublicKey: wallet?.publicKey?.toBase58(),
-  // });
-  // const {
-  //   formValues,
-  //   setFormValues,
-  //   checkDisabled,
-  //   onCreateStrategy,
-  //   onUpdateStrategy,
-  //   loadingModalVisible,
-  //   closeLoadingModal,
-  // } = useStrategyCreation(settings);
-
   const { setSettings } = useSettingsPool();
 
   const openAdminPanel = (tradePool) => () => {
     history.push(PATHS.STRATEGY_CREATION);
-    // console.log(tradePool);
-
-    console.log('tradePools', tradePool);
     setSettings(tradePool);
   };
 
@@ -141,7 +107,7 @@ const Strategy: FC<any> = ({
             </Button>
           )}
 
-          {!admin && tradePool?.wallet?.userLiquidity && (
+          {!admin && !!tradePool?.wallet?.userLiquidity && (
             <Button
               className={styles.btn}
               type="primary"
