@@ -37,7 +37,7 @@ export const useStrategyCreation = (tradePool?) => {
       imageUrl: tradePool?.poolImage || '',
     },
     hadoMarkets: {
-      marketName: '',
+      marketName: tradePool?.collections?.[0]?.name || '',
       marketPubkey: tradePool?.settings?.[0]?.hadoMarket || '',
     },
     durationFilter: String(

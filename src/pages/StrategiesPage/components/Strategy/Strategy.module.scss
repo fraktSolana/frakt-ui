@@ -82,6 +82,10 @@
   gap: 4px;
   font: var(--font-text-8);
   white-space: nowrap;
+  height: 28px;
+  @media screen and (max-width: 1200px) {
+    height: auto;
+  }
 }
 
 .negative {

@@ -1,24 +1,28 @@
 import { FC, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { useWallet } from '@solana/wallet-adapter-react';
+import classNames from 'classnames/bind';
 
 import Button from '@frakt/components/Button';
 import Tooltip from '@frakt/components/Tooltip';
 import CollectionsPreviews from '../CollectionsPreviews';
-
-import classNames from 'classnames/bind';
-
-import { useWallet } from '@solana/wallet-adapter-react';
-
-import { useDispatch } from 'react-redux';
-import { commonActions } from '@frakt/state/common/actions';
-import { TabsNames } from '@frakt/components/PoolModalStrategy/types';
 import { PoolModalStrategy } from '@frakt/components/PoolModalStrategy';
-import { PATHS } from '@frakt/constants';
-import { useHistory } from 'react-router-dom';
+
 import { useSettingsPool } from '../../hooks';
+import { commonActions } from '@frakt/state/common/actions';
+import { PATHS } from '@frakt/constants';
+import { TradePool } from '../../types';
+import { TabsNames } from '@frakt/components/PoolModalStrategy/types';
 import { Solana } from '@frakt/icons';
 import styles from './Strategy.module.scss';
 
-const Strategy: FC<any> = ({ tradePool, admin }) => {
+interface StrategyProps {
+  tradePool: TradePool;
+  admin?: boolean;
+}
+
+const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
   const history = useHistory();
   const wallet = useWallet();
 
@@ -33,11 +37,11 @@ const Strategy: FC<any> = ({ tradePool, admin }) => {
     }
   };
 
-  const { setSettings } = useSettingsPool();
+  const { setTradePool } = useSettingsPool();
 
-  const openAdminPanel = (tradePool) => () => {
+  const openAdminPanel = (tradePool: TradePool) => () => {
     history.push(PATHS.STRATEGY_CREATION);
-    setSettings(tradePool);
+    setTradePool(tradePool);
   };
 
   return (
@@ -66,7 +70,7 @@ const Strategy: FC<any> = ({ tradePool, admin }) => {
                 [styles.positive]: Math.sign(tradePool?.depositYield) === 1,
               })}
             >
-              {Math.round(tradePool?.depositYield)} %
+              {(tradePool?.depositYield).toFixed(2)} %
             </div>
           </div>
           <div className={styles.info}>

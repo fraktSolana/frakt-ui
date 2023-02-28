@@ -4,8 +4,13 @@
   width: 97px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
+
   padding-right: 5px;
+
+  @media screen and (max-width: 1200px) {
+    justify-content: flex-end;
+  }
 }
 
 .labelCollectionsAmount {

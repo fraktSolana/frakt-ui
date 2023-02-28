@@ -1,12 +1,13 @@
 import { create } from 'zustand';
+import { TradePool } from './types';
 
 interface SettingsPoolState {
-  tradePool: any;
-  setSettings: (settings: any) => void;
+  tradePool: TradePool;
+  setTradePool: (settings: TradePool) => void;
 }
 
 export const useSettingsPool = create<SettingsPoolState>((set) => ({
   tradePool: null,
-  setSettings: (settings) =>
+  setTradePool: (settings) =>
     set((state) => ({ ...state, tradePool: settings })),
 }));

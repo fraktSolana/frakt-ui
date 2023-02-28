@@ -78,13 +78,16 @@ const SearchCollection: FC<SearchCollectionProps> = ({
         <div className={styles.label}>
           select collections: {markets?.length}
         </div>
-        <div className={styles.clear} onClick={clearSelectedMarkets}>
-          clear
-        </div>
+
+        {formValues.hadoMarkets.marketName && (
+          <div className={styles.clear} onClick={clearSelectedMarkets}>
+            clear
+          </div>
+        )}
       </div>
 
       <SearchInput
-        value={formValues.hadoMarkets.marketName}
+        value={formValues.hadoMarkets.marketName || ''}
         onChange={(event) => searchDebounced(event.target.value)}
         onClick={() => setFocus(true)}
         className={styles.searchInput}
