@@ -147,22 +147,22 @@ export const useOfferPage = () => {
 
         await new Promise((res) => res);
 
-        // const { transaction, signers } = await makeCreatePairTransaction({
-        //   marketPubkey: new web3.PublicKey(marketPubkey),
-        //   maxDuration: duration,
-        //   maxLTV: ltv,
-        //   solDeposit: parseFloat(offerSize),
-        //   apr: parseFloat(interest),
-        //   connection,
-        //   wallet,
-        // });
+        const { transaction, signers } = await makeCreatePairTransaction({
+          marketPubkey: new web3.PublicKey(marketPubkey),
+          maxDuration: duration,
+          maxLTV: ltv,
+          solDeposit: parseFloat(offerSize),
+          interest: parseFloat(interest),
+          connection,
+          wallet,
+        });
 
-        // await signAndConfirmTransaction({
-        //   transaction,
-        //   signers,
-        //   wallet,
-        //   connection,
-        // });
+        await signAndConfirmTransaction({
+          transaction,
+          signers,
+          wallet,
+          connection,
+        });
 
         notify({
           message: 'Transaction successful!',

@@ -1,5 +1,5 @@
 import { FC, useMemo, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
@@ -34,19 +34,20 @@ interface OrderBookProps {
 const OrderBook: FC<OrderBookProps> = ({
   market,
   syntheticParams,
-  // hideEditButtons,
+  hideEditButtons,
 }) => {
   const wallet = useWallet();
   const connection = useConnection();
+  const history = useHistory();
 
   const [openOffersMobile, setOpenOffersMobile] = useState<boolean>(false);
   const toggleOffers = () => setOpenOffersMobile((prev) => !prev);
 
-  // const editOrder = (order: MarketOrder) => {
-  //   history.push(
-  //     `${PATHS.OFFER}/${market?.marketPubkey}/${order?.rawData?.publicKey}`,
-  //   );
-  // };
+  const editOrder = (order: MarketOrder) => {
+    history.push(
+      `${PATHS.OFFER}/${market?.marketPubkey}/${order?.rawData?.publicKey}`,
+    );
+  };
 
   const removeOrder = async (order: MarketOrder) => {
     try {
@@ -181,7 +182,7 @@ const OrderBook: FC<OrderBookProps> = ({
                 order={offer}
                 bestOffer={bestOffer}
                 duration={offer.duration}
-                // editOrder={!hideEditButtons && (() => editOrder(offer))}
+                editOrder={!hideEditButtons && (() => editOrder(offer))}
                 removeOrder={() => removeOrder(offer)}
                 isOwnOrder={isOwnOrder(offer)}
                 key={idx}
