@@ -9,20 +9,7 @@ const Strategies: FC<any> = ({ tradePools, admin }) => {
     <div className={styles.strategies}>
       {tradePools?.map((tradePool) => (
         <Fragment key={tradePool.poolPubkey}>
-          <Strategy
-            tradePool={tradePool}
-            admin={admin}
-            // poolPubkey={poolPubkey}
-            // poolName={poolName}
-            // poolImage={poolImage}
-            // depositYield={depositYield}
-            // collections={collections}
-            // totalLiquidity={totalLiquidity}
-            // utilizationRate={utilizationRate}
-            // isCanEdit={isCanEdit}
-            // settings={settings}
-            // userWallet={wallet}
-          />
+          <Strategy tradePool={tradePool} admin={admin} />
         </Fragment>
       ))}
     </div>

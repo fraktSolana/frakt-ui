@@ -16,8 +16,6 @@ const StrategiesPage: FC = () => {
     walletPublicKey: wallet?.publicKey?.toBase58(),
   });
 
-  console.log('tradePools', tradePools);
-
   return (
     <AppLayout>
       <Titles

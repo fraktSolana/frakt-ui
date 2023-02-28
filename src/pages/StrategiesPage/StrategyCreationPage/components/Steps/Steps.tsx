@@ -22,8 +22,6 @@ const Steps: FC = () => {
 
   const tradePool = useSettingsPool((state) => state.tradePool);
 
-  console.log('tradePool', tradePool);
-
   const {
     formValues,
     setFormValues,
@@ -33,8 +31,6 @@ const Steps: FC = () => {
     loadingModalVisible,
     closeLoadingModal,
   } = useStrategyCreation(tradePool);
-
-  const isManage = false;
 
   const deltaType =
     formValues.bondingType === BondingCurveType.Exponential ? '%' : 'SOL';
@@ -116,6 +112,7 @@ const Steps: FC = () => {
                 className={styles.btn}
                 type={!tradePool ? 'secondary' : 'primary'}
                 onClick={handleNextStep}
+                disabled={!checkDisabled[step]}
               >
                 Next
               </Button>

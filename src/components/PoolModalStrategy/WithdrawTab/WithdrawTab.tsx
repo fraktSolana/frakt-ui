@@ -7,6 +7,7 @@ import { SOL_TOKEN } from '../../../utils';
 import { marks, useDepositTxn, usePoolModal } from '../hooks';
 import styles from './WithdrawTab.module.scss';
 import { useWithdraw } from '@frakt/pages/StrategiesPage/StrategyCreationPage/hooks/useWithdraw';
+import { LoadingModal } from '@frakt/components/LoadingModal';
 
 interface WithdrawTabProps {
   depositAmount: number;
@@ -27,21 +28,17 @@ const WithdrawTab: FC<WithdrawTabProps> = ({
     onClearDepositValue,
   } = usePoolModal({ depositAmount });
 
-  const { onWithdraw } = useWithdraw({
+  const { onWithdraw, loadingModalVisible, closeLoadingModal } = useWithdraw({
     tradePool,
     amountToUnstake: withdrawValue,
     onCancel,
+    onClearDepositValue,
   });
 
   const notEnoughDepositError = depositAmount < Number(withdrawValue);
 
   const isDisabledWithdrawBtn =
     Number(withdrawValue) === 0 || notEnoughDepositError;
-
-  const unstake = () => {
-    onWithdraw();
-    onClearDepositValue();
-  };
 
   return (
     <div className={styles.wrapper}>
@@ -71,13 +68,19 @@ const WithdrawTab: FC<WithdrawTabProps> = ({
       </div>
 
       <Button
-        onClick={unstake}
+        onClick={onWithdraw}
         className={styles.btn}
         type="secondary"
         disabled={isDisabledWithdrawBtn}
       >
         Withdraw
       </Button>
+      <LoadingModal
+        title="Please approve transaction"
+        visible={loadingModalVisible}
+        onCancel={closeLoadingModal}
+        // subtitle="In order to create Bond"
+      />
     </div>
   );
 };

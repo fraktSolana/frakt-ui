@@ -10,7 +10,12 @@ import { useHistory } from 'react-router-dom';
 
 import { makeWithdraw } from './makeWithdraw';
 
-export const useWithdraw = ({ tradePool, amountToUnstake, onCancel }: any) => {
+export const useWithdraw = ({
+  tradePool,
+  amountToUnstake,
+  onCancel,
+  onClearDepositValue,
+}: any) => {
   const history = useHistory();
   const wallet = useWallet();
   const connection = useConnection();
@@ -33,20 +38,20 @@ export const useWithdraw = ({ tradePool, amountToUnstake, onCancel }: any) => {
           tradePool,
         });
 
-        console.log('investment', investment);
-
         await signAndConfirmTransaction({
           transaction,
           signers,
           wallet,
           connection,
         });
+        onClearDepositValue();
 
         notify({
           message: 'Transaction successful!',
           type: NotifyType.SUCCESS,
         });
         onCancel();
+        history.go(0);
         // history.push(`${PATHS.MY_STRATEGIES}`);
       } catch (error) {
         // eslint-disable-next-line no-console
@@ -67,5 +72,7 @@ export const useWithdraw = ({ tradePool, amountToUnstake, onCancel }: any) => {
 
   return {
     onWithdraw,
+    loadingModalVisible,
+    closeLoadingModal,
   };
 };

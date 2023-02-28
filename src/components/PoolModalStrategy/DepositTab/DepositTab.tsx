@@ -8,6 +8,7 @@ import { Slider } from '../../Slider';
 import Button from '../../Button';
 import classNames from 'classnames/bind';
 import { useDeposit } from '@frakt/pages/StrategiesPage/StrategyCreationPage/hooks/useDeposit';
+import { LoadingModal } from '@frakt/components/LoadingModal';
 
 interface DepositTabProps {
   utilizationRate: number;
@@ -33,16 +34,13 @@ const DepositTab: FC<DepositTabProps> = ({
     onClearDepositValue,
   } = usePoolModal({ depositAmount });
 
-  const { onCreateInvestment } = useDeposit({
-    tradePool,
-    amountToDeposit: depositValue,
-    onCancel,
-  });
-
-  const setDeposit = () => {
-    onCreateInvestment();
-    onClearDepositValue();
-  };
+  const { onCreateInvestment, loadingModalVisible, closeLoadingModal } =
+    useDeposit({
+      tradePool,
+      amountToDeposit: depositValue,
+      onCancel,
+      onClearDepositValue,
+    });
 
   const solWalletBalanceNumber = parseFloat(solWalletBalance.toFixed(2));
   const depositValueNumber = parseFloat(depositValue) || 0;
@@ -105,13 +103,19 @@ const DepositTab: FC<DepositTabProps> = ({
       </div>
 
       <Button
-        onClick={setDeposit}
+        onClick={onCreateInvestment}
         className={styles.btn}
         type="secondary"
         disabled={isDisabledDepositBtn}
       >
         Deposit
       </Button>
+      <LoadingModal
+        title="Please approve transaction"
+        visible={loadingModalVisible}
+        onCancel={closeLoadingModal}
+        // subtitle="In order to create Bond"
+      />
     </div>
   );
 };

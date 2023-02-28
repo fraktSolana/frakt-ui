@@ -7,9 +7,9 @@ export const fetchTradePools = async ({ walletPublicKey }): Promise<any> => {
     `https://${tetsApi}/trade-pools?wallet=${walletPublicKey}`,
   );
 
-  // if (!response.ok) {
-  //   throw new Error('Network response was not ok');
-  // }
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
   return await response.json();
 };
 
@@ -25,19 +25,19 @@ export const setImageTradePools = async (file) => {
     method: 'POST',
     body: formData,
   });
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
 
   return await response.json();
 };
 
 export const updateTradePools = async (settings) => {
-  console.log('settings request', settings);
-
   const response = await axios.patch(
     `https://${tetsApi}/trade-pools`,
     settings,
   );
 
-  console.log(response);
   if (!response.data) {
     throw new Error('Network response was not ok');
   }
