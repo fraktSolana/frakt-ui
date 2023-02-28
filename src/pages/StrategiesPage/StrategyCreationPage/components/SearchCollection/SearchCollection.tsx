@@ -40,11 +40,22 @@ const SearchCollection: FC<SearchCollectionProps> = ({
         marketPubkey: market.marketPubkey,
       },
     }));
-    // const isMarketAlreadyInList = selectedMarkets.includes(marketPubkey);
-    // isMarketAlreadyInList
-    //   ? setSelectedMarkets((prev) => prev.filter((el) => el !== marketPubkey))
-    //   : setSelectedMarkets((prev) => [...prev, marketPubkey]);
   };
+
+  const clearSelectedMarkets = () => {
+    setFormValues((prev) => ({
+      ...prev,
+      hadoMarkets: {
+        marketName: '',
+        marketPubkey: '',
+      },
+    }));
+  };
+
+  // const isMarketAlreadyInList = selectedMarkets.includes(marketPubkey);
+  // isMarketAlreadyInList
+  //   ? setSelectedMarkets((prev) => prev.filter((el) => el !== marketPubkey))
+  //   : setSelectedMarkets((prev) => [...prev, marketPubkey]);
 
   // const isSelected = (marketPubkey: string) => {
   //   return formValues.selectedMarkets.find((el) => el === marketPubkey);
@@ -63,9 +74,18 @@ const SearchCollection: FC<SearchCollectionProps> = ({
 
   return (
     <div className={styles.searchCollection}>
-      <div className={styles.label}>select collections: {markets?.length}</div>
+      <div className={styles.labelWrapper}>
+        <div className={styles.label}>
+          select collections: {markets?.length}
+        </div>
+        <div className={styles.clear} onClick={clearSelectedMarkets}>
+          clear
+        </div>
+      </div>
+
       <SearchInput
-        onChange={(event) => searchDebounced(event.target.value || '')}
+        value={formValues.hadoMarkets.marketName}
+        onChange={(event) => searchDebounced(event.target.value)}
         onClick={() => setFocus(true)}
         className={styles.searchInput}
         placeholder="Search by name"

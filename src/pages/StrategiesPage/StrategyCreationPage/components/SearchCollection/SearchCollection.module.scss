@@ -13,10 +13,34 @@
   height: 100% !important;
 }
 
+.labelWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .label {
   font: var(--font-text-6);
   color: var(--gray-color-2);
   text-transform: uppercase;
+}
+
+.clear {
+  position: relative;
+  font: vat(--font-btn-middle);
+  color: var(--blue-color);
+  text-transform: capitalize;
+  cursor: pointer;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    height: 1px;
+    width: 100%;
+    background: var(--blue-color);
+  }
 }
 
 .centered {

@@ -86,7 +86,10 @@ export const useStrategyCreation = (tradePool?) => {
 
   const checkDisabled = {
     0: formValues.strategyName && formValues.image.imageUrl,
-    1: formValues.durationFilter && formValues.loanToValueFilter,
+    1:
+      formValues.durationFilter &&
+      formValues.loanToValueFilter &&
+      formValues.hadoMarkets.marketName,
     2:
       formValues.bondingType &&
       formValues.spotPrice &&
