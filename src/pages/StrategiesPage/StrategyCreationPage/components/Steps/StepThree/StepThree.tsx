@@ -29,7 +29,7 @@ const StepThree: FC<StepThreeProps> = ({
   unit,
 }) => {
   const handleInterest = (value: string) =>
-    setFormValues((prev: FormValues) => ({ ...prev, interest: value }));
+    setFormValues((prev: FormValues) => ({ ...prev, spotPrice: value }));
 
   const handleBidCap = (value: string) => {
     setFormValues((prev: FormValues) => ({ ...prev, bidCap: value }));
@@ -49,10 +49,12 @@ const StepThree: FC<StepThreeProps> = ({
     }));
   };
 
-  const spotPrice = BOND_DECIMAL_DELTA - Number(formValues.interest) * 100;
+  const spotPrice = BOND_DECIMAL_DELTA - Number(formValues.spotPrice) * 100;
+
+  console.log(spotPrice);
 
   const points = usePriceGraph({
-    spotPrice: Number(spotPrice),
+    spotPrice: Number(formValues.spotPrice),
     delta: Number(formValues.delta),
     bondingCurve: formValues.bondingType,
   });
@@ -60,7 +62,7 @@ const StepThree: FC<StepThreeProps> = ({
   return (
     <div className={className}>
       <TokenField
-        value={formValues.interest}
+        value={formValues.spotPrice}
         onValueChange={handleInterest}
         label="starting interest"
         currentToken={{

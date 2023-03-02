@@ -68,7 +68,7 @@ export const makeCreateStrategy: MakeCreateStrategy = async ({
       loanToValueFilter: +formValues.loanToValueFilter * 100,
       durationFilter: +formValues.durationFilter * 86400,
       delta: deltaParsed,
-      spotPrice: BOND_DECIMAL_DELTA - Number(formValues.interest) * 100,
+      spotPrice: BOND_DECIMAL_DELTA - Number(formValues.spotPrice) * 100,
       bidCap: +formValues.bidCap,
       tradeAmountRatio: +formValues.utilizationRate * 100,
       maxTradeAmount: +formValues.maxTradeAmount * 1e9,

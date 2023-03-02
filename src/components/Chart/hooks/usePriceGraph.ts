@@ -23,8 +23,6 @@ const usePriceGraph: UsePriceGraph = ({
 }) => {
   if (!bondingCurve || !spotPrice) return null;
 
-  console.log('chart', spotPrice);
-
   const deltaParsed =
     bondingCurve === BondingCurveType.Linear ? delta * 1e9 : delta * 100;
 
@@ -37,17 +35,13 @@ const usePriceGraph: UsePriceGraph = ({
     counter: mathCounter,
   }) as { array: number[]; total: number };
 
-  console.log('priceArray', priceArray);
-
   const points = priceArray.map((price, i) => {
-    const newPrice = (BOND_DECIMAL_DELTA - price) / 100;
+    const newPrice = (BOND_DECIMAL_DELTA - price / 1e9) / 100;
     return {
       order: 1 + i,
       price: newPrice,
     };
   }) as Point[];
-
-  console.log('points', points);
 
   return points;
 };

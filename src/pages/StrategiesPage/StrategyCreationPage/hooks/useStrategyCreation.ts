@@ -7,6 +7,7 @@ import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { PATHS } from '@frakt/constants';
 import { useConnection } from '@frakt/hooks';
 import { notify } from '@frakt/utils';
+import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { signAndConfirmTransaction } from '@frakt/utils/transactions';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -30,8 +31,6 @@ export const useStrategyCreation = (tradePool?) => {
       ? tradePool?.settings?.[0]?.delta / 1e9
       : tradePool?.settings?.[0]?.delta / 100;
 
-  console.log(tradePool);
-
   const [formValues, setFormValues] = useState<FormValues>({
     strategyName: tradePool?.poolName || '',
     image: {
@@ -48,7 +47,9 @@ export const useStrategyCreation = (tradePool?) => {
     loanToValueFilter: tradePool?.settings?.[0]?.loanToValueFilter / 100 || 10,
     bondingType:
       tradePool?.settings?.[0]?.bondingType || BondingCurveType.Linear,
-    interest: String(tradePool?.settings?.[0]?.spotPrice / 1e9 || ''),
+    spotPrice: String(
+      (BOND_DECIMAL_DELTA - tradePool?.settings?.[0]?.spotPrice) / 100 || '',
+    ),
     bidCap: tradePool?.settings?.[0]?.bidCap || '',
     delta: String(parsedDelta || ''),
     utilizationRate: String(
@@ -94,7 +95,7 @@ export const useStrategyCreation = (tradePool?) => {
       formValues.hadoMarkets.marketName,
     2:
       formValues.bondingType &&
-      formValues.interest &&
+      formValues.spotPrice &&
       formValues.bidCap &&
       formValues.delta,
     3:
