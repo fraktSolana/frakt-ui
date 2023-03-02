@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useAdminTradePools } from '../../../utils/strategies';
+import { useAdminTradePools } from '../../../utils/strategies/hooks';
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
 import AdminButton from '../components/AdminButton';
 import Titles from '@frakt/components/Titles';

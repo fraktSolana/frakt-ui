@@ -7,7 +7,7 @@ import Strategies from './components/Strategies';
 
 import styles from './StrategiesPage.module.scss';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useTradePools } from '../../utils/strategies';
+// import { useTradePools } from '../../utils/strategies';
 import { Loader } from '@frakt/components/Loader';
 import Button from '@frakt/components/Button';
 import FiltersDropdown, {
@@ -21,6 +21,7 @@ import {
   useLoansFiltering,
 } from '../LoansPage/hooks/useLoansFiltering';
 import { useDebounce } from '@frakt/hooks';
+import { useTradePools } from '@frakt/utils/strategies/hooks';
 
 const StrategiesPage: FC = () => {
   const wallet = useWallet();
