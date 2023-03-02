@@ -20,7 +20,7 @@ import {
   useLoansFiltering,
 } from '../LoansPage/hooks/useLoansFiltering';
 import { useDebounce } from '@frakt/hooks';
-import { useTradePools } from '@frakt/utils/strategies/hooks';
+import { useTradePools } from '@frakt/utils/strategies';
 
 const StrategiesPage: FC = () => {
   const wallet = useWallet();
