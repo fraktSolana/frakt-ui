@@ -21,9 +21,6 @@ export const drawPoints: DrawPoints = (
       );
     };
 
-    // console.log('width', width);
-    // console.log(e);
-
     const tooltip = select(`#chart`)
       .append('div')
       .classed('tooltipPoint', true)
@@ -35,22 +32,10 @@ export const drawPoints: DrawPoints = (
       .text(`${getNumberWithOrdinal(Math.abs(d.order))} NFT`);
 
     const price = tooltip.append('div').classed('price', true);
-    // price.append('svg');
-    // .classed('point-buy', d.type === 'buy')
-    // .classed('point-sell', d.type === 'sell')
-    // .append('circle')
-    // .attr('r', 5)
-    // .attr('cx', 6)
-    // .attr('cy', 7)
-    // .attr('stroke', 'none');
     price
       .append('span')
       .classed('priceTitle', true)
-      .text(`price: ${d.price.toFixed(2)}`);
-    // price
-    //   .append('span')
-    //   .classed('priceValue', true)
-    //   .text(`${d.price.toFixed(2)}`);
+      .text(`price: ${d.price.toFixed(1)} %`);
   };
 
   const pointsGroup = selection.append('g');
@@ -61,8 +46,6 @@ export const drawPoints: DrawPoints = (
     .enter()
     .append('circle')
     .classed('point', true)
-    // .classed('point-sell', ({ type }) => type === 'sell')
-    // .classed('point-empty', ({ type }) => type === 'empty')
     .attr('cx', ({ order }) => xScale(order))
     .attr('cy', ({ price }) => yScale(price))
     .attr('r', 4)

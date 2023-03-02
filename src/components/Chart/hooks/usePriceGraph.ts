@@ -23,20 +23,19 @@ const usePriceGraph: UsePriceGraph = ({
 }) => {
   if (!bondingCurve || !spotPrice) return null;
 
-  const deltaParsed =
-    bondingCurve === BondingCurveType.Linear ? delta * 1e9 : delta * 100;
+  const spotPricePercent = BOND_DECIMAL_DELTA - spotPrice * 100;
 
   const { array: priceArray } = helpers.calculatePricesArray({
-    starting_spot_price: spotPrice,
-    delta: deltaParsed,
+    starting_spot_price: spotPricePercent,
+    delta: delta * 100,
     amount: buyOrdersAmount,
     bondingCurveType: bondingCurve,
     orderType: OrderType.Buy,
-    counter: mathCounter,
+    counter: mathCounter - 1,
   }) as { array: number[]; total: number };
 
   const points = priceArray.map((price, i) => {
-    const newPrice = (BOND_DECIMAL_DELTA - price / 1e9) / 100;
+    const newPrice = (BOND_DECIMAL_DELTA - price) / 100;
     return {
       order: 1 + i,
       price: newPrice,

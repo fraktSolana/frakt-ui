@@ -6,11 +6,11 @@ import StepOne from './StepOne';
 import StepTwo from './StepTwo';
 import StepThree from './StepThree';
 import StepFour from './StepFour';
-import styles from './Steps.module.scss';
-import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
 import { useStrategyCreation } from '../../hooks/useStrategyCreation';
 import { LoadingModal } from '@frakt/components/LoadingModal';
+import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
 import { useSettingsPool } from '@frakt/pages/StrategiesPage/hooks/hooks';
+import styles from './Steps.module.scss';
 
 const { Step } = AntSteps;
 
@@ -65,7 +65,6 @@ const Steps: FC = () => {
               className={styles.step}
               formValues={formValues}
               setFormValues={setFormValues}
-              unit={deltaType}
             />
           )}
           {step === 3 && (

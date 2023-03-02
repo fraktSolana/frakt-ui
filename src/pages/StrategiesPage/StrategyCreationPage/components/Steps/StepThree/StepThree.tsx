@@ -2,19 +2,17 @@ import { ChangeEvent, FC } from 'react';
 import RadioButton from '@frakt/components/RadioButton';
 import TokenField from '@frakt/components/TokenField';
 import InputField from '@frakt/components/InputField';
+import Chart from '@frakt/components/Chart';
 
 import { SOL_TOKEN } from '@frakt/utils';
-import Chart from '@frakt/components/Chart';
-import usePriceGraph from '@frakt/components/Chart/hooks/usePriceGraph';
 import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
 import { FormValues } from '../../../types';
-import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
+import usePriceGraph from '@frakt/components/Chart/hooks/usePriceGraph';
 
 interface StepThreeProps {
   className: string;
   formValues: FormValues;
   setFormValues: (prev) => void;
-  unit: '%' | 'sec' | 'SOL';
 }
 
 export interface Point {
@@ -26,7 +24,6 @@ const StepThree: FC<StepThreeProps> = ({
   className,
   formValues,
   setFormValues,
-  unit,
 }) => {
   const handleInterest = (value: string) =>
     setFormValues((prev: FormValues) => ({ ...prev, spotPrice: value }));
@@ -49,10 +46,6 @@ const StepThree: FC<StepThreeProps> = ({
     }));
   };
 
-  const spotPrice = BOND_DECIMAL_DELTA - Number(formValues.spotPrice) * 100;
-
-  console.log(spotPrice);
-
   const points = usePriceGraph({
     spotPrice: Number(formValues.spotPrice),
     delta: Number(formValues.delta),
@@ -74,34 +67,41 @@ const StepThree: FC<StepThreeProps> = ({
         tokensList={[{ ...SOL_TOKEN, symbol: '%', logoURI: null, name: null }]}
         toolTipText="Interest (in %) for the duration of this loan"
       />
-      {/* <TokenField
-        value={formValues.spotPrice}
-        onValueChange={handleSpotPice}
-        label="starting spot price"
-        currentToken={SOL_TOKEN}
-        toolTipText="Yearly rewards based on the current utilization rate and borrow interest"
-      /> */}
+
       <RadioButton
-        labelName="bonding curve"
-        tooltipText="bonding curve"
+        labelName="delta"
+        tooltipText="delta"
         current={formValues.bondingType}
         onChange={handleDuration}
         buttons={[
           { value: BondingCurveType.Linear, name: 'Linear' },
           { value: BondingCurveType.Exponential, name: 'Exponential' },
-          { value: 'xyk', name: 'XYK' },
         ]}
       />
-      <InputField
+      {/* <InputField
         unit={unit}
         label="delta"
         toolTipText="delta"
         value={formValues.delta}
         onValueChange={handleDelta}
+      /> */}
+
+      <TokenField
+        value={formValues.delta}
+        onValueChange={handleDelta}
+        label="starting interest"
+        currentToken={{
+          ...SOL_TOKEN,
+          symbol: '%',
+          logoURI: null,
+          name: null,
+        }}
+        tokensList={[{ ...SOL_TOKEN, symbol: '%', logoURI: null, name: null }]}
+        toolTipText="Interest (in %) for the duration of this loan"
       />
 
       <InputField
-        unit="fSOL"
+        unit="bSOL"
         label="bid capacity"
         toolTipText="Yearly rewards based on the current utilization rate and borrow interest"
         value={formValues.bidCap}

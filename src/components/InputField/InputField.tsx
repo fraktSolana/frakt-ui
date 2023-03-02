@@ -9,7 +9,7 @@ import styles from './InputField.module.scss';
 
 export interface TokenFieldProps {
   value: string;
-  unit: '%' | 'sec' | 'SOL' | 'fSOL';
+  unit: '%' | 'sec' | 'SOL' | 'bSOL';
   onValueChange: (nextValue: string) => void;
   label?: string;
   className?: string;

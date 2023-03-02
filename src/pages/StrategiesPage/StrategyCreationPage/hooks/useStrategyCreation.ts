@@ -26,10 +26,10 @@ export const useStrategyCreation = (tradePool?) => {
   const wallet = useWallet();
   const connection = useConnection();
 
-  const parsedDelta =
-    tradePool?.settings?.[0]?.bondingType === BondingCurveType.Linear
-      ? tradePool?.settings?.[0]?.delta / 1e9
-      : tradePool?.settings?.[0]?.delta / 100;
+  // const parsedDelta =
+  //   tradePool?.settings?.[0]?.bondingType === BondingCurveType.Linear
+  //     ? tradePool?.settings?.[0]?.delta / 1e9
+  //     : tradePool?.settings?.[0]?.delta / 100;
 
   const [formValues, setFormValues] = useState<FormValues>({
     strategyName: tradePool?.poolName || '',
@@ -51,7 +51,7 @@ export const useStrategyCreation = (tradePool?) => {
       (BOND_DECIMAL_DELTA - tradePool?.settings?.[0]?.spotPrice) / 100 || '',
     ),
     bidCap: tradePool?.settings?.[0]?.bidCap || '',
-    delta: String(parsedDelta || ''),
+    delta: String(tradePool?.settings?.[0]?.delta / 100 || ''),
     utilizationRate: String(
       tradePool?.settings?.[0]?.tradeAmountRatio / 100 || '',
     ),
