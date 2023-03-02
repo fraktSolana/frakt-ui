@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, ReactNode, useState } from 'react';
 import classNames from 'classnames';
 import { TokenInfo } from '@frakt-protocol/frakt-sdk';
 
@@ -23,8 +23,9 @@ export interface TokenFieldProps {
   amountMaxLength?: number;
   disabled?: boolean;
   labelRight?: boolean;
-  lpBalance?: number;
+  lpBalance?: number | string;
   toolTipText?: string;
+  labelRightNode?: ReactNode;
 }
 
 const TokenField: FC<TokenFieldProps> = ({
@@ -44,6 +45,7 @@ const TokenField: FC<TokenFieldProps> = ({
   disabled = false,
   lpBalance,
   toolTipText,
+  labelRightNode,
 }) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
@@ -66,6 +68,7 @@ const TokenField: FC<TokenFieldProps> = ({
             className={classNames(
               styles.label,
               !labelRight && styles.labelFlex,
+              !!labelRightNode && styles.labelSeparete,
             )}
           >
             {label}
@@ -74,7 +77,7 @@ const TokenField: FC<TokenFieldProps> = ({
             )}
             {!!lpBalance && (
               <span className={styles.balance}>
-                {lpBalance.toFixed(2)} {currentToken?.symbol}
+                {Number(lpBalance).toFixed(2)} {currentToken?.symbol}
               </span>
             )}
           </div>
