@@ -26,7 +26,10 @@ const StepThree: FC<StepThreeProps> = ({
   setFormValues,
 }) => {
   const handleInterest = (value: string) =>
-    setFormValues((prev: FormValues) => ({ ...prev, spotPrice: value }));
+    setFormValues((prev: FormValues) => ({
+      ...prev,
+      spotPrice: +value >= 100 ? String(100) : value,
+    }));
 
   const handleBidCap = (value: string) => {
     setFormValues((prev: FormValues) => ({ ...prev, bidCap: value }));
@@ -42,7 +45,7 @@ const StepThree: FC<StepThreeProps> = ({
   const handleDelta = (value: string) => {
     setFormValues((prev: FormValues) => ({
       ...prev,
-      delta: value,
+      delta: +value >= 100 ? String(100) : value,
     }));
   };
 
@@ -69,8 +72,8 @@ const StepThree: FC<StepThreeProps> = ({
       />
 
       <RadioButton
-        labelName="delta"
-        tooltipText="delta"
+        labelName="bonding curve"
+        tooltipText="bonding curve"
         current={formValues.bondingType}
         onChange={handleDuration}
         buttons={[
@@ -89,7 +92,7 @@ const StepThree: FC<StepThreeProps> = ({
       <TokenField
         value={formValues.delta}
         onValueChange={handleDelta}
-        label="starting interest"
+        label="delta"
         currentToken={{
           ...SOL_TOKEN,
           symbol: '%',
@@ -97,7 +100,7 @@ const StepThree: FC<StepThreeProps> = ({
           name: null,
         }}
         tokensList={[{ ...SOL_TOKEN, symbol: '%', logoURI: null, name: null }]}
-        toolTipText="Interest (in %) for the duration of this loan"
+        toolTipText="delta"
       />
 
       <InputField
