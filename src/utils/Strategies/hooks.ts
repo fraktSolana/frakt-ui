@@ -1,8 +1,9 @@
 import { fetchAdminTradePools, fetchTradePools } from '@frakt/api/strategies';
+import { TradePool } from '@frakt/pages/StrategiesPage/types';
 import { useQuery } from '@tanstack/react-query';
 
 type UseTradePools = (props: { walletPublicKey: string }) => {
-  tradePools: any;
+  tradePools: TradePool[];
   isLoading: boolean;
 };
 export const useTradePools: UseTradePools = ({ walletPublicKey }) => {
@@ -26,7 +27,7 @@ export const useTradePools: UseTradePools = ({ walletPublicKey }) => {
 };
 
 type UseAdminTradePools = (props: { walletPublicKey: string }) => {
-  tradePoolsAdmin: any;
+  tradePoolsAdmin: TradePool[];
   isLoading: boolean;
 };
 export const useAdminTradePools: UseAdminTradePools = ({ walletPublicKey }) => {

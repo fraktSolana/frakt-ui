@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { useAdminTradePools } from '@frakt/utils/strategies';
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
 import AdminButton from '../components/AdminButton';
 import Titles from '@frakt/components/Titles';
@@ -8,7 +9,6 @@ import { SearchInput } from '@frakt/components/SearchInput';
 
 import { Loader } from '@frakt/components/Loader';
 import styles from '../StrategiesPage.module.scss';
-import { useAdminTradePools } from '@frakt/utils/strategies';
 
 const MyStrategiesPage: FC = () => {
   const wallet = useWallet();

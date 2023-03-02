@@ -13,7 +13,7 @@ export interface TradePool {
   poolPubkey: string;
   totalLiquidity: number;
   utilizationRate: number;
-  wallet: {
+  wallet?: {
     userDeposit: number;
     userLiquidity: number;
     userYield: number;
