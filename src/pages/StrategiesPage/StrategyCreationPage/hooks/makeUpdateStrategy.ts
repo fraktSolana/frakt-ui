@@ -1,4 +1,5 @@
 import { sendTxnPlaceHolder } from '@frakt/utils';
+import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
 import { changeTradeSettings } from 'fbonds-core/lib/bonds_trade_pool/functions/pool-factory';
@@ -50,7 +51,7 @@ export const makeUpdateStrategy: MakeUpdateStrategy = async ({
       loanToValueFilter: +formValues.loanToValueFilter * 100,
       durationFilter: +formValues.durationFilter * 86400,
       delta: deltaParsed,
-      spotPrice: +formValues.spotPrice * 1e9,
+      spotPrice: BOND_DECIMAL_DELTA - Number(formValues.interest) * 100,
       bidCap: +formValues.bidCap,
       tradeAmountRatio: +formValues.utilizationRate * 100,
       maxTradeAmount: +formValues.maxTradeAmount * 1e9,

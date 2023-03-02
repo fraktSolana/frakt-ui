@@ -10,7 +10,7 @@ import styles from './Steps.module.scss';
 import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
 import { useStrategyCreation } from '../../hooks/useStrategyCreation';
 import { LoadingModal } from '@frakt/components/LoadingModal';
-import { useSettingsPool } from '@frakt/pages/StrategiesPage/hooks';
+import { useSettingsPool } from '@frakt/pages/StrategiesPage/hooks/hooks';
 
 const { Step } = AntSteps;
 

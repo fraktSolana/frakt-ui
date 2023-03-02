@@ -43,7 +43,10 @@ export const drawPoints: DrawPoints = (
     // .attr('cx', 6)
     // .attr('cy', 7)
     // .attr('stroke', 'none');
-    price.append('span').classed('priceTitle', true).text(`price: ${d.price}`);
+    price
+      .append('span')
+      .classed('priceTitle', true)
+      .text(`price: ${d.price.toFixed(2)}`);
     // price
     //   .append('span')
     //   .classed('priceValue', true)

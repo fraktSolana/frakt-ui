@@ -9,7 +9,7 @@ import Tooltip from '@frakt/components/Tooltip';
 import CollectionsPreviews from '../CollectionsPreviews';
 import { PoolModalStrategy } from '@frakt/components/PoolModalStrategy';
 
-import { useSettingsPool } from '../../hooks';
+import { useSettingsPool } from '../../hooks/hooks';
 import { commonActions } from '@frakt/state/common/actions';
 import { PATHS } from '@frakt/constants';
 import { TradePool } from '../../types';

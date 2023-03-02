@@ -33,10 +33,10 @@ type UseLoansFiltering = ({
   loans,
 }: {
   selectedCollections: string[];
-  loans: Loan[];
+  loans?: Loan[];
 }) => {
   control: Control<FilterFormFieldsValues>;
-  loans: Loan[];
+  loans?: Loan[];
   sortValueOption: LoansValue[];
   sort: LoansValue;
   setValue: any;

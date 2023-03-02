@@ -13,7 +13,7 @@ export interface FormValues {
   };
   loanToValueFilter: number;
   bondingType: BondingCurveType;
-  spotPrice: string;
+  interest: string;
   bidCap: string;
   delta: string;
   maxTradeAmount: string;

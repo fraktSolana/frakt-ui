@@ -74,7 +74,7 @@ const TokenField: FC<TokenFieldProps> = ({
             )}
             {!!lpBalance && (
               <span className={styles.balance}>
-                {lpBalance} {currentToken?.symbol}
+                {lpBalance.toFixed(2)} {currentToken?.symbol}
               </span>
             )}
           </div>

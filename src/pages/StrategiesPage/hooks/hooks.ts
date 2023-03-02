@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { TradePool } from './types';
+import { TradePool } from '../types';
 
 interface SettingsPoolState {
   tradePool: TradePool;

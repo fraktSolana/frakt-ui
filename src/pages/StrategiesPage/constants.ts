@@ -14,7 +14,7 @@ export const defaultFormValues = {
 
   loanToValueFilter: 10,
   bondingType: BondingCurveType.Linear,
-  spotPrice: '',
+  interest: '',
   bidCap: '',
   delta: '',
   utilizationRate: '',
