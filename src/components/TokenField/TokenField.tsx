@@ -10,7 +10,7 @@ import styles from './styles.module.scss';
 export interface TokenFieldProps {
   tokensList?: TokenInfo[];
   onTokenChange?: (nextToken: TokenInfo) => void;
-  currentToken?: any;
+  currentToken?: TokenInfo;
   value: string;
   onValueChange: (nextValue: string) => void;
   modalTitle?: string;
