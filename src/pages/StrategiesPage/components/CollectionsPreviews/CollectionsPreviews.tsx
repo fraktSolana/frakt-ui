@@ -1,10 +1,12 @@
 import { FC } from 'react';
 import classNames from 'classnames';
-import { collectionPreview } from './assets/constants';
-
 import styles from './CollectionsPreviews.module.scss';
 
-const CollectionsPreviews: FC<any> = ({ collections }) => {
+interface CollectionsPreviewsProps {
+  collections: { name: string; image: string }[];
+}
+
+const CollectionsPreviews: FC<CollectionsPreviewsProps> = ({ collections }) => {
   const collectionsLimit = 4;
   const showLabelCollectionsAmount = collections.length - collectionsLimit > 0;
 

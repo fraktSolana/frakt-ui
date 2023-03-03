@@ -1,11 +1,23 @@
 import { sendTxnPlaceHolder } from '@frakt/utils';
+import { WalletContextState } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
 import { web3 } from 'fbonds-core';
-import { unstakeFromPool } from 'fbonds-core/lib/bonds_trade_pool/functions/investment';
+import { createInvestment } from 'fbonds-core/lib/bonds_trade_pool/functions/investment';
 
-export const makeWithdraw = async ({
+type MakeDeposit = (props: {
+  connection: web3.Connection;
+  wallet: WalletContextState;
+  amountToDeposit: string;
+  tradePool: string;
+}) => Promise<{
+  transaction: web3.Transaction;
+  signers: web3.Signer[];
+  investment: web3.PublicKey;
+}>;
+
+export const makeDeposit: MakeDeposit = async ({
   connection,
-  amountToUnstake,
+  amountToDeposit,
   wallet,
   tradePool,
 }) => {
@@ -13,11 +25,11 @@ export const makeWithdraw = async ({
 
   const FRAKT_TRADE_PROGRAM_ID = new web3.PublicKey(programID);
 
-  const { investment, instructions, signers } = await unstakeFromPool({
+  const { investment, instructions, signers } = await createInvestment({
     programId: FRAKT_TRADE_PROGRAM_ID,
     connection: connection,
     args: {
-      amountToUnstake: +amountToUnstake * 1e9,
+      amountToDeposit: Number(amountToDeposit) * 1e9,
     },
     accounts: {
       userPubkey: wallet?.publicKey,

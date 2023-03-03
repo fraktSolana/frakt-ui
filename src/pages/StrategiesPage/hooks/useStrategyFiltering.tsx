@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Control, useForm } from 'react-hook-form';
 import { compareNumbers } from '@frakt/utils';
-import { TradePool } from '../types';
+import { TradePool } from '@frakt/api/strategies';
 
 type TradePoolSortValue = {
   label: JSX.Element;
@@ -28,11 +28,6 @@ export enum SORT_ORDER {
   ASC = 'asc',
   DESC = 'desc',
 }
-
-const defaultSortValue = {
-  label: <span>Name</span>,
-  value: 'name_',
-};
 
 type UseStrategyFiltering = ({ strategies }: { strategies: TradePool[] }) => {
   control: Control<FilterFormFieldsValues>;

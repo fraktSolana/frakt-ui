@@ -9,11 +9,11 @@ type MakeUpdateStrategy = (params: {
   connection: web3.Connection;
   wallet: WalletContextState;
   formValues: FormValues;
-  tradePool;
+  tradePool: string;
 }) => Promise<{
   transaction: web3.Transaction;
   signers: web3.Signer[];
-  tradeSettings;
+  tradeSettings: web3.PublicKey;
 }>;
 
 export const makeUpdateStrategy: MakeUpdateStrategy = async ({

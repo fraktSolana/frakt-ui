@@ -14,8 +14,8 @@ interface PoolModalStrategyProps {
   depositYield: number;
   depositAmount: number;
   utilizationRate: number;
-  tradePool: any;
-  poolModalTab: any;
+  tradePool: string;
+  poolModalTab: TabsNames;
 }
 
 export const PoolModalStrategy: FC<PoolModalStrategyProps> = ({

@@ -3,12 +3,14 @@ import { TextInput } from '@frakt/components/TextInput';
 import InputUpload from '../../InputUpload/InputUpload';
 
 import styles from './StepOne.module.scss';
-import { FormValues } from '../../../types';
+import { FormValues } from '@frakt/utils/strategies/types';
 
 interface StepOneProps {
   className: string;
   formValues: FormValues;
-  setFormValues: (prev) => void;
+  setFormValues: (
+    value: FormValues | ((prevVar: FormValues) => FormValues),
+  ) => void;
 }
 
 const StepOne: FC<StepOneProps> = ({
@@ -17,13 +19,13 @@ const StepOne: FC<StepOneProps> = ({
   setFormValues,
 }) => {
   const handleStrategyName = (val: string) =>
-    setFormValues((prev: FormValues) => ({ ...prev, strategyName: val }));
+    setFormValues((prev) => ({ ...prev, strategyName: val }));
 
   return (
     <div className={className}>
       <InputUpload
         imageUrl={formValues.image.imageUrl}
-        setImageUrl={setFormValues}
+        setFormValues={setFormValues}
       />
 
       <TextInput

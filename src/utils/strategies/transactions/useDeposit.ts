@@ -1,5 +1,4 @@
 import { useLoadingModal } from '@frakt/components/LoadingModal';
-import { PATHS } from '@frakt/constants';
 import { useConnection } from '@frakt/hooks';
 import { notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
@@ -7,15 +6,25 @@ import { signAndConfirmTransaction } from '@frakt/utils/transactions';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { useHistory } from 'react-router-dom';
+import { makeDeposit } from './makeDeposit';
 
-import { makeWithdraw } from './makeWithdraw';
+type UseDeposit = (props: {
+  tradePool: string;
+  amountToDeposit: string;
+  onCancel: () => void;
+  onClearDepositValue: () => void;
+}) => {
+  onCreateInvestment: () => void;
+  loadingModalVisible: boolean;
+  closeLoadingModal: () => void;
+};
 
-export const useWithdraw = ({
+export const useDeposit: UseDeposit = ({
   tradePool,
-  amountToUnstake,
+  amountToDeposit,
   onCancel,
   onClearDepositValue,
-}: any) => {
+}) => {
   const history = useHistory();
   const wallet = useWallet();
   const connection = useConnection();
@@ -26,14 +35,14 @@ export const useWithdraw = ({
     open: openLoadingModal,
   } = useLoadingModal();
 
-  const onWithdraw = async () => {
+  const onCreateInvestment = async () => {
     if (wallet.publicKey) {
       try {
         openLoadingModal();
 
-        const { investment, transaction, signers } = await makeWithdraw({
+        const { transaction, signers } = await makeDeposit({
           connection,
-          amountToUnstake,
+          amountToDeposit,
           wallet,
           tradePool,
         });
@@ -44,15 +53,17 @@ export const useWithdraw = ({
           wallet,
           connection,
         });
+
         onClearDepositValue();
 
         notify({
           message: 'Transaction successful!',
           type: NotifyType.SUCCESS,
         });
+
         onCancel();
+
         history.go(0);
-        // history.push(`${PATHS.MY_STRATEGIES}`);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.warn(error?.logs);
@@ -62,6 +73,7 @@ export const useWithdraw = ({
           message: 'The transaction just failed :( Give it another try',
           type: NotifyType.ERROR,
         });
+
         onCancel();
       } finally {
         closeLoadingModal();
@@ -71,7 +83,7 @@ export const useWithdraw = ({
   };
 
   return {
-    onWithdraw,
+    onCreateInvestment,
     loadingModalVisible,
     closeLoadingModal,
   };

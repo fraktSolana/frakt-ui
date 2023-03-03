@@ -4,12 +4,14 @@ import RadioButton from '@frakt/components/RadioButton';
 import SliderGradient from '@frakt/components/SliderGradient';
 import SearchCollection from '../../SearchCollection';
 import { useMarkets } from '@frakt/utils/bonds';
-import { FormValues } from '../../../types';
+import { FormValues } from '@frakt/utils/strategies/types';
 
 interface StepTwoProps {
   className: string;
   formValues: FormValues;
-  setFormValues: (prev) => void;
+  setFormValues: (
+    value: FormValues | ((prevVar: FormValues) => FormValues),
+  ) => void;
 }
 
 const StepTwo: FC<StepTwoProps> = ({
@@ -20,14 +22,14 @@ const StepTwo: FC<StepTwoProps> = ({
   const { markets, isLoading } = useMarkets();
 
   const handleDuration = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormValues((prev: FormValues) => ({
+    setFormValues((prev) => ({
       ...prev,
       durationFilter: e.target.value,
     }));
   };
 
   const handleLTV = (value: number) => {
-    setFormValues((prev: FormValues) => ({
+    setFormValues((prev) => ({
       ...prev,
       loanToValueFilter: value,
     }));

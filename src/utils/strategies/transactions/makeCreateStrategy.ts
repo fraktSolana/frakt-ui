@@ -6,7 +6,6 @@ import {
   changeTradeSettings,
   initializeTradePool,
 } from 'fbonds-core/lib/bonds_trade_pool/functions/pool-factory';
-import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
 import { FormValues } from '../types';
 
 type MakeCreateStrategy = (params: {
@@ -16,8 +15,8 @@ type MakeCreateStrategy = (params: {
 }) => Promise<{
   transaction: web3.Transaction;
   signers: web3.Signer[];
-  tradeSettings;
-  tradePool;
+  tradeSettings: web3.PublicKey;
+  tradePool: web3.PublicKey;
 }>;
 
 export const makeCreateStrategy: MakeCreateStrategy = async ({

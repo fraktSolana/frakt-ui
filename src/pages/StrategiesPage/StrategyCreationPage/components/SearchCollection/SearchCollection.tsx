@@ -5,14 +5,16 @@ import { SearchInput } from '@frakt/components/SearchInput';
 import { Selected } from '@frakt/icons';
 import { Market } from '@frakt/api/bonds';
 import { useDebounce, useOnClickOutside } from '@frakt/hooks';
-import { FormValues } from '../../types';
+import { FormValues } from '@frakt/utils/strategies/types';
 import styles from './SearchCollection.module.scss';
 
 interface SearchCollectionProps {
   markets: Market[];
   isLoading: boolean;
   formValues: FormValues;
-  setFormValues: (prev) => void;
+  setFormValues: (
+    value: FormValues | ((prevVar: FormValues) => FormValues),
+  ) => void;
 }
 
 const SearchCollection: FC<SearchCollectionProps> = ({

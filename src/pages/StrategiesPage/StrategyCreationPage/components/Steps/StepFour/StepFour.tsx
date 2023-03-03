@@ -2,14 +2,16 @@ import { FC } from 'react';
 import TokenField from '@frakt/components/TokenField';
 import InputField from '@frakt/components/InputField';
 import { SOL_TOKEN } from '@frakt/utils';
+import { FormValues } from '@frakt/utils/strategies/types';
 
-import { FormValues } from '../../../types';
 import styles from './StepFour.module.scss';
 
 interface StepFourProps {
   className: string;
   formValues: FormValues;
-  setFormValues: (prev) => void;
+  setFormValues: (
+    value: FormValues | ((prevVar: FormValues) => FormValues),
+  ) => void;
 }
 
 const StepFour: FC<StepFourProps> = ({
@@ -18,35 +20,35 @@ const StepFour: FC<StepFourProps> = ({
   setFormValues,
 }) => {
   const handleMaxTradeAmount = (value: string) => {
-    setFormValues((prev: FormValues) => ({
+    setFormValues((prev) => ({
       ...prev,
       maxTradeAmount: value,
     }));
   };
 
   const handleUtilizationRate = (value: string) => {
-    setFormValues((prev: FormValues) => ({
+    setFormValues((prev) => ({
       ...prev,
       utilizationRate: value,
     }));
   };
 
   const handleTradeDuration = (value: string) => {
-    setFormValues((prev: FormValues) => ({
+    setFormValues((prev) => ({
       ...prev,
       tradeDuration: value,
     }));
   };
 
   const handleTradeAmountRatio = (value: string) => {
-    setFormValues((prev: FormValues) => ({
+    setFormValues((prev) => ({
       ...prev,
       remainingSolRatioToFinishTrade: value,
     }));
   };
 
   const handleMinTime = (value: string) => {
-    setFormValues((prev: FormValues) => ({
+    setFormValues((prev) => ({
       ...prev,
       minTimeBetweenTrades: value,
     }));

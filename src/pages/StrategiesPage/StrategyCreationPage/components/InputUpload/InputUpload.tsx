@@ -1,26 +1,23 @@
-import { FC, useRef } from 'react';
+import { FC } from 'react';
 
-import { useDrag } from './useDrag';
-import { Trash, UploadImg } from '@frakt/icons';
+import { UploadImg } from '@frakt/icons';
 import styles from './InputUpload.module.scss';
-import { FormValues } from '../../types';
+import { FormValues } from '@frakt/utils/strategies/types';
 
 interface InputUploadProps {
   imageUrl: string;
-  setImageUrl: any;
+  setFormValues: (
+    value: FormValues | ((prevVar: FormValues) => FormValues),
+  ) => void;
 }
 
-const InputUpload: FC<InputUploadProps> = ({ imageUrl, setImageUrl }) => {
-  const drop = useRef(null);
-
-  useDrag(drop);
-
+const InputUpload: FC<InputUploadProps> = ({ imageUrl, setFormValues }) => {
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (e.target?.files?.length) {
-      setImageUrl((prev: FormValues) => ({
+      setFormValues((prev) => ({
         ...prev,
         image: {
           file: e.target.files[0],
@@ -31,7 +28,7 @@ const InputUpload: FC<InputUploadProps> = ({ imageUrl, setImageUrl }) => {
 
     if (e.dataTransfer?.files?.length) {
       const { files } = e.dataTransfer;
-      setImageUrl((prev: FormValues) => ({
+      setFormValues((prev) => ({
         ...prev,
         image: {
           file: files[0],
@@ -64,16 +61,11 @@ const InputUpload: FC<InputUploadProps> = ({ imageUrl, setImageUrl }) => {
         id="image"
         className={styles.input}
         onChange={handleDrop}
-        // onClick={(e) => (imageUrl ? e.preventDefault() : null)}
         type="file"
       />
-      <label ref={drop} htmlFor="image" className={styles.label}>
+      <label htmlFor="image" className={styles.label}>
         {!!imageUrl && <div className={styles.backdrop}></div>}
-        {/* {!!imageUrl && (
-          <div onClick={closeAndRemoveImg} className={styles.close}>
-            <Trash />
-          </div>
-        )} */}
+
         <div className={styles.field}>
           {!imageUrl && <UploadImg />}
           {!imageUrl && `сlick here or drag 'n' drop strategy PFP`}

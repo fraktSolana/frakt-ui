@@ -1,12 +1,11 @@
 import { FC, Fragment } from 'react';
-import { TradePool } from '../../types';
-
+import { TradePool } from '@frakt/api/strategies';
 import Strategy from '../Strategy';
 
 import styles from './Strategies.module.scss';
 
 interface StrategiesProps {
-  tradePools: any;
+  tradePools: TradePool[];
   admin?: boolean;
 }
 

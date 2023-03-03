@@ -6,18 +6,15 @@ import Titles from '@frakt/components/Titles';
 import Strategies from './components/Strategies';
 import { Loader } from '@frakt/components/Loader';
 import Button from '@frakt/components/Button';
+import { SearchInput } from '@frakt/components/SearchInput';
 import FiltersDropdown, {
   useFiltersModal,
 } from '@frakt/components/FiltersDropdown';
 import SortControl from '@frakt/components/SortControl';
-import useTradePools from '@frakt/utils/strategies/hooks/useTradePools';
-import {
-  SORT_VALUES,
-  useStrategyFiltering,
-} from './hooks/useStrategyFiltering';
+import { useTradePools } from '@frakt/utils/strategies';
+import { SORT_VALUES, useSearch, useStrategyFiltering } from './hooks';
 import { useOnClickOutside } from '@frakt/hooks';
-import { SearchInput } from '@frakt/components/SearchInput';
-import { useSearch } from './hooks/useSearch';
+
 import styles from './StrategiesPage.module.scss';
 
 const StrategiesPage: FC = () => {

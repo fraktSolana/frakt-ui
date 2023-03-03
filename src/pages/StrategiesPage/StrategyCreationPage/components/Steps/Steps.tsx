@@ -6,10 +6,9 @@ import StepOne from './StepOne';
 import StepTwo from './StepTwo';
 import StepThree from './StepThree';
 import StepFour from './StepFour';
-import { useStrategyCreation } from '../../hooks/useStrategyCreation';
 import { LoadingModal } from '@frakt/components/LoadingModal';
-import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
 import { useSettingsPool } from '@frakt/pages/StrategiesPage/hooks/hooks';
+import { useStrategyCreation } from '@frakt/utils/strategies/transactions/useStrategyCreation';
 import styles from './Steps.module.scss';
 
 const { Step } = AntSteps;
@@ -31,9 +30,6 @@ const Steps: FC = () => {
     loadingModalVisible,
     closeLoadingModal,
   } = useStrategyCreation(tradePool);
-
-  const deltaType =
-    formValues.bondingType === BondingCurveType.Exponential ? '%' : 'SOL';
 
   return (
     <>
@@ -122,7 +118,6 @@ const Steps: FC = () => {
         title="Please approve transaction"
         visible={loadingModalVisible}
         onCancel={closeLoadingModal}
-        // subtitle="In order to create Bond"
       />
     </>
   );

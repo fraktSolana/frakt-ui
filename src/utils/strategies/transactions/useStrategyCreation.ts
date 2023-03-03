@@ -1,33 +1,32 @@
+import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { PublicKey } from '@solana/web3.js';
+import { useLoadingModal } from '@frakt/components/LoadingModal';
+import { signAndConfirmTransaction } from '@frakt/utils/transactions';
 import {
   createTradePools,
   setImageTradePools,
+  TradePool,
   updateTradePools,
 } from '@frakt/api/strategies';
-import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { PATHS } from '@frakt/constants';
 import { useConnection } from '@frakt/hooks';
+import { useSettingsPool } from '@frakt/pages/StrategiesPage/hooks/hooks';
 import { notify } from '@frakt/utils';
-import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
-import { NotifyType } from '@frakt/utils/solanaUtils';
-import { signAndConfirmTransaction } from '@frakt/utils/transactions';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { PublicKey } from '@solana/web3.js';
-import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
-import { useState } from 'react';
 
-import { useHistory } from 'react-router-dom';
-import { useSettingsPool } from '../../hooks/hooks';
-import { TradePool } from '../../types';
-import { FormValues } from '../types';
 import { makeCreateStrategy } from './makeCreateStrategy';
 import { makeUpdateStrategy } from './makeUpdateStrategy';
+import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
+import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
+import { NotifyType } from '@frakt/utils/solanaUtils';
+import { FormValues } from '../types';
 
 export const useStrategyCreation = (tradePool?: TradePool) => {
   const history = useHistory();
   const wallet = useWallet();
   const connection = useConnection();
   const { clearTradePool } = useSettingsPool();
-  console.log(tradePool);
 
   const [formValues, setFormValues] = useState<FormValues>({
     strategyName: tradePool?.poolName || '',
@@ -115,12 +114,11 @@ export const useStrategyCreation = (tradePool?: TradePool) => {
       try {
         openLoadingModal();
 
-        const { transaction, signers, tradePool, tradeSettings } =
-          await makeCreateStrategy({
-            connection,
-            wallet,
-            formValues,
-          });
+        const { transaction, signers, tradePool } = await makeCreateStrategy({
+          connection,
+          wallet,
+          formValues,
+        });
 
         await signAndConfirmTransaction({
           transaction,
@@ -161,13 +159,12 @@ export const useStrategyCreation = (tradePool?: TradePool) => {
       try {
         openLoadingModal();
 
-        const { transaction, signers, tradeSettings } =
-          await makeUpdateStrategy({
-            connection,
-            wallet,
-            formValues,
-            tradePool: tradePool?.poolPubkey,
-          });
+        const { transaction, signers } = await makeUpdateStrategy({
+          connection,
+          wallet,
+          formValues,
+          tradePool: tradePool?.poolPubkey,
+        });
 
         await signAndConfirmTransaction({
           transaction,

@@ -12,7 +12,7 @@ type UsePoolModal = ({
 }: {
   visible?: string;
   depositAmount: number;
-  poolModalTab?: any;
+  poolModalTab?: TabsNames;
 }) => {
   depositValue: string;
   withdrawValue: string;

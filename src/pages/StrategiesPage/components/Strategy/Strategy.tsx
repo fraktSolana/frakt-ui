@@ -11,8 +11,8 @@ import { PoolModalStrategy } from '@frakt/components/PoolModalStrategy';
 
 import { useSettingsPool } from '../../hooks/hooks';
 import { commonActions } from '@frakt/state/common/actions';
+import { TradePool } from '@frakt/api/strategies';
 import { PATHS } from '@frakt/constants';
-import { TradePool } from '../../types';
 import { TabsNames } from '@frakt/components/PoolModalStrategy/types';
 import { Solana } from '@frakt/icons';
 import styles from './Strategy.module.scss';

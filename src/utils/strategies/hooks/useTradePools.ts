@@ -1,11 +1,11 @@
-import { fetchTradePools } from '@frakt/api/strategies';
-import { TradePool } from '@frakt/pages/StrategiesPage/types';
+import { fetchTradePools, TradePool } from '@frakt/api/strategies';
 import { useQuery } from '@tanstack/react-query';
 
 type UseTradePools = (props: { walletPublicKey: string }) => {
-  tradePools: TradePool[];
+  tradePools: TradePool[] | null;
   isLoading: boolean;
 };
+
 export const useTradePools: UseTradePools = ({ walletPublicKey }) => {
   const { data, isLoading } = useQuery(
     ['tradePools', walletPublicKey],
@@ -25,5 +25,3 @@ export const useTradePools: UseTradePools = ({ walletPublicKey }) => {
     isLoading,
   };
 };
-
-export default useTradePools;

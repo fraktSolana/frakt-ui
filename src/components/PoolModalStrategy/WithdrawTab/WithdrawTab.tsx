@@ -1,13 +1,13 @@
 import { FC } from 'react';
 
 import { TokenFieldWithBalance } from '../../TokenField';
+import { LoadingModal } from '@frakt/components/LoadingModal';
 import { Slider } from '../../Slider';
 import Button from '../../Button';
+import { marks, usePoolModal } from '../hooks';
+import { useWithdraw } from '@frakt/utils/strategies';
 import { SOL_TOKEN } from '../../../utils';
-import { marks, useDepositTxn, usePoolModal } from '../hooks';
 import styles from './WithdrawTab.module.scss';
-import { useWithdraw } from '@frakt/pages/StrategiesPage/StrategyCreationPage/hooks/useWithdraw';
-import { LoadingModal } from '@frakt/components/LoadingModal';
 
 interface WithdrawTabProps {
   depositAmount: number;
@@ -79,7 +79,6 @@ const WithdrawTab: FC<WithdrawTabProps> = ({
         title="Please approve transaction"
         visible={loadingModalVisible}
         onCancel={closeLoadingModal}
-        // subtitle="In order to create Bond"
       />
     </div>
   );

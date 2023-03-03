@@ -1,12 +1,11 @@
-import { fetchAdminTradePools } from '@frakt/api/strategies';
-import { TradePool } from '@frakt/pages/StrategiesPage/types';
+import { fetchAdminTradePools, TradePool } from '@frakt/api/strategies';
 import { useQuery } from '@tanstack/react-query';
 
 type UseAdminTradePools = (props: { walletPublicKey: string }) => {
-  tradePoolsAdmin: TradePool[];
+  tradePoolsAdmin: TradePool[] | null;
   isLoading: boolean;
 };
-const useAdminTradePools: UseAdminTradePools = ({ walletPublicKey }) => {
+export const useAdminTradePools: UseAdminTradePools = ({ walletPublicKey }) => {
   const { data, isLoading } = useQuery(
     ['tradePoolsAdmin', walletPublicKey],
     () =>
@@ -25,5 +24,3 @@ const useAdminTradePools: UseAdminTradePools = ({ walletPublicKey }) => {
     isLoading,
   };
 };
-
-export default useAdminTradePools;

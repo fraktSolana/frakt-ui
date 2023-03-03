@@ -1,21 +1,21 @@
 import { FC } from 'react';
-
-import { marks, usePoolModal } from '../hooks';
-import { TokenFieldWithBalance } from '../../TokenField';
-import styles from './DepositTab.module.scss';
-import { SOL_TOKEN } from '../../../utils';
-import { Slider } from '../../Slider';
-import Button from '../../Button';
 import classNames from 'classnames/bind';
-import { useDeposit } from '@frakt/pages/StrategiesPage/StrategyCreationPage/hooks/useDeposit';
+
+import Button from '../../Button';
+import { Slider } from '../../Slider';
+import { TokenFieldWithBalance } from '../../TokenField';
 import { LoadingModal } from '@frakt/components/LoadingModal';
+import { useDeposit } from '@frakt/utils/strategies';
+import { marks, usePoolModal } from '../hooks';
+import { SOL_TOKEN } from '../../../utils';
+import styles from './DepositTab.module.scss';
 
 interface DepositTabProps {
   utilizationRate: number;
   onCancel: () => void;
   depositYield: number;
   depositAmount: number;
-  tradePool: any;
+  tradePool: string;
 }
 
 const DepositTab: FC<DepositTabProps> = ({

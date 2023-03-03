@@ -1,5 +1,4 @@
 import { useLoadingModal } from '@frakt/components/LoadingModal';
-import { PATHS } from '@frakt/constants';
 import { useConnection } from '@frakt/hooks';
 import { notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
@@ -7,11 +6,23 @@ import { signAndConfirmTransaction } from '@frakt/utils/transactions';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { useHistory } from 'react-router-dom';
-import { makeDeposit } from './makeDeposit';
 
-export const useDeposit = ({
+import { makeWithdraw } from './makeWithdraw';
+
+type UseWithdraw = (props: {
+  tradePool: string;
+  amountToUnstake: string;
+  onCancel: () => void;
+  onClearDepositValue: () => void;
+}) => {
+  onWithdraw: () => void;
+  loadingModalVisible: boolean;
+  closeLoadingModal: () => void;
+};
+
+export const useWithdraw: UseWithdraw = ({
   tradePool,
-  amountToDeposit,
+  amountToUnstake,
   onCancel,
   onClearDepositValue,
 }) => {
@@ -25,14 +36,14 @@ export const useDeposit = ({
     open: openLoadingModal,
   } = useLoadingModal();
 
-  const onCreateInvestment = async () => {
+  const onWithdraw = async () => {
     if (wallet.publicKey) {
       try {
         openLoadingModal();
 
-        const { investment, transaction, signers } = await makeDeposit({
+        const { transaction, signers } = await makeWithdraw({
           connection,
-          amountToDeposit,
+          amountToUnstake,
           wallet,
           tradePool,
         });
@@ -53,7 +64,6 @@ export const useDeposit = ({
 
         onCancel();
 
-        // history.push(`${PATHS.MY_STRATEGIES}`);
         history.go(0);
       } catch (error) {
         // eslint-disable-next-line no-console
@@ -73,7 +83,7 @@ export const useDeposit = ({
   };
 
   return {
-    onCreateInvestment,
+    onWithdraw,
     loadingModalVisible,
     closeLoadingModal,
   };

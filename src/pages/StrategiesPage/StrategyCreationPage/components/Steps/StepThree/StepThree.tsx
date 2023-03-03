@@ -6,13 +6,15 @@ import Chart from '@frakt/components/Chart';
 
 import { SOL_TOKEN } from '@frakt/utils';
 import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
-import { FormValues } from '../../../types';
 import usePriceGraph from '@frakt/components/Chart/hooks/usePriceGraph';
+import { FormValues } from '@frakt/utils/strategies/types';
 
 interface StepThreeProps {
   className: string;
   formValues: FormValues;
-  setFormValues: (prev) => void;
+  setFormValues: (
+    value: FormValues | ((prevVar: FormValues) => FormValues),
+  ) => void;
 }
 
 export interface Point {
@@ -26,24 +28,24 @@ const StepThree: FC<StepThreeProps> = ({
   setFormValues,
 }) => {
   const handleInterest = (value: string) =>
-    setFormValues((prev: FormValues) => ({
+    setFormValues((prev) => ({
       ...prev,
       spotPrice: +value >= 100 ? String(100) : value,
     }));
 
   const handleBidCap = (value: string) => {
-    setFormValues((prev: FormValues) => ({ ...prev, bidCap: value }));
+    setFormValues((prev) => ({ ...prev, bidCap: value }));
   };
 
   const handleDuration = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormValues((prev: FormValues) => ({
+    setFormValues((prev) => ({
       ...prev,
-      bondingType: e.target.value,
+      bondingType: e.target.value as BondingCurveType,
     }));
   };
 
   const handleDelta = (value: string) => {
-    setFormValues((prev: FormValues) => ({
+    setFormValues((prev) => ({
       ...prev,
       delta: +value >= 100 ? String(100) : value,
     }));
@@ -81,13 +83,6 @@ const StepThree: FC<StepThreeProps> = ({
           { value: BondingCurveType.Exponential, name: 'Exponential' },
         ]}
       />
-      {/* <InputField
-        unit={unit}
-        label="delta"
-        toolTipText="delta"
-        value={formValues.delta}
-        onValueChange={handleDelta}
-      /> */}
 
       <TokenField
         value={formValues.delta}
