@@ -98,9 +98,9 @@ const StepFour: FC<StepFourProps> = ({
           {formValues.durationFilter} days
         </p>
         <p className={styles.infoItem}>
-          Your strategy will place orders starting with {formValues.spotPrice}{' '}
-          SOL interest getting {formValues.delta}% high every time order is
-          filled up to
+          Your strategy will place orders starting with {formValues.spotPrice}%
+          interest getting {formValues.delta}% high every time order is filled
+          up to
           {' ' + formValues.bidCap}
         </p>
         <p className={styles.infoItem}>
