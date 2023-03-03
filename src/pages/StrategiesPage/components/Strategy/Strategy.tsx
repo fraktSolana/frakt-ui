@@ -70,7 +70,10 @@ const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
                 [styles.positive]: Math.sign(tradePool?.depositYield) === 1,
               })}
             >
-              {(tradePool?.depositYield).toFixed(2)} %
+              {tradePool?.depositYield
+                ? (tradePool?.depositYield).toFixed(2)
+                : 0}{' '}
+              %
             </div>
           </div>
           <div className={styles.info}>

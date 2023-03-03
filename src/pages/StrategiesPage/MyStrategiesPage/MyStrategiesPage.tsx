@@ -8,7 +8,7 @@ import { SearchInput } from '@frakt/components/SearchInput';
 
 import { Loader } from '@frakt/components/Loader';
 import styles from '../StrategiesPage.module.scss';
-import { useAdminTradePools } from '@frakt/utils/Strategies/hooks';
+import { useAdminTradePools } from '@frakt/utils/strategies/hooks';
 
 const MyStrategiesPage: FC = () => {
   const wallet = useWallet();

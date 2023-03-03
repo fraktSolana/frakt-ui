@@ -30,8 +30,8 @@ const usePriceGraph: UsePriceGraph = ({
     delta: delta * 100,
     amount: buyOrdersAmount,
     bondingCurveType: bondingCurve,
-    orderType: OrderType.Buy,
-    counter: mathCounter - 1,
+    orderType: OrderType.Sell,
+    counter: mathCounter,
   }) as { array: number[]; total: number };
 
   const points = priceArray.map((price, i) => {
