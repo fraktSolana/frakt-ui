@@ -111,7 +111,7 @@ const Steps: FC = () => {
                 className={styles.btn}
                 type={!tradePool ? 'secondary' : 'primary'}
                 onClick={handleNextStep}
-                // disabled={!checkDisabled[step]}
+                disabled={!checkDisabled[step]}
               >
                 Next
               </Button>
