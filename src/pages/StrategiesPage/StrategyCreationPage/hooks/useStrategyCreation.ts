@@ -26,6 +26,8 @@ export const useStrategyCreation = (tradePool?) => {
   const wallet = useWallet();
   const connection = useConnection();
 
+  console.log(tradePool);
+
   // const parsedDelta =
   //   tradePool?.settings?.[0]?.bondingType === BondingCurveType.Linear
   //     ? tradePool?.settings?.[0]?.delta / 1e9
