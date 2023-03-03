@@ -6,7 +6,7 @@ import Strategy from '../Strategy';
 import styles from './Strategies.module.scss';
 
 interface StrategiesProps {
-  tradePools: TradePool[];
+  tradePools: any;
   admin?: boolean;
 }
 

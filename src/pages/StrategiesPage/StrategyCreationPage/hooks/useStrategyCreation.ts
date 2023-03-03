@@ -16,22 +16,18 @@ import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
 import { useState } from 'react';
 
 import { useHistory } from 'react-router-dom';
-import { defaultFormValues } from '../../constants';
+import { useSettingsPool } from '../../hooks/hooks';
+import { TradePool } from '../../types';
 import { FormValues } from '../types';
 import { makeCreateStrategy } from './makeCreateStrategy';
 import { makeUpdateStrategy } from './makeUpdateStrategy';
 
-export const useStrategyCreation = (tradePool?) => {
+export const useStrategyCreation = (tradePool?: TradePool) => {
   const history = useHistory();
   const wallet = useWallet();
   const connection = useConnection();
-
+  const { clearTradePool } = useSettingsPool();
   console.log(tradePool);
-
-  // const parsedDelta =
-  //   tradePool?.settings?.[0]?.bondingType === BondingCurveType.Linear
-  //     ? tradePool?.settings?.[0]?.delta / 1e9
-  //     : tradePool?.settings?.[0]?.delta / 100;
 
   const [formValues, setFormValues] = useState<FormValues>({
     strategyName: tradePool?.poolName || '',
@@ -137,12 +133,12 @@ export const useStrategyCreation = (tradePool?) => {
 
         await setNewTradePools(tradePool, imagePool?.url);
 
+        clearTradePool();
+
         notify({
           message: 'Transaction successful!',
           type: NotifyType.SUCCESS,
         });
-
-        setFormValues(defaultFormValues);
 
         history.push(`${PATHS.MY_STRATEGIES}`);
       } catch (error) {
@@ -190,12 +186,12 @@ export const useStrategyCreation = (tradePool?) => {
           );
         }
 
+        clearTradePool();
+
         notify({
           message: 'Transaction successful!',
           type: NotifyType.SUCCESS,
         });
-
-        setFormValues(defaultFormValues);
 
         history.push(`${PATHS.MY_STRATEGIES}`);
       } catch (error) {

@@ -72,7 +72,6 @@ const Steps: FC = () => {
               className={styles.step}
               formValues={formValues}
               setFormValues={setFormValues}
-              deltaType={deltaType}
             />
           )}
           <div className={styles.buttons}>

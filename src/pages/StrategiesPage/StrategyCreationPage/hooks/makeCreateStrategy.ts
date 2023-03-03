@@ -51,11 +51,6 @@ export const makeCreateStrategy: MakeCreateStrategy = async ({
     sendTxn: sendTxnPlaceHolder,
   });
 
-  // const deltaParsed =
-  //   formValues.bondingType === BondingCurveType.Linear
-  //     ? +formValues.delta * 1e9
-  //     : +formValues.delta * 100;
-
   const {
     tradeSettings,
     instructions: tradeSettingTxs,

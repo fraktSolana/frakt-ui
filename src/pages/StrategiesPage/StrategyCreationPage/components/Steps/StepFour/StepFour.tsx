@@ -10,14 +10,12 @@ interface StepFourProps {
   className: string;
   formValues: FormValues;
   setFormValues: (prev) => void;
-  deltaType: string;
 }
 
 const StepFour: FC<StepFourProps> = ({
   className,
   formValues,
   setFormValues,
-  deltaType,
 }) => {
   const handleMaxTradeAmount = (value: string) => {
     setFormValues((prev: FormValues) => ({
@@ -101,8 +99,8 @@ const StepFour: FC<StepFourProps> = ({
         </p>
         <p className={styles.infoItem}>
           Your strategy will place orders starting with {formValues.spotPrice}{' '}
-          SOL interest getting {formValues.delta}
-          {' ' + deltaType} high every time order is filled up to
+          SOL interest getting {formValues.delta}% high every time order is
+          filled up to
           {' ' + formValues.bidCap}
         </p>
         <p className={styles.infoItem}>

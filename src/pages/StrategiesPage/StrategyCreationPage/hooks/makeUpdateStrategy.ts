@@ -3,7 +3,6 @@ import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
 import { changeTradeSettings } from 'fbonds-core/lib/bonds_trade_pool/functions/pool-factory';
-import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
 import { FormValues } from '../types';
 
 type MakeUpdateStrategy = (params: {
@@ -27,18 +26,6 @@ export const makeUpdateStrategy: MakeUpdateStrategy = async ({
 
   const FRAKT_TRADE_PROGRAM_ID = new web3.PublicKey(programID);
 
-  console.log('new web3.PublicKey(tradePool)', new web3.PublicKey(tradePool));
-
-  // const sendTxnUser = async (txn, signers) =>
-  //   void (await connection
-  //     .sendTransaction(txn, [wallet, ...signers])
-  //     .catch((err) => console.log(err)));
-
-  const deltaParsed =
-    formValues.bondingType === BondingCurveType.Linear
-      ? +formValues.delta * 1e9
-      : +formValues.delta * 100;
-
   const {
     tradeSettings,
     instructions: tradeSettingTxs,
@@ -50,7 +37,7 @@ export const makeUpdateStrategy: MakeUpdateStrategy = async ({
       strategyNum: 1,
       loanToValueFilter: +formValues.loanToValueFilter * 100,
       durationFilter: +formValues.durationFilter * 86400,
-      delta: deltaParsed,
+      delta: +formValues.delta * 100,
       spotPrice: BOND_DECIMAL_DELTA - Number(formValues.spotPrice) * 100,
       bidCap: +formValues.bidCap,
       tradeAmountRatio: +formValues.utilizationRate * 100,
