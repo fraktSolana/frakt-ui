@@ -12,7 +12,7 @@ import {
 } from '@frakt/api/strategies';
 import { PATHS } from '@frakt/constants';
 import { useConnection } from '@frakt/hooks';
-import { useSettingsPool } from '@frakt/pages/StrategiesPage/hooks/hooks';
+import { useSettingsPool } from '@frakt/pages/StrategiesPages/hooks/hooks';
 import { notify } from '@frakt/utils';
 
 import { makeCreateStrategy } from './makeCreateStrategy';

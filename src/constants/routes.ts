@@ -5,7 +5,7 @@ import {
   Page404,
   HomePage,
   LendPage,
-  StrategiesPage,
+  StrategiesPages,
   LiquidationsPage,
   LoansPage,
   MarketsPage,
@@ -35,7 +35,7 @@ export const routes: Route[] = [
   {
     exact: true,
     path: PATHS.STRATEGIES,
-    component: StrategiesPage,
+    component: StrategiesPages,
   },
   {
     exact: true,

@@ -7,7 +7,7 @@ import StepTwo from './StepTwo';
 import StepThree from './StepThree';
 import StepFour from './StepFour';
 import { LoadingModal } from '@frakt/components/LoadingModal';
-import { useSettingsPool } from '@frakt/pages/StrategiesPage/hooks/hooks';
+import { useSettingsPool } from '@frakt/pages/StrategiesPages/hooks/hooks';
 import { useStrategyCreation } from '@frakt/utils/strategies/transactions/useStrategyCreation';
 import styles from './Steps.module.scss';
 
