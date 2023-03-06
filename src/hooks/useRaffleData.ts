@@ -74,6 +74,7 @@ export const useRaffleInfo = (params: {
       const nextPage = allPages.length + 1;
       return lastPage.data.length !== 0 ? nextPage : undefined;
     },
+    refetchInterval: 5000,
     cacheTime: 100_000,
     networkMode: 'offlineFirst',
   });
