@@ -12,6 +12,7 @@ import {
   makeRemoveOrderTransaction,
   useMarket,
   useMarketPair,
+  useMarketPairs,
 } from '@frakt/utils/bonds';
 import { signAndConfirmTransaction } from '@frakt/utils/transactions';
 import { notify } from '@frakt/utils';
@@ -22,6 +23,7 @@ import { PATHS } from '@frakt/constants';
 import { Pair } from '@frakt/api/bonds';
 
 import { RBOption } from './components/RadioButton';
+import { makeModifyPairTransactions } from '@frakt/utils/bonds/transactions/makeModifyPairTransactions';
 
 export const useOfferPage = () => {
   const history = useHistory();
@@ -38,6 +40,8 @@ export const useOfferPage = () => {
   const { pair, isLoading: pairLoading } = useMarketPair({
     pairPubkey,
   });
+
+  const { hidePair } = useMarketPairs({ marketPubkey: marketPubkey });
 
   const queryClient = useQueryClient();
 
@@ -145,14 +149,11 @@ export const useOfferPage = () => {
       try {
         openLoadingModal();
 
-        await new Promise((res) => res);
-
-        const { transaction, signers } = await makeCreatePairTransaction({
-          marketPubkey: new web3.PublicKey(marketPubkey),
-          maxDuration: duration,
-          maxLTV: ltv,
+        const { transaction, signers } = await makeModifyPairTransactions({
           solDeposit: parseFloat(offerSize),
           interest: parseFloat(interest),
+          pair: pairPubkey,
+          authorityAdapter: pair.authorityAdapterPublicKey,
           connection,
           wallet,
         });
@@ -187,7 +188,7 @@ export const useOfferPage = () => {
         openLoadingModal();
 
         const { transaction, signers } = await makeRemoveOrderTransaction({
-          pairPubkey: new web3.PublicKey(pair.publicKey),
+          pairPubkey: new web3.PublicKey(pairPubkey),
           authorityAdapter: new web3.PublicKey(pair.authorityAdapterPublicKey),
           edgeSettlement: pair.edgeSettlement,
           wallet,
@@ -199,6 +200,7 @@ export const useOfferPage = () => {
           transaction,
           signers,
           wallet,
+          onAfterSend: () => hidePair?.(pairPubkey),
         });
 
         notify({

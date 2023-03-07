@@ -11,9 +11,6 @@ import { PATHS } from '@frakt/constants';
 import { ArrowDownTableSort, ArrowUpTableSort, Chevron } from '@frakt/icons';
 import PartyHorn from '@frakt/icons/PartyHorn';
 import { Market } from '@frakt/api/bonds';
-import { signAndConfirmTransaction } from '@frakt/utils/transactions';
-import { makeRemoveOrderTransaction } from '@frakt/utils/bonds';
-import { useConnection } from '@frakt/hooks';
 
 import Offer from '../Offer/Offer';
 import { useMarketOrders } from './hooks';
@@ -31,13 +28,8 @@ interface OrderBookProps {
   };
 }
 
-const OrderBook: FC<OrderBookProps> = ({
-  market,
-  syntheticParams,
-  hideEditButtons,
-}) => {
+const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
   const wallet = useWallet();
-  const connection = useConnection();
   const history = useHistory();
 
   const [openOffersMobile, setOpenOffersMobile] = useState<boolean>(false);
@@ -47,31 +39,6 @@ const OrderBook: FC<OrderBookProps> = ({
     history.push(
       `${PATHS.OFFER}/${market?.marketPubkey}/${order?.rawData?.publicKey}`,
     );
-  };
-
-  const removeOrder = async (order: MarketOrder) => {
-    try {
-      const { transaction, signers } = await makeRemoveOrderTransaction({
-        pairPubkey: new web3.PublicKey(order.rawData.publicKey),
-        authorityAdapter: new web3.PublicKey(order.rawData.authorityAdapter),
-        edgeSettlement: order.rawData.edgeSettlement,
-        wallet,
-        connection,
-      });
-
-      await signAndConfirmTransaction({
-        connection,
-        transaction,
-        signers,
-        wallet,
-
-        onAfterSend: () => hidePair?.(order.rawData.publicKey),
-      });
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn(error?.logs?.join('\n'));
-      console.error(error);
-    }
   };
 
   const isOwnOrder = (order: MarketOrder) =>
@@ -84,7 +51,7 @@ const OrderBook: FC<OrderBookProps> = ({
     sort === 'desc' ? setSort('asc') : setSort('desc');
   };
 
-  const { offers, isLoading, offersExist, hidePair } = useMarketOrders({
+  const { offers, isLoading, offersExist } = useMarketOrders({
     marketPubkey: new web3.PublicKey(market?.marketPubkey),
     sortDirection: sort,
     walletOwned: showOwnOrders,
@@ -182,8 +149,7 @@ const OrderBook: FC<OrderBookProps> = ({
                 order={offer}
                 bestOffer={bestOffer}
                 duration={offer.duration}
-                editOrder={!hideEditButtons && (() => editOrder(offer))}
-                removeOrder={() => removeOrder(offer)}
+                editOrder={() => editOrder(offer)}
                 isOwnOrder={isOwnOrder(offer)}
                 key={idx}
               />

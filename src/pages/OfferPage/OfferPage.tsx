@@ -85,17 +85,19 @@ export const OfferPage = () => {
           </div>
           <SliderGradient value={ltv} setValue={onLtvChange} />
 
-          <div className={styles.radio}>
-            <h6 className={styles.subtitle}>duration</h6>
-            <RadioButton
-              currentOption={{
-                label: `${duration} days`,
-                value: duration,
-              }}
-              onOptionChange={onDurationChange}
-              options={DURATION_OPTIONS}
-            />
-          </div>
+          {!isEdit && (
+            <div className={styles.radio}>
+              <h6 className={styles.subtitle}>duration</h6>
+              <RadioButton
+                currentOption={{
+                  label: `${duration} days`,
+                  value: duration,
+                }}
+                onOptionChange={onDurationChange}
+                options={DURATION_OPTIONS}
+              />
+            </div>
+          )}
 
           <SizeField
             value={offerSize}
@@ -151,24 +153,26 @@ export const OfferPage = () => {
             </Tooltip>
           </div> */}
 
-          <div className={styles.checkbox}>
-            <label className={styles.checkboxLabel}>
-              <input
-                className={styles.checkboxInput}
-                type="checkbox"
-                name="checkbox"
-                checked={receiveLiquidatedNfts}
-                onChange={toggleReceiveLiquidatedNfts}
-              />
-              Receive liquidated NFTs
-            </label>
-            <Tooltip
-              placement="bottom"
-              overlay="When funding full loans, lenders have the option to get defaulted NFTs instead of the SOL recovered from the liquidation"
-            >
-              <QuestionCircleOutlined className={styles.questionIcon} />
-            </Tooltip>
-          </div>
+          {!isEdit && (
+            <div className={styles.checkbox}>
+              <label className={styles.checkboxLabel}>
+                <input
+                  className={styles.checkboxInput}
+                  type="checkbox"
+                  name="checkbox"
+                  checked={receiveLiquidatedNfts}
+                  onChange={toggleReceiveLiquidatedNfts}
+                />
+                Receive liquidated NFTs
+              </label>
+              <Tooltip
+                placement="bottom"
+                overlay="When funding full loans, lenders have the option to get defaulted NFTs instead of the SOL recovered from the liquidation"
+              >
+                <QuestionCircleOutlined className={styles.questionIcon} />
+              </Tooltip>
+            </div>
+          )}
 
           <TotalOverview
             size={parseFloat(offerSize)}
@@ -210,7 +214,6 @@ export const OfferPage = () => {
       {!isLoading && !!market && (
         <OrderBook
           market={market}
-          hideEditButtons
           syntheticParams={{
             ltv,
             offerSize: parseFloat(offerSize) * 1e9 || 0,
