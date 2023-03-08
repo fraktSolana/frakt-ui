@@ -85,19 +85,17 @@ export const OfferPage = () => {
           </div>
           <SliderGradient value={ltv} setValue={onLtvChange} />
 
-          {!isEdit && (
-            <div className={styles.radio}>
-              <h6 className={styles.subtitle}>duration</h6>
-              <RadioButton
-                currentOption={{
-                  label: `${duration} days`,
-                  value: duration,
-                }}
-                onOptionChange={onDurationChange}
-                options={DURATION_OPTIONS}
-              />
-            </div>
-          )}
+          <div className={styles.radio}>
+            <h6 className={styles.subtitle}>duration</h6>
+            <RadioButton
+              currentOption={{
+                label: `${duration} days`,
+                value: duration,
+              }}
+              onOptionChange={onDurationChange}
+              options={DURATION_OPTIONS}
+            />
+          </div>
 
           <SizeField
             value={offerSize}

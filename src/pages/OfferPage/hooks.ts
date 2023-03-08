@@ -152,9 +152,10 @@ export const useOfferPage = () => {
         const { transaction, signers } = await makeModifyPairTransactions({
           solDeposit: parseFloat(offerSize),
           interest: parseFloat(interest),
-          pair: pairPubkey,
-          authorityAdapter: pair.authorityAdapterPublicKey,
+          pair,
           connection,
+          maxDuration: duration,
+          maxLTV: ltv,
           wallet,
         });
 
