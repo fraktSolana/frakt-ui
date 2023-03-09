@@ -34,9 +34,8 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
 
   const solDepositLamports = solDeposit * 1e9;
 
-  const newTokenAmount = solDepositLamports / pair.currentSpotPrice;
-
   const spotPrice = BOND_DECIMAL_DELTA - interest * 100;
+
   const bidCap = Math.floor(solDepositLamports / spotPrice);
 
   const topOrderSize = getTopOrderSize({
@@ -46,42 +45,7 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
     buyOrdersQuantity: pair.buyOrdersQuantity,
   });
 
-  const depositInstructionsAndSigners = [];
-
-  if (newTokenAmount > topOrderSize) {
-    const { instructions, signers } = await pairs.deposits.depositSolToPair({
-      accounts: {
-        authorityAdapter: new web3.PublicKey(pair.authorityAdapterPublicKey),
-        pair: new web3.PublicKey(pair.publicKey),
-        userPubkey: wallet.publicKey,
-      },
-      args: {
-        amountOfTokensToBuy: bidCap, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
-      },
-      programId: BONDS_PROGRAM_PUBKEY,
-      connection,
-      sendTxn: sendTxnPlaceHolder,
-    });
-
-    depositInstructionsAndSigners.push({ instructions, signers });
-  } else {
-    const { instructions, signers } =
-      await pairs.withdrawals.withdrawSolFromPair({
-        accounts: {
-          authorityAdapter: new web3.PublicKey(pair.authorityAdapterPublicKey),
-          pair: new web3.PublicKey(pair.publicKey),
-          userPubkey: wallet.publicKey,
-        },
-        args: {
-          amountOfTokensToWithdraw: bidCap, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
-        },
-        programId: BONDS_PROGRAM_PUBKEY,
-        connection,
-        sendTxn: sendTxnPlaceHolder,
-      });
-
-    depositInstructionsAndSigners.push({ instructions, signers });
-  }
+  const amountTokenToUpdate = bidCap - topOrderSize;
 
   const { instructions: instructions1, signers: signers1 } =
     await pairs.mutations.modifyPair({
@@ -101,34 +65,71 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
       sendTxn: sendTxnPlaceHolder,
     });
 
-  // const { instructions: instructions2, signers: signers2 } =
-  //   await fBondsValidation.updateValidationFilter({
-  //     accounts: {
-  //       authorityAdapter: new web3.PublicKey(pair.authorityAdapterPublicKey),
-  //       validation: new web3.PublicKey(pair.validation.publicKey),
-  //       userPubkey: wallet.publicKey,
-  //     },
-  //     args: {
-  //       loanToValueFilter: maxLTVRaw,
-  //       maxDurationFilter: maxDurationSec,
-  //     },
-  //     connection,
-  //     programId: BONDS_PROGRAM_PUBKEY,
-  //     sendTxn: sendTxnPlaceHolder,
-  //   });
+  const depositInstructionsAndSigners = [];
+
+  if (bidCap > topOrderSize) {
+    const { instructions, signers } = await pairs.deposits.depositSolToPair({
+      accounts: {
+        authorityAdapter: new web3.PublicKey(pair.authorityAdapterPublicKey),
+        pair: new web3.PublicKey(pair.publicKey),
+        userPubkey: wallet.publicKey,
+      },
+      args: {
+        amountOfTokensToBuy: amountTokenToUpdate, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
+      },
+      programId: BONDS_PROGRAM_PUBKEY,
+      connection,
+      sendTxn: sendTxnPlaceHolder,
+    });
+
+    depositInstructionsAndSigners.push({ instructions, signers });
+  } else {
+    const { instructions, signers } =
+      await pairs.withdrawals.withdrawSolFromPair({
+        accounts: {
+          authorityAdapter: new web3.PublicKey(pair.authorityAdapterPublicKey),
+          pair: new web3.PublicKey(pair.publicKey),
+          userPubkey: wallet.publicKey,
+        },
+        args: {
+          amountOfTokensToWithdraw: amountTokenToUpdate, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
+        },
+        programId: BONDS_PROGRAM_PUBKEY,
+        connection,
+        sendTxn: sendTxnPlaceHolder,
+      });
+
+    depositInstructionsAndSigners.push({ instructions, signers });
+  }
+
+  const { instructions: instructions2, signers: signers2 } =
+    await fBondsValidation.updateValidationFilter({
+      accounts: {
+        authorityAdapter: new web3.PublicKey(pair.authorityAdapterPublicKey),
+        pair: new web3.PublicKey(pair.publicKey),
+        userPubkey: wallet.publicKey,
+      },
+      args: {
+        loanToValueFilter: maxLTVRaw,
+        maxDurationFilter: maxDurationSec,
+      },
+      connection,
+      programId: BONDS_PROGRAM_PUBKEY,
+      sendTxn: sendTxnPlaceHolder,
+    });
 
   return {
     transaction: new web3.Transaction().add(
       ...[
         instructions1,
-        // instructions2,
         depositInstructionsAndSigners[0]?.instructions,
+        instructions2,
       ].flat(),
     ),
     signers: [
       signers1,
-      // signers2,
       depositInstructionsAndSigners[0]?.signers,
+      signers2,
     ].flat(),
   };
 };
