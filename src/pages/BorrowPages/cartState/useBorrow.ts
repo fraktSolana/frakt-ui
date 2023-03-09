@@ -51,6 +51,10 @@ export const useBorrow = () => {
       //     unshift,
       //   });
       // }
+      console.log(
+        'saveUpcomingOrderToCart currentBondOrder: ',
+        currentBondOrder,
+      );
       addBondOrder({
         bondOrder: currentBondOrder,
         pairs: pairs.filter((pair) =>
@@ -89,6 +93,7 @@ export const useBorrow = () => {
         const cartPair = findPairInCart({
           pairPubkey: cartOrder?.bondOrderParams?.orderParams?.[0]?.pairPubkey,
         });
+        console.log('cartPair Remove: ', cartPair);
 
         setCurrentNftState({
           nft: cartOrder.borrowNft,
@@ -117,12 +122,12 @@ export const useBorrow = () => {
     saveUpcomingOrderToCart(reverse);
 
     const cartOrder = reverse ? cartOrders.at(-1) : cartOrders.at(0);
-
     const cartPair = findPairInCart({
       pairPubkey: cartOrder?.bondOrderParams?.orderParams?.[0]?.pairPubkey,
     });
-
     removeOrder({ nftMint: cartOrder?.borrowNft?.mint });
+
+    console.log('cartPair Next: ', cartPair);
 
     setCurrentNftState({
       nft: cartOrder.borrowNft,
@@ -131,13 +136,6 @@ export const useBorrow = () => {
       pair: cartPair
         ? {
             ...cartPair,
-            edgeSettlement:
-              cartPair.edgeSettlement +
-              calcBondsAmount({
-                loanValue: cartOrder.loanValue,
-                spotPrice:
-                  cartOrder?.bondOrderParams?.orderParams?.[0]?.spotPrice,
-              }),
           }
         : null,
       bondOrder: cartOrder,
@@ -151,6 +149,7 @@ export const useBorrow = () => {
     const cartPair = findPairInCart({
       pairPubkey: cartOrder?.bondOrderParams?.orderParams?.[0]?.pairPubkey,
     });
+    console.log('setCurrentNftFromOrder cartPair: ', cartPair);
 
     removeOrder({ nftMint: cartOrder?.borrowNft?.mint });
 
@@ -161,13 +160,6 @@ export const useBorrow = () => {
       pair: cartPair
         ? {
             ...cartPair,
-            edgeSettlement:
-              cartPair.edgeSettlement +
-              calcBondsAmount({
-                loanValue: cartOrder.loanValue,
-                spotPrice:
-                  cartOrder?.bondOrderParams?.orderParams?.[0]?.spotPrice,
-              }),
           }
         : null,
       bondOrder: cartOrder,

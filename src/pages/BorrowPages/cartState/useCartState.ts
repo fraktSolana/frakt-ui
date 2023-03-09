@@ -152,6 +152,7 @@ export const useCartState = create<CartState>((set, get) => ({
     }
   },
   removeOrder: ({ nftMint }) => {
+    console.log('REMOVE ORDER TRIGGERED');
     set(
       produce((state: CartState) => {
         const order = state.orders.find(
@@ -192,6 +193,9 @@ export const useCartState = create<CartState>((set, get) => ({
         );
       }),
     );
+    const { pairs } = get();
+
+    // console.log('CartState: ', pairs)
   },
   updateOrder: ({ loanType, nft, loanValue, pair, market }) => {
     const { addOrder, removeOrder } = get();
@@ -280,7 +284,7 @@ const patchPairToNextOrderAfterBuy = (pair: Pair): Pair =>
   pair.bidSettlement === 0
     ? {
         ...pair,
-        bidSettlement: pair.buyOrdersQuantity === 1 ? 0 : -pair.bidCap,
+        bidSettlement: -pair.bidCap,
         buyOrdersQuantity: pair.buyOrdersQuantity + 1,
         currentSpotPrice: calculateNextSpotPrice({
           orderType: OrderType.Sell,
