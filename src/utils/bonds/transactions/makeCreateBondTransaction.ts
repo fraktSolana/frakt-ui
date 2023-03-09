@@ -134,8 +134,9 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
     wallet,
   }) => {
     const amountToReturn =
-      bondOrderParams.reduce((sum, order) => sum + order.orderSize, 0) *
-      BOND_DECIMAL_DELTA;
+      Math.trunc(
+        bondOrderParams.reduce((sum, order) => sum + order.orderSize, 0),
+      ) * BOND_DECIMAL_DELTA;
 
     const durationFilter = bondOrderParams.reduce(
       (smallestDurationParam, orderParams) =>
