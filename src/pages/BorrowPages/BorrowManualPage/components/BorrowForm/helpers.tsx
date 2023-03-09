@@ -50,7 +50,7 @@ export const getBorrowValueRange: GetBorrowValueRange = ({
     valuation * (classicParams?.timeBased?.ltvPercent / 100);
   const maxBorrowValuePriceBased =
     valuation * (classicParams?.priceBased?.ltvPercent / 100);
-  const minBorrowValue = valuation / 10;
+  const minBorrowValue = valuation / 100;
 
   const maxBorrowValue = (() => {
     if (loanType === LoanType.PRICE_BASED) return maxBorrowValuePriceBased;
