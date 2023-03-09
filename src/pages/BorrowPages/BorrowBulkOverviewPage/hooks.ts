@@ -7,7 +7,10 @@ import { useConfirmModal } from '@frakt/components/ConfirmModal';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { PATHS } from '@frakt/constants';
 import { showSolscanLinkNotification } from '@frakt/utils/transactions';
-import { makeCreateBondTransaction } from '@frakt/utils/bonds';
+import {
+  makeCreateBondTransaction,
+  makeCreateBondMultiOrdersTransaction,
+} from '@frakt/utils/bonds';
 import { BondOrder } from '@frakt/pages/BorrowPages/cartState';
 import { Pair } from '@frakt/api/bonds';
 import { notify } from '@frakt/utils';
@@ -18,6 +21,11 @@ import { LoanType } from '@frakt/api/loans';
 import { useConnection } from '@frakt/hooks';
 
 import { useBorrow } from '../cartState';
+import { BondOrderParams } from '@frakt/api/nft';
+import {
+  signAndSendAllTransactions,
+  TxnsAndSigners,
+} from '../BorrowManualPage/components/Sidebar/hooks';
 
 export const useBorrowBulkOverviewPage = () => {
   const history = useHistory();
@@ -116,98 +124,66 @@ const borrowBulk: BorrowBulk = async ({
   connection,
   wallet,
 }): Promise<boolean> => {
-  try {
-    const transactionsAndSigners = await Promise.all(
-      orders.map((order) => {
-        if (order.loanType === LoanType.BOND) {
-          return makeCreateBondTransaction({
-            nftMint: order.borrowNft.mint,
-            market: order.bondOrderParams?.market,
-            pair: pairs.find(
-              (pair) =>
-                pair.publicKey ===
-                order?.bondOrderParams?.orderParams?.[0]?.pairPubkey,
-            ),
-            borrowValue: order.loanValue,
-            connection,
-            wallet,
-          });
-        }
-
-        return makeProposeTransaction({
-          nftMint: order.borrowNft.mint,
-          valuation: order.borrowNft.valuation,
-          loanValue: order.loanValue,
-          loanType: order.loanType,
-          connection,
-          wallet,
-        });
-      }),
-    );
-
-    const { blockhash, lastValidBlockHeight } =
-      await connection.getLatestBlockhash();
-
-    const transactions = transactionsAndSigners.map(
-      ({ transaction, signers }) => {
-        transaction.recentBlockhash = blockhash;
-        transaction.feePayer = wallet?.publicKey;
-        if (signers.length) {
-          transaction.sign(...signers);
-        }
-
-        return transaction;
-      },
-    );
-
-    const signedTransactions = await wallet?.signAllTransactions(transactions);
-
-    const txids = await Promise.all(
-      signedTransactions.map((signedTransaction) =>
-        connection.sendRawTransaction(signedTransaction.serialize()),
-      ),
-    );
-
-    notify({
-      message: 'Transactions sent',
-      type: NotifyType.INFO,
-    });
-
-    await Promise.all(
-      txids.map((txid) =>
-        connection.confirmTransaction(
-          { signature: txid, blockhash, lastValidBlockHeight },
-          'confirmed',
-        ),
-      ),
-    );
-
-    notify({
-      message: 'Borrowed successfully!',
-      type: NotifyType.SUCCESS,
-    });
-
-    return true;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.warn(error?.logs);
-    console.error(error);
-
-    const isNotConfirmed = showSolscanLinkNotification(error);
-
-    if (!isNotConfirmed) {
-      notify({
-        message: 'The transaction just failed :( Give it another try',
-        type: NotifyType.ERROR,
+  const notBondOrders = orders.filter(
+    (order) => order.loanType !== LoanType.BOND,
+  );
+  const notBondTransactionsAndSigners = await Promise.all(
+    notBondOrders.map((order) => {
+      return makeProposeTransaction({
+        nftMint: order.borrowNft.mint,
+        valuation: order.borrowNft.valuation,
+        loanValue: order.loanValue,
+        loanType: order.loanType,
+        connection,
+        wallet,
       });
-    }
+    }),
+  );
+  const bondOrders = orders.filter((order) => order.loanType === LoanType.BOND);
 
-    captureSentryError({
-      error,
-      wallet,
-      transactionName: 'proposeBulkLoanWithBonds',
-    });
+  const bondTransactionsAndSignersChunks = await Promise.all(
+    bondOrders.map((order) => {
+      return makeCreateBondMultiOrdersTransaction({
+        nftMint: order.borrowNft.mint,
+        market: order.bondOrderParams.market,
+        bondOrderParams: order.bondOrderParams.orderParams,
+        borrowValue: order.loanValue,
+        connection,
+        wallet,
+      });
+    }),
+  );
 
-    return false;
-  }
+  const firstChunk: TxnsAndSigners[] = [
+    ...notBondTransactionsAndSigners,
+    ...bondTransactionsAndSignersChunks
+      .map((chunk) => chunk.createBondTxnAndSigners)
+      .flat(),
+  ];
+  await signAndSendAllTransactions({
+    txnsAndSigners: firstChunk,
+    connection,
+    wallet,
+    // commitment = 'finalized',
+    onBeforeApprove: () => {},
+    onAfterSend: () => {},
+    onSuccess: () => {},
+    onError: () => {},
+  });
+
+  const secondChunk: TxnsAndSigners[] = [
+    ...bondTransactionsAndSignersChunks
+      .map((chunk) => chunk.sellingBondsTxnsAndSigners)
+      .flat(),
+  ];
+  await signAndSendAllTransactions({
+    txnsAndSigners: secondChunk,
+    connection,
+    wallet,
+    // commitment = 'finalized',
+    onBeforeApprove: () => {},
+    onAfterSend: () => {},
+    onSuccess: () => {},
+    onError: () => {},
+  });
 };

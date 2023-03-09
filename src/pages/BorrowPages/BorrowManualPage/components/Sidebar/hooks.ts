@@ -113,27 +113,6 @@ const borrowSingle: BorrowSingle = async ({
   connection,
   wallet,
 }): Promise<boolean> => {
-  const { transaction, signers } = await (() => {
-    if (loanType === LoanType.BOND) {
-      return makeCreateBondTransaction({
-        nftMint: nft.mint,
-        market,
-        pair,
-        borrowValue: loanValue,
-        connection,
-        wallet,
-      });
-    }
-
-    return makeProposeTransaction({
-      nftMint: nft.mint,
-      valuation: nft.valuation,
-      loanValue: loanValue,
-      loanType: loanType,
-      connection,
-      wallet,
-    });
-  })();
   if (loanType !== LoanType.BOND) {
     const { transaction, signers } = await makeProposeTransaction({
       nftMint: nft.mint,
@@ -190,7 +169,7 @@ const borrowSingle: BorrowSingle = async ({
   });
 };
 
-interface TxnsAndSigners {
+export interface TxnsAndSigners {
   transaction: web3.Transaction;
   signers?: web3.Signer[];
 }
@@ -254,18 +233,20 @@ export const signAndSendAllTransactions: SignAndSendAllTransactions = async ({
 
     onAfterSend?.();
 
-    await Promise.allSettled(
-      txnSignatures.map((signature) =>
-        connection.confirmTransaction(
-          {
-            signature,
-            blockhash,
-            lastValidBlockHeight,
-          },
-          commitment,
-        ),
-      ),
-    );
+    // await Promise.allSettled(
+    //   txnSignatures.map((signature) =>
+    //     connection.confirmTransaction(
+    //       {
+    //         signature,
+    //         blockhash,
+    //         lastValidBlockHeight,
+    //       },
+    //       commitment,
+    //     ),
+    //   ),
+    // );
+
+    await new Promise((r) => setTimeout(r, 5000));
 
     onSuccess?.();
     notify({
