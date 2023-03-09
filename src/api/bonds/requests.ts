@@ -1,4 +1,5 @@
 import { web3 } from '@frakt-protocol/frakt-sdk';
+import { IS_PRIVATE_MARKETS } from '@frakt/config';
 import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
 import axios from 'axios';
 
@@ -9,7 +10,7 @@ const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN;
 type FetchAllMarkets = () => Promise<Market[]>;
 export const fetchAllMarkets: FetchAllMarkets = async () => {
   const { data } = await axios.get<Market[]>(
-    `https://${BACKEND_DOMAIN}/markets`,
+    `https://${BACKEND_DOMAIN}/markets?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data;
@@ -22,7 +23,7 @@ export const fetchCertainMarket: FetchCertainMarket = async ({
   marketPubkey,
 }) => {
   const { data } = await axios.get<Market>(
-    `https://${BACKEND_DOMAIN}/markets/${marketPubkey.toBase58()}`,
+    `https://${BACKEND_DOMAIN}/markets/${marketPubkey.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data;
@@ -31,7 +32,7 @@ export const fetchCertainMarket: FetchCertainMarket = async ({
 type FetchMarketsPreview = () => Promise<MarketPreview[]>;
 export const fetchMarketsPreview: FetchMarketsPreview = async () => {
   const { data } = await axios.get<MarketPreview[]>(
-    `https://${BACKEND_DOMAIN}/bonds/preview`,
+    `https://${BACKEND_DOMAIN}/bonds/preview?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data;
@@ -83,7 +84,7 @@ export const fetchAllUserBonds: FetchAllUserBonds = async ({
   walletPubkey,
 }) => {
   const { data } = await axios.get<Bond[]>(
-    `https://${BACKEND_DOMAIN}/bonds/${walletPubkey.toBase58()}`,
+    `https://${BACKEND_DOMAIN}/bonds/${walletPubkey.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data ?? [];

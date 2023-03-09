@@ -2,14 +2,14 @@ import { FC } from 'react';
 
 import { Alert, Solana } from '@frakt/icons';
 import Button from '@frakt/components/Button';
-import { Order, useBorrow } from '@frakt/pages/BorrowPages/cartState';
+import { BondOrder, useBorrow } from '@frakt/pages/BorrowPages/cartState';
 
 import styles from './OverviewSidebar.module.scss';
 import { Pair } from '@frakt/api/bonds';
 import { calcCartFees, isBulkHasDifferentDurations } from './helpers';
 
 interface OverviewSidebarProps {
-  orders: Order[];
+  orders: BondOrder[];
   pairs: Pair[];
   onChangeAssets: () => void;
   onBorrow: () => void;

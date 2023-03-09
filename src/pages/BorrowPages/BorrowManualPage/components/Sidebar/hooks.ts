@@ -5,7 +5,10 @@ import { web3 } from 'fbonds-core';
 
 import { PATHS } from '@frakt/constants';
 import { showSolscanLinkNotification } from '@frakt/utils/transactions';
-import { makeCreateBondTransaction } from '@frakt/utils/bonds';
+import {
+  makeCreateBondMultiOrdersTransaction,
+  makeCreateBondTransaction,
+} from '@frakt/utils/bonds';
 import { useConnection } from '@frakt/hooks';
 import { useBorrow } from '@frakt/pages/BorrowPages/cartState';
 import { Market, Pair } from '@frakt/api/bonds';
@@ -14,7 +17,7 @@ import { NotifyType } from '@frakt/utils/solanaUtils';
 import { captureSentryError } from '@frakt/utils/sentry';
 import { makeProposeTransaction } from '@frakt/utils/loans';
 import { LoanType } from '@frakt/api/loans';
-import { BorrowNft } from '@frakt/api/nft';
+import { BondOrderParams, BorrowNft } from '@frakt/api/nft';
 
 export const useSidebar = () => {
   const {
@@ -25,6 +28,7 @@ export const useSidebar = () => {
     onRemoveNft,
     onNextNftSelect,
     currentPair,
+    currentBondOrder,
     market,
     currentLoanType,
     currentLoanValue,
@@ -56,6 +60,8 @@ export const useSidebar = () => {
       const result = await borrowSingle({
         nft: currentNft,
         pair: currentPair,
+        // bondOrderParamsAndAssetReceiver: currentBondOrder.bondOrderParams.orderParams.map(orderParam => ({...orderParam, assetReceiver: })),
+        bondOrderParams: currentBondOrder.bondOrderParams.orderParams,
         loanType: currentLoanType,
         loanValue: currentLoanValue,
         market,
@@ -89,6 +95,7 @@ export const useSidebar = () => {
 type BorrowSingle = (props: {
   nft: BorrowNft;
   pair?: Pair;
+  bondOrderParams?: BondOrderParams[];
   market?: Market;
   loanType: LoanType;
   loanValue: number;
@@ -99,63 +106,172 @@ type BorrowSingle = (props: {
 const borrowSingle: BorrowSingle = async ({
   nft,
   pair,
+  bondOrderParams,
   market,
   loanType,
   loanValue,
   connection,
   wallet,
 }): Promise<boolean> => {
-  try {
-    const { transaction, signers } = await (() => {
-      if (loanType === LoanType.BOND) {
-        return makeCreateBondTransaction({
-          nftMint: nft.mint,
-          market,
-          pair,
-          borrowValue: loanValue,
-          connection,
-          wallet,
-        });
-      }
-
-      return makeProposeTransaction({
+  const { transaction, signers } = await (() => {
+    if (loanType === LoanType.BOND) {
+      return makeCreateBondTransaction({
         nftMint: nft.mint,
-        valuation: nft.valuation,
-        loanValue: loanValue,
-        loanType: loanType,
+        market,
+        pair,
+        borrowValue: loanValue,
         connection,
         wallet,
       });
-    })();
+    }
+
+    return makeProposeTransaction({
+      nftMint: nft.mint,
+      valuation: nft.valuation,
+      loanValue: loanValue,
+      loanType: loanType,
+      connection,
+      wallet,
+    });
+  })();
+  if (loanType !== LoanType.BOND) {
+    const { transaction, signers } = await makeProposeTransaction({
+      nftMint: nft.mint,
+      valuation: nft.valuation,
+      loanValue: loanValue,
+      loanType: loanType,
+      connection,
+      wallet,
+    });
+    return await signAndSendAllTransactions({
+      txnsAndSigners: [{ transaction, signers }],
+      connection,
+      wallet,
+      // commitment = 'finalized',
+      onBeforeApprove: () => {},
+      onAfterSend: () => {},
+      onSuccess: () => {},
+      onError: () => {},
+    });
+  }
+
+  console.log('nft.valuation: ', nft.valuation);
+
+  const { createBondTxnAndSigners, sellingBondsTxnsAndSigners } =
+    await makeCreateBondMultiOrdersTransaction({
+      nftMint: nft.mint,
+      market,
+      bondOrderParams: bondOrderParams,
+      borrowValue: loanValue,
+      connection,
+      wallet,
+    });
+
+  await signAndSendAllTransactions({
+    txnsAndSigners: [createBondTxnAndSigners],
+    connection,
+    wallet,
+    // commitment = 'finalized',
+    onBeforeApprove: () => {},
+    onAfterSend: () => {},
+    onSuccess: () => {},
+    onError: () => {},
+  });
+
+  await signAndSendAllTransactions({
+    txnsAndSigners: sellingBondsTxnsAndSigners,
+    connection,
+    wallet,
+    // commitment = 'finalized',
+    onBeforeApprove: () => {},
+    onAfterSend: () => {},
+    onSuccess: () => {},
+    onError: () => {},
+  });
+};
+
+interface TxnsAndSigners {
+  transaction: web3.Transaction;
+  signers?: web3.Signer[];
+}
+
+interface SignAndSendAllTransactionsProps {
+  txnsAndSigners: TxnsAndSigners[];
+  connection: web3.Connection;
+  wallet: WalletContextState;
+  commitment?: web3.Commitment;
+  onBeforeApprove?: () => void;
+  onAfterSend?: () => void;
+  onSuccess?: () => void;
+  onError?: () => void;
+}
+
+type SignAndSendAllTransactions = (
+  props: SignAndSendAllTransactionsProps,
+) => Promise<boolean>;
+
+export const signAndSendAllTransactions: SignAndSendAllTransactions = async ({
+  txnsAndSigners,
+  connection,
+  wallet,
+  commitment = 'finalized',
+  onBeforeApprove,
+  onAfterSend,
+  onSuccess,
+  onError,
+}) => {
+  try {
+    onBeforeApprove?.();
 
     const { blockhash, lastValidBlockHeight } =
       await connection.getLatestBlockhash();
 
-    transaction.recentBlockhash = blockhash;
-    transaction.feePayer = wallet?.publicKey;
-    if (signers.length) {
-      transaction.sign(...signers);
-    }
+    const transactions = txnsAndSigners.map(({ transaction, signers = [] }) => {
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = wallet.publicKey;
 
-    const signedTransaction = await wallet?.signTransaction(transaction);
+      if (signers.length) {
+        transaction.sign(...signers);
+      }
 
-    const txid = await connection.sendRawTransaction(
-      signedTransaction.serialize(),
+      return transaction;
+    });
+
+    const signedTransactions = await wallet.signAllTransactions(transactions);
+
+    const txnSignatures = await Promise.all(
+      signedTransactions.map((txn) =>
+        connection.sendRawTransaction(txn.serialize(), {
+          skipPreflight: false,
+        }),
+      ),
     );
 
     notify({
-      message: 'Transactions sent',
+      message: 'transaction sent!',
       type: NotifyType.INFO,
     });
 
-    await connection.confirmTransaction(
-      { signature: txid, blockhash, lastValidBlockHeight },
-      'confirmed',
-    ),
-      notify({
-        message: 'Borrowed successfully!',
-        type: NotifyType.SUCCESS,
-      });
+    onAfterSend?.();
+
+    await Promise.allSettled(
+      txnSignatures.map((signature) =>
+        connection.confirmTransaction(
+          {
+            signature,
+            blockhash,
+            lastValidBlockHeight,
+          },
+          commitment,
+        ),
+      ),
+    );
+
+    onSuccess?.();
+    notify({
+      message: 'Borrowed successfully!',
+      type: NotifyType.SUCCESS,
+    });
 
     return true;
   } catch (error) {

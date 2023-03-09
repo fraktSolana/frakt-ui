@@ -4,7 +4,7 @@ import { Pair } from '@frakt/api/bonds';
 import { BOND_DECIMAL_DELTA, pairLoanDurationFilter } from '@frakt/utils/bonds';
 import { LoanType } from '@frakt/api/loans';
 
-import { Order } from './types';
+import { BondOrder } from './types';
 
 type GetPairMaxBorrowValue = (params: {
   pair: Pair;
@@ -52,14 +52,14 @@ export interface SelectValue {
   };
 }
 
-export const calcLtv = (order: Order) => {
+export const calcLtv = (order: BondOrder) => {
   const { borrowNft, loanValue } = order;
   const ltv = (loanValue / borrowNft.valuation) * 100;
 
   return ltv;
 };
 
-export const calcTimeBasedRepayValue = (order: Order) => {
+export const calcTimeBasedRepayValue = (order: BondOrder) => {
   const { loanValue } = order;
 
   const { fee, feeDiscountPercent } = order.borrowNft.classicParams.timeBased;
@@ -72,13 +72,13 @@ export const calcTimeBasedRepayValue = (order: Order) => {
   return loanValue + feeAmountWithDiscount;
 };
 
-export const calcPriceBasedUpfrontFee = (order: Order) => {
+export const calcPriceBasedUpfrontFee = (order: BondOrder) => {
   const { loanValue } = order;
 
   return loanValue * 0.01;
 };
 
-type CalcBondFee = (props: { order: Order; pair: Pair }) => number;
+type CalcBondFee = (props: { order: BondOrder; pair: Pair }) => number;
 export const calcBondFee: CalcBondFee = ({ order, pair }) => {
   const { loanValue } = order;
   const { currentSpotPrice } = pair;

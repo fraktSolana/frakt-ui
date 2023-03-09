@@ -12,7 +12,7 @@ import styles from './BorrowBulkOverviewPage.module.scss';
 import { getLoanFields } from './helpers';
 import { CARD_VALUES_TYPES, LoanCardValue } from './types';
 import { useBorrowBulkOverviewPage } from './hooks';
-import { Order } from '../cartState';
+import { BondOrder } from '../cartState';
 import { Pair } from '@frakt/api/bonds';
 
 export const BorrowBulkOverviewPage: FC = () => {
@@ -81,7 +81,7 @@ export const BorrowBulkOverviewPage: FC = () => {
 };
 
 interface LoanCardprops {
-  order: Order;
+  order: BondOrder;
   pair?: Pair;
   onEditClick: () => void;
 }
