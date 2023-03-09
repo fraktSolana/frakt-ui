@@ -186,4 +186,5 @@ const borrowBulk: BorrowBulk = async ({
     onSuccess: () => {},
     onError: () => {},
   });
+  return true;
 };
