@@ -3,6 +3,7 @@ import { WalletContextState } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
 import { web3 } from 'fbonds-core';
 import { unstakeFromPool } from 'fbonds-core/lib/bonds_trade_pool/functions/investment';
+import { FRAKT_TRADE_PROGRAM_ID } from '../constants';
 
 type MakeWithdraw = (props: {
   connection: web3.Connection;
@@ -21,10 +22,6 @@ export const makeWithdraw: MakeWithdraw = async ({
   wallet,
   tradePool,
 }) => {
-  const programID = 'bondPKoXiaX83eJeCKY2VVDrRygkaFhjqZVbHsdDC4T';
-
-  const FRAKT_TRADE_PROGRAM_ID = new web3.PublicKey(programID);
-
   const { investment, instructions, signers } = await unstakeFromPool({
     programId: FRAKT_TRADE_PROGRAM_ID,
     connection: connection,

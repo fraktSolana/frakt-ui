@@ -6,6 +6,7 @@ import {
   changeTradeSettings,
   initializeTradePool,
 } from 'fbonds-core/lib/bonds_trade_pool/functions/pool-factory';
+import { FRAKT_TRADE_AUTHORITY, FRAKT_TRADE_PROGRAM_ID } from '../constants';
 import { FormValues } from '../types';
 
 type MakeCreateStrategy = (params: {
@@ -24,13 +25,6 @@ export const makeCreateStrategy: MakeCreateStrategy = async ({
   wallet,
   formValues,
 }) => {
-  const tradeAuthority = '7JxVxxLTDkra9E3y7SZxuunmgeGzL7vzUQj55PFxfguT';
-  const programID = 'bondPKoXiaX83eJeCKY2VVDrRygkaFhjqZVbHsdDC4T';
-
-  const FRAKT_TRADE_AUTHORITY = new web3.PublicKey(tradeAuthority);
-
-  const FRAKT_TRADE_PROGRAM_ID = new web3.PublicKey(programID);
-
   ///reserveFundsRatio = utilizationRate
   const {
     tradePool,

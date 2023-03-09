@@ -3,6 +3,7 @@ import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
 import { changeTradeSettings } from 'fbonds-core/lib/bonds_trade_pool/functions/pool-factory';
+import { FRAKT_TRADE_PROGRAM_ID } from '../constants';
 import { FormValues } from '../types';
 
 type MakeUpdateStrategy = (params: {
@@ -22,10 +23,6 @@ export const makeUpdateStrategy: MakeUpdateStrategy = async ({
   formValues,
   tradePool,
 }) => {
-  const programID = 'bondPKoXiaX83eJeCKY2VVDrRygkaFhjqZVbHsdDC4T';
-
-  const FRAKT_TRADE_PROGRAM_ID = new web3.PublicKey(programID);
-
   const {
     tradeSettings,
     instructions: tradeSettingTxs,
