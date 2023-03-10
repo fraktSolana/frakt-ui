@@ -54,7 +54,7 @@ export const fetchMarketPairs: FetchMarketPairs = async ({ marketPubkey }) => {
 type FetchMarketPair = (props: { pairPubkey: web3.PublicKey }) => Promise<Pair>;
 export const fetchMarketPair: FetchMarketPair = async ({ pairPubkey }) => {
   const { data } = await axios.get<Pair>(
-    `https://${BACKEND_DOMAIN}/pair/${pairPubkey.toBase58()}`,
+    `https://${BACKEND_DOMAIN}/pair/${pairPubkey.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data;
@@ -70,7 +70,7 @@ export const fetchWalletBonds: FetchWalletBonds = async ({
   marketPubkey,
 }) => {
   const { data } = await axios.get<Bond[]>(
-    `https://${BACKEND_DOMAIN}/bonds/${walletPubkey.toBase58()}/${marketPubkey.toBase58()}`,
+    `https://${BACKEND_DOMAIN}/bonds/${walletPubkey.toBase58()}/${marketPubkey.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data ?? [];
