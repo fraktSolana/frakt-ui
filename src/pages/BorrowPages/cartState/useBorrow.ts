@@ -111,18 +111,7 @@ export const useBorrow = () => {
           nft: cartOrder.borrowNft,
           loanType: cartOrder.loanType,
           loanValue: cartOrder.loanValue,
-          // pair: cartPair
-          //   ? {
-          //     ...cartPair,
-          //     edgeSettlement:
-          //       cartPair.edgeSettlement +
-          //       calcBondsAmount({
-          //         loanValue: cartOrder.loanValue,
-          //         spotPrice:
-          //           cartOrder?.bondOrderParams?.orderParams?.[0]?.spotPrice,
-          //       }),
-          //   }
-          //   : null,
+
           pair: cartPair || null,
           bondOrder: cartOrder,
         });

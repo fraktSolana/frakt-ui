@@ -10,7 +10,6 @@ import { Bond, Market, Pair } from '@frakt/api/bonds';
 import { useCountdown } from '@frakt/hooks';
 import {
   BOND_SOL_DECIMAIL_DELTA,
-  getBestPairForExit,
   isBondAvailableToRedeem,
 } from '@frakt/utils/bonds';
 
@@ -212,13 +211,6 @@ export const BondCard: FC<BondCardProps> = ({
           </Button>
         </div>
       </div>
-      {/* <ExitModal
-        visible={exitModalVisible}
-        availableToExit={bestPair?.edgeSettlement / 1e6} //TODO: SOL
-        // onExit={() => onExit({ bond, pair: bestPair })}
-        onExit={() => {}}
-        onCancel={() => setExitModalVisible(false)}
-      /> */}
     </>
   );
 };

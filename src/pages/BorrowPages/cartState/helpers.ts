@@ -8,44 +8,6 @@ import { BondOrder } from './types';
 import { Order } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
 import { BondOrderParams } from '@frakt/api/nft';
 
-type GetPairMaxBorrowValue = (params: {
-  pair: Pair;
-  collectionFloor: number;
-}) => number; //? lamports
-export const getPairMaxBorrowValue: GetPairMaxBorrowValue = ({
-  pair,
-  collectionFloor,
-}) => {
-  const loanToValueLamports =
-    collectionFloor * (pair.validation.loanToValueFilter / 1e4);
-  const maxValueBonds = Math.min(
-    pair.edgeSettlement,
-    loanToValueLamports / BOND_DECIMAL_DELTA,
-  );
-  return maxValueBonds * pair.currentSpotPrice;
-};
-
-type GetPairWithMaxBorrowValue = (params: {
-  pairs: Pair[];
-  collectionFloor: number;
-  duration?: number;
-}) => Pair;
-export const getPairWithMaxBorrowValue: GetPairWithMaxBorrowValue = ({
-  pairs,
-  collectionFloor,
-  duration = 7, //? Days
-}) => {
-  const suitablePairsByDuration = pairs.filter((p) =>
-    pairLoanDurationFilter({ pair: p, duration }),
-  );
-
-  const pairWithMaxBorrowValue = maxBy(suitablePairsByDuration, (p) =>
-    getPairMaxBorrowValue({ pair: p, collectionFloor }),
-  );
-
-  return pairWithMaxBorrowValue;
-};
-
 type ConvertTakenOrdersToOrderParams = (params: {
   pairs: Pair[];
   takenOrders: Order[];

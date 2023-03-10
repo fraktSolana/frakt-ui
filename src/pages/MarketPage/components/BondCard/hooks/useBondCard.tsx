@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { Bond, Market, Pair } from '@frakt/api/bonds';
 import {
-  getBestPairForExit,
   isBondAvailableToRedeem,
   pairLoanDurationFilter,
 } from '@frakt/utils/bonds';

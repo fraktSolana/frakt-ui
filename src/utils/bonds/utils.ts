@@ -84,32 +84,3 @@ export const pairLtvFilter: PairLtvFilter = ({
   pair,
   ltvBasePoints = 1000, //? 1000 === 10%
 }) => ltvBasePoints <= pair?.validation?.loanToValueFilter;
-
-type GetBestPairForExit = (params: {
-  fbondTokenAmount: number;
-  ltvBasePoints: number;
-  duration: number;
-  pairs: Pair[];
-}) => Pair | null;
-export const getBestPairForExit: GetBestPairForExit = ({
-  fbondTokenAmount,
-  ltvBasePoints,
-  duration,
-  pairs,
-}) => {
-  const suitablePairsByDuration = pairs.filter((p) =>
-    pairLoanDurationFilter({ pair: p, duration }),
-  );
-
-  const suitablePairsByLtv = suitablePairsByDuration.filter((p) =>
-    pairLtvFilter({ pair: p, ltvBasePoints }),
-  );
-
-  const suitablePairsBySettlement = suitablePairsByLtv.filter((pair) => {
-    return fbondTokenAmount <= pair.edgeSettlement;
-  });
-
-  return (
-    maxBy(suitablePairsBySettlement, (pair) => pair.currentSpotPrice) ?? null
-  );
-};

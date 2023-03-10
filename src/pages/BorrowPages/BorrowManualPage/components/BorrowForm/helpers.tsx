@@ -14,10 +14,6 @@ import {
   calcTimeBasedRepayValue,
 } from '@frakt/pages/BorrowPages/helpers';
 
-import {
-  getPairMaxBorrowValue,
-  getPairWithMaxBorrowValue,
-} from '../../../cartState';
 import { LoanDetailsField } from './types';
 import styles from './BorrowForm.module.scss';
 import { getMaxBorrowValueOptimized } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
@@ -56,15 +52,6 @@ export const getBorrowValueRange: GetBorrowValueRange = ({
     if (loanType === LoanType.PRICE_BASED) return maxBorrowValuePriceBased;
     if (loanType === LoanType.TIME_BASED) return maxBorrowValueTimeBased;
 
-    // const maxBorrowValuePair = getPairWithMaxBorrowValue({
-    //   pairs: bondsParams?.pairs,
-    //   collectionFloor: bondsParams?.market?.oracleFloor?.floor,
-    //   duration: bondsParams?.duration,
-    // });
-
-    // if (!maxBorrowValuePair) {
-    //   return 0;
-    // }
     const maxBorrowValue = getMaxBorrowValueOptimized({
       pairs: bondsParams?.pairs.filter((p) =>
         pairLoanDurationFilter({ pair: p, duration: bondsParams.duration }),

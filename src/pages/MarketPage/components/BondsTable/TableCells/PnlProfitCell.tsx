@@ -5,7 +5,6 @@ import { Bond, Market, Pair } from '@frakt/api/bonds';
 import { Solana } from '@frakt/icons';
 import {
   BOND_SOL_DECIMAIL_DELTA,
-  getBestPairForExit,
   pairLoanDurationFilter,
 } from '@frakt/utils/bonds';
 
@@ -97,12 +96,6 @@ export const calcPnlProfit = ({ bond, market, pairs }) => {
       }),
     ),
   });
-  // const bestPair = getBestPairForExit({
-  //   pairs,
-  //   ltvBasePoints,
-  //   fbondTokenAmount: amountOfUserBonds,
-  //   duration: (fbond.liquidatingAt - fbond.activatedAt) / (24 * 60 * 60),
-  // });
 
   const pnlLamports = bestOrdersAndBorrowValue.maxBorrowValue;
 
