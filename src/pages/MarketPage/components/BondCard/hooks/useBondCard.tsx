@@ -23,7 +23,6 @@ export const useBondCardActions = ({
 
     const ltvBasePoints =
       (fbond.amountToReturn / market?.oracleFloor?.floor) * 1e4;
-    console.log('exitPairs HERE: ', pairs);
 
     return getBestOrdersForExit({
       loanToValueFilter: ltvBasePoints,
