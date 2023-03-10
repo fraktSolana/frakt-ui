@@ -39,7 +39,7 @@ export const exitBond: ExitBond = async ({
       wallet,
     });
 
-  if (unsetBondTxnAndSigners.length > 0)
+  if (unsetBondTxnAndSigners.length > 0) {
     await signAndSendAllTransactions({
       txnsAndSigners: unsetBondTxnAndSigners,
       connection,
@@ -50,7 +50,7 @@ export const exitBond: ExitBond = async ({
       onSuccess: () => {},
       onError: () => {},
     });
-
+  }
   await signAndSendAllTransactions({
     txnsAndSigners: sellingBondsTxnsAndSigners,
     connection,

@@ -43,7 +43,7 @@ type FetchMarketPairs = (props: {
 }) => Promise<Pair[]>;
 export const fetchMarketPairs: FetchMarketPairs = async ({ marketPubkey }) => {
   const { data } = await axios.get<Pair[]>(
-    `https://${BACKEND_DOMAIN}/pairs/${marketPubkey.toBase58()}`,
+    `https://${BACKEND_DOMAIN}/pairs/${marketPubkey.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data?.filter(
