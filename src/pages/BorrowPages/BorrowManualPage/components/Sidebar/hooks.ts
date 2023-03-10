@@ -61,7 +61,9 @@ export const useSidebar = () => {
         nft: currentNft,
         pair: currentPair,
         // bondOrderParamsAndAssetReceiver: currentBondOrder.bondOrderParams.orderParams.map(orderParam => ({...orderParam, assetReceiver: })),
-        bondOrderParams: currentBondOrder.bondOrderParams.orderParams,
+        bondOrderParams: currentBondOrder
+          ? currentBondOrder.bondOrderParams.orderParams
+          : [],
         loanType: currentLoanType,
         loanValue: currentLoanValue,
         market,
@@ -113,6 +115,7 @@ const borrowSingle: BorrowSingle = async ({
   connection,
   wallet,
 }): Promise<boolean> => {
+  // console.log("bondOrderParams: ", bondOrderParams)
   if (loanType !== LoanType.BOND) {
     const { transaction, signers } = await makeProposeTransaction({
       nftMint: nft.mint,

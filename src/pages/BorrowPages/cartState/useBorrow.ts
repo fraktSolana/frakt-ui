@@ -6,6 +6,7 @@ import { useMarket, useMarketPairs } from '@frakt/utils/bonds';
 
 import { useCurrentNft } from './useCurrentNft';
 import { calcBondsAmount, useCartState } from './useCartState';
+import { LoanType } from '@frakt/api/loans';
 
 export const useBorrow = () => {
   const {
@@ -40,7 +41,7 @@ export const useBorrow = () => {
   );
 
   const saveUpcomingOrderToCart = (unshift = false) => {
-    if (currentNft && currentLoanType && currentLoanValue && currentBondOrder) {
+    if (currentNft && currentLoanType && currentLoanValue) {
       // for (let orderParam of currentBondOrder.bondOrderParams.orderParams) {
       //   addOrder({
       //     loanType: currentLoanType,
@@ -51,18 +52,29 @@ export const useBorrow = () => {
       //     unshift,
       //   });
       // }
-      console.log(
-        'saveUpcomingOrderToCart currentBondOrder: ',
-        currentBondOrder,
-      );
-      addBondOrder({
-        bondOrder: currentBondOrder,
-        pairs: pairs.filter((pair) =>
-          currentBondOrder.bondOrderParams.orderParams.find(
-            (orderParam) => orderParam.pairPubkey === pair.publicKey,
+      if (currentLoanType === LoanType.BOND) {
+        console.log(
+          'saveUpcomingOrderToCart currentBondOrder: ',
+          currentBondOrder,
+        );
+        addBondOrder({
+          bondOrder: currentBondOrder,
+          pairs: pairs.filter((pair) =>
+            currentBondOrder.bondOrderParams.orderParams.find(
+              (orderParam) => orderParam.pairPubkey === pair.publicKey,
+            ),
           ),
-        ),
-      });
+        });
+      } else {
+        addOrder({
+          loanType: currentLoanType,
+          nft: currentNft,
+          loanValue: currentLoanValue,
+          pair: null,
+          market: null,
+          unshift,
+        });
+      }
       clearCurrentNftState();
     }
   };
