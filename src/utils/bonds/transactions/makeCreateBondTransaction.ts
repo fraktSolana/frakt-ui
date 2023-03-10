@@ -11,6 +11,7 @@ import {
   BONDS_ADMIN_PUBKEY,
   BONDS_PROGRAM_PUBKEY,
   BOND_DECIMAL_DELTA,
+  PRECISION_CORRECTION_LAMPORTS,
 } from '../constants';
 
 type MakeCreateBondTransaction = (params: {
@@ -203,7 +204,9 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
           args: {
             proof: proof,
             amountToSell: orderParam.orderSize, //? amount of fbond tokens decimals
-            minAmountToGet: orderParam.orderSize * orderParam.spotPrice, //? SOL lamports
+            minAmountToGet:
+              orderParam.orderSize * orderParam.spotPrice -
+              PRECISION_CORRECTION_LAMPORTS, //? SOL lamports
             skipFailed: false,
           },
           connection,
