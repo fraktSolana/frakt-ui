@@ -49,7 +49,7 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
     buyOrdersQuantity: pair.buyOrdersQuantity,
   });
 
-  const amountTokenToUpdate = bidCap - topOrderSize;
+  const amountTokenToUpdate = Math.abs(bidCap - topOrderSize);
 
   const { instructions: instructions1, signers: signers1 } =
     await pairs.mutations.modifyPair({
