@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { LoanType } from '@frakt/api/loans';
-import { BondOrder, useBorrow } from '@frakt/pages/BorrowPages/cartState';
+import {
+  BondOrder,
+  convertTakenOrdersToOrderParams,
+  useBorrow,
+} from '@frakt/pages/BorrowPages/cartState';
 
 import {
   generateSelectOptions,
@@ -113,19 +117,11 @@ export const useBorrowForm = () => {
         loanValue: bestOrdersAndBorrowValue.maxBorrowValue,
         bondOrderParams: {
           market,
-          orderParams: bestOrdersAndBorrowValue.takenOrders.map(
-            (takenOrder) => ({
-              orderSize: takenOrder.orderSize,
-              spotPrice: takenOrder.pricePerShare,
-              pairPubkey: takenOrder.pairPubkey,
-              assetReceiver: pairs.find(
-                (pair) => pair.publicKey === takenOrder.pairPubkey,
-              ).assetReceiver,
-              durationFilter: pairs.find(
-                (pair) => pair.publicKey === takenOrder.pairPubkey,
-              ).validation.durationFilter,
-            }),
-          ),
+          orderParams: convertTakenOrdersToOrderParams({
+            pairs,
+            takenOrders: bestOrdersAndBorrowValue.takenOrders,
+          }),
+
           // [
           //   {
           //     orderSize: bondsAmount,

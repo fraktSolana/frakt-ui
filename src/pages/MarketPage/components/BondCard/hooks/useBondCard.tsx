@@ -18,13 +18,14 @@ export const useBondCardActions = ({
   pairs: Pair[];
 }) => {
   const redeemAvailable = isBondAvailableToRedeem(bond);
-  const bestPair = useMemo(() => {
+
+  const bestOrdersAndBorrowValue = useMemo(() => {
     const { fbond, amountOfUserBonds } = bond;
 
     const ltvBasePoints =
       (fbond.amountToReturn / market?.oracleFloor?.floor) * 1e4;
 
-    const bestOrdersAndBorrowValue = getBestOrdersForExit({
+    return getBestOrdersForExit({
       loanToValueFilter: ltvBasePoints,
       amountOfBonds: amountOfUserBonds,
       pairs: pairs.filter((p) =>
@@ -34,20 +35,18 @@ export const useBondCardActions = ({
         }),
       ),
     });
-    return getBestPairForExit({
-      pairs,
-      ltvBasePoints,
-      fbondTokenAmount: amountOfUserBonds,
-      duration: (fbond.liquidatingAt - fbond.activatedAt) / (24 * 60 * 60),
-    });
   }, [pairs, bond, market]);
 
   const exitAvailable =
-    bestPair && bond.fbond.fraktBondState === FraktBondState.Active;
+    bond.fbond.fraktBondState === FraktBondState.Active &&
+    bestOrdersAndBorrowValue.takenOrders.reduce(
+      (sum, order) => order.orderSize + sum,
+      0,
+    );
 
   return {
     exitAvailable,
     redeemAvailable,
-    bestPair,
+    bestOrdersAndBorrowValue,
   };
 };

@@ -6,11 +6,13 @@ import { Solana } from '@frakt/icons';
 import {
   BOND_SOL_DECIMAIL_DELTA,
   getBestPairForExit,
+  pairLoanDurationFilter,
 } from '@frakt/utils/bonds';
 
 import { useBondCardActions } from '../../BondCard/hooks/useBondCard';
 import { getMarketAndPairsByBond } from '../helpers';
 import styles from './TableCells.module.scss';
+import { getBestOrdersForExit } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
 
 interface PnlProfitCellProps {
   bond: Bond;
@@ -33,7 +35,7 @@ export const PnlProfitCell: FC<PnlProfitCellProps> = ({
 
   const { amountOfUserBonds, averageBondPrice } = bond;
 
-  const { exitAvailable, bestPair } = useBondCardActions({
+  const { exitAvailable, bestOrdersAndBorrowValue } = useBondCardActions({
     bond,
     market,
     pairs,
@@ -43,8 +45,7 @@ export const PnlProfitCell: FC<PnlProfitCellProps> = ({
     setCurrentMarketAndPairs({ market, pairs });
   }, [market]);
 
-  const pnlLamports =
-    (bestPair?.currentSpotPrice - averageBondPrice) * amountOfUserBonds;
+  const pnlLamports = bestOrdersAndBorrowValue.maxBorrowValue;
 
   const pnlProfit = averageBondPrice
     ? pnlLamports / (averageBondPrice * BOND_SOL_DECIMAIL_DELTA)
@@ -86,15 +87,24 @@ export const calcPnlProfit = ({ bond, market, pairs }) => {
   const ltvBasePoints =
     (fbond.amountToReturn / market?.oracleFloor?.floor) * 1e4;
 
-  const bestPair = getBestPairForExit({
-    pairs,
-    ltvBasePoints,
-    fbondTokenAmount: amountOfUserBonds,
-    duration: (fbond.liquidatingAt - fbond.activatedAt) / (24 * 60 * 60),
+  const bestOrdersAndBorrowValue = getBestOrdersForExit({
+    loanToValueFilter: ltvBasePoints,
+    amountOfBonds: amountOfUserBonds,
+    pairs: pairs.filter((p) =>
+      pairLoanDurationFilter({
+        pair: p,
+        duration: (fbond.liquidatingAt - fbond.activatedAt) / (24 * 60 * 60),
+      }),
+    ),
   });
+  // const bestPair = getBestPairForExit({
+  //   pairs,
+  //   ltvBasePoints,
+  //   fbondTokenAmount: amountOfUserBonds,
+  //   duration: (fbond.liquidatingAt - fbond.activatedAt) / (24 * 60 * 60),
+  // });
 
-  const pnlLamports =
-    (bestPair?.currentSpotPrice - averageBondPrice) * amountOfUserBonds;
+  const pnlLamports = bestOrdersAndBorrowValue.maxBorrowValue;
 
   const pnlProfit = averageBondPrice
     ? pnlLamports / (averageBondPrice * BOND_SOL_DECIMAIL_DELTA)

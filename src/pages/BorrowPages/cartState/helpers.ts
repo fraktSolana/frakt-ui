@@ -5,6 +5,8 @@ import { BOND_DECIMAL_DELTA, pairLoanDurationFilter } from '@frakt/utils/bonds';
 import { LoanType } from '@frakt/api/loans';
 
 import { BondOrder } from './types';
+import { Order } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+import { BondOrderParams } from '@frakt/api/nft';
 
 type GetPairMaxBorrowValue = (params: {
   pair: Pair;
@@ -43,6 +45,25 @@ export const getPairWithMaxBorrowValue: GetPairWithMaxBorrowValue = ({
 
   return pairWithMaxBorrowValue;
 };
+
+type ConvertTakenOrdersToOrderParams = (params: {
+  pairs: Pair[];
+  takenOrders: Order[];
+}) => BondOrderParams[];
+export const convertTakenOrdersToOrderParams: ConvertTakenOrdersToOrderParams =
+  ({ pairs, takenOrders }) => {
+    return takenOrders.map((takenOrder) => ({
+      orderSize: takenOrder.orderSize,
+      spotPrice: takenOrder.pricePerShare,
+      pairPubkey: takenOrder.pairPubkey,
+      assetReceiver: pairs.find(
+        (pair) => pair.publicKey === takenOrder.pairPubkey,
+      ).assetReceiver,
+      durationFilter: pairs.find(
+        (pair) => pair.publicKey === takenOrder.pairPubkey,
+      ).validation.durationFilter,
+    }));
+  };
 
 export interface SelectValue {
   label: string;

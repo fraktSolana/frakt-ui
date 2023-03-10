@@ -17,12 +17,13 @@ import {
 import styles from './BondCard.module.scss';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useBondCardActions } from './hooks/useBondCard';
+import { Order } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
 
 interface BondCardProps {
   bond: Bond;
   pairs: Pair[];
   market: Market;
-  onExit: ({ bond, pair }: { bond: Bond; pair: Pair }) => void;
+  onExit: ({ bond, bondOrders }: { bond: Bond; bondOrders: Order[] }) => void;
   onRedeem: (bond: Bond) => void;
 }
 
@@ -42,11 +43,12 @@ export const BondCard: FC<BondCardProps> = ({
     averageBondPrice,
   } = bond;
 
-  const { exitAvailable, bestPair, redeemAvailable } = useBondCardActions({
-    bond,
-    market,
-    pairs,
-  });
+  const { exitAvailable, redeemAvailable, bestOrdersAndBorrowValue } =
+    useBondCardActions({
+      bond,
+      market,
+      pairs,
+    });
 
   const wallet = useWallet();
 
@@ -56,13 +58,17 @@ export const BondCard: FC<BondCardProps> = ({
 
   const { timeLeft } = useCountdown(fbond.liquidatingAt);
 
-  const pnlLamports =
-    (bestPair?.currentSpotPrice - averageBondPrice) * amountOfUserBonds;
+  const pnlLamports = bestOrdersAndBorrowValue.maxBorrowValue;
 
   const pnlProfit = averageBondPrice
     ? pnlLamports / (averageBondPrice * BOND_SOL_DECIMAIL_DELTA)
     : 0;
 
+  console.log({
+    pnlLamports,
+    pnlProfit,
+    bSolLamports,
+  });
   const isReceiveLiquidatedNfts =
     wallet?.publicKey?.toBase58() === bond?.fbond?.bondCollateralOrSolReceiver;
 
@@ -198,7 +204,9 @@ export const BondCard: FC<BondCardProps> = ({
             disabled={!exitAvailable}
             type="primary"
             // onClick={() => setExitModalVisible(true)}
-            onClick={() => onExit({ bond, pair: bestPair })}
+            onClick={() =>
+              onExit({ bond, bondOrders: bestOrdersAndBorrowValue.takenOrders })
+            }
           >
             Exit
           </Button>
