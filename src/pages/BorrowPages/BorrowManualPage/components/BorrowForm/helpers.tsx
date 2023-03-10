@@ -66,7 +66,9 @@ export const getBorrowValueRange: GetBorrowValueRange = ({
     //   return 0;
     // }
     const maxBorrowValue = getMaxBorrowValueOptimized({
-      pairs: bondsParams?.pairs,
+      pairs: bondsParams?.pairs.filter((p) =>
+        pairLoanDurationFilter({ pair: p, duration: bondsParams.duration }),
+      ),
       collectionFloor: bondsParams?.market?.oracleFloor?.floor,
     });
 
