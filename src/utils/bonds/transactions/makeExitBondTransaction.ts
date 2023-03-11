@@ -12,6 +12,7 @@ import {
   BONDS_PROGRAM_PUBKEY,
   PRECISION_CORRECTION_LAMPORTS,
 } from '../constants';
+import { groupBy } from 'ramda';
 
 type MakeExitBondTransaction = (params: {
   bond: Bond;
@@ -187,9 +188,24 @@ export const makeExitBondMultiOrdersTransaction: MakeExitBondMultiOrdersTransact
     //   // transaction.add(...unsetBondCollateralInstructions);
     //   // signers.push(...unsetBondCollateralSigners);
     // }
+    const groupedPairOrderParams = Object.values(
+      groupBy((orderParam) => orderParam.pairPubkey, bondOrderParams),
+    );
+    // const mergedSamePairOrderParams = reduceBy((orderParam) => orderParam.pairPubkey, bondOrderParams, (orderParam) => orderParam.pairPubkey)
+
+    console.log('groupedPairOrderParams: ', groupedPairOrderParams);
+    const mergedPairsOrderParams = groupedPairOrderParams.map((orderParams) =>
+      orderParams.reduce((acc, orderParam) => ({
+        ...acc,
+        orderSize: acc.orderSize + orderParam.orderSize,
+        sum:
+          ((acc as any).sum || 0) * orderParam.orderSize * orderParam.spotPrice,
+      })),
+    );
+    console.log('mergedPairsOrderParams: ', mergedPairsOrderParams);
 
     const sellingBondsIxsAndSigners = await Promise.all(
-      bondOrderParams.map((orderParam) =>
+      mergedPairsOrderParams.map((orderParam) =>
         validateAndSellNftToTokenToNftPair({
           accounts: {
             collateralBox: new web3.PublicKey(bond.collateralBox.publicKey),
@@ -217,7 +233,9 @@ export const makeExitBondMultiOrdersTransaction: MakeExitBondMultiOrdersTransact
             proof: [],
             amountToSell: orderParam.orderSize, //? amount of fbond tokens decimals
             minAmountToGet:
-              orderParam.orderSize * orderParam.spotPrice -
+              ((orderParam as any).sum
+                ? (orderParam as any).sum
+                : orderParam.orderSize * orderParam.spotPrice) -
               PRECISION_CORRECTION_LAMPORTS, //? SOL lamports
             skipFailed: false,
           },
