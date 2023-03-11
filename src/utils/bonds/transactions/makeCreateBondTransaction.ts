@@ -14,6 +14,7 @@ import {
   PRECISION_CORRECTION_LAMPORTS,
 } from '../constants';
 import { groupBy } from 'ramda';
+import { mergeBondOrderParamsByPair } from '../utils';
 
 type MakeCreateBondTransaction = (params: {
   market: Market;
@@ -179,21 +180,9 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
       signers: createBondSigners,
     };
 
-    const groupedPairOrderParams = Object.values(
-      groupBy((orderParam) => orderParam.pairPubkey, bondOrderParams),
-    );
-    // const mergedSamePairOrderParams = reduceBy((orderParam) => orderParam.pairPubkey, bondOrderParams, (orderParam) => orderParam.pairPubkey)
-
-    console.log('groupedPairOrderParams: ', groupedPairOrderParams);
-    const mergedPairsOrderParams = groupedPairOrderParams.map((orderParams) =>
-      orderParams.reduce((acc, orderParam) => ({
-        ...acc,
-        orderSize: acc.orderSize + orderParam.orderSize,
-        sum:
-          ((acc as any).sum || 0) * orderParam.orderSize * orderParam.spotPrice,
-      })),
-    );
-    console.log('mergedPairsOrderParams: ', mergedPairsOrderParams);
+    const mergedPairsOrderParams = mergeBondOrderParamsByPair({
+      bondOrderParams,
+    });
 
     const sellingBondsIxsAndSigners = await Promise.all(
       mergedPairsOrderParams.map((orderParam) =>
@@ -222,9 +211,7 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
             proof: proof,
             amountToSell: orderParam.orderSize, //? amount of fbond tokens decimals
             minAmountToGet:
-              ((orderParam as any).sum
-                ? (orderParam as any).sum
-                : orderParam.orderSize * orderParam.spotPrice) -
+              orderParam.orderSize * orderParam.spotPrice -
               PRECISION_CORRECTION_LAMPORTS, //? SOL lamports
             skipFailed: false,
           },

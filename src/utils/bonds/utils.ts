@@ -2,6 +2,8 @@ import { maxBy } from 'lodash';
 import { FraktBondState } from 'fbonds-core/lib/fbond-protocol/types';
 
 import { Bond, Pair } from '@frakt/api/bonds';
+import { BondOrderParams } from '@frakt/api/nft';
+import { groupBy } from 'ramda';
 
 export const calcRisk = (value: number) => {
   if (value < 40) {
@@ -84,3 +86,27 @@ export const pairLtvFilter: PairLtvFilter = ({
   pair,
   ltvBasePoints = 1000, //? 1000 === 10%
 }) => ltvBasePoints <= pair?.validation?.loanToValueFilter;
+
+type MergeBondOrderParamsByPair = (props: {
+  bondOrderParams: BondOrderParams[];
+}) => BondOrderParams[];
+export const mergeBondOrderParamsByPair: MergeBondOrderParamsByPair = ({
+  bondOrderParams,
+}) => {
+  const groupedPairOrderParams = Object.values(
+    groupBy((orderParam) => orderParam.pairPubkey, bondOrderParams),
+  );
+
+  const mergedPairsOrderParams = groupedPairOrderParams.map((orderParams) =>
+    orderParams.reduce((acc, orderParam) => ({
+      ...acc,
+      orderSize: acc.orderSize + orderParam.orderSize,
+      spotPrice:
+        (acc.orderSize * acc.spotPrice +
+          orderParam.orderSize * orderParam.spotPrice) /
+        (acc.orderSize + orderParam.orderSize),
+    })),
+  );
+
+  return mergedPairsOrderParams;
+};
