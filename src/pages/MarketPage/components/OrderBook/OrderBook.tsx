@@ -19,6 +19,7 @@ import Offer from '../Offer/Offer';
 import { useMarketOrders } from './hooks';
 import { MarketOrder } from './types';
 import styles from './OrderBook.module.scss';
+import { groupWith } from 'ramda';
 
 interface OrderBookProps {
   market: Market;
@@ -83,7 +84,12 @@ const OrderBook: FC<OrderBookProps> = ({
     sort === 'desc' ? setSort('asc') : setSort('desc');
   };
 
-  const { offers, isLoading, offersExist, hidePair } = useMarketOrders({
+  const {
+    offers: offersRaw,
+    isLoading,
+    offersExist,
+    hidePair,
+  } = useMarketOrders({
     marketPubkey: new web3.PublicKey(market?.marketPubkey),
     sortDirection: sort,
     walletOwned: showOwnOrders,
@@ -92,6 +98,24 @@ const OrderBook: FC<OrderBookProps> = ({
     interest: syntheticParams?.interest,
     duration: syntheticParams?.durationDays,
   });
+  // ltv={offer.ltv}
+  // size={offer.size}
+  // interest={offer.interest}
+  const offers = groupWith(
+    (offerA, offerB) =>
+      offerA.interest === offerB.interest &&
+      offerA.ltv === offerB.ltv &&
+      !isOwnOrder(offerA) &&
+      !isOwnOrder(offerB),
+    offersRaw,
+  ).map((squashedOffers) =>
+    squashedOffers.reduce((accOffer, offer) => ({
+      ...accOffer,
+      size: accOffer.size + offer.size,
+    })),
+  );
+  // console.log("offersSquashed: ", offersSquashed)
+  // .reduce((accOffer, offer) => ({...accOffer, size: accOffer.size + }))
 
   const bestOffer = useMemo(() => {
     return offers.at(0)?.synthetic ? offers.at(1) : offers.at(0);
