@@ -13,7 +13,10 @@ import {
 } from './makeExitBondTransaction';
 import { Order } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
 import { BondOrderParams } from '@frakt/api/nft';
-import { signAndSendAllTransactions } from '@frakt/pages/BorrowPages/BorrowManualPage/components/Sidebar/hooks';
+import {
+  signAndSendAllTransactions,
+  signAndSendAllTransactionsInSequence,
+} from '@frakt/pages/BorrowPages/BorrowManualPage/components/Sidebar/hooks';
 
 type ExitBond = (props: {
   bond: Bond;
@@ -39,20 +42,8 @@ export const exitBond: ExitBond = async ({
       wallet,
     });
 
-  if (unsetBondTxnAndSigners.length > 0) {
-    await signAndSendAllTransactions({
-      txnsAndSigners: unsetBondTxnAndSigners,
-      connection,
-      wallet,
-      // commitment = 'finalized',
-      onBeforeApprove: () => {},
-      onAfterSend: () => {},
-      onSuccess: () => {},
-      onError: () => {},
-    });
-  }
-  await signAndSendAllTransactions({
-    txnsAndSigners: sellingBondsTxnsAndSigners,
+  await signAndSendAllTransactionsInSequence({
+    txnsAndSigners: [unsetBondTxnAndSigners, sellingBondsTxnsAndSigners],
     connection,
     wallet,
     // commitment = 'finalized',
@@ -61,5 +52,6 @@ export const exitBond: ExitBond = async ({
     onSuccess: () => {},
     onError: () => {},
   });
+
   return true;
 };

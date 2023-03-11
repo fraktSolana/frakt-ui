@@ -23,7 +23,7 @@ import { useConnection } from '@frakt/hooks';
 import { useBorrow } from '../cartState';
 import { BondOrderParams } from '@frakt/api/nft';
 import {
-  signAndSendAllTransactions,
+  signAndSendAllTransactionsInSequence,
   TxnsAndSigners,
 } from '../BorrowManualPage/components/Sidebar/hooks';
 
@@ -160,8 +160,35 @@ const borrowBulk: BorrowBulk = async ({
       .map((chunk) => chunk.createBondTxnAndSigners)
       .flat(),
   ];
-  await signAndSendAllTransactions({
-    txnsAndSigners: firstChunk,
+  // await signAndSendAllTransactions({
+  //   txnsAndSigners: firstChunk,
+  //   connection,
+  //   wallet,
+  //   // commitment = 'finalized',
+  //   onBeforeApprove: () => {},
+  //   onAfterSend: () => {},
+  //   onSuccess: () => {},
+  //   onError: () => {},
+  // });
+
+  const secondChunk: TxnsAndSigners[] = [
+    ...bondTransactionsAndSignersChunks
+      .map((chunk) => chunk.sellingBondsTxnsAndSigners)
+      .flat(),
+  ];
+  // await signAndSendAllTransactions({
+  // txnsAndSigners: secondChunk,
+  // connection,
+  // wallet,
+  // // commitment = 'finalized',
+  // onBeforeApprove: () => {},
+  // onAfterSend: () => {},
+  // onSuccess: () => {},
+  // onError: () => {},
+  // });
+
+  await signAndSendAllTransactionsInSequence({
+    txnsAndSigners: [firstChunk, secondChunk],
     connection,
     wallet,
     // commitment = 'finalized',
@@ -171,20 +198,5 @@ const borrowBulk: BorrowBulk = async ({
     onError: () => {},
   });
 
-  const secondChunk: TxnsAndSigners[] = [
-    ...bondTransactionsAndSignersChunks
-      .map((chunk) => chunk.sellingBondsTxnsAndSigners)
-      .flat(),
-  ];
-  await signAndSendAllTransactions({
-    txnsAndSigners: secondChunk,
-    connection,
-    wallet,
-    // commitment = 'finalized',
-    onBeforeApprove: () => {},
-    onAfterSend: () => {},
-    onSuccess: () => {},
-    onError: () => {},
-  });
   return true;
 };

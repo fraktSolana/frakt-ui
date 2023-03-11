@@ -149,19 +149,10 @@ const borrowSingle: BorrowSingle = async ({
       wallet,
     });
 
-  await signAndSendAllTransactions({
-    txnsAndSigners: [createBondTxnAndSigners],
-    connection,
-    wallet,
-    // commitment = 'finalized',
-    onBeforeApprove: () => {},
-    onAfterSend: () => {},
-    onSuccess: () => {},
-    onError: () => {},
-  });
+  console.log('signAndSendAllTransactionsInSequence');
 
-  await signAndSendAllTransactions({
-    txnsAndSigners: sellingBondsTxnsAndSigners,
+  await signAndSendAllTransactionsInSequence({
+    txnsAndSigners: [[createBondTxnAndSigners], sellingBondsTxnsAndSigners],
     connection,
     wallet,
     // commitment = 'finalized',
@@ -280,3 +271,118 @@ export const signAndSendAllTransactions: SignAndSendAllTransactions = async ({
     return false;
   }
 };
+
+interface SignAndSendAllTransactionsInSequenceProps {
+  txnsAndSigners: TxnsAndSigners[][];
+  connection: web3.Connection;
+  wallet: WalletContextState;
+  commitment?: web3.Commitment;
+  onBeforeApprove?: () => void;
+  onAfterSend?: () => void;
+  onSuccess?: () => void;
+  onError?: () => void;
+}
+
+type SignAndSendAllTransactionsInSequence = (
+  props: SignAndSendAllTransactionsInSequenceProps,
+) => Promise<boolean>;
+
+export const signAndSendAllTransactionsInSequence: SignAndSendAllTransactionsInSequence =
+  async ({
+    txnsAndSigners,
+    connection,
+    wallet,
+    commitment = 'finalized',
+    onBeforeApprove,
+    onAfterSend,
+    onSuccess,
+    onError,
+  }) => {
+    try {
+      onBeforeApprove?.();
+
+      const { blockhash, lastValidBlockHeight } =
+        await connection.getLatestBlockhash();
+
+      const transactions = txnsAndSigners
+        .flat()
+        .map(({ transaction, signers = [] }) => {
+          transaction.recentBlockhash = blockhash;
+          transaction.feePayer = wallet.publicKey;
+
+          if (signers.length) {
+            transaction.sign(...signers);
+          }
+
+          return transaction;
+        });
+
+      console.log('txnsAndSigners: ', txnsAndSigners);
+      console.log('transactions: ', transactions);
+
+      const signedTransactions = await wallet.signAllTransactions(transactions);
+
+      let currentTxIndex = 0;
+      for (let i = 0; i < txnsAndSigners.length; i++) {
+        for (let r = 0; r < txnsAndSigners[i].length; r++) {
+          console.log('currentTxIndex: ', currentTxIndex);
+          const txn = signedTransactions[currentTxIndex];
+          await connection.sendRawTransaction(txn.serialize(), {
+            skipPreflight: false,
+          });
+          currentTxIndex += 1;
+        }
+        await new Promise((r) => setTimeout(r, 6000));
+      }
+
+      console.log('Transactions sent!');
+      notify({
+        message: 'transaction sent!',
+        type: NotifyType.INFO,
+      });
+
+      onAfterSend?.();
+
+      // await Promise.allSettled(
+      //   txnSignatures.map((signature) =>
+      //     connection.confirmTransaction(
+      //       {
+      //         signature,
+      //         blockhash,
+      //         lastValidBlockHeight,
+      //       },
+      //       commitment,
+      //     ),
+      //   ),
+      // );
+
+      await new Promise((r) => setTimeout(r, 5000));
+
+      onSuccess?.();
+      notify({
+        message: 'Borrowed successfully!',
+        type: NotifyType.SUCCESS,
+      });
+
+      return true;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.warn(error.logs?.join('\n'));
+      const isNotConfirmed = showSolscanLinkNotification(error);
+
+      if (!isNotConfirmed) {
+        notify({
+          message: 'The transaction just failed :( Give it another try',
+          type: NotifyType.ERROR,
+        });
+      }
+
+      captureSentryError({
+        error,
+        wallet,
+        transactionName: 'proposeSingleLoanWithBonds',
+      });
+
+      return false;
+    }
+  };
