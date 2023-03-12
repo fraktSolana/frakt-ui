@@ -11,7 +11,7 @@ export interface BondOrderParams {
 }
 
 //? Almost same as BorrowNftSuggested
-export interface Order {
+export interface BondOrder {
   loanType: LoanType;
   loanValue: number; //? lamports. Max for timeBased, selected for priceBased and Bonds
 

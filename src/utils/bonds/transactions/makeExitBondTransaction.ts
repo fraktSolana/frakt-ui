@@ -4,10 +4,16 @@ import { validateAndSellNftToTokenToNftPair } from 'fbonds-core/lib/fbond-protoc
 import { unsetBondCollateralOrSolReceiver } from 'fbonds-core/lib/fbond-protocol/functions/management';
 
 import { Bond, Market, Pair, WhitelistType } from '@frakt/api/bonds';
-import { getNftMerkleTreeProof } from '@frakt/api/nft';
+import { BondOrderParams, getNftMerkleTreeProof } from '@frakt/api/nft';
 import { PUBKEY_PLACEHOLDER, sendTxnPlaceHolder } from '@frakt/utils';
 
-import { BONDS_ADMIN_PUBKEY, BONDS_PROGRAM_PUBKEY } from '../constants';
+import {
+  BONDS_ADMIN_PUBKEY,
+  BONDS_PROGRAM_PUBKEY,
+  PRECISION_CORRECTION_LAMPORTS,
+} from '../constants';
+import { groupBy } from 'ramda';
+import { mergeBondOrderParamsByPair } from '../utils';
 
 type MakeExitBondTransaction = (params: {
   bond: Bond;
@@ -104,3 +110,109 @@ export const makeExitBondTransaction: MakeExitBondTransaction = async ({
     signers,
   };
 };
+
+type MakeExitBondMultiOrdersTransaction = (params: {
+  market: Market;
+  // bondOrder: BondOrder;
+  bondOrderParams: BondOrderParams[];
+  bond: Bond;
+  connection: web3.Connection;
+  wallet: WalletContextState;
+}) => Promise<{
+  unsetBondTxnAndSigners: {
+    transaction: web3.Transaction;
+    signers: web3.Signer[];
+  }[];
+  sellingBondsTxnsAndSigners: {
+    transaction: web3.Transaction;
+    signers: web3.Signer[];
+  }[];
+}>;
+
+export const makeExitBondMultiOrdersTransaction: MakeExitBondMultiOrdersTransaction =
+  async ({ market, bondOrderParams, bond, connection, wallet }) => {
+    const isReceiveLiquidatedNfts =
+      wallet?.publicKey?.toBase58() ===
+      bond?.fbond?.bondCollateralOrSolReceiver;
+
+    const {
+      instructions: unsetBondCollateralInstructions,
+      signers: unsetBondCollateralSigners,
+    } = await unsetBondCollateralOrSolReceiver({
+      accounts: {
+        fbond: new web3.PublicKey(bond.fbond.publicKey),
+        fbondsTokenMint: new web3.PublicKey(bond.fbond.fbondTokenMint),
+        userPubkey: wallet.publicKey,
+      },
+      args: {},
+      connection,
+      programId: BONDS_PROGRAM_PUBKEY,
+      sendTxn: sendTxnPlaceHolder,
+    });
+    const unsetBondTxnAndSigners = isReceiveLiquidatedNfts
+      ? [
+          {
+            transaction: new web3.Transaction().add(
+              ...unsetBondCollateralInstructions,
+            ),
+            signers: unsetBondCollateralSigners,
+          },
+        ]
+      : [];
+
+    const mergedPairsOrderParams = mergeBondOrderParamsByPair({
+      bondOrderParams,
+    });
+
+    const sellingBondsIxsAndSigners = await Promise.all(
+      mergedPairsOrderParams.map((orderParam) =>
+        validateAndSellNftToTokenToNftPair({
+          accounts: {
+            collateralBox: new web3.PublicKey(bond.collateralBox.publicKey),
+            fbond: new web3.PublicKey(bond.fbond.publicKey),
+            fbondTokenMint: new web3.PublicKey(bond.fbond.fbondTokenMint),
+            collateralTokenMint: new web3.PublicKey(
+              bond.collateralBox.collateralTokenMint,
+            ),
+            fraktMarket: new web3.PublicKey(market.fraktMarket.publicKey),
+            oracleFloor: new web3.PublicKey(
+              market.oracleFloor?.publicKey || PUBKEY_PLACEHOLDER,
+            ),
+            whitelistEntry: new web3.PublicKey(
+              market.whitelistEntry?.publicKey || PUBKEY_PLACEHOLDER,
+            ),
+            hadoMarket: new web3.PublicKey(market.marketPubkey),
+            pair: new web3.PublicKey(orderParam.pairPubkey),
+            userPubkey: wallet.publicKey,
+            protocolFeeReceiver: new web3.PublicKey(
+              BONDS_ADMIN_PUBKEY || PUBKEY_PLACEHOLDER,
+            ),
+            assetReceiver: new web3.PublicKey(orderParam.assetReceiver),
+          },
+          args: {
+            proof: [],
+            amountToSell: orderParam.orderSize, //? amount of fbond tokens decimals
+            minAmountToGet:
+              orderParam.orderSize * orderParam.spotPrice -
+              PRECISION_CORRECTION_LAMPORTS, //? SOL lamports
+            skipFailed: false,
+          },
+          connection,
+          programId: BONDS_PROGRAM_PUBKEY,
+          sendTxn: sendTxnPlaceHolder,
+        }),
+      ),
+    );
+
+    const sellingBondsTxnsAndSigners = sellingBondsIxsAndSigners.map(
+      (ixsAndSigners) => ({
+        transaction: new web3.Transaction().add(...ixsAndSigners.instructions),
+        signers: ixsAndSigners.signers,
+      }),
+    );
+
+    return {
+      unsetBondTxnAndSigners,
+      sellingBondsTxnsAndSigners: sellingBondsTxnsAndSigners,
+    };
+  };

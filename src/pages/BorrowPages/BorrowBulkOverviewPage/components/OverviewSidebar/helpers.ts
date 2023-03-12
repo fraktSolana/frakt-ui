@@ -2,14 +2,14 @@ import { sumBy, uniq } from 'lodash';
 
 import { Pair } from '@frakt/api/bonds';
 import { LoanType } from '@frakt/api/loans';
-import { Order } from '@frakt/pages/BorrowPages/cartState';
+import { BondOrder } from '@frakt/pages/BorrowPages/cartState';
 import {
   calcBondFee,
   calcTimeBasedFee,
 } from '@frakt/pages/BorrowPages/helpers';
 
 type CalcCartFees = (props: {
-  orders: Order[];
+  orders: BondOrder[];
   pairs: Pair[];
 }) => [string, number][];
 export const calcCartFees: CalcCartFees = ({ orders, pairs }) => {
@@ -40,7 +40,7 @@ interface FeesByDay {
   '1y'?: number;
 }
 
-type CalcOrderFees = (props: { order: Order; pair?: Pair }) => FeesByDay;
+type CalcOrderFees = (props: { order: BondOrder; pair?: Pair }) => FeesByDay;
 const calcOrderFees: CalcOrderFees = ({ order, pair }) => {
   const { loanType, loanValue } = order;
 
@@ -95,7 +95,7 @@ const calcOrderFees: CalcOrderFees = ({ order, pair }) => {
 };
 
 type IsBulkHasDifferentDurations = (props: {
-  orders: Order[];
+  orders: BondOrder[];
   pairs: Pair[];
 }) => boolean;
 

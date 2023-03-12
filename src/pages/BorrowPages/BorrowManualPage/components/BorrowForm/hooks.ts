@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { LoanType } from '@frakt/api/loans';
-import { useBorrow } from '@frakt/pages/BorrowPages/cartState';
+import {
+  BondOrder,
+  convertTakenOrdersToOrderParams,
+  useBorrow,
+} from '@frakt/pages/BorrowPages/cartState';
 
 import {
   generateSelectOptions,
@@ -9,6 +13,8 @@ import {
   getCheapestPairForBorrowValue,
   SelectValue,
 } from './helpers';
+import { getBestOrdersByBorrowValue } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+import { pairLoanDurationFilter } from '@frakt/utils/bonds';
 
 export const useBorrowForm = () => {
   const {
@@ -21,6 +27,7 @@ export const useBorrowForm = () => {
     totalBorrowValue,
     setCurrentLoanType,
     setCurrentPair,
+    setCurrentBondOrder,
     currentLoanType,
     currentPair,
   } = useBorrow();
@@ -84,11 +91,61 @@ export const useBorrowForm = () => {
         duration: selectedOption.value.duration,
       });
 
+      const bestOrdersAndBorrowValue = getBestOrdersByBorrowValue({
+        borrowValue: currentLoanValue,
+        collectionFloor: market?.oracleFloor?.floor,
+        pairs: pairs.filter((p) =>
+          pairLoanDurationFilter({
+            pair: p,
+            duration: selectedOption.value.duration,
+          }),
+        ),
+      });
+
+      console.log('bestOrdersAndBorrowValue: ', bestOrdersAndBorrowValue);
+      console.log(
+        'recalculated borrowValue: ',
+        bestOrdersAndBorrowValue.takenOrders.reduce(
+          (sum, order) => sum + order.orderSize * order.pricePerShare,
+          0,
+        ),
+      );
+
+      const bondOrder: BondOrder = {
+        borrowNft: currentNft,
+        loanType: LoanType.BOND,
+        loanValue: bestOrdersAndBorrowValue.maxBorrowValue,
+        bondOrderParams: {
+          market,
+          orderParams: convertTakenOrdersToOrderParams({
+            pairs,
+            takenOrders: bestOrdersAndBorrowValue.takenOrders,
+          }),
+
+          // [
+          //   {
+          //     orderSize: bondsAmount,
+          //     spotPrice: patchedPair.currentSpotPrice,
+          //     pairPubkey: patchedPair.publicKey,
+          //   },
+          // ],
+        },
+      };
+
+      setCurrentBondOrder(bondOrder);
       setCurrentPair(pair);
     } else {
+      setCurrentBondOrder(null);
       setCurrentPair(null);
     }
-  }, [market, currentLoanValue, pairs, selectedOption, setCurrentPair]);
+  }, [
+    market,
+    currentLoanValue,
+    pairs,
+    selectedOption,
+    setCurrentPair,
+    setCurrentBondOrder,
+  ]);
 
   //? Calc loanValue range
   const [minBorrowValue, maxBorrowValue] = useMemo(() => {
