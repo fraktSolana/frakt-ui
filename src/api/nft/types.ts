@@ -41,6 +41,8 @@ export interface BondOrderParams {
   orderSize: number; //? lamports
   spotPrice: number; //? lamports
   pairPubkey: string;
+  assetReceiver: string;
+  durationFilter: number;
 }
 
 export interface BorrowNftSuggested {

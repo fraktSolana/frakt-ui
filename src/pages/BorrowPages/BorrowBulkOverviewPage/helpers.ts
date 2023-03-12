@@ -8,11 +8,11 @@ import {
   calcTimeBasedRepayValue,
 } from '@frakt/pages/BorrowPages/helpers';
 
-import { Order } from '../cartState';
+import { BondOrder } from '../cartState';
 import { CARD_VALUES_TYPES, LoanCardValue, LOAN_TYPE_NAME } from './types';
 
 type GetLoanFields = (props: {
-  order: Order;
+  order: BondOrder;
   pair?: Pair;
 }) => Array<LoanCardValue>;
 export const getLoanFields: GetLoanFields = ({ order, pair }) => {

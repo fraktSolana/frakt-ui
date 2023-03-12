@@ -14,12 +14,9 @@ import {
   calcTimeBasedRepayValue,
 } from '@frakt/pages/BorrowPages/helpers';
 
-import {
-  getPairMaxBorrowValue,
-  getPairWithMaxBorrowValue,
-} from '../../../cartState';
 import { LoanDetailsField } from './types';
 import styles from './BorrowForm.module.scss';
+import { getMaxBorrowValueOptimized } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
 
 export interface SelectValue {
   label: string;
@@ -49,27 +46,21 @@ export const getBorrowValueRange: GetBorrowValueRange = ({
     valuation * (classicParams?.timeBased?.ltvPercent / 100);
   const maxBorrowValuePriceBased =
     valuation * (classicParams?.priceBased?.ltvPercent / 100);
-  const minBorrowValue = valuation / 10;
+  const minBorrowValue = valuation / 100;
 
   const maxBorrowValue = (() => {
     if (loanType === LoanType.PRICE_BASED) return maxBorrowValuePriceBased;
     if (loanType === LoanType.TIME_BASED) return maxBorrowValueTimeBased;
 
-    const maxBorrowValuePair = getPairWithMaxBorrowValue({
-      pairs: bondsParams?.pairs,
+    const maxBorrowValue = getMaxBorrowValueOptimized({
+      pairs: bondsParams?.pairs.filter((p) =>
+        pairLoanDurationFilter({ pair: p, duration: bondsParams.duration }),
+      ),
       collectionFloor: bondsParams?.market?.oracleFloor?.floor,
-      duration: bondsParams?.duration,
     });
-
-    if (!maxBorrowValuePair) {
-      return 0;
-    }
 
     //? LoanType.BONDS
-    return getPairMaxBorrowValue({
-      pair: maxBorrowValuePair,
-      collectionFloor: bondsParams.market.oracleFloor.floor,
-    });
+    return maxBorrowValue;
   })();
 
   return [Math.min(minBorrowValue, maxBorrowValue), maxBorrowValue];
@@ -158,7 +149,7 @@ export const getCheapestPairForBorrowValue: GetCheapestPairForBorrowValue = ({
         valuation * (pair.validation.loanToValueFilter * 0.01 * 0.01);
 
       return (
-        borrowValueBonds <= pair.edgeSettlement &&
+        // borrowValueBonds <= pair.edgeSettlement &&
         loanToValueLamports >= borrowValueBonds * BOND_DECIMAL_DELTA
       );
     },

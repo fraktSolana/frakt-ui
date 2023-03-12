@@ -92,6 +92,7 @@ export const useOfferPage = () => {
             maxLTV: ltv,
             solDeposit: parseFloat(offerSize),
             interest: parseFloat(interest),
+            marketFloor: market.oracleFloor.floor,
             bondFeature: receiveLiquidatedNfts
               ? BondFeatures.ReceiveNftOnLiquidation
               : BondFeatures.None,

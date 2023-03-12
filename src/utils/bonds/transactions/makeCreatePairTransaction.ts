@@ -11,9 +11,11 @@ import {
 } from 'fbonds-core/lib/fbond-protocol/types';
 
 import {
+  BASE_POINTS,
   BONDS_PROGRAM_PUBKEY,
   BOND_DECIMAL_DELTA,
   BOND_MAX_RETURN_AMOUNT_FILTER,
+  BOND_MAX_RETURN_AMOUNT_PROTECTION_BASE_POINTS,
 } from '../constants';
 
 type MakeCreatePairTransaction = (params: {
@@ -21,6 +23,7 @@ type MakeCreatePairTransaction = (params: {
   maxDuration: number; //? days 7or14
   solDeposit: number; //? Amount of deposit in SOL. Normal values (F.e. 1, 20, 100)
   interest: number; //? % 0-Infinity
+  marketFloor: number; //? % 0-Infinity
   marketPubkey: web3.PublicKey;
   bondFeature?: BondFeatures;
   connection: web3.Connection;
@@ -39,6 +42,7 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
   maxDuration,
   solDeposit,
   interest,
+  marketFloor,
   marketPubkey,
   bondFeature = BondFeatures.None,
   connection,
@@ -52,6 +56,14 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
 
   const bidCap = Math.floor(solDepositLamports / spotPrice);
 
+  const maxReturnAmountFilter = Math.ceil(
+    (marketFloor *
+      ((maxLTVRaw *
+        (BASE_POINTS + BOND_MAX_RETURN_AMOUNT_PROTECTION_BASE_POINTS)) /
+        BASE_POINTS)) /
+      BASE_POINTS,
+  );
+  console.log({ maxReturnAmountFilter, marketFloor, maxLTVRaw });
   const {
     instructions: instructions1,
     signers: signers1,
@@ -101,7 +113,7 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
     args: {
       loanToValueFilter: maxLTVRaw,
       maxDurationFilter: maxDurationSec,
-      maxReturnAmountFilter: BOND_MAX_RETURN_AMOUNT_FILTER,
+      maxReturnAmountFilter: maxReturnAmountFilter,
       bondFeatures: bondFeature,
     },
     connection,

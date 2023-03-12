@@ -2,6 +2,8 @@ import { maxBy } from 'lodash';
 import { FraktBondState } from 'fbonds-core/lib/fbond-protocol/types';
 
 import { Bond, Pair } from '@frakt/api/bonds';
+import { BondOrderParams } from '@frakt/api/nft';
+import { groupBy } from 'ramda';
 
 export const calcRisk = (value: number) => {
   if (value < 40) {
@@ -77,7 +79,7 @@ export const pairLoanDurationFilter: PairLoanDurationFilter = ({
   pair,
   duration = 7, //? Days
   // }) => duration * (24 * 60 * 60) <= pair?.validation?.durationFilter; //TODO: Allow to take loans with shorter duration
-}) => duration * (24 * 60 * 60) === pair?.validation?.durationFilter;
+}) => duration * (24 * 60 * 60) <= pair?.validation?.durationFilter;
 
 type PairLtvFilter = (props: { pair: Pair; ltvBasePoints: number }) => boolean;
 export const pairLtvFilter: PairLtvFilter = ({
@@ -85,31 +87,26 @@ export const pairLtvFilter: PairLtvFilter = ({
   ltvBasePoints = 1000, //? 1000 === 10%
 }) => ltvBasePoints <= pair?.validation?.loanToValueFilter;
 
-type GetBestPairForExit = (params: {
-  fbondTokenAmount: number;
-  ltvBasePoints: number;
-  duration: number;
-  pairs: Pair[];
-}) => Pair | null;
-export const getBestPairForExit: GetBestPairForExit = ({
-  fbondTokenAmount,
-  ltvBasePoints,
-  duration,
-  pairs,
+type MergeBondOrderParamsByPair = (props: {
+  bondOrderParams: BondOrderParams[];
+}) => BondOrderParams[];
+export const mergeBondOrderParamsByPair: MergeBondOrderParamsByPair = ({
+  bondOrderParams,
 }) => {
-  const suitablePairsByDuration = pairs.filter((p) =>
-    pairLoanDurationFilter({ pair: p, duration }),
+  const groupedPairOrderParams = Object.values(
+    groupBy((orderParam) => orderParam.pairPubkey, bondOrderParams),
   );
 
-  const suitablePairsByLtv = suitablePairsByDuration.filter((p) =>
-    pairLtvFilter({ pair: p, ltvBasePoints }),
+  const mergedPairsOrderParams = groupedPairOrderParams.map((orderParams) =>
+    orderParams.reduce((acc, orderParam) => ({
+      ...acc,
+      orderSize: acc.orderSize + orderParam.orderSize,
+      spotPrice:
+        (acc.orderSize * acc.spotPrice +
+          orderParam.orderSize * orderParam.spotPrice) /
+        (acc.orderSize + orderParam.orderSize),
+    })),
   );
 
-  const suitablePairsBySettlement = suitablePairsByLtv.filter((pair) => {
-    return fbondTokenAmount <= pair.edgeSettlement;
-  });
-
-  return (
-    maxBy(suitablePairsBySettlement, (pair) => pair.currentSpotPrice) ?? null
-  );
+  return mergedPairsOrderParams;
 };

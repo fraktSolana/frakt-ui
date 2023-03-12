@@ -1,4 +1,5 @@
 import { web3 } from '@frakt-protocol/frakt-sdk';
+import { IS_PRIVATE_MARKETS } from '@frakt/config';
 import axios from 'axios';
 
 import { BorrowNft, BulkSuggestion } from './types';
@@ -25,7 +26,7 @@ export const fetchWalletBorrowNfts: FetchWalletBorrowNfts = async ({
   const searchQuery = search ? `search=${search}&` : '';
 
   const { data } = await axios.get<BorrowNft[]>(
-    `https://${BACKEND_DOMAIN}/nft/meta2/${publicKey?.toBase58()}?${searchQuery}limit=${limit}&skip=${offset}&sortBy=${sortBy}&sort=${sortOrder}`,
+    `https://${BACKEND_DOMAIN}/nft/meta2/${publicKey?.toBase58()}?${searchQuery}limit=${limit}&skip=${offset}&sortBy=${sortBy}&sort=${sortOrder}&isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data;
