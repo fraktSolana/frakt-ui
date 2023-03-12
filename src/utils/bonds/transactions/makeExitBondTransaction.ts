@@ -96,6 +96,7 @@ export const makeExitBondTransaction: MakeExitBondTransaction = async ({
       amountToSell: bond.amountOfUserBonds, //? amount of fbond tokens decimals
       minAmountToGet: bond.amountOfUserBonds * pair.currentSpotPrice, //? SOL lamports
       skipFailed: false,
+      isAutocompoundOrAutoreceiveSol: false,
     },
     connection,
     programId: BONDS_PROGRAM_PUBKEY,
@@ -196,6 +197,7 @@ export const makeExitBondMultiOrdersTransaction: MakeExitBondMultiOrdersTransact
               orderParam.orderSize * orderParam.spotPrice -
               PRECISION_CORRECTION_LAMPORTS, //? SOL lamports
             skipFailed: false,
+            isAutocompoundOrAutoreceiveSol: false,
           },
           connection,
           programId: BONDS_PROGRAM_PUBKEY,
