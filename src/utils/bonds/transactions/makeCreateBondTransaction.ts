@@ -92,6 +92,7 @@ export const makeCreateBondTransaction: MakeCreateBondTransaction = async ({
         minAmountToGet:
           (amountToReturn / BOND_DECIMAL_DELTA) * pair.currentSpotPrice, //? SOL lamports
         skipFailed: false,
+        isAutocompoundOrAutoreceiveSol: false,
       },
       connection,
       programId: BONDS_PROGRAM_PUBKEY,
@@ -214,6 +215,7 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
               orderParam.orderSize * orderParam.spotPrice -
               PRECISION_CORRECTION_LAMPORTS, //? SOL lamports
             skipFailed: false,
+            isAutocompoundOrAutoreceiveSol: false,
           },
           connection,
           programId: BONDS_PROGRAM_PUBKEY,
