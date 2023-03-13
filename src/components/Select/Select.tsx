@@ -46,7 +46,6 @@ export const Select = <T extends unknown>({
       components={{ ValueContainer }}
       className={classNames(styles.select, className)}
       isDisabled={disabled}
-      closeMenuOnSelect={false}
       isOptionDisabled={(option) => option?.disabled}
       classNamePrefix="custom-select"
       defaultValue={defaultValue}
