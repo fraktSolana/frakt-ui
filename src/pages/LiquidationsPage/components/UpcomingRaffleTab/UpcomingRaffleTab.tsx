@@ -3,6 +3,8 @@ import { FC, useEffect } from 'react';
 import { useIntersection } from '@frakt/hooks/useIntersection';
 import { useRaffleInfo } from '@frakt/hooks/useRaffleData';
 import EmptyList from '@frakt/components/EmptyList';
+import { Loader } from '@frakt/components/Loader';
+
 import { useRaffleSort } from '../Liquidations/hooks';
 import styles from './UpcomingRaffleTab.module.scss';
 import RafflesList from '../RafflesList';
@@ -34,11 +36,15 @@ const UpcomingRaffleTab: FC = () => {
     <>
       <RafflesList isGraceList>
         {graceList?.length ? (
-          <div className={styles.rafflesList} ref={ref}>
-            {graceList?.map((raffle) => (
-              <GraceCard key={raffle.nftMint} raffle={raffle} />
-            ))}
-          </div>
+          <>
+            <div className={styles.rafflesList}>
+              {graceList?.map((raffle) => (
+                <GraceCard key={raffle.nftMint} raffle={raffle} />
+              ))}
+            </div>
+            {!!isFetchingNextPage && <Loader />}
+            <div ref={ref} />
+          </>
         ) : (
           <EmptyList text="No loans on grace at the moment" />
         )}
