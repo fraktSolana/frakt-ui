@@ -6,6 +6,7 @@ import styles from './styles.module.scss';
 export interface SelectOption<T> {
   label: string;
   value: T;
+  disabled?: boolean;
 }
 
 interface SelectProps<T> {
@@ -45,6 +46,8 @@ export const Select = <T extends unknown>({
       components={{ ValueContainer }}
       className={classNames(styles.select, className)}
       isDisabled={disabled}
+      closeMenuOnSelect={false}
+      isOptionDisabled={(option) => option?.disabled}
       classNamePrefix="custom-select"
       defaultValue={defaultValue}
       options={options}

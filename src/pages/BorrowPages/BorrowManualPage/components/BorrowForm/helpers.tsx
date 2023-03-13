@@ -24,6 +24,7 @@ export interface SelectValue {
     type: LoanType;
     duration?: number | null; //? Doesn't Exist for LoanType.PRICE_BASED
   };
+  disabled?: boolean;
 }
 
 type GetBorrowValueRange = (props: {
@@ -85,13 +86,16 @@ export const generateSelectOptions: GenerateSelectOptions = ({
 
   const nftHasLimit = nft?.classicParams?.isLimitExceeded;
 
-  if (!nftHasLimit && (!bondsAvailable || timeBasedDiscountAvailable)) {
+  if (!bondsAvailable || timeBasedDiscountAvailable) {
     options.push({
-      label: `${nft?.classicParams?.timeBased.returnPeriodDays} days (flip)`,
+      label: `${nft?.classicParams?.timeBased.returnPeriodDays} days (flip) ${
+        nftHasLimit ? '- limit exceeded' : ''
+      }`,
       value: {
         type: LoanType.TIME_BASED,
         duration: nft?.classicParams?.timeBased.returnPeriodDays,
       },
+      disabled: nftHasLimit,
     });
   }
 
@@ -113,13 +117,14 @@ export const generateSelectOptions: GenerateSelectOptions = ({
     });
   }
 
-  if (!nftHasLimit && nft?.classicParams?.priceBased) {
+  if (nft?.classicParams?.priceBased) {
     options.push({
-      label: 'Perpetual',
+      label: `Perpetual ${nftHasLimit ? '- limit exceeded' : ''}`,
       value: {
         type: LoanType.PRICE_BASED,
         duration: null,
       },
+      disabled: nftHasLimit,
     });
   }
 

@@ -58,6 +58,8 @@ export const useBorrowForm = () => {
   //? Select default select option (when user selects nft)
   useEffect(() => {
     if (selectOptions.length) {
+      const defaultOption = selectOptions.find((option) => !option.disabled);
+
       if (currentNft && currentLoanType) {
         const selectOption = selectOptions.find(({ value }) => {
           const sameLoanType = value?.type === currentLoanType;
@@ -73,10 +75,10 @@ export const useBorrowForm = () => {
           return sameLoanType && sameBondDuration;
         });
 
-        return onSelectOption(selectOption || selectOptions[0]);
+        return onSelectOption(selectOption || defaultOption);
       }
 
-      onSelectOption(selectOptions[0]); //TODO: change to available. F.e. If classic loans not available
+      onSelectOption(defaultOption); //TODO: change to available. F.e. If classic loans not available
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectOptions, onSelectOption]);
