@@ -9,6 +9,7 @@ import { useBondCardActions } from '../../BondCard/hooks/useBondCard';
 import styles from './TableCells.module.scss';
 
 import { getMarketAndPairsByBond } from '../helpers';
+import { convertTakenOrdersToOrderParams } from '@frakt/pages/BorrowPages/cartState';
 
 interface ButtontsCellProps {
   bond: Bond;
@@ -25,11 +26,12 @@ export const ButtontsCell: FC<ButtontsCellProps> = ({
 }) => {
   const { market, pairs } = getMarketAndPairsByBond(bond);
 
-  const { exitAvailable, bestPair, redeemAvailable } = useBondCardActions({
-    bond,
-    market,
-    pairs,
-  });
+  const { exitAvailable, redeemAvailable, bestOrdersAndBorrowValue } =
+    useBondCardActions({
+      bond,
+      market,
+      pairs,
+    });
 
   const { onRedeem, onExit } = useBondsTransactions({
     bonds,
@@ -64,7 +66,15 @@ export const ButtontsCell: FC<ButtontsCellProps> = ({
         disabled={!exitAvailable}
         type="primary"
         // onClick={() => setExitModalVisible(true)}
-        onClick={() => onExit({ bond, pair: bestPair })}
+        onClick={() =>
+          onExit({
+            bond,
+            bondOrderParams: convertTakenOrdersToOrderParams({
+              pairs,
+              takenOrders: bestOrdersAndBorrowValue.takenOrders,
+            }),
+          })
+        }
       >
         Exit
       </Button>

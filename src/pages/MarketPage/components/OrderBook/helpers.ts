@@ -1,5 +1,6 @@
 import { Pair } from '@frakt/api/bonds';
 import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
+import { getTopOrderSize } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
 
 import { MarketOrder } from './types';
 
@@ -9,7 +10,8 @@ import { MarketOrder } from './types';
 export const parseMarketOrder = (pair: Pair): MarketOrder => {
   return {
     ltv: (pair?.validation?.loanToValueFilter || 0) / 100,
-    size: (pair?.edgeSettlement * pair?.currentSpotPrice) / 1e9 || 0,
+    size:
+      (pair ? getTopOrderSize(pair) * pair?.currentSpotPrice : 0) / 1e9 || 0,
     interest: calcInterest({
       spotPrice: pair?.currentSpotPrice,
     }),
@@ -17,7 +19,7 @@ export const parseMarketOrder = (pair: Pair): MarketOrder => {
     rawData: {
       publicKey: pair?.publicKey || '',
       assetReceiver: pair?.assetReceiver || '',
-      edgeSettlement: pair?.edgeSettlement || 0,
+      edgeSettlement: pair ? getTopOrderSize(pair) : 0,
       authorityAdapter: pair?.authorityAdapterPublicKey || '',
     },
   };

@@ -66,22 +66,18 @@ export const useRaffleInfo = (params: {
     };
   };
 
-  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
-    [id, publicKey, queryData],
-    ({ pageParam = 0 }) => fetchData({ pageParam, queryString }),
-    {
-      enabled: !!queryData,
-      getPreviousPageParam: (firstPage) => {
-        return firstPage.pageParam - 1 ?? undefined;
-      },
-      refetchInterval: 5000,
-      getNextPageParam: (lastPage) => {
-        return lastPage.data?.length ? lastPage.pageParam + 1 : undefined;
-      },
-      cacheTime: 100_000,
-      networkMode: 'offlineFirst',
+  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
+    queryKey: [publicKey, queryData, id],
+    enabled: !!queryData,
+    queryFn: ({ pageParam = 0 }) => fetchData({ pageParam, queryString }),
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = allPages.length + 1;
+      return lastPage.data.length !== 0 ? nextPage : undefined;
     },
-  );
+    refetchInterval: 5000,
+    cacheTime: 100_000,
+    networkMode: 'offlineFirst',
+  });
 
   const rafflesData = data?.pages?.map((page) => page.data).flat();
 
