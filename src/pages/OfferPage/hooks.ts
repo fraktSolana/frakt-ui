@@ -67,7 +67,7 @@ export const useOfferPage = () => {
       const { duration, interest, size, ltv } = initialPairValues;
       setDuration(duration || 0);
       setInterest((interest * 100)?.toFixed(0));
-      setOfferSize((size || 0).toFixed(3));
+      setOfferSize((size || 0).toFixed(2));
       setLtv(ltv || 0);
     }
   }, [isEdit, isLoading, pair]);
