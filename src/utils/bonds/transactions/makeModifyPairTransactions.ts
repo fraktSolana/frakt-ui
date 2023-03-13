@@ -42,12 +42,7 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
 
   const bidCap = Math.floor(solDepositLamports / spotPrice);
 
-  const topOrderSize = getTopOrderSize({
-    edgeSettlement: pair.edgeSettlement,
-    bidCap: pair.bidCap,
-    bidSettlement: pair.bidSettlement,
-    buyOrdersQuantity: pair.buyOrdersQuantity,
-  });
+  const topOrderSize = getTopOrderSize(pair);
 
   const amountTokenToUpdate = Math.abs(bidCap - topOrderSize);
 
