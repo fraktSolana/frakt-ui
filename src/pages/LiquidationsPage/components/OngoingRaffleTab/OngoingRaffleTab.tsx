@@ -58,26 +58,30 @@ const OngoingRaffleTab: FC = () => {
   return (
     <RafflesList withRafflesInfo>
       {raffleListWithAuctions?.length ? (
-        <div className={styles.rafflesList} ref={ref}>
-          {raffleListWithAuctions.map((raffle: any) => {
-            if (!raffle?.buyPrice) {
+        <>
+          <div className={styles.rafflesList}>
+            {raffleListWithAuctions.map((raffle: any) => {
+              if (!raffle?.buyPrice) {
+                return (
+                  <LiquidationRaffleCard
+                    key={raffle.rafflePubKey}
+                    raffle={raffle}
+                    disabled={lotteryTickets?.currentTickets < 1}
+                  />
+                );
+              }
               return (
-                <LiquidationRaffleCard
+                <AuctionCard
                   key={raffle.rafflePubKey}
-                  raffle={raffle}
-                  disabled={lotteryTickets?.currentTickets < 1}
+                  hideAuction={hideAuction}
+                  auction={raffle}
                 />
               );
-            }
-            return (
-              <AuctionCard
-                key={raffle.rafflePubKey}
-                hideAuction={hideAuction}
-                auction={raffle}
-              />
-            );
-          })}
-        </div>
+            })}
+            {!!isFetchingNextPage && <Loader />}
+            <div ref={ref} />
+          </div>
+        </>
       ) : (
         <EmptyList text="No ongoing raffles at the moment" />
       )}
