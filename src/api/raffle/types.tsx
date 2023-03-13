@@ -64,6 +64,11 @@ export interface AuctionListItem {
   startPrice: number;
   nextPrice: number;
   buyPrice: number;
+
+  denominator: number;
+  startedAt: number;
+  delta: number;
+  deltaType: string;
 }
 
 export interface CollectionsListItem {
