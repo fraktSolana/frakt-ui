@@ -209,6 +209,8 @@ export const useOfferPage = () => {
           message: 'Transaction successful!',
           type: NotifyType.SUCCESS,
         });
+
+        history.push(`${PATHS.BOND}/${marketPubkey}`);
       } catch (error) {
         console.error(error);
 
