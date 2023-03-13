@@ -79,6 +79,11 @@
         pointer-events: none;
         cursor: default;
       }
+      &--is-disabled {
+        cursor: default;
+        pointer-events: none;
+        color: var(--primary-border);
+      }
     }
   }
 }
