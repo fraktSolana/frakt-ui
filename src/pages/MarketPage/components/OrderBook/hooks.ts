@@ -5,6 +5,7 @@ import { parseMarketOrder } from './helpers';
 import { MarketOrder } from './types';
 import { useMarketPairs } from '@frakt/utils/bonds';
 import { compareNumbers } from '@frakt/utils';
+import { useParams } from 'react-router-dom';
 
 type UseMarketOrders = (props: {
   marketPubkey: web3.PublicKey;
@@ -32,12 +33,18 @@ export const useMarketOrders: UseMarketOrders = ({
 }) => {
   const { publicKey } = useWallet();
 
+  const { pairPubkey: pairPubkey } = useParams<{ pairPubkey: string }>();
+
   const { pairs, isLoading, hidePair } = useMarketPairs({
     marketPubkey: marketPubkey?.toBase58(),
   });
 
   const offers = useMemo(() => {
     if (!pairs) return [];
+
+    const editOffer = pairs.find(({ publicKey }) => publicKey === pairPubkey);
+    const editOfferPubkey = editOffer?.publicKey;
+
     const myOffer: MarketOrder = {
       ltv,
       size: size / 1e9,
@@ -58,8 +65,25 @@ export const useMarketOrders: UseMarketOrders = ({
       })
       .map(parseMarketOrder);
 
-    if (ltv) parsedOffers.push(myOffer);
-    const sortOffersByInterest = parsedOffers.sort((a, b) => {
+    const parsedEditabledOffers = [];
+
+    if (editOfferPubkey) {
+      const offers = parsedOffers.map((offer) => {
+        const isEditOffer = offer?.rawData?.publicKey === editOfferPubkey;
+        if (isEditOffer) return { ...offer, ...myOffer };
+        return offer;
+      });
+
+      parsedEditabledOffers.push(...offers);
+    }
+
+    if (ltv && !editOffer?.publicKey) {
+      parsedOffers.push(myOffer);
+    }
+
+    const offers = editOfferPubkey ? parsedEditabledOffers : parsedOffers;
+
+    const sortOffersByInterest = offers.sort((a, b) => {
       return compareNumbers(a.interest, b.interest, sortDirection === 'desc');
     });
 

@@ -32,7 +32,7 @@ export const PnlProfitCell: FC<PnlProfitCellProps> = ({
 }) => {
   const { market, pairs } = getMarketAndPairsByBond(bond);
 
-  const { amountOfUserBonds, averageBondPrice } = bond;
+  const { averageBondPrice } = bond;
 
   const { exitAvailable, bestOrdersAndBorrowValue } = useBondCardActions({
     bond,
@@ -52,7 +52,7 @@ export const PnlProfitCell: FC<PnlProfitCellProps> = ({
 
   return (
     <>
-      {exitAvailable && (
+      {!!exitAvailable && (
         <div
           className={classNames(styles.value, styles.column, {
             [styles.columnMobile]: inMobile,

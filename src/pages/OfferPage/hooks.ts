@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { web3 } from 'fbonds-core';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useHistory, useParams } from 'react-router-dom';
@@ -12,6 +12,7 @@ import {
   makeRemoveOrderTransaction,
   useMarket,
   useMarketPair,
+  useMarketPairs,
 } from '@frakt/utils/bonds';
 import { signAndConfirmTransaction } from '@frakt/utils/transactions';
 import { notify } from '@frakt/utils';
@@ -22,6 +23,8 @@ import { PATHS } from '@frakt/constants';
 import { Pair } from '@frakt/api/bonds';
 
 import { RBOption } from './components/RadioButton';
+import { makeModifyPairTransactions } from '@frakt/utils/bonds/transactions/makeModifyPairTransactions';
+import { parseMarketOrder } from '../MarketPage/components/OrderBook/helpers';
 
 export const useOfferPage = () => {
   const history = useHistory();
@@ -39,7 +42,15 @@ export const useOfferPage = () => {
     pairPubkey,
   });
 
+  const isEdit = !!pairPubkey;
+  const initialPairValues = parseMarketOrder(pair);
+  const { hidePair } = useMarketPairs({ marketPubkey: marketPubkey });
+
   const queryClient = useQueryClient();
+
+  const isLoading = pairPubkey
+    ? !initialPairValues?.duration || pairLoading || marketLoading
+    : marketLoading;
 
   const wallet = useWallet();
   const connection = useConnection();
@@ -50,6 +61,16 @@ export const useOfferPage = () => {
   const [offerSize, setOfferSize] = useState<string>('0');
   const [autocompound, setAutocompound] = useState(false);
   const [receiveLiquidatedNfts, setReceiveLiquidatedNfts] = useState(false);
+
+  useEffect(() => {
+    if (isEdit && !isLoading) {
+      const { duration, interest, size, ltv } = initialPairValues;
+      setDuration(duration || 0);
+      setInterest((interest * 100)?.toFixed(0));
+      setOfferSize((size || 0).toFixed(2));
+      setLtv(ltv || 0);
+    }
+  }, [isEdit, isLoading, pair]);
 
   const onLtvChange = useCallback((value: number) => setLtv(value), []);
   const onDurationChange = (nextOption: RBOption<number>) => {
@@ -146,29 +167,50 @@ export const useOfferPage = () => {
       try {
         openLoadingModal();
 
-        await new Promise((res) => res);
+        const { transaction, signers, accountsPublicKeys } =
+          await makeModifyPairTransactions({
+            solDeposit: parseFloat(offerSize),
+            interest: parseFloat(interest),
+            pair,
+            connection,
+            maxDuration: duration,
+            maxLTV: ltv,
+            wallet,
+          });
 
-        // const { transaction, signers } = await makeCreatePairTransaction({
-        //   marketPubkey: new web3.PublicKey(marketPubkey),
-        //   maxDuration: duration,
-        //   maxLTV: ltv,
-        //   solDeposit: parseFloat(offerSize),
-        //   apr: parseFloat(interest),
-        //   connection,
-        //   wallet,
-        // });
+        await signAndConfirmTransaction({
+          transaction,
+          signers,
+          wallet,
+          connection,
+        });
 
-        // await signAndConfirmTransaction({
-        //   transaction,
-        //   signers,
-        //   wallet,
-        //   connection,
-        // });
+        const newPair = await getPairAccount({
+          accountsPublicKeys,
+          connection,
+        });
+
+        newPair &&
+          queryClient.setQueryData(
+            ['marketPairs', marketPubkey],
+            (pairs: Pair[]) => {
+              return pairs.map((pair) => {
+                if (
+                  pair.publicKey === accountsPublicKeys.pairPubkey?.toBase58()
+                ) {
+                  return newPair;
+                }
+                return pair;
+              });
+            },
+          );
 
         notify({
           message: 'Transaction successful!',
           type: NotifyType.SUCCESS,
         });
+
+        history.push(`${PATHS.BOND}/${marketPubkey}`);
       } catch (error) {
         console.error(error);
 
@@ -188,7 +230,7 @@ export const useOfferPage = () => {
         openLoadingModal();
 
         const { transaction, signers } = await makeRemoveOrderTransaction({
-          pairPubkey: new web3.PublicKey(pair.publicKey),
+          pairPubkey: new web3.PublicKey(pairPubkey),
           authorityAdapter: new web3.PublicKey(pair.authorityAdapterPublicKey),
           edgeSettlement: pair.edgeSettlement,
           wallet,
@@ -200,6 +242,7 @@ export const useOfferPage = () => {
           transaction,
           signers,
           wallet,
+          onAfterSend: () => hidePair?.(pairPubkey),
         });
 
         notify({
@@ -223,8 +266,6 @@ export const useOfferPage = () => {
     }
   };
 
-  const isLoading = pairPubkey ? pairLoading || marketLoading : marketLoading;
-
   return {
     loadingModalVisible,
     closeLoadingModal,
@@ -240,7 +281,7 @@ export const useOfferPage = () => {
     onEditOffer,
     onRemoveOffer,
     isValid,
-    isEdit: !!pairPubkey,
+    isEdit,
     goBack,
     walletSolBalance: account?.lamports ?? 0,
     market,
