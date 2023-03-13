@@ -163,7 +163,6 @@ const borrowBulk: BorrowBulk = async ({
         loanType: order.loanType,
         connection,
         wallet,
-
       });
     }),
   );
