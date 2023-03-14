@@ -1,11 +1,10 @@
+import { calculateAuctionPrice } from '@frakters/raffle-sdk/lib/raffle-core/helpers';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import moment from 'moment';
 
 import { buyAuction, buyAuctionBond } from '@frakt/utils/raffles';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { AuctionListItem } from '@frakt/api/raffle';
-
-import { calculateAuctionPrice } from '@frakters/raffle-sdk/lib/raffle-core/helpers';
 
 export const useAuctionCard = (
   auction: AuctionListItem,
@@ -20,25 +19,27 @@ export const useAuctionCard = (
     close: closeLoadingModal,
   } = useLoadingModal();
 
+  const currentTime = moment().unix();
+
   const rawTimeToNextRound =
     auction?.denominator -
-    ((moment().unix() - auction.startedAt) % auction?.denominator);
+    ((currentTime - auction.startedAt) % auction?.denominator);
 
-  const currentPrice = calculateAuctionPrice({
-    now: moment().unix(),
+  const rawBuyPrice = calculateAuctionPrice({
+    now: currentTime,
     startPrice: auction.startPrice,
     startTime: auction.startedAt,
     delta: auction.delta,
-    deltaType: auction.deltaType as any,
+    deltaType: auction.deltaType,
     denominator: auction?.denominator,
   });
 
   const rawNextPrice = calculateAuctionPrice({
-    now: moment().unix() + rawTimeToNextRound + 1,
+    now: currentTime + rawTimeToNextRound + 1,
     startPrice: auction.startPrice,
     startTime: auction.startedAt,
     delta: auction.delta,
-    deltaType: auction.deltaType as any,
+    deltaType: auction.deltaType,
     denominator: auction?.denominator,
   });
 
@@ -76,9 +77,9 @@ export const useAuctionCard = (
     }
   };
 
-  const timeToNextRound = moment().unix() + rawTimeToNextRound;
-  const nextPrice = Number((rawNextPrice / 1e9).toFixed(3));
-  const buyPrice = Number((currentPrice / 1e9).toFixed(3));
+  const timeToNextRound = currentTime + rawTimeToNextRound;
+  const nextPrice = parseFloat((rawNextPrice / 1e9).toFixed(3));
+  const buyPrice = parseFloat((rawBuyPrice / 1e9).toFixed(3));
 
   return {
     onSubmit,
