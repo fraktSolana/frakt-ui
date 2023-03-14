@@ -7,6 +7,7 @@ import { useMarket, useMarketPairs } from '@frakt/utils/bonds';
 import { useCurrentNft } from './useCurrentNft';
 import { calcBondsAmount, useCartState } from './useCartState';
 import { LoanType } from '@frakt/api/loans';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 export const useBorrow = () => {
   const {
@@ -214,17 +215,22 @@ const useMarketAndPairs = (marketPubkey: string | null) => {
   const { market, isLoading: isLoadingMarket } = useMarket({
     marketPubkey: marketPubkey,
   });
+  const { publicKey } = useWallet();
 
   const pairs = useMemo(
     () =>
       isLoadingPairs
         ? []
-        : rawPairs.map((rawPair) => {
-            const samePairSelected = cartPairs.find(
-              (cartPair) => cartPair.publicKey === rawPair.publicKey,
-            );
-            return samePairSelected ?? rawPair;
-          }),
+        : rawPairs
+            .map((rawPair) => {
+              const samePairSelected = cartPairs.find(
+                (cartPair) => cartPair.publicKey === rawPair.publicKey,
+              );
+              return samePairSelected ?? rawPair;
+            })
+            .filter(
+              ({ assetReceiver }) => assetReceiver !== publicKey?.toBase58(),
+            ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [cartPairs, isLoadingPairs],
   );
