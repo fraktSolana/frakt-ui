@@ -114,7 +114,7 @@ const borrowSingle: BorrowSingle = async ({
   loanValue,
   connection,
   wallet,
-}): Promise<boolean> => {
+}) => {
   // console.log("bondOrderParams: ", bondOrderParams)
   if (loanType !== LoanType.BOND) {
     const { transaction, signers } = await makeProposeTransaction({
@@ -151,7 +151,7 @@ const borrowSingle: BorrowSingle = async ({
 
   console.log('signAndSendAllTransactionsInSequence');
 
-  await signAndSendAllTransactionsInSequence({
+  return await signAndSendAllTransactionsInSequence({
     txnsAndSigners: [[createBondTxnAndSigners], sellingBondsTxnsAndSigners],
     connection,
     wallet,
