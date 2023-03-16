@@ -27,6 +27,10 @@ export const BOND_FEATURE_OPTIONS: RBOption<BondFeatures>[] = [
     value: BondFeatures.None,
   },
   {
+    label: 'Autoreceive',
+    value: BondFeatures.AutoreceiveSol,
+  },
+  {
     label: 'Receive liquidated NFT',
     value: BondFeatures.ReceiveNftOnLiquidation,
   },

@@ -215,7 +215,7 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
               orderParam.orderSize * orderParam.spotPrice -
               PRECISION_CORRECTION_LAMPORTS, //? SOL lamports
             skipFailed: false,
-            isAutocompoundOrAutoreceiveSol: false,
+            isAutocompoundOrAutoreceiveSol: false, // true if bondFeature exist autocompound and autorecieve
           },
           connection,
           programId: BONDS_PROGRAM_PUBKEY,

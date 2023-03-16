@@ -16,7 +16,7 @@ import { Header } from './components/Header';
 import { useOfferPage } from './hooks';
 import { SOL_TOKEN } from '../../utils';
 import styles from './OfferPage.module.scss';
-import { DURATION_OPTIONS } from './constants';
+import { BOND_FEATURE_OPTIONS, DURATION_OPTIONS } from './constants';
 
 export const OfferPage = () => {
   const {
@@ -39,8 +39,8 @@ export const OfferPage = () => {
     isLoading,
     onEditOffer,
     onRemoveOffer,
-    // autocompound,
-    // toggleAutocompound,
+    bondFeature,
+    onBondFeatureChange,
     receiveLiquidatedNfts,
     toggleReceiveLiquidatedNfts,
   } = useOfferPage();
@@ -132,24 +132,17 @@ export const OfferPage = () => {
             toolTipText="Interest (in %) for the duration of this loan"
           />
 
-          {/* <div className={styles.checkbox}>
-            <label className={styles.checkboxLabel}>
-              <input
-                className={styles.checkboxInput}
-                type="checkbox"
-                name="checkbox"
-                checked={autocompound}
-                onChange={toggleAutocompound}
-              />
-              Autocompound
-            </label>
-            <Tooltip
-              placement="bottom"
-              overlay="Deposit rewards back into offer"
-            >
-              <QuestionCircleOutlined className={styles.questionIcon} />
-            </Tooltip>
-          </div> */}
+          <div className={styles.radio}>
+            <h6 className={styles.subtitle}>Bond Feature</h6>
+            <RadioButton
+              currentOption={{
+                label: bondFeature,
+                value: bondFeature,
+              }}
+              onOptionChange={onBondFeatureChange}
+              options={BOND_FEATURE_OPTIONS}
+            />
+          </div>
 
           {!isEdit && (
             <div className={styles.checkbox}>

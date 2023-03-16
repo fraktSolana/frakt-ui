@@ -59,7 +59,9 @@ export const useOfferPage = () => {
   const [duration, setDuration] = useState<number>(7);
   const [interest, setInterest] = useState<string>('0');
   const [offerSize, setOfferSize] = useState<string>('0');
-  const [autocompound, setAutocompound] = useState(false);
+  const [bondFeature, setBondFeature] = useState<BondFeatures>(
+    BondFeatures.None,
+  );
   const [receiveLiquidatedNfts, setReceiveLiquidatedNfts] = useState(false);
 
   useEffect(() => {
@@ -81,8 +83,8 @@ export const useOfferPage = () => {
   const onOfferSizeChange = (value: string) => {
     setOfferSize(value);
   };
-  const toggleAutocompound = () => {
-    setAutocompound((prev) => !prev);
+  const onBondFeatureChange = (nextOption: RBOption<BondFeatures>) => {
+    setBondFeature(nextOption.value);
   };
   const toggleReceiveLiquidatedNfts = () => {
     setReceiveLiquidatedNfts((prev) => !prev);
@@ -114,9 +116,7 @@ export const useOfferPage = () => {
             solDeposit: parseFloat(offerSize),
             interest: parseFloat(interest),
             marketFloor: market.oracleFloor.floor,
-            bondFeature: receiveLiquidatedNfts
-              ? BondFeatures.ReceiveNftOnLiquidation
-              : BondFeatures.None,
+            bondFeature,
             connection,
             wallet,
           });
@@ -286,8 +286,8 @@ export const useOfferPage = () => {
     walletSolBalance: account?.lamports ?? 0,
     market,
     isLoading,
-    autocompound,
-    toggleAutocompound,
+    bondFeature,
+    onBondFeatureChange,
     receiveLiquidatedNfts,
     toggleReceiveLiquidatedNfts,
   };
