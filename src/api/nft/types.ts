@@ -44,7 +44,7 @@ export interface BondOrderParams {
   pairPubkey: string;
   assetReceiver: string;
   durationFilter: number;
-  bondFeature: BondFeatures;
+  bondFeature?: BondFeatures;
 }
 
 export interface BorrowNftSuggested {
