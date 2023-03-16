@@ -60,9 +60,8 @@ export const useOfferPage = () => {
   const [interest, setInterest] = useState<string>('0');
   const [offerSize, setOfferSize] = useState<string>('0');
   const [bondFeature, setBondFeature] = useState<BondFeatures>(
-    BondFeatures.None,
+    BondFeatures.AutoreceiveSol,
   );
-  const [receiveLiquidatedNfts, setReceiveLiquidatedNfts] = useState(false);
 
   useEffect(() => {
     if (isEdit && !isLoading) {
@@ -83,11 +82,12 @@ export const useOfferPage = () => {
   const onOfferSizeChange = (value: string) => {
     setOfferSize(value);
   };
-  const onBondFeatureChange = (nextOption: RBOption<BondFeatures>) => {
-    setBondFeature(nextOption.value);
-  };
-  const toggleReceiveLiquidatedNfts = () => {
-    setReceiveLiquidatedNfts((prev) => !prev);
+  const onBondFeatureChange = (nextOption: BondFeatures) => {
+    if (bondFeature === nextOption) {
+      setBondFeature(BondFeatures.AutoreceiveSol);
+    } else {
+      setBondFeature(nextOption);
+    }
   };
 
   const {
@@ -288,7 +288,5 @@ export const useOfferPage = () => {
     isLoading,
     bondFeature,
     onBondFeatureChange,
-    receiveLiquidatedNfts,
-    toggleReceiveLiquidatedNfts,
   };
 };

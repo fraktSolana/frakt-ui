@@ -44,7 +44,7 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
   interest,
   marketFloor,
   marketPubkey,
-  bondFeature = BondFeatures.None,
+  bondFeature = BondFeatures.AutoreceiveSol,
   connection,
   wallet,
 }) => {

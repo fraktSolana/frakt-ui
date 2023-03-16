@@ -1,7 +1,9 @@
 import { FC } from 'react';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
+import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 
+import Toggle from '@frakt/components/Toggle';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import Tooltip from '@frakt/components/Tooltip';
 
@@ -16,7 +18,7 @@ import { Header } from './components/Header';
 import { useOfferPage } from './hooks';
 import { SOL_TOKEN } from '../../utils';
 import styles from './OfferPage.module.scss';
-import { BOND_FEATURE_OPTIONS, DURATION_OPTIONS } from './constants';
+import { DURATION_OPTIONS } from './constants';
 
 export const OfferPage = () => {
   const {
@@ -41,8 +43,6 @@ export const OfferPage = () => {
     onRemoveOffer,
     bondFeature,
     onBondFeatureChange,
-    receiveLiquidatedNfts,
-    toggleReceiveLiquidatedNfts,
   } = useOfferPage();
 
   const apr = (parseFloat(interest) / duration) * 365;
@@ -96,74 +96,76 @@ export const OfferPage = () => {
               options={DURATION_OPTIONS}
             />
           </div>
-
-          <SizeField
-            value={offerSize}
-            onValueChange={onOfferSizeChange}
-            label="SIZE"
-            currentToken={SOL_TOKEN}
-            lpBalance={parseFloat((walletSolBalance / 1e9).toFixed(3))}
-            toolTipText="Amount of SOL you want to lend for a specific collection at the chosen LTV & APY"
-          />
-          <TokenField
-            value={interest}
-            onValueChange={onInterestChange}
-            label="Interest"
-            labelRightNode={
-              <div className={styles.labelRow}>
-                APR: <span>{(apr || 0).toFixed(2)} %</span>
+          <div className={styles.fieldWrapper}>
+            <SizeField
+              value={offerSize}
+              onValueChange={onOfferSizeChange}
+              label="SIZE"
+              currentToken={SOL_TOKEN}
+              lpBalance={parseFloat((walletSolBalance / 1e9).toFixed(3))}
+              toolTipText="Amount of SOL you want to lend for a specific collection at the chosen LTV & APY"
+            />
+            {!isEdit && (
+              <div className={styles.toggle}>
+                <Toggle
+                  label="Receive liquidated NFT"
+                  value={bondFeature === BondFeatures.ReceiveNftOnLiquidation}
+                  onChange={() =>
+                    onBondFeatureChange(BondFeatures.ReceiveNftOnLiquidation)
+                  }
+                />
                 <Tooltip
                   placement="bottom"
-                  overlay={'Analyzed profit from repaying the loan'}
+                  overlay="When funding full loans, lenders have the option to get defaulted NFTs instead of the SOL recovered from the liquidation"
                 >
                   <QuestionCircleOutlined className={styles.questionIcon} />
                 </Tooltip>
               </div>
-            }
-            currentToken={{
-              ...SOL_TOKEN,
-              symbol: '%',
-              logoURI: null,
-              name: null,
-            }}
-            tokensList={[
-              { ...SOL_TOKEN, symbol: '%', logoURI: null, name: null },
-            ]}
-            toolTipText="Interest (in %) for the duration of this loan"
-          />
-
-          <div className={styles.radio}>
-            <h6 className={styles.subtitle}>Bond Feature</h6>
-            <RadioButton
-              currentOption={{
-                label: bondFeature,
-                value: bondFeature,
-              }}
-              onOptionChange={onBondFeatureChange}
-              options={BOND_FEATURE_OPTIONS}
-            />
+            )}
           </div>
 
-          {!isEdit && (
-            <div className={styles.checkbox}>
-              <label className={styles.checkboxLabel}>
-                <input
-                  className={styles.checkboxInput}
-                  type="checkbox"
-                  name="checkbox"
-                  checked={receiveLiquidatedNfts}
-                  onChange={toggleReceiveLiquidatedNfts}
+          <div className={styles.fieldWrapper}>
+            <TokenField
+              value={interest}
+              onValueChange={onInterestChange}
+              label="Interest"
+              labelRightNode={
+                <div className={styles.labelRow}>
+                  APR: <span>{(apr || 0).toFixed(2)} %</span>
+                  <Tooltip
+                    placement="bottom"
+                    overlay={'Analyzed profit from repaying the loan'}
+                  >
+                    <QuestionCircleOutlined className={styles.questionIcon} />
+                  </Tooltip>
+                </div>
+              }
+              currentToken={{
+                ...SOL_TOKEN,
+                symbol: '%',
+                logoURI: null,
+                name: null,
+              }}
+              tokensList={[
+                { ...SOL_TOKEN, symbol: '%', logoURI: null, name: null },
+              ]}
+              toolTipText="Interest (in %) for the duration of this loan"
+            />
+            {!isEdit && (
+              <div className={styles.toggle}>
+                <Toggle
+                  label="Autocompound"
+                  value={bondFeature === BondFeatures.Autocompound}
+                  onChange={() =>
+                    onBondFeatureChange(BondFeatures.Autocompound)
+                  }
                 />
-                Receive liquidated NFTs
-              </label>
-              <Tooltip
-                placement="bottom"
-                overlay="When funding full loans, lenders have the option to get defaulted NFTs instead of the SOL recovered from the liquidation"
-              >
-                <QuestionCircleOutlined className={styles.questionIcon} />
-              </Tooltip>
-            </div>
-          )}
+                <Tooltip placement="bottom" overlay="">
+                  <QuestionCircleOutlined className={styles.questionIcon} />
+                </Tooltip>
+              </div>
+            )}
+          </div>
 
           <TotalOverview
             size={parseFloat(offerSize)}
