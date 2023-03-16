@@ -2,6 +2,7 @@ import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
 import { fbondFactory } from 'fbonds-core/lib/fbond-protocol/functions';
 import { validateAndSellNftToTokenToNftPair } from 'fbonds-core/lib/fbond-protocol/functions/router';
+import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 
 import { Market, Pair, WhitelistType } from '@frakt/api/bonds';
 import { BondOrderParams, getNftMerkleTreeProof } from '@frakt/api/nft';
@@ -13,7 +14,6 @@ import {
   BOND_DECIMAL_DELTA,
   PRECISION_CORRECTION_LAMPORTS,
 } from '../constants';
-import { groupBy } from 'ramda';
 import { mergeBondOrderParamsByPair } from '../utils';
 
 type MakeCreateBondTransaction = (params: {
@@ -92,7 +92,11 @@ export const makeCreateBondTransaction: MakeCreateBondTransaction = async ({
         minAmountToGet:
           (amountToReturn / BOND_DECIMAL_DELTA) * pair.currentSpotPrice, //? SOL lamports
         skipFailed: false,
-        isAutocompoundOrAutoreceiveSol: false,
+        isAutocompoundOrAutoreceiveSol:
+          pair.validation.bondFeatures === BondFeatures.Autocompound ||
+          pair.validation.bondFeatures === BondFeatures.AutoreceiveSol
+            ? true
+            : false,
       },
       connection,
       programId: BONDS_PROGRAM_PUBKEY,
@@ -215,7 +219,11 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
               orderParam.orderSize * orderParam.spotPrice -
               PRECISION_CORRECTION_LAMPORTS, //? SOL lamports
             skipFailed: false,
-            isAutocompoundOrAutoreceiveSol: false, // true if bondFeature exist autocompound and autorecieve
+            isAutocompoundOrAutoreceiveSol:
+              orderParam.bondFeature === BondFeatures.Autocompound ||
+              orderParam.bondFeature === BondFeatures.AutoreceiveSol
+                ? true
+                : false,
           },
           connection,
           programId: BONDS_PROGRAM_PUBKEY,

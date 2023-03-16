@@ -9,6 +9,7 @@ import {
   PairType,
   CollateralBoxType,
   FraktBondState,
+  BondFeatures,
 } from 'fbonds-core/lib/fbond-protocol/types';
 
 interface FMarket {
@@ -124,6 +125,7 @@ export interface Pair {
   solOrTokenFeeAmount: number;
   updatedAt: string;
   validation: {
+    bondFeatures: BondFeatures;
     publicKey: string;
     createdAt: string;
     durationFilter: number;

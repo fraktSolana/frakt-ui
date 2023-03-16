@@ -1,3 +1,4 @@
+import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 import { Market, Pair } from '../bonds';
 import { LoanType } from '../loans';
 
@@ -43,6 +44,7 @@ export interface BondOrderParams {
   pairPubkey: string;
   assetReceiver: string;
   durationFilter: number;
+  bondFeature: BondFeatures;
 }
 
 export interface BorrowNftSuggested {

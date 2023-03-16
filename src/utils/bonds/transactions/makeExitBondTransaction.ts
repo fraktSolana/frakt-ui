@@ -2,6 +2,7 @@ import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
 import { validateAndSellNftToTokenToNftPair } from 'fbonds-core/lib/fbond-protocol/functions/router';
 import { unsetBondCollateralOrSolReceiver } from 'fbonds-core/lib/fbond-protocol/functions/management';
+import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 
 import { Bond, Market, Pair, WhitelistType } from '@frakt/api/bonds';
 import { BondOrderParams, getNftMerkleTreeProof } from '@frakt/api/nft';
@@ -12,7 +13,6 @@ import {
   BONDS_PROGRAM_PUBKEY,
   PRECISION_CORRECTION_LAMPORTS,
 } from '../constants';
-import { groupBy } from 'ramda';
 import { mergeBondOrderParamsByPair } from '../utils';
 
 type MakeExitBondTransaction = (params: {
@@ -96,7 +96,11 @@ export const makeExitBondTransaction: MakeExitBondTransaction = async ({
       amountToSell: bond.amountOfUserBonds, //? amount of fbond tokens decimals
       minAmountToGet: bond.amountOfUserBonds * pair.currentSpotPrice, //? SOL lamports
       skipFailed: false,
-      isAutocompoundOrAutoreceiveSol: false,
+      isAutocompoundOrAutoreceiveSol:
+        pair.validation.bondFeatures === BondFeatures.Autocompound ||
+        pair.validation.bondFeatures === BondFeatures.AutoreceiveSol
+          ? true
+          : false,
     },
     connection,
     programId: BONDS_PROGRAM_PUBKEY,
@@ -197,7 +201,11 @@ export const makeExitBondMultiOrdersTransaction: MakeExitBondMultiOrdersTransact
               orderParam.orderSize * orderParam.spotPrice -
               PRECISION_CORRECTION_LAMPORTS, //? SOL lamports
             skipFailed: false,
-            isAutocompoundOrAutoreceiveSol: false,
+            isAutocompoundOrAutoreceiveSol:
+              orderParam.bondFeature === BondFeatures.Autocompound ||
+              orderParam.bondFeature === BondFeatures.AutoreceiveSol
+                ? true
+                : false,
           },
           connection,
           programId: BONDS_PROGRAM_PUBKEY,

@@ -24,6 +24,9 @@ export const convertTakenOrdersToOrderParams: ConvertTakenOrdersToOrderParams =
       durationFilter: pairs.find(
         (pair) => pair.publicKey === takenOrder.pairPubkey,
       ).validation.durationFilter,
+      bondFeature: pairs.find(
+        (pair) => pair.publicKey === takenOrder.pairPubkey,
+      ).validation.bondFeatures,
     }));
   };
 
