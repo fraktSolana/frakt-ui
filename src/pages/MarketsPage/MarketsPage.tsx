@@ -3,20 +3,17 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import classNames from 'classnames';
 
 import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
-import { useBondsTransactions } from '@frakt/hooks/useBondTransactions';
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
 import { useFetchAllUserBonds } from '@frakt/utils/bonds';
-import EmptyList from '@frakt/components/EmptyList';
 import { Tabs, useTabs } from '@frakt/components/Tabs';
+import EmptyList from '@frakt/components/EmptyList';
 
 import { MarketTabsNames, MARKET_TABS, useMarketsPreview } from './hooks';
 import { MarketTable } from './components/MarketTable/MarketTable';
 import { BondsTable } from '../MarketPage/components/BondsTable';
-import MyBondsWidgets from './components/MyBondsWidgets';
-import { createMyBondsStats } from './helpers';
-import { Header } from './components/Header';
-
+import BondsWidgets from './components/BondsWidgets';
 import styles from './MarketsPage.module.scss';
+import { createMyBondsStats } from './helpers';
 
 const MarketsPreviewPage: FC = () => {
   const { publicKey, connected } = useWallet();
@@ -27,31 +24,28 @@ const MarketsPreviewPage: FC = () => {
     tabs: marketTabs,
     value: tabValue,
     setValue: setTabValue,
-  } = useTabs({
-    tabs: MARKET_TABS,
-    defaultValue: MARKET_TABS[0].value,
-  });
+  } = useTabs({ tabs: MARKET_TABS, defaultValue: MARKET_TABS[0].value });
 
   const {
     bonds,
     isLoading: bondsLoanding,
     hideBond,
-  } = useFetchAllUserBonds({
-    walletPubkey: publicKey,
-  });
+  } = useFetchAllUserBonds({ walletPubkey: publicKey });
 
-  const { onClaimAll } = useBondsTransactions({
-    bonds,
-    hideBond,
-  });
-
-  const { rewards, locked, activeLoans } = createMyBondsStats(bonds);
+  const { locked, activeLoans } = createMyBondsStats(bonds);
 
   const loading = isLoading || bondsLoanding;
 
   return (
     <AppLayout>
-      <Header title="Bonds" subtitle="Lend on your own terms" />
+      <div className={styles.marketTableWrapper}>
+        <h3 className={styles.marketTableTitle}>Collections</h3>
+        <MarketTable
+          className={classNames(styles.table, styles.marketTable)}
+          loading={isLoading}
+          data={marketsPreview}
+        />
+      </div>
       <div className={styles.content}>
         <Tabs
           className={styles.tab}
@@ -59,19 +53,7 @@ const MarketsPreviewPage: FC = () => {
           value={tabValue}
           setValue={setTabValue}
         />
-        <div
-          className={classNames(styles.tabContent, {
-            [styles.tabContentMinHeight]:
-              tabValue === MarketTabsNames.COLLECTIONS,
-          })}
-        >
-          {tabValue === MarketTabsNames.COLLECTIONS && (
-            <MarketTable
-              className={classNames(styles.table, styles.marketTable)}
-              loading={isLoading}
-              data={marketsPreview}
-            />
-          )}
+        <div className={styles.tabContent}>
           {tabValue === MarketTabsNames.BONDS && (
             <>
               {!connected && (
@@ -83,12 +65,7 @@ const MarketsPreviewPage: FC = () => {
 
               {connected && (
                 <>
-                  <MyBondsWidgets
-                    locked={locked}
-                    activeLoans={activeLoans}
-                    rewards={rewards}
-                    onClick={onClaimAll}
-                  />
+                  <BondsWidgets locked={locked} activeLoans={activeLoans} />
                   <BondsTable
                     className={classNames(styles.table, styles.bondsTable)}
                     noDataClassName={styles.noDataTableMessage}
@@ -109,6 +86,7 @@ const MarketsPreviewPage: FC = () => {
               )}
             </>
           )}
+          {tabValue === MarketTabsNames.HISTORY && <></>}
         </div>
       </div>
     </AppLayout>

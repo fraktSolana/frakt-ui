@@ -9,9 +9,6 @@
   button:first-child {
     border-right: 1px solid var(--primary-border);
   }
-  // button:last-child {
-  //   border-left: 1px solid var(--primary-border);
-  // }
 }
 
 .content {
@@ -42,8 +39,7 @@
     }
 
     .ant-table-tbody > tr > td {
-      padding: 29px 16px !important;
-      padding-right: 0 !important;
+      border: 0 !important;
     }
 
     .ant-table-tbody > tr:last-child > td {
@@ -52,51 +48,39 @@
   }
 }
 
+.marketTableWrapper {
+  background: var(--primary-background);
+  border: 1px solid var(--primary-border);
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.marketTableTitle {
+  color: var(--primary-text);
+  font: var(--font-text-2);
+  font-size: 20px;
+  line-height: 24px;
+  padding-bottom: 16px;
+}
+
 .marketTable {
   :global {
-    .ant-table-tbody > tr:last-child > td {
-      border-bottom: 0;
-    }
-    .ant-table-tbody > tr > td {
-      padding: 29px 0 !important;
-      padding-left: 0;
-    }
-    .ant-table-tbody > tr > td:first-child {
-      padding-left: 16px !important;
+    height: 236px;
+    .ant-table-tbody > tr:first-child > td {
+      display: none;
     }
 
+    .ant-table-tbody > tr > td,
+    .ant-table-tbody > tr > td:first-child,
     .ant-table-tbody > tr > td:last-child {
-      padding: 16px !important;
-      padding-left: 0 !important;
-
-      @media screen and (max-width: 1240px) {
-        padding: 12px !important;
-        padding-left: 0 !important;
-      }
+      padding: 8px !important;
     }
 
     .ant-table-thead > tr > th {
-      padding: 16px !important;
+      border: 0 !important;
+      padding: 8px !important;
+      padding-top: 0 !important;
       width: 100%;
-
-      @media screen and (max-width: 1340px) {
-        padding: 8px !important;
-      }
-
-      @media screen and (max-width: 1250px) {
-        padding: 4px !important;
-      }
-    }
-    .ant-table-thead > tr > th:first-child {
-      padding: 16px !important;
-      max-width: 300px;
-    }
-    .ant-table-thead > tr > th:last-child {
-      padding: 16px !important;
-
-      @media screen and (max-width: 1240px) {
-        padding: 12px !important;
-      }
     }
   }
 }

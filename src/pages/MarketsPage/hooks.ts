@@ -1,4 +1,3 @@
-import { web3 } from 'fbonds-core';
 import { useQuery } from '@tanstack/react-query';
 
 import { MarketPreview, fetchMarketsPreview } from '@frakt/api/bonds';
@@ -26,18 +25,17 @@ export const useMarketsPreview: UseMarketsPreview = () => {
 };
 
 export enum MarketTabsNames {
-  COLLECTIONS = 'collections',
-  OFFERS = 'offers',
+  HISTORY = 'history',
   BONDS = 'bonds',
 }
 
 export const MARKET_TABS: Tab[] = [
   {
-    label: 'Collections',
-    value: 'collections',
+    label: 'Bonds',
+    value: 'bonds',
   },
   {
-    label: 'My bonds',
-    value: 'bonds',
+    label: 'History',
+    value: 'history',
   },
 ];

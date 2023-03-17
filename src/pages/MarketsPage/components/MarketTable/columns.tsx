@@ -9,7 +9,6 @@ import {
   TitleCell,
   HeaderTitleCell,
   createOfferTvlJSX,
-  createBestOfferJSX,
   createDurationJSX,
   createAprJSX,
   createHighestLtvJSX,
@@ -37,6 +36,35 @@ export const TableList = ({ onChange }) => {
       render: (_, market: MarketPreview) => <TitleCell market={market} />,
     },
     {
+      key: 'activeBondsAmount',
+      dataIndex: 'activeBondsAmount',
+      title: (column) => (
+        <HeaderTitleCell
+          sortColumns={column?.sortColumns}
+          label="Active loans"
+          value="activeBondsAmount"
+        />
+      ),
+      render: (value) => createActiveLoansJSX(value),
+      sorter: (a, b) => a.activeBondsAmount - b.activeBondsAmount,
+      showSorterTooltip: false,
+    },
+    // {
+    //   key: 'bestOffer',
+    //   dataIndex: 'bestOffer',
+    //   title: (column) => (
+    //     <HeaderTitleCell
+    //       sortColumns={column?.sortColumns}
+    //       label="Best offer"
+    //       value="bestOffer"
+    //       tooltipText="Highest loan amount offered for that collection"
+    //     />
+    //   ),
+    //   sorter: (a, b) => a.bestOffer - b.bestOffer,
+    //   render: (value) => createBestOfferJSX(value),
+    //   showSorterTooltip: false,
+    // },
+    {
       key: 'offerTVL',
       dataIndex: 'offerTVL',
       title: (column) => (
@@ -53,21 +81,6 @@ export const TableList = ({ onChange }) => {
       defaultSortOrder: 'descend',
     },
     {
-      key: 'bestOffer',
-      dataIndex: 'bestOffer',
-      title: (column) => (
-        <HeaderTitleCell
-          sortColumns={column?.sortColumns}
-          label="Best offer"
-          value="bestOffer"
-          tooltipText="Highest loan amount offered for that collection"
-        />
-      ),
-      sorter: (a, b) => a.bestOffer - b.bestOffer,
-      render: (value) => createBestOfferJSX(value),
-      showSorterTooltip: false,
-    },
-    {
       key: 'duration',
       dataIndex: 'duration',
       title: (column) => (
@@ -79,20 +92,6 @@ export const TableList = ({ onChange }) => {
       ),
       sorter: (a, b) => sum(map(a.duration)) - sum(map(b.duration)),
       render: (value) => createDurationJSX(value),
-      showSorterTooltip: false,
-    },
-    {
-      key: 'activeBondsAmount',
-      dataIndex: 'activeBondsAmount',
-      title: (column) => (
-        <HeaderTitleCell
-          sortColumns={column?.sortColumns}
-          label="Active loans"
-          value="activeBondsAmount"
-        />
-      ),
-      render: (value) => createActiveLoansJSX(value),
-      sorter: (a, b) => a.activeBondsAmount - b.activeBondsAmount,
       showSorterTooltip: false,
     },
     {

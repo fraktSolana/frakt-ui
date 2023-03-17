@@ -17,10 +17,8 @@
 
 .nftName {
   color: var(--primary-text);
-  font-family: var(--font-family-syne);
-  font-weight: 700;
-  font-size: 14px;
-  width: 190px;
+  font: var(--font-text-6);
+  max-width: 160px;
 }
 
 .nftImage {

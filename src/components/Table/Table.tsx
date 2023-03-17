@@ -111,6 +111,7 @@ const Table = <T extends unknown>({
       sortDirections={['descend', 'ascend']}
       style={onRowClick && { cursor: 'pointer' }}
       rowKey={(data) => data[rowKeyField]}
+      scroll={{ y: 226 }}
       onRow={
         onRowClick
           ? (data) => ({
