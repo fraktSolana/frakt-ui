@@ -7,9 +7,8 @@ import Button from '@frakt/components/Button';
 import { Bond } from '@frakt/api/bonds';
 
 import { useBondCardActions } from '../../BondCard/hooks/useBondCard';
-import styles from './TableCells.module.scss';
-
 import { getMarketAndPairsByBond } from '../helpers';
+import styles from './TableCells.module.scss';
 
 interface ButtontsCellProps {
   bond: Bond;

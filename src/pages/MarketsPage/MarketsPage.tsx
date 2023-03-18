@@ -7,13 +7,14 @@ import { AppLayout } from '@frakt/components/Layout/AppLayout';
 import { useFetchAllUserBonds } from '@frakt/utils/bonds';
 import { Tabs, useTabs } from '@frakt/components/Tabs';
 import EmptyList from '@frakt/components/EmptyList';
+import Toggle from '@frakt/components/Toggle';
 
 import { MarketTabsNames, MARKET_TABS, useMarketsPreview } from './hooks';
 import { MarketTable } from './components/MarketTable/MarketTable';
 import { BondsTable } from '../MarketPage/components/BondsTable';
 import BondsWidgets from './components/BondsWidgets';
 import styles from './MarketsPage.module.scss';
-import { createMyBondsStats } from './helpers';
+import { createBondsStats } from './helpers';
 
 const MarketsPreviewPage: FC = () => {
   const { publicKey, connected } = useWallet();
@@ -32,7 +33,7 @@ const MarketsPreviewPage: FC = () => {
     hideBond,
   } = useFetchAllUserBonds({ walletPubkey: publicKey });
 
-  const { locked, activeLoans } = createMyBondsStats(bonds);
+  const { locked, activeLoans } = createBondsStats(bonds);
 
   const loading = isLoading || bondsLoanding;
 
@@ -66,7 +67,10 @@ const MarketsPreviewPage: FC = () => {
 
               {connected && (
                 <>
-                  <BondsWidgets locked={locked} activeLoans={activeLoans} />
+                  <div className={styles.bondsTableHeader}>
+                    <BondsWidgets locked={locked} activeLoans={activeLoans} />
+                    <Toggle label="My bonds only" />
+                  </div>
                   <BondsTable
                     className={classNames(styles.table, styles.bondsTable)}
                     noDataClassName={styles.noDataTableMessage}

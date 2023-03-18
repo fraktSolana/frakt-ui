@@ -8,7 +8,7 @@ import {
   isBondAvailableToRedeem,
 } from '@frakt/utils/bonds';
 
-export const createMyBondsStats = (bonds: Bond[]) => {
+export const createBondsStats = (bonds: Bond[]) => {
   const bondsAvailableToRedeem = useMemo(() => {
     return filter(bonds, isBondAvailableToRedeem);
   }, [bonds]);
