@@ -1,31 +1,31 @@
 import { FC } from 'react';
 
-import Table, { useTable } from '@frakt/components/Table';
+import Table, { useTable, PartialBreakpoints } from '@frakt/components/Table';
 import { useWindowSize } from '@frakt/hooks';
 
 import { TableList } from './columns';
 
 export interface BondsTableProps {
   data: ReadonlyArray<any>;
-  mobileBreakpoint?: number;
   loading?: boolean;
   className?: string;
   noDataClassName?: string;
   hideBond?: (bondPubkey: string) => void;
   haderTitleCellClassName?: string;
+  breakpoints?: PartialBreakpoints;
 }
 
 export const BondsTable: FC<BondsTableProps> = ({
   data,
-  mobileBreakpoint,
   noDataClassName,
   loading,
   className,
   hideBond,
   haderTitleCellClassName,
+  breakpoints,
 }) => {
   const { width } = useWindowSize();
-  const isMobile = width <= mobileBreakpoint;
+  const isMobile = width <= breakpoints?.mobile;
 
   const COLUMNS = TableList({
     data,
@@ -50,7 +50,7 @@ export const BondsTable: FC<BondsTableProps> = ({
       search={search}
       className={className}
       noDataClassName={noDataClassName}
-      mobileBreakpoint={mobileBreakpoint}
+      breakpoints={breakpoints}
     />
   );
 };

@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import classNames from 'classnames';
 
+import { convertTakenOrdersToOrderParams } from '@frakt/pages/BorrowPages/cartState';
 import { useBondsTransactions } from '@frakt/hooks/useBondTransactions';
 import Button from '@frakt/components/Button';
 import { Bond } from '@frakt/api/bonds';
@@ -9,7 +10,6 @@ import { useBondCardActions } from '../../BondCard/hooks/useBondCard';
 import styles from './TableCells.module.scss';
 
 import { getMarketAndPairsByBond } from '../helpers';
-import { convertTakenOrdersToOrderParams } from '@frakt/pages/BorrowPages/cartState';
 
 interface ButtontsCellProps {
   bond: Bond;
@@ -26,41 +26,20 @@ export const ButtontsCell: FC<ButtontsCellProps> = ({
 }) => {
   const { market, pairs } = getMarketAndPairsByBond(bond);
 
-  const { exitAvailable, redeemAvailable, bestOrdersAndBorrowValue } =
-    useBondCardActions({
-      bond,
-      market,
-      pairs,
-    });
-
-  const { onRedeem, onExit } = useBondsTransactions({
-    bonds,
-    hideBond,
+  const { exitAvailable, bestOrdersAndBorrowValue } = useBondCardActions({
+    bond,
     market,
+    pairs,
   });
 
+  const { onExit } = useBondsTransactions({ bonds, hideBond, market });
+
   return (
-    <div
-      className={classNames(styles.btnWrapper, {
-        [styles.btnWrapperMobile]: isMobile,
-      })}
-    >
-      <Button
-        className={classNames(styles.btn, {
-          [styles.btnMobile]: isMobile,
-        })}
-        disabled={!redeemAvailable}
-        type="secondary"
-        onClick={() => onRedeem(bond)}
-      >
-        Claim
-      </Button>
+    <div className={styles.btnWrapper}>
       <Button
         className={classNames(
           styles.btn,
-          {
-            [styles.btnMobile]: isMobile,
-          },
+          { [styles.btnMobile]: isMobile },
           styles.btnExit,
         )}
         disabled={!exitAvailable}

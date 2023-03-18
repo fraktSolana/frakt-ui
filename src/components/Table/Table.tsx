@@ -13,6 +13,7 @@ import { useRef } from 'react';
 import Button from '../Button';
 
 import styles from './Table.module.scss';
+import { PartialBreakpoints } from './types';
 
 export interface TableProps<T> {
   data: ReadonlyArray<T>;
@@ -22,13 +23,13 @@ export interface TableProps<T> {
   loading?: boolean;
   noDataMessage?: string;
   className?: string;
-  mobileBreakpoint?: number;
   defaultField?: string;
   noDataClassName?: string;
   search?: {
     placeHolderText?: string;
     onChange: DebouncedFunc<(event: any) => void>;
   };
+  breakpoints?: PartialBreakpoints;
 }
 
 export interface TablePropsWithSortModalMobileProps<T>
@@ -44,13 +45,12 @@ const Table = <T extends unknown>({
   setSort,
   loading = false,
   search,
-  // noDataMessage,
   noDataClassName,
   className,
-  mobileBreakpoint = 1190,
+  breakpoints,
 }: TablePropsWithSortModalMobileProps<T>): JSX.Element => {
   const { width } = useWindowSize();
-  const isMobile = width <= mobileBreakpoint;
+  const isMobile = width <= breakpoints?.mobile;
 
   const {
     visible: sortModalMobileVisible,
@@ -99,9 +99,7 @@ const Table = <T extends unknown>({
     <AntdTable
       className={classNames(
         className,
-        {
-          [noDataClassName]: !data.length && !loading,
-        },
+        { [noDataClassName]: !data.length && !loading },
         styles.table,
       )}
       rowClassName={() => 'rowClassName'}
@@ -111,7 +109,7 @@ const Table = <T extends unknown>({
       sortDirections={['descend', 'ascend']}
       style={onRowClick && { cursor: 'pointer' }}
       rowKey={(data) => data[rowKeyField]}
-      scroll={{ y: 226 }}
+      scroll={{ x: breakpoints?.scrollX, y: breakpoints?.scrollY }}
       onRow={
         onRowClick
           ? (data) => ({

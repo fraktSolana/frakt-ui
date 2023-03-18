@@ -16,7 +16,6 @@ export const BondsList: FC<BondsListProps> = ({ bonds, hideBond }) => {
       <BondsTable
         data={bonds}
         hideBond={hideBond}
-        mobileBreakpoint={1380}
         noDataClassName={styles.noDataMessage}
       />
     </div>

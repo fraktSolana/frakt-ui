@@ -32,22 +32,6 @@
   min-height: 600px;
 }
 
-.table {
-  :global {
-    .ant-table {
-      border: 0 !important;
-    }
-
-    .ant-table-tbody > tr > td {
-      border: 0 !important;
-    }
-
-    .ant-table-tbody > tr:last-child > td {
-      border-bottom: 0 !important;
-    }
-  }
-}
-
 .marketTableWrapper {
   background: var(--primary-background);
   border: 1px solid var(--primary-border);
@@ -63,12 +47,25 @@
   padding-bottom: 16px;
 }
 
-.marketTable {
+.table {
   :global {
-    height: 236px;
+    .ant-table {
+      border: 0 !important;
+    }
+
     .ant-table-tbody > tr:first-child > td {
       display: none;
     }
+
+    .ant-table-tbody > tr > td {
+      border: 0 !important;
+    }
+  }
+}
+
+.marketTable {
+  :global {
+    height: 236px;
 
     .ant-table-tbody > tr > td,
     .ant-table-tbody > tr > td:first-child,
@@ -90,16 +87,6 @@
     .ant-table-tbody > tr > td:last-child {
       width: 127px !important;
     }
-  }
-}
-
-.searchInput {
-  max-width: 173px;
-  margin-right: 20px;
-  width: unset;
-
-  @media screen and (max-width: 468px) {
-    margin-bottom: 20px;
   }
 }
 

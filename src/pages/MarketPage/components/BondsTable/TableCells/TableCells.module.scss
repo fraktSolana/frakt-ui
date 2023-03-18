@@ -23,7 +23,7 @@
   font-family: var(--font-family-syne);
   font-weight: 700;
   font-size: 14px;
-  max-width: 128px;
+  min-width: 116px;
 }
 .nftNameMobile {
   max-width: unset;
@@ -70,14 +70,8 @@
 
 .btnWrapper {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-}
-.btnWrapperMobile {
+  justify-content: flex-end;
   width: 100%;
-  flex-direction: row;
-  align-items: center;
 }
 
 .btn {
@@ -154,6 +148,7 @@
     height: 10px;
   }
 }
+
 .receiveIconTooltip {
   min-width: 450px;
 

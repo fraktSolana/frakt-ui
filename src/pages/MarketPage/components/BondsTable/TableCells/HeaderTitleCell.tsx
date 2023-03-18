@@ -19,7 +19,6 @@ interface HeaderTitleCellProps {
   tooltipText?: string;
   fixedLeft?: boolean;
   isMobile?: boolean;
-  mobileBreakpoint?: number;
   className?: string;
 }
 

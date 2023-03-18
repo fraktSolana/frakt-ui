@@ -44,6 +44,7 @@ const MarketsPreviewPage: FC = () => {
           className={classNames(styles.table, styles.marketTable)}
           loading={isLoading}
           data={marketsPreview}
+          breakpoints={{ mobile: 1190, scrollY: 226 }}
         />
       </div>
       <div className={styles.content}>
@@ -72,7 +73,7 @@ const MarketsPreviewPage: FC = () => {
                     loading={loading}
                     data={bonds}
                     haderTitleCellClassName={styles.haderTitleCell}
-                    mobileBreakpoint={1190}
+                    breakpoints={{ mobile: 1190 }}
                     hideBond={hideBond}
                   />
                 </>
