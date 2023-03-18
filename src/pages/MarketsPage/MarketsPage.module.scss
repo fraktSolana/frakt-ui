@@ -1,3 +1,12 @@
+.bondPage {
+  width: calc(100% - 344px);
+
+  @media screen and (max-width: 768px) {
+    margin-bottom: 145px;
+    width: 100%;
+  }
+}
+
 .tab {
   flex-wrap: nowrap;
 
