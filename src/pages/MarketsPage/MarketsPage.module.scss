@@ -57,11 +57,6 @@
 
 .table {
   :global {
-    .ant-table,
-    .ant-table-tbody > tr > td {
-      border: 0 !important;
-    }
-
     .ant-table-tbody > tr:first-child > td {
       display: none;
     }
@@ -72,15 +67,8 @@
   :global {
     height: 236px;
 
-    .ant-table-tbody > tr > td,
-    .ant-table-tbody > tr > td:first-child,
-    .ant-table-tbody > tr > td:last-child {
-      padding: 8px !important;
-    }
-
     .ant-table-thead > tr > th {
       border: 0 !important;
-      padding: 8px !important;
       padding-top: 0 !important;
       width: 100%;
     }

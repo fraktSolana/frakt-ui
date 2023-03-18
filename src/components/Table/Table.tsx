@@ -13,7 +13,7 @@ import { useRef } from 'react';
 import Button from '../Button';
 
 import styles from './Table.module.scss';
-import { PartialBreakpoints } from './types';
+import { ActiveRowParams, PartialBreakpoints } from './types';
 
 export interface TableProps<T> {
   data: ReadonlyArray<T>;
@@ -30,6 +30,7 @@ export interface TableProps<T> {
     onChange: DebouncedFunc<(event: any) => void>;
   };
   breakpoints?: PartialBreakpoints;
+  activeRowParams?: ActiveRowParams;
 }
 
 export interface TablePropsWithSortModalMobileProps<T>
@@ -48,6 +49,7 @@ const Table = <T extends unknown>({
   noDataClassName,
   className,
   breakpoints,
+  activeRowParams,
 }: TablePropsWithSortModalMobileProps<T>): JSX.Element => {
   const { width } = useWindowSize();
   const isMobile = width <= breakpoints?.mobile;
@@ -102,7 +104,11 @@ const Table = <T extends unknown>({
         { [noDataClassName]: !data.length && !loading },
         styles.table,
       )}
-      rowClassName={() => 'rowClassName'}
+      rowClassName={(record) =>
+        record[activeRowParams.field] === activeRowParams.value
+          ? 'activeRowClassName'
+          : 'rowClassName'
+      }
       columns={columns as ColumnsType}
       dataSource={data as any}
       pagination={false}

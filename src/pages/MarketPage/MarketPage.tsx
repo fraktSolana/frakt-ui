@@ -11,7 +11,7 @@ import { Loader } from '@frakt/components/Loader';
 import { PATHS } from '@frakt/constants';
 import { Arrow } from '@frakt/icons';
 
-import OrderBook from './components/OrderBook/OrderBook';
+import OrderBook from '../MarketsPage/components/OrderBook/OrderBook';
 import { MarketInfo } from './components/MarketInfo';
 import { BondsList } from './components/BondsList';
 import styles from './MarketPage.module.scss';

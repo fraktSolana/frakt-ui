@@ -16,6 +16,8 @@ export interface MarketTableProps {
   className?: string;
   loading?: boolean;
   breakpoints?: PartialBreakpoints;
+  onSelectedRow?: (collection: MarketPreview) => void;
+  marketPubkey: string;
 }
 
 export const MarketTable: FC<MarketTableProps> = ({
@@ -23,11 +25,14 @@ export const MarketTable: FC<MarketTableProps> = ({
   className,
   loading,
   breakpoints,
+  onSelectedRow,
+  marketPubkey,
 }) => {
   const history = useHistory();
 
   const onRowClick = useCallback(
     (dataItem: MarketPreview) => {
+      onSelectedRow(dataItem);
       history.push(`${PATHS.BONDS}/${dataItem?.marketPubkey}`);
       window.scrollTo(0, 0);
     },
@@ -55,6 +60,10 @@ export const MarketTable: FC<MarketTableProps> = ({
       breakpoints={breakpoints}
       search={{ onChange }}
       className={className}
+      activeRowParams={{
+        field: 'marketPubkey',
+        value: marketPubkey,
+      }}
     />
   );
 };

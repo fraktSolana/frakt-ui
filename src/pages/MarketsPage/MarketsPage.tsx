@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import classNames from 'classnames';
 
@@ -16,7 +16,7 @@ import styles from './MarketsPage.module.scss';
 import { createBondsStats } from './helpers';
 import { MarketTabsNames } from './types';
 import { MARKET_TABS } from './constants';
-import OrderBook from '../MarketPage/components/OrderBook/OrderBook';
+import OrderBook from './components/OrderBook/OrderBook';
 
 const MarketsPreviewPage: FC = () => {
   const { connected } = useWallet();
@@ -38,6 +38,8 @@ const MarketsPreviewPage: FC = () => {
 
   const { locked, activeLoans } = createBondsStats(bonds);
 
+  const [selectedCollection, setSelectedCollection] = useState(null);
+
   const loading = isLoading || bondsLoanding;
 
   return (
@@ -49,7 +51,9 @@ const MarketsPreviewPage: FC = () => {
             className={classNames(styles.table, styles.marketTable)}
             loading={isLoading}
             data={marketsPreview}
-            breakpoints={{ mobile: 1190, scrollY: 226 }}
+            breakpoints={{ mobile: 1190, scrollY: 216 }}
+            onSelectedRow={setSelectedCollection}
+            marketPubkey={selectedCollection?.marketPubkey}
           />
         </div>
         <div className={styles.content}>
@@ -98,7 +102,6 @@ const MarketsPreviewPage: FC = () => {
             {tabValue === MarketTabsNames.HISTORY && <></>}
           </div>
         </div>
-
         <OrderBook market={market} marketLoading={marketLoading} />
       </div>
     </AppLayout>

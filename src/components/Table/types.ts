@@ -5,3 +5,8 @@ interface Breakpoints {
 }
 
 export type PartialBreakpoints = Partial<Breakpoints>;
+
+export interface ActiveRowParams {
+  field: string;
+  value: string;
+}
