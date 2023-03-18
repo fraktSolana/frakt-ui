@@ -4,34 +4,30 @@ import classNames from 'classnames';
 
 import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
-import { useFetchAllUserBonds } from '@frakt/utils/bonds';
 import { Tabs, useTabs } from '@frakt/components/Tabs';
 import EmptyList from '@frakt/components/EmptyList';
 import Toggle from '@frakt/components/Toggle';
 
-import { MarketTabsNames, MARKET_TABS, useMarketsPreview } from './hooks';
+import { useMarketsPage, useMarketsPreview } from './hooks';
 import { MarketTable } from './components/MarketTable/MarketTable';
 import { BondsTable } from '../MarketPage/components/BondsTable';
 import BondsWidgets from './components/BondsWidgets';
 import styles from './MarketsPage.module.scss';
 import { createBondsStats } from './helpers';
+import { MarketTabsNames } from './types';
+import { MARKET_TABS } from './constants';
 
 const MarketsPreviewPage: FC = () => {
-  const { publicKey, connected } = useWallet();
+  const { connected } = useWallet();
 
   const { marketsPreview, isLoading } = useMarketsPreview();
+  const { bonds, loading: bondsLoanding, hideUserBond } = useMarketsPage();
 
   const {
     tabs: marketTabs,
     value: tabValue,
     setValue: setTabValue,
   } = useTabs({ tabs: MARKET_TABS, defaultValue: MARKET_TABS[0].value });
-
-  const {
-    bonds,
-    isLoading: bondsLoanding,
-    hideBond,
-  } = useFetchAllUserBonds({ walletPubkey: publicKey });
 
   const { locked, activeLoans } = createBondsStats(bonds);
 
@@ -78,7 +74,7 @@ const MarketsPreviewPage: FC = () => {
                     data={bonds}
                     haderTitleCellClassName={styles.haderTitleCell}
                     breakpoints={{ mobile: 1190 }}
-                    hideBond={hideBond}
+                    hideBond={hideUserBond}
                   />
                 </>
               )}

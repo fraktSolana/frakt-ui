@@ -1,7 +1,10 @@
+import { useParams } from 'react-router-dom';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { useQuery } from '@tanstack/react-query';
+import { web3 } from '@frakt-protocol/frakt-sdk';
 
+import { useFetchAllUserBonds, useWalletBonds } from '@frakt/utils/bonds';
 import { MarketPreview, fetchMarketsPreview } from '@frakt/api/bonds';
-import { Tab } from '@frakt/components/Tabs';
 
 type UseMarketsPreview = () => {
   marketsPreview: MarketPreview[];
@@ -24,18 +27,30 @@ export const useMarketsPreview: UseMarketsPreview = () => {
   };
 };
 
-export enum MarketTabsNames {
-  HISTORY = 'history',
-  BONDS = 'bonds',
-}
+export const useMarketsPage = () => {
+  const wallet = useWallet();
 
-export const MARKET_TABS: Tab[] = [
-  {
-    label: 'Bonds',
-    value: 'bonds',
-  },
-  {
-    label: 'History',
-    value: 'history',
-  },
-];
+  const { marketPubkey, walletPubkey } = useParams<{
+    marketPubkey: string;
+    walletPubkey?: string;
+  }>();
+
+  const { bonds, isLoading: bondsLoanding } = useWalletBonds({
+    walletPubkey: wallet.publicKey,
+    marketPubkey: new web3.PublicKey(marketPubkey),
+  });
+
+  const {
+    bonds: userBonds,
+    // isLoading: userBondsLoanding,
+    hideBond: hideUserBond,
+  } = useFetchAllUserBonds({ walletPubkey });
+
+  const loading = bondsLoanding;
+
+  return {
+    bonds: walletPubkey && userBonds?.length ? userBonds : bonds,
+    hideUserBond,
+    loading,
+  };
+};

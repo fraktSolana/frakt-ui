@@ -28,7 +28,7 @@ export const MarketTable: FC<MarketTableProps> = ({
 
   const onRowClick = useCallback(
     (dataItem: MarketPreview) => {
-      history.push(`${PATHS.BOND}/${dataItem?.marketPubkey}`);
+      history.push(`${PATHS.BONDS}/${dataItem?.marketPubkey}`);
       window.scrollTo(0, 0);
     },
     [history],

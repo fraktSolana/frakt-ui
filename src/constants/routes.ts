@@ -46,6 +46,11 @@ export const routes: Route[] = [
   },
   {
     exact: true,
+    path: `${PATHS.BONDS}/:marketPubkey`,
+    component: MarketsPage,
+  },
+  {
+    exact: true,
     path: `${PATHS.BOND}/:marketPubkey`,
     component: MarketPage,
   },
