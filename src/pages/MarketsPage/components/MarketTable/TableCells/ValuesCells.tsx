@@ -1,6 +1,7 @@
-import styles from './TableCells.module.scss';
-import { Solana } from '@frakt/icons';
 import classNames from 'classnames';
+
+import { Solana } from '@frakt/icons';
+import styles from './TableCells.module.scss';
 
 export const createSolValueJSX = (value?: string) => (
   <span className={styles.value}>

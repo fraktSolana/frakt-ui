@@ -62,5 +62,6 @@ export const useMarketsPage = () => {
     loading,
     market,
     marketLoading,
+    marketPubkey,
   };
 };

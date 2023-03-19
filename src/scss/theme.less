@@ -4,6 +4,10 @@
 @primary-border: var(--primary-border);
 @tabel-row-hover: var(--gray-table-hover);
 
+@light-green-color: var(--light-green-color);
+@border-light-green: var(--border-light-green-1);
+@light-green-color-2: var(--light-green-color-2);
+
 // Table styles
 .ant-table {
   background: @primary-background;
@@ -28,19 +32,22 @@
 }
 
 .activeRowClassName {
-  background: rgba(245, 255, 233, 0.2);
+  cursor: default;
+  background: @light-green-color-2;
+  z-index: 10;
+
   & > td {
-    border-top: 1px solid #9cff1f !important;
-    border-bottom: 1px solid #9cff1f !important;
+    border-top: @border-light-green !important;
+    border-bottom: @border-light-green !important;
     padding-top: 7px !important;
     padding-bottom: 7px !important;
   }
   & > td:first-child {
-    border-left: 1px solid #9cff1f !important;
+    border-left: @border-light-green !important;
     padding-left: 7px !important;
   }
   & > td:last-child {
-    border-right: 1px solid #9cff1f !important;
+    border-right: @border-light-green !important;
     padding-right: 7px !important;
   }
 }

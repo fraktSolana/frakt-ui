@@ -1,13 +1,13 @@
 import { FC, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { MarketPreview } from '@frakt/api/bonds';
+import { PATHS } from '@frakt/constants';
 import Table, {
   PartialBreakpoints,
   useSearch,
   useTable,
 } from '@frakt/components/Table';
-import { MarketPreview } from '@frakt/api/bonds';
-import { PATHS } from '@frakt/constants';
 
 import { TableList } from './columns';
 
@@ -16,7 +16,6 @@ export interface MarketTableProps {
   className?: string;
   loading?: boolean;
   breakpoints?: PartialBreakpoints;
-  onSelectedRow?: (collection: MarketPreview) => void;
   marketPubkey: string;
 }
 
@@ -25,16 +24,13 @@ export const MarketTable: FC<MarketTableProps> = ({
   className,
   loading,
   breakpoints,
-  onSelectedRow,
   marketPubkey,
 }) => {
   const history = useHistory();
 
   const onRowClick = useCallback(
     (dataItem: MarketPreview) => {
-      onSelectedRow(dataItem);
       history.push(`${PATHS.BONDS}/${dataItem?.marketPubkey}`);
-      window.scrollTo(0, 0);
     },
     [history],
   );

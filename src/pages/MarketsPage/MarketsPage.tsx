@@ -28,6 +28,7 @@ const MarketsPreviewPage: FC = () => {
     hideUserBond,
     market,
     marketLoading,
+    marketPubkey,
   } = useMarketsPage();
 
   const {
@@ -37,8 +38,6 @@ const MarketsPreviewPage: FC = () => {
   } = useTabs({ tabs: MARKET_TABS, defaultValue: MARKET_TABS[0].value });
 
   const { locked, activeLoans } = createBondsStats(bonds);
-
-  const [selectedCollection, setSelectedCollection] = useState(null);
 
   const loading = isLoading || bondsLoanding;
 
@@ -52,8 +51,7 @@ const MarketsPreviewPage: FC = () => {
             loading={isLoading}
             data={marketsPreview}
             breakpoints={{ mobile: 1190, scrollY: 216 }}
-            onSelectedRow={setSelectedCollection}
-            marketPubkey={selectedCollection?.marketPubkey}
+            marketPubkey={marketPubkey}
           />
         </div>
         <div className={styles.content}>

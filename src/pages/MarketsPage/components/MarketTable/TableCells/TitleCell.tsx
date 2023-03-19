@@ -1,9 +1,8 @@
 import { FC } from 'react';
 import classNames from 'classnames';
 
-import { StarActive } from '@frakt/icons';
-
 import { MarketPreview } from '@frakt/api/bonds';
+import { StarActive } from '@frakt/icons';
 
 import styles from './TableCells.module.scss';
 
