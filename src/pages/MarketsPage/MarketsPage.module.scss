@@ -1,4 +1,4 @@
-.bondPage {
+.container {
   width: calc(100% - 344px);
 
   @media screen and (max-width: 768px) {
@@ -43,9 +43,23 @@
 .marketTableWrapper {
   background: var(--primary-background);
   border: 1px solid var(--primary-border);
+  display: flex;
+  align-items: center;
   padding: 24px;
   margin-bottom: 16px;
 }
+
+.collapsedMarketTable {
+  :global {
+    .ant-table-thead > tr > th:nth-child(n + 3) {
+      display: none !important;
+    }
+    .ant-table-tbody > tr > td:nth-child(n + 3) {
+      display: none !important;
+    }
+  }
+}
+
 
 .marketTableTitle {
   color: var(--primary-text);

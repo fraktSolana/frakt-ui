@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import classNames from 'classnames';
 
@@ -17,6 +17,7 @@ import { createBondsStats } from './helpers';
 import { MarketTabsNames } from './types';
 import { MARKET_TABS } from './constants';
 import OrderBook from './components/OrderBook/OrderBook';
+import Chart from './components/Chart';
 
 const MarketsPreviewPage: FC = () => {
   const { connected } = useWallet();
@@ -43,17 +44,29 @@ const MarketsPreviewPage: FC = () => {
 
   return (
     <AppLayout>
-      <div className={styles.bondPage}>
+      <div className={styles.container}>
         <div className={styles.marketTableWrapper}>
-          <h3 className={styles.marketTableTitle}>Collections</h3>
-          <MarketTable
-            className={classNames(styles.table, styles.marketTable)}
-            loading={isLoading}
-            data={marketsPreview}
-            breakpoints={{ mobile: 1190, scrollY: 216 }}
-            marketPubkey={marketPubkey}
-          />
+          <div>
+            <h3 className={styles.marketTableTitle}>Collections</h3>
+            <MarketTable
+              className={classNames(styles.table, styles.marketTable, {
+                [styles.collapsedMarketTable]: marketPubkey,
+              })}
+              loading={isLoading}
+              data={marketsPreview}
+              breakpoints={{ mobile: 1190, scrollY: 216 }}
+              marketPubkey={marketPubkey}
+            />
+          </div>
+          {marketPubkey && (
+            <Chart
+              marketPreview={marketsPreview.find(
+                (market) => market.marketPubkey === marketPubkey,
+              )}
+            />
+          )}
         </div>
+
         <div className={styles.content}>
           <Tabs
             className={styles.tab}
