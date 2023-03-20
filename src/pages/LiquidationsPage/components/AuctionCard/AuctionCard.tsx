@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import moment from 'moment';
 
 import { AuctionListItem } from '@frakt/api/raffle';
 import { LoadingModal } from '@frakt/components/LoadingModal';
@@ -16,10 +17,14 @@ interface AuctionCardProps {
 }
 
 const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
-  const { onSubmit, closeLoadingModal, loadingModalVisible } = useAuctionCard(
-    auction,
-    hideAuction,
-  );
+  const {
+    onSubmit,
+    closeLoadingModal,
+    loadingModalVisible,
+    buyPrice,
+    timeToNextRound,
+    nextPrice,
+  } = useAuctionCard(auction, hideAuction);
 
   return (
     <>
@@ -40,17 +45,14 @@ const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
               <Timer />
               <div className={styles.countdown}>
                 {createTimerJSX({
-                  expiredAt: auction.timeToNextRound,
+                  expiredAt: moment.unix(timeToNextRound),
                   isSecondType: true,
                 })}
               </div>
             </div>
           </StatsRaffleValues>
-          <StatsRaffleValues
-            label="Next round price"
-            value={auction.nextPrice}
-          />
-          <StatsRaffleValues label="Buy price" value={auction.buyPrice} />
+          <StatsRaffleValues label="Next round price" value={nextPrice} />
+          <StatsRaffleValues label="Buy price" value={buyPrice} />
         </div>
         <Button onClick={onSubmit} type="secondary" className={styles.button}>
           Liquidate

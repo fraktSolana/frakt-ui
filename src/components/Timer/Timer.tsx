@@ -1,9 +1,9 @@
 import { useCountdown } from '@frakt/hooks';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import { FC } from 'react';
 
 interface CreateTimerProps {
-  expiredAt: string | number;
+  expiredAt: string | number | Moment;
   isSecondType?: boolean;
 }
 

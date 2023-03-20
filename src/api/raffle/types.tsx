@@ -1,3 +1,5 @@
+import { DeltaType } from '@frakters/raffle-sdk/lib/raffle-core/types';
+
 export interface FetchItemsParams {
   sortBy?: string;
   sort?: string;
@@ -64,6 +66,11 @@ export interface AuctionListItem {
   startPrice: number;
   nextPrice: number;
   buyPrice: number;
+
+  denominator: number;
+  startedAt: number;
+  delta: number;
+  deltaType: DeltaType;
 }
 
 export interface CollectionsListItem {
