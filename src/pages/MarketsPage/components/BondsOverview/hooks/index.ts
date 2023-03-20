@@ -3,12 +3,13 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useQuery } from '@tanstack/react-query';
 import { web3 } from '@frakt-protocol/frakt-sdk';
 
-import {
-  useFetchAllUserBonds,
-  useMarket,
-  useWalletBonds,
-} from '@frakt/utils/bonds';
+import { useFetchAllUserBonds, useWalletBonds } from '@frakt/utils/bonds';
 import { MarketPreview, fetchMarketsPreview } from '@frakt/api/bonds';
+
+export enum MarketTabsNames {
+  HISTORY = 'history',
+  BONDS = 'bonds',
+}
 
 type UseMarketsPreview = () => {
   marketsPreview: MarketPreview[];
@@ -50,18 +51,9 @@ export const useMarketsPage = () => {
     hideBond: hideUserBond,
   } = useFetchAllUserBonds({ walletPubkey });
 
-  const { market, isLoading: marketLoading } = useMarket({
-    marketPubkey,
-  });
-
-  const loading = bondsLoanding;
-
   return {
     bonds: walletPubkey && userBonds?.length ? userBonds : bonds,
     hideUserBond,
-    loading,
-    market,
-    marketLoading,
-    marketPubkey,
+    loading: bondsLoanding,
   };
 };

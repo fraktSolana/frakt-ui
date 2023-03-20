@@ -14,16 +14,16 @@ interface ChartWidgetsProps {
 const ChartWidgets: FC<ChartWidgetsProps> = ({ marketPreview }) => {
   return (
     <div className={styles.wrapper}>
-      <CollectionGeneralInfoJSX
+      <CollectionGeneralInfo
         image={marketPreview?.collectionImage}
         name={marketPreview?.collectionName}
       />
       <StatsValues
         label="Offer TVL"
         value={
-          <p>
+          <>
             {marketPreview?.offerTVL} <Solana />
-          </p>
+          </>
         }
         tooltipText="Offer TVL"
       />
@@ -34,16 +34,23 @@ const ChartWidgets: FC<ChartWidgetsProps> = ({ marketPreview }) => {
             up to {marketPreview?.apy.toFixed(2)} %
           </p>
         }
-        tooltipText="Offer TVL"
+        tooltipText="APR"
       />
-      <StatsValues label="Duration" value={marketPreview?.duration} />
+      <StatsValues
+        label="Duration"
+        value={
+          marketPreview?.duration?.length
+            ? `${marketPreview?.duration?.join(' / ')} days`
+            : '--'
+        }
+      />
     </div>
   );
 };
 
 export default ChartWidgets;
 
-const CollectionGeneralInfoJSX = ({
+const CollectionGeneralInfo = ({
   image,
   name,
 }: {
@@ -69,7 +76,7 @@ const StatsValues = ({
     <div className={styles.rowCenter}>
       <span className={styles.label}>{label}</span>
       {tooltipText && (
-        <Tooltip overlay={tooltipText}>
+        <Tooltip placement="bottom" overlay={tooltipText}>
           <QuestionCircleOutlined className={styles.questionIcon} />
         </Tooltip>
       )}

@@ -5,16 +5,24 @@ import ChartWidgets from '../ChartWidgets';
 import chartImage from './ChartImage.png';
 
 import styles from './Chart.module.scss';
+import { Loader } from '@frakt/components/Loader';
 
 interface ChartProps {
+  isLoading: boolean;
   marketPreview: MarketPreview;
 }
 
-const Chart: FC<ChartProps> = ({ marketPreview }) => {
+const Chart: FC<ChartProps> = ({ marketPreview, isLoading }) => {
   return (
     <div className={styles.wrapper}>
-      <ChartWidgets marketPreview={marketPreview} />
-      <img src={chartImage} className={styles.chart} />
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <ChartWidgets marketPreview={marketPreview} />
+          <img src={chartImage} className={styles.chart} />
+        </>
+      )}
     </div>
   );
 };

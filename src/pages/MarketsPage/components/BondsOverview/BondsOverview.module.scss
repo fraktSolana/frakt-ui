@@ -1,0 +1,72 @@
+.tab {
+  flex-wrap: nowrap;
+
+  button {
+    border: 0;
+    border-bottom: 1px solid var(--primary-border);
+  }
+
+  button:first-child {
+    border-right: 1px solid var(--primary-border);
+  }
+}
+
+.content {
+  border: 1px solid var(--primary-border);
+}
+
+.tabContent {
+  background: var(--primary-background);
+
+  @media (max-width: 1190px) {
+    padding: 24px;
+  }
+
+  @media (max-width: 767px) {
+    padding: 16px;
+  }
+}
+
+.tabContentMinHeight {
+  min-height: 600px;
+}
+
+.table {
+  :global {
+    .ant-table-tbody > tr:first-child > td {
+      display: none;
+    }
+  }
+}
+
+.bondsTableHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 24px 8px 24px;
+}
+.bondsTable {
+  :global {
+    .ant-table-tbody > tr > td:last-child {
+      width: 127px !important;
+    }
+  }
+}
+
+.emptyList {
+  padding: 120px 0 160px !important;
+}
+
+.noDataTableMessage {
+  :global {
+    display: none;
+  }
+}
+
+.haderTitleCell {
+  opacity: 1 !important;
+
+  @media screen and (max-width: 1190px) {
+    opacity: 0 !important;
+  }
+}
