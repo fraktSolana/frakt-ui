@@ -15,6 +15,10 @@
   border: 1px solid var(--primary-border);
 }
 
+.wrapper {
+  padding: 24px;
+}
+
 .tabContent {
   background: var(--primary-background);
 
@@ -43,12 +47,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 24px 8px 24px;
+  padding: 24px 0 8px 0;
 }
 .bondsTable {
   :global {
     .ant-table-tbody > tr > td:last-child {
       width: 127px !important;
+    }
+    .ant-table-tbody > tr > td:last-child {
+      padding-right: 0;
+    }
+    .ant-table-tbody > tr > td:first-child {
+      padding-left: 0;
     }
   }
 }

@@ -12,10 +12,7 @@ import styles from './MarketsPage.module.scss';
 
 const MarketsPreviewPage: FC = () => {
   const { marketPubkey } = useParams<{ marketPubkey: string }>();
-
-  const { market, isLoading: marketLoading } = useMarket({
-    marketPubkey,
-  });
+  const { market, isLoading: marketLoading } = useMarket({ marketPubkey });
 
   return (
     <AppLayout>

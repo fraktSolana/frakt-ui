@@ -47,7 +47,7 @@ const BondsOverview: FC = () => {
             )}
 
             {connected && (
-              <>
+              <div className={styles.wrapper}>
                 <div className={styles.bondsTableHeader}>
                   <BondsWidgets locked={locked} activeLoans={activeLoans} />
                   <Toggle label="My bonds only" />
@@ -58,10 +58,10 @@ const BondsOverview: FC = () => {
                   loading={loading}
                   data={bonds}
                   haderTitleCellClassName={styles.haderTitleCell}
-                  breakpoints={{ mobile: 1190 }}
+                  breakpoints={{ mobile: 768 }}
                   hideBond={hideUserBond}
                 />
-              </>
+              </div>
             )}
 
             {connected && !bonds.length && !loading && (

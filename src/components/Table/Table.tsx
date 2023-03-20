@@ -104,11 +104,13 @@ const Table = <T extends unknown>({
         { [noDataClassName]: !data.length && !loading },
         styles.table,
       )}
-      rowClassName={(record) =>
-        record[activeRowParams.field] === activeRowParams.value
-          ? 'activeRowClassName'
-          : 'rowClassName'
-      }
+      rowClassName={(record) => {
+        if (!activeRowParams?.field) return 'rowClassName';
+        return (
+          record[activeRowParams?.field] === activeRowParams.value &&
+          'activeRowClassName'
+        );
+      }}
       columns={columns as ColumnsType}
       dataSource={data as any}
       pagination={false}
