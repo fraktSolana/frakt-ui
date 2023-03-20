@@ -3,13 +3,13 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import classNames from 'classnames';
 
 import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
-import { BondsTable } from '@frakt/pages/MarketPage/components/BondsTable';
 import { Tabs, useTabs } from '@frakt/components/Tabs';
 import EmptyList from '@frakt/components/EmptyList';
 import Toggle from '@frakt/components/Toggle';
 
 import { MarketTabsNames, useMarketsPage } from './hooks';
 import BondsWidgets from './components/BondsWidgets';
+import { BondsTable } from './components/BondsTable';
 import { createBondsStats } from './helpers';
 import { MARKET_TABS } from './constants';
 

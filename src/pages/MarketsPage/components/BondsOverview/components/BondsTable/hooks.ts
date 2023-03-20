@@ -1,13 +1,15 @@
 import { useMemo } from 'react';
+
+import { getBestOrdersForExit } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+import { FraktBondState } from 'fbonds-core/lib/fbond-protocol/types';
+
 import { Bond, Market, Pair } from '@frakt/api/bonds';
 import {
   isBondAvailableToRedeem,
   pairLoanDurationFilter,
 } from '@frakt/utils/bonds';
-import { FraktBondState } from 'fbonds-core/lib/fbond-protocol/types';
-import { getBestOrdersForExit } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
 
-export const useBondCardActions = ({
+export const useBondActions = ({
   bond,
   market,
   pairs,

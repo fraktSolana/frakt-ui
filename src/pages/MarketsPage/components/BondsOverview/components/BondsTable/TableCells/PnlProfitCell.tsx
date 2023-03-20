@@ -1,4 +1,5 @@
 import { FC, useEffect } from 'react';
+import { getBestOrdersForExit } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
 import classNames from 'classnames';
 
 import { Bond, Market, Pair } from '@frakt/api/bonds';
@@ -8,10 +9,9 @@ import {
   pairLoanDurationFilter,
 } from '@frakt/utils/bonds';
 
-import { useBondCardActions } from '../../BondCard/hooks/useBondCard';
 import { getMarketAndPairsByBond } from '../helpers';
 import styles from './TableCells.module.scss';
-import { getBestOrdersForExit } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+import { useBondActions } from '../hooks';
 
 interface PnlProfitCellProps {
   bond: Bond;
@@ -35,7 +35,7 @@ export const PnlProfitCell: FC<PnlProfitCellProps> = ({
   console.log('getMarketAndPairsByBond: ', pairs);
   const { averageBondPrice } = bond;
 
-  const { exitAvailable, bestOrdersAndBorrowValue } = useBondCardActions({
+  const { exitAvailable, bestOrdersAndBorrowValue } = useBondActions({
     bond,
     market,
     pairs,

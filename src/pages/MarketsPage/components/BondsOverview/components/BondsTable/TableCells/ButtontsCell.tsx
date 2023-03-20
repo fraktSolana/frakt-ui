@@ -6,9 +6,9 @@ import { useBondsTransactions } from '@frakt/hooks/useBondTransactions';
 import Button from '@frakt/components/Button';
 import { Bond } from '@frakt/api/bonds';
 
-import { useBondCardActions } from '../../BondCard/hooks/useBondCard';
 import { getMarketAndPairsByBond } from '../helpers';
 import styles from './TableCells.module.scss';
+import { useBondActions } from '../hooks';
 
 interface ButtontsCellProps {
   bond: Bond;
@@ -25,7 +25,7 @@ export const ButtontsCell: FC<ButtontsCellProps> = ({
 }) => {
   const { market, pairs } = getMarketAndPairsByBond(bond);
 
-  const { exitAvailable, bestOrdersAndBorrowValue } = useBondCardActions({
+  const { exitAvailable, bestOrdersAndBorrowValue } = useBondActions({
     bond,
     market,
     pairs,
