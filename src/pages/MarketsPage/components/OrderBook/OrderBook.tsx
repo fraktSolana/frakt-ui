@@ -17,6 +17,7 @@ import Offer from './components/Offer';
 import { useMarketOrders } from './hooks';
 import { MarketOrder } from './types';
 import styles from './OrderBook.module.scss';
+import NoActiveOffers from './components/NoActiveOffers';
 
 interface OrderBookProps {
   market: Market;
@@ -71,9 +72,6 @@ const OrderBook: FC<OrderBookProps> = ({
     duration: syntheticParams?.durationDays,
   });
 
-  // ltv={offer.ltv}
-  // size={offer.size}
-  // interest={offer.interest}
   const offers = groupWith(
     (offerA, offerB) =>
       offerA.interest === offerB.interest &&
@@ -87,8 +85,6 @@ const OrderBook: FC<OrderBookProps> = ({
       size: accOffer.size + offer.size,
     })),
   );
-  // console.log("offersSquashed: ", offersSquashed)
-  // .reduce((accOffer, offer) => ({...accOffer, size: accOffer.size + }))
 
   const bestOffer = useMemo(() => {
     return offers.at(0)?.synthetic ? offers.at(1) : offers.at(0);
@@ -193,20 +189,10 @@ const OrderBook: FC<OrderBookProps> = ({
               </ul>
             )}
             {!isLoading && !offersExist && !syntheticParams?.ltv && (
-              <div
-                className={classNames(styles.noData, {
-                  [styles.active]: openOffersMobile,
-                  [styles.create]: syntheticParams?.ltv,
-                })}
-              >
-                <PartyHorn />
-                <div className={styles.noDataTitle}>
-                  No active offers at the moment
-                </div>
-                <div className={styles.noDataSubTitle}>
-                  Good chance to be first!
-                </div>
-              </div>
+              <NoActiveOffers
+                ltv={syntheticParams?.ltv}
+                openOffersMobile={openOffersMobile}
+              />
             )}
 
             {!syntheticParams?.ltv && (
