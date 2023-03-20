@@ -25,7 +25,7 @@ const ChartWidgets: FC<ChartWidgetsProps> = ({ marketPreview }) => {
             {marketPreview?.offerTVL} <Solana />
           </>
         }
-        tooltipText="Offer TVL"
+        tooltipText="Total liquidity currently available in active offers"
       />
       <StatsValues
         label="APR"
@@ -34,7 +34,7 @@ const ChartWidgets: FC<ChartWidgetsProps> = ({ marketPreview }) => {
             up to {marketPreview?.apy.toFixed(2)} %
           </p>
         }
-        tooltipText="APR"
+        tooltipText="Interest (in %) for the duration of this loan"
       />
       <StatsValues
         label="Duration"

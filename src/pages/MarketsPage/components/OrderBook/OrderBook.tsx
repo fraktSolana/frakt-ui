@@ -13,7 +13,7 @@ import { ArrowDownTableSort, ArrowUpTableSort, Chevron } from '@frakt/icons';
 import PartyHorn from '@frakt/icons/PartyHorn';
 import { Market } from '@frakt/api/bonds';
 
-import Offer from '../Offer';
+import Offer from './components/Offer';
 import { useMarketOrders } from './hooks';
 import { MarketOrder } from './types';
 import styles from './OrderBook.module.scss';

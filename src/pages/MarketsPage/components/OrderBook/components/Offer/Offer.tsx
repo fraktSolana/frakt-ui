@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { Pencil } from '@frakt/icons';
 import { colorByPercentOffers, getColorByPercent } from '@frakt/utils/bonds';
 
-import { MarketOrder } from '../OrderBook/types';
+import { MarketOrder } from '../../types';
 import styles from './Offer.module.scss';
 
 interface OfferProps {

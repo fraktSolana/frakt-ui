@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { useMarketsPreview } from '../BondsOverview/hooks';
-import { MarketTable } from '../MarketTable';
+import { MarketTable } from './components/MarketTable';
 import Chart from './components/Chart';
 
 import styles from './CollectionsOverview.module.scss';
@@ -22,7 +22,7 @@ const CollectionsOverview: FC = () => {
           })}
           loading={isLoading}
           data={marketsPreview}
-          breakpoints={{ mobile: 1190, scrollY: 216 }}
+          breakpoints={{ mobile: 768, scrollY: 216 }}
           marketPubkey={marketPubkey}
         />
       </div>

@@ -1,11 +1,12 @@
 import { FC } from 'react';
 import { MarketPreview } from '@frakt/api/bonds';
 
+import { Loader } from '@frakt/components/Loader';
+
 import ChartWidgets from '../ChartWidgets';
 import chartImage from './ChartImage.png';
 
 import styles from './Chart.module.scss';
-import { Loader } from '@frakt/components/Loader';
 
 interface ChartProps {
   isLoading: boolean;
