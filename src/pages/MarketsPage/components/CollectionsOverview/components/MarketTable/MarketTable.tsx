@@ -51,7 +51,7 @@ export const MarketTable: FC<MarketTableProps> = ({
     columns: COLUMNS,
     onRowClick,
     loading,
-    defaultField: 'offerTVL',
+    defaultField: 'activeBondsAmount',
   });
 
   return (
