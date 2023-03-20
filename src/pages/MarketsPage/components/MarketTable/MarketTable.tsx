@@ -30,9 +30,13 @@ export const MarketTable: FC<MarketTableProps> = ({
 
   const onRowClick = useCallback(
     (dataItem: MarketPreview) => {
-      history.push(`${PATHS.BONDS}/${dataItem?.marketPubkey}`);
+      if (marketPubkey === dataItem?.marketPubkey) {
+        history.push(PATHS.BONDS);
+      } else {
+        history.push(`${PATHS.BONDS}/${dataItem?.marketPubkey}`);
+      }
     },
-    [history],
+    [history, marketPubkey],
   );
 
   const { filteredData, onChange } = useSearch({

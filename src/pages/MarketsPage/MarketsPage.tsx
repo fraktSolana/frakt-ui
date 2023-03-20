@@ -61,7 +61,7 @@ const MarketsPreviewPage: FC = () => {
           {marketPubkey && (
             <Chart
               marketPreview={marketsPreview.find(
-                (market) => market.marketPubkey === marketPubkey,
+                (market) => market?.marketPubkey === marketPubkey,
               )}
             />
           )}
@@ -113,7 +113,10 @@ const MarketsPreviewPage: FC = () => {
             {tabValue === MarketTabsNames.HISTORY && <></>}
           </div>
         </div>
-        <OrderBook market={market} marketLoading={marketLoading} />
+        <OrderBook
+          market={marketPubkey ? market : null}
+          marketLoading={marketLoading}
+        />
       </div>
     </AppLayout>
   );

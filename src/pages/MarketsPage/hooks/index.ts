@@ -41,7 +41,7 @@ export const useMarketsPage = () => {
 
   const { bonds, isLoading: bondsLoanding } = useWalletBonds({
     walletPubkey: wallet.publicKey,
-    marketPubkey: new web3.PublicKey(marketPubkey),
+    marketPubkey: marketPubkey && new web3.PublicKey(marketPubkey),
   });
 
   const {
