@@ -7,7 +7,7 @@ import Tooltip from '@frakt/components/Tooltip';
 
 import TokenField from '../../components/TokenField';
 import { AppLayout } from '../../components/Layout/AppLayout';
-import OrderBook from '../MarketPage/components/OrderBook/OrderBook';
+import OrderBook from '../MarketsPage/components/OrderBook/OrderBook';
 import Button from '../../components/Button';
 import SizeField from './components/SizeField/SizeField';
 import { RadioButton } from './components/RadioButton';

@@ -1,0 +1,55 @@
+.rowCenter {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.wrapper {
+  @extend .rowCenter;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.collectionGeneralInfo {
+  @extend .rowCenter;
+  gap: 8px;
+}
+.collectionImage {
+  height: 32px;
+  width: 32px;
+}
+.collectionName {
+  font: var(--font-text-5);
+  width: 120px;
+}
+
+.label {
+  color: var(--secondary-text);
+  font: var(--font-text-7);
+  text-transform: uppercase;
+}
+
+.value {
+  font: var(--font-text-8);
+  font-size: 14px;
+}
+
+.highlightPositiveText {
+  color: var(--light-green-color);
+}
+
+.questionIcon {
+  svg {
+    fill: var(--blue-color);
+    width: 18px;
+    height: 18px;
+  }
+}

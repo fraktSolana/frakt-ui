@@ -1,0 +1,46 @@
+.wrapper {
+  background: var(--primary-background);
+  border: 1px solid var(--primary-border);
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.title {
+  color: var(--primary-text);
+  font: var(--font-text-2);
+  font-size: 20px;
+  line-height: 24px;
+  padding-bottom: 16px;
+}
+
+.rootTable {
+  :global {
+    .ant-table-tbody > tr:first-child > td {
+      display: none;
+    }
+  }
+}
+
+.marketTable {
+  :global {
+    height: 236px;
+    .ant-table-thead > tr > th {
+      border: 0 !important;
+      padding-top: 0 !important;
+      width: 100%;
+    }
+  }
+}
+
+.collapsedMarketTable {
+  :global {
+    .ant-table-thead > tr > th:nth-child(n + 3) {
+      display: none !important;
+    }
+    .ant-table-tbody > tr > td:nth-child(n + 3) {
+      display: none !important;
+    }
+  }
+}

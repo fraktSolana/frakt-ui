@@ -24,7 +24,7 @@ import { Pair } from '@frakt/api/bonds';
 
 import { RBOption } from './components/RadioButton';
 import { makeModifyPairTransactions } from '@frakt/utils/bonds/transactions/makeModifyPairTransactions';
-import { parseMarketOrder } from '../MarketPage/components/OrderBook/helpers';
+import { parseMarketOrder } from '../MarketsPage/components/OrderBook/helpers';
 
 export const useOfferPage = () => {
   const history = useHistory();

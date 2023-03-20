@@ -1,0 +1,55 @@
+.rowCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  @media (max-width: 1190px) {
+    padding: 24px 0;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 768px) {
+    padding: 24px 0;
+    gap: 8px;
+  }
+}
+
+.block {
+  @extend .rowCenter;
+  border: 1px solid var(--primary-border);
+
+  justify-content: center;
+  padding: 0 8px;
+  min-width: 188px;
+  height: 34px;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    padding: 0 12px;
+  }
+}
+
+.values {
+  @extend .rowCenter;
+  white-space: nowrap;
+}
+
+.label {
+  color: var(--secondary-text);
+  font: var(--font-text-7);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.value {
+  @extend .rowCenter;
+  font: var(--font-text-8);
+  font-size: 14px;
+}

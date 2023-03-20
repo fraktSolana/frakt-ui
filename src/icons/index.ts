@@ -45,6 +45,8 @@ export { SignOut } from './SignOut';
 export { Solana } from './Solana';
 export { Solscan } from './Solscan';
 export { Staking, StakingDark } from './Staking';
+export { Star } from './Star';
+export { StarActive } from './StarActive';
 export { Sun } from './Sun';
 export { Ticket } from './Ticket';
 export { Timer } from './Timer';
