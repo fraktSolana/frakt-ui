@@ -1,0 +1,50 @@
+.flexCenter {
+  display: flex;
+  align-items: center;
+}
+
+.collectionInfo {
+  @extend .flexCenter;
+  cursor: pointer;
+  gap: 4px;
+}
+
+.collectionCard {
+  @extend .flexCenter;
+  justify-content: space-between;
+}
+
+.collectionImage {
+  height: 28px;
+  width: 28px;
+}
+
+.collectionName {
+  font: var(--font-text-6);
+}
+
+.button {
+  @extend .flexCenter;
+  justify-content: center;
+
+  position: relative;
+
+  height: 24px;
+  width: 24px;
+}
+.button svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 14px;
+}
+.active {
+  transform: rotate(180deg);
+}
+
+.hiddenOffersList {
+  @extend .flexCenter;
+  flex-direction: column;
+}

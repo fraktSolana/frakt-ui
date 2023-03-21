@@ -1,11 +1,16 @@
 import { useMemo } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { web3 } from 'fbonds-core';
-import { parseMarketOrder } from './helpers';
-import { MarketOrder } from './types';
-import { useMarketPairs } from '@frakt/utils/bonds';
-import { compareNumbers } from '@frakt/utils';
 import { useParams } from 'react-router-dom';
+import { web3 } from 'fbonds-core';
+
+import { useMarketPairs } from '@frakt/utils/bonds';
+
+import { MarketOrder } from './types';
+import {
+  parseMarketOrder,
+  sortOffersByInterest,
+  sortOffersByLtv,
+} from './helpers';
 
 type UseMarketOrders = (props: {
   marketPubkey: web3.PublicKey;
@@ -83,15 +88,8 @@ export const useMarketOrders: UseMarketOrders = ({
 
     const offers = editOfferPubkey ? parsedEditabledOffers : parsedOffers;
 
-    const sortOffersByInterest = offers.sort((a, b) => {
-      return compareNumbers(a.interest, b.interest, sortDirection === 'desc');
-    });
-
-    const sortedByLtv = (
-      sortDirection === 'asc'
-        ? sortOffersByInterest
-        : sortOffersByInterest.reverse()
-    ).sort((a, b) => compareNumbers(a.ltv, b.ltv, sortDirection === 'desc'));
+    const sortedOffersByInterest = sortOffersByInterest(offers, sortDirection);
+    const sortedByLtv = sortOffersByLtv(sortedOffersByInterest, sortDirection);
 
     return sortedByLtv;
   }, [
