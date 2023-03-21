@@ -328,11 +328,11 @@ export const signAndSendAllTransactionsInSequence: SignAndSendAllTransactionsInS
           console.log('currentTxIndex: ', currentTxIndex);
           const txn = signedTransactions[currentTxIndex];
           await connection.sendRawTransaction(txn.serialize(), {
-            skipPreflight: false,
+            skipPreflight: true,
           });
           currentTxIndex += 1;
         }
-        await new Promise((r) => setTimeout(r, 6000));
+        await new Promise((r) => setTimeout(r, 7000));
       }
 
       console.log('Transactions sent!');

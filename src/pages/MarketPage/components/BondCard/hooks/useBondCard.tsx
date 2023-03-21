@@ -18,6 +18,7 @@ export const useBondCardActions = ({
 }) => {
   const redeemAvailable = isBondAvailableToRedeem(bond);
 
+  console.log('pairs for exit: ', pairs);
   const bestOrdersAndBorrowValue = useMemo(() => {
     const { fbond, amountOfUserBonds } = bond;
 
@@ -35,6 +36,8 @@ export const useBondCardActions = ({
       ),
     });
   }, [pairs, bond, market]);
+
+  console.log('bestOrdersAndBorrowValue: ', bestOrdersAndBorrowValue);
 
   const exitAvailable =
     bond.fbond.fraktBondState === FraktBondState.Active &&

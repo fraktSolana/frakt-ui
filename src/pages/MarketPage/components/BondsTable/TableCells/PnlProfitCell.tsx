@@ -32,6 +32,7 @@ export const PnlProfitCell: FC<PnlProfitCellProps> = ({
 }) => {
   const { market, pairs } = getMarketAndPairsByBond(bond);
 
+  console.log('getMarketAndPairsByBond: ', pairs);
   const { averageBondPrice } = bond;
 
   const { exitAvailable, bestOrdersAndBorrowValue } = useBondCardActions({
@@ -96,6 +97,8 @@ export const calcPnlProfit = ({ bond, market, pairs }) => {
       }),
     ),
   });
+
+  console.log('bestOrdersAndBorrowValue: ', bestOrdersAndBorrowValue);
 
   const pnlLamports = bestOrdersAndBorrowValue.maxBorrowValue;
 
