@@ -49,7 +49,7 @@ export const makeCreateBondTransaction: MakeCreateBondTransaction = async ({
     fbondTokenMint: bondTokenMint,
     instructions: createBondIxns,
     signers: createBondSigners,
-  } = await fbondFactory.createBondWithSingleCollateral({
+  } = await fbondFactory.createBondWithSingleCollateralPnft({
     accounts: {
       tokenMint: new web3.PublicKey(nftMint),
       userPubkey: wallet.publicKey,
@@ -166,7 +166,7 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
       fbondTokenMint: bondTokenMint,
       instructions: createBondIxns,
       signers: createBondSigners,
-    } = await fbondFactory.createBondWithSingleCollateral({
+    } = await fbondFactory.createBondWithSingleCollateralPnft({
       accounts: {
         tokenMint: new web3.PublicKey(nftMint),
         userPubkey: wallet.publicKey,

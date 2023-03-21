@@ -54,7 +54,12 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
 
   const spotPrice = BOND_DECIMAL_DELTA - interest * 100;
 
-  const bidCap = Math.floor(solDepositLamports / spotPrice);
+  const bidCapMultiplier =
+    bondFeature === BondFeatures.Autocompound ||
+    bondFeature === BondFeatures.AutoCompoundAndReceiveNft
+      ? 10
+      : 1; // multiplying by 10, so autocompound
+  const bidCap = Math.floor(solDepositLamports / spotPrice) * bidCapMultiplier;
 
   const maxReturnAmountFilter = Math.ceil(
     (marketFloor *
