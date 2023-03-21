@@ -9,11 +9,13 @@ import styles from './CollectionList.module.scss';
 interface CollectionListProps {
   openOffersMobile: boolean;
   existSyntheticParams: boolean;
+  sortDirection: string;
 }
 
 const CollectionList: FC<CollectionListProps> = ({
   openOffersMobile,
   existSyntheticParams,
+  sortDirection = 'desc',
 }) => {
   const { marketsPreview, isLoading } = useMarketsPreview();
 

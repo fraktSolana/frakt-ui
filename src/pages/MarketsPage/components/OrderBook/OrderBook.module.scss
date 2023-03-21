@@ -143,6 +143,10 @@
     height: calc(100% - var(--header-height) - 66px);
   }
 
+  &.listHeight {
+    height: calc(100% - var(--header-height) - 60px);
+  }
+
   @media screen and (max-width: 768px) {
     &.active {
       height: calc(100vh - var(--header-height) - 206px);

@@ -105,28 +105,22 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
             onChange={(nextValue) => setShowOwnOrders(nextValue)}
           />
 
-          {offersExist && (
-            <div
-              className={classNames(styles.columnWrapper, {
-                [styles.active]: openOffersMobile,
-                [styles.create]: syntheticParams?.ltv,
-              })}
-            >
-              <div className={styles.col}>
-                <span className={styles.colName}>size</span>
-                <span>(SOL)</span>
-              </div>
-              <div onClick={toggleSort} className={styles.col}>
-                <span className={styles.colName}>Interest</span>
-                <span>(%)</span>
-                {sort === 'desc' ? (
-                  <ArrowDownTableSort />
-                ) : (
-                  <ArrowUpTableSort />
-                )}
-              </div>
+          <div
+            className={classNames(styles.columnWrapper, {
+              [styles.active]: openOffersMobile,
+              [styles.create]: syntheticParams?.ltv,
+            })}
+          >
+            <div className={styles.col}>
+              <span className={styles.colName}>size</span>
+              <span>(SOL)</span>
             </div>
-          )}
+            <div onClick={toggleSort} className={styles.col}>
+              <span className={styles.colName}>Interest</span>
+              <span>(%)</span>
+              {sort === 'desc' ? <ArrowDownTableSort /> : <ArrowUpTableSort />}
+            </div>
+          </div>
         </div>
 
         <div
@@ -134,6 +128,7 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
             [styles.active]: openOffersMobile,
             [styles.create]: syntheticParams?.ltv,
             [styles.visible]: !offersExist,
+            [styles.listHeight]: !marketPubkey,
           })}
         >
           {isLoading && marketPubkey && (
@@ -150,6 +145,7 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
             <CollectionsList
               openOffersMobile={openOffersMobile}
               existSyntheticParams={!!syntheticParams?.ltv}
+              sortDirection={sort}
             />
           )}
 
