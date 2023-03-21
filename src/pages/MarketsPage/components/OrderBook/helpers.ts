@@ -82,3 +82,9 @@ export const sortOffersByLtv = (
         .reverse()
         .sort((a, b) => compareNumbers(a.ltv, b.ltv, sortDirection === 'desc'));
 };
+
+export const filterOffersByDuration = (offers: MarketOrder[], duration = 7) => {
+  if (duration > 14) return offers;
+
+  return offers.filter((offer) => offer?.duration === duration);
+};

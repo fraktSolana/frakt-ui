@@ -53,7 +53,7 @@ const BondsOverview: FC = () => {
                   <Toggle label="My bonds only" />
                 </div>
                 <BondsTable
-                  className={classNames(styles.table, styles.bondsTable)}
+                  className={styles.bondsTable}
                   noDataClassName={styles.noDataTableMessage}
                   loading={loading}
                   data={bonds}

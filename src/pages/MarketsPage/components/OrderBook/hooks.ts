@@ -7,6 +7,7 @@ import { useMarketPairs } from '@frakt/utils/bonds';
 
 import { MarketOrder } from './types';
 import {
+  filterOffersByDuration,
   parseMarketOrder,
   sortOffersByInterest,
   sortOffersByLtv,
@@ -15,6 +16,7 @@ import {
 type UseMarketOrders = (props: {
   marketPubkey: web3.PublicKey;
   sortDirection?: 'desc' | 'asc'; //? Sort by interest only
+  filterDuration?: number;
   walletOwned?: boolean;
   ltv: number;
   size: number; //? lamports
@@ -35,6 +37,7 @@ export const useMarketOrders: UseMarketOrders = ({
   size,
   interest,
   duration,
+  filterDuration,
 }) => {
   const { publicKey } = useWallet();
 
@@ -90,8 +93,12 @@ export const useMarketOrders: UseMarketOrders = ({
 
     const sortedOffersByInterest = sortOffersByInterest(offers, sortDirection);
     const sortedByLtv = sortOffersByLtv(sortedOffersByInterest, sortDirection);
+    const sortedByDuration = filterOffersByDuration(
+      sortedByLtv,
+      filterDuration,
+    );
 
-    return sortedByLtv;
+    return sortedByDuration;
   }, [
     pairs,
     sortDirection,

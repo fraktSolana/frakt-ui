@@ -54,6 +54,7 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
     marketPubkey:
       market?.marketPubkey && new web3.PublicKey(market?.marketPubkey),
     sortDirection: sort,
+    filterDuration: duration,
     walletOwned: showOwnOrders,
     ltv: syntheticParams?.ltv,
     size: syntheticParams?.offerSize,

@@ -35,14 +35,6 @@
   min-height: 600px;
 }
 
-.table {
-  :global {
-    .ant-table-tbody > tr:first-child > td {
-      display: none;
-    }
-  }
-}
-
 .bondsTableHeader {
   display: flex;
   align-items: center;
