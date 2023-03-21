@@ -281,3 +281,21 @@
     }
   }
 }
+
+.filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.radioButton {
+  label {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+
+    height: 22px;
+    width: 32px !important;
+  }
+}

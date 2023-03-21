@@ -28,7 +28,7 @@ export const RadioButton = <T extends unknown>({
             id={option.label}
             name={option.label}
             value={option.label}
-            checked={option.label === currentOption.label}
+            checked={option.value === currentOption.value}
             onChange={() => onOptionChange(option)}
           />
           <label htmlFor={option.label}>{option.label}</label>

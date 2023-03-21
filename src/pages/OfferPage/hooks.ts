@@ -22,7 +22,7 @@ import { useNativeAccount } from '@frakt/utils/accounts';
 import { PATHS } from '@frakt/constants';
 import { Pair } from '@frakt/api/bonds';
 
-import { RBOption } from './components/RadioButton';
+import { RBOption } from '../../components/RadioButton';
 import { makeModifyPairTransactions } from '@frakt/utils/bonds/transactions/makeModifyPairTransactions';
 import { parseMarketOrder } from '../MarketsPage/components/OrderBook/helpers';
 

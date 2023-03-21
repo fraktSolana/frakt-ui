@@ -5,20 +5,22 @@ import { web3 } from 'fbonds-core';
 import { groupWith } from 'ramda';
 
 import { ArrowDownTableSort, ArrowUpTableSort, Chevron } from '@frakt/icons';
+import { RadioButton, RBOption } from '@frakt/components/RadioButton';
 import { Loader } from '@frakt/components/Loader';
 import Button from '@frakt/components/Button';
 import Toggle from '@frakt/components/Toggle';
 import { Market } from '@frakt/api/bonds';
 import { PATHS } from '@frakt/constants';
 
-import { SortOrder, SyntheticParams } from './types';
 import CollectionsList from './components/CollectionsList';
+import { isOwnOrder, makeEditOrderPath } from './helpers';
 import NoActiveOffers from './components/NoActiveOffers';
+import { SortOrder, SyntheticParams } from './types';
+import { DURATION_OPTIONS } from './constants';
 import { useMarketOrders } from './hooks';
 import Offer from './components/Offer';
 
 import styles from './OrderBook.module.scss';
-import { isOwnOrder, makeEditOrderPath } from './helpers';
 
 interface OrderBookProps {
   market: Market;
@@ -30,10 +32,15 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
   const { marketPubkey } = useParams<{ marketPubkey: string }>();
 
   const [openOffersMobile, setOpenOffersMobile] = useState<boolean>(false);
-  const toggleOffers = () => setOpenOffersMobile((prev) => !prev);
-
   const [showOwnOrders, setShowOwnOrders] = useState<boolean>(false);
   const [sort, setSort] = useState<SortOrder>(SortOrder.DESC);
+  const [duration, setDuration] = useState<number>(7);
+
+  const toggleOffers = () => setOpenOffersMobile((prev) => !prev);
+
+  const onDurationChange = (nextOption: RBOption<number>) => {
+    setDuration(nextOption.value);
+  };
 
   const toggleSort = () => {
     sort === SortOrder.DESC ? setSort(SortOrder.ASC) : setSort(SortOrder.DESC);
@@ -96,14 +103,25 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
           })}
         >
           <h5 className={styles.title}>Offers</h5>
-          <Toggle
-            label="My offers only"
-            className={classNames(styles.toggle, {
-              [styles.active]: openOffersMobile,
-            })}
-            defaultChecked={showOwnOrders}
-            onChange={(nextValue) => setShowOwnOrders(nextValue)}
-          />
+          <div className={styles.filters}>
+            <RadioButton
+              className={styles.radioButton}
+              currentOption={{
+                label: `${duration}`,
+                value: duration,
+              }}
+              onOptionChange={onDurationChange}
+              options={DURATION_OPTIONS}
+            />
+            <Toggle
+              label="My offers"
+              className={classNames(styles.toggle, {
+                [styles.active]: openOffersMobile,
+              })}
+              defaultChecked={showOwnOrders}
+              onChange={(nextValue) => setShowOwnOrders(nextValue)}
+            />
+          </div>
 
           <div
             className={classNames(styles.columnWrapper, {

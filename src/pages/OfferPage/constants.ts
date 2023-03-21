@@ -1,6 +1,6 @@
 import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 
-import { RBOption } from './components/RadioButton';
+import { RBOption } from '../../components/RadioButton';
 
 export const riskMarks: { [key: string]: string | JSX.Element } = {
   10: '10%',
