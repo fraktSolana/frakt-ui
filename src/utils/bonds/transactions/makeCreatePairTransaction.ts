@@ -48,6 +48,7 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
   connection,
   wallet,
 }) => {
+  console.log('bondFeature: ', bondFeature);
   const maxLTVRaw = maxLTV * 100; //? Max LTV (2000 --> 20%)
   const maxDurationSec = maxDuration * 24 * 60 * 60; //? Max duration (seconds)
   const solDepositLamports = solDeposit * 1e9;
@@ -59,7 +60,9 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
     bondFeature === BondFeatures.AutoCompoundAndReceiveNft
       ? 10
       : 1; // multiplying by 10, so autocompound
-  const bidCap = Math.floor(solDepositLamports / spotPrice) * bidCapMultiplier;
+  const amountOfTokensInOrder = Math.floor(solDepositLamports / spotPrice);
+
+  const bidCap = amountOfTokensInOrder * bidCapMultiplier;
 
   const maxReturnAmountFilter = Math.ceil(
     (marketFloor *
@@ -134,7 +137,7 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
         userPubkey: wallet.publicKey,
       },
       args: {
-        amountOfTokensToBuy: bidCap, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
+        amountOfTokensToBuy: amountOfTokensInOrder, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
       },
       programId: BONDS_PROGRAM_PUBKEY,
       connection,
