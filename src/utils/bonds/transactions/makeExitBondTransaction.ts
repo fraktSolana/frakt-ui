@@ -261,10 +261,7 @@ export const makeExitBondMultiOrdersTransaction: MakeExitBondMultiOrdersTransact
           (orderParam) => orderParam.orderSize > 0,
         );
       }
-      console.log(
-        'claimAndSellTxnsAndSigners: ',
-        claimAndSellTxnsAndSigners.length,
-      );
+
       return {
         unsetBondTxnAndSigners,
         sellingBondsTxnsAndSigners: claimAndSellTxnsAndSigners,
