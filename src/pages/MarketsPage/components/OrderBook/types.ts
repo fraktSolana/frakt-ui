@@ -11,3 +11,15 @@ export interface MarketOrder {
     edgeSettlement: number;
   };
 }
+
+export interface SyntheticParams {
+  ltv: number;
+  interest: number;
+  offerSize: number;
+  durationDays: number;
+}
+
+export enum SortOrder {
+  ASC = 'asc',
+  DESC = 'desc',
+}

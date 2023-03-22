@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import classNames from 'classnames';
 
 import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
 import { Tabs, useTabs } from '@frakt/components/Tabs';
@@ -50,10 +49,10 @@ const BondsOverview: FC = () => {
               <div className={styles.wrapper}>
                 <div className={styles.bondsTableHeader}>
                   <BondsWidgets locked={locked} activeLoans={activeLoans} />
-                  <Toggle label="My bonds only" />
+                  <Toggle className={styles.toggle} label="My bonds only" />
                 </div>
                 <BondsTable
-                  className={classNames(styles.table, styles.bondsTable)}
+                  className={styles.bondsTable}
                   noDataClassName={styles.noDataTableMessage}
                   loading={loading}
                   data={bonds}

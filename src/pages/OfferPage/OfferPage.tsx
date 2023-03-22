@@ -10,7 +10,7 @@ import { AppLayout } from '../../components/Layout/AppLayout';
 import OrderBook from '../MarketsPage/components/OrderBook/OrderBook';
 import Button from '../../components/Button';
 import SizeField from './components/SizeField/SizeField';
-import { RadioButton } from './components/RadioButton';
+import { RadioButton } from '../../components/RadioButton';
 import { SliderGradient } from './components/SliderGradient/SliderGradient';
 import { Header } from './components/Header';
 import { useOfferPage } from './hooks';

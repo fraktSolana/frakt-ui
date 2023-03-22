@@ -1,59 +1,49 @@
 import { FC, useMemo, useState } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { NavLink, useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { web3 } from 'fbonds-core';
 import { groupWith } from 'ramda';
 
-import Button from '@frakt/components/Button';
-import Toggle from '@frakt/components/Toggle';
-import { Loader } from '@frakt/components/Loader';
-import { PATHS } from '@frakt/constants';
 import { ArrowDownTableSort, ArrowUpTableSort, Chevron } from '@frakt/icons';
-import PartyHorn from '@frakt/icons/PartyHorn';
+import { RadioButton, RBOption } from '@frakt/components/RadioButton';
+import { NavigationButton } from '@frakt/components/Button';
+import { Loader } from '@frakt/components/Loader';
+import Toggle from '@frakt/components/Toggle';
 import { Market } from '@frakt/api/bonds';
+import { PATHS } from '@frakt/constants';
 
-import Offer from './components/Offer';
+import CollectionsList from './components/CollectionsList';
+import { isOwnOrder, makeEditOrderPath } from './helpers';
+import NoActiveOffers from './components/NoActiveOffers';
+import { SortOrder, SyntheticParams } from './types';
+import { DURATION_OPTIONS } from './constants';
 import { useMarketOrders } from './hooks';
-import { MarketOrder } from './types';
+import Offer from './components/Offer';
+
 import styles from './OrderBook.module.scss';
 
 interface OrderBookProps {
   market: Market;
   marketLoading?: boolean;
-  syntheticParams?: {
-    ltv: number;
-    interest: number;
-    offerSize: number;
-    durationDays: number;
-  };
+  syntheticParams?: SyntheticParams;
 }
 
-const OrderBook: FC<OrderBookProps> = ({
-  market,
-  marketLoading,
-  syntheticParams,
-}) => {
-  const wallet = useWallet();
-  const history = useHistory();
+const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
+  const { marketPubkey } = useParams<{ marketPubkey: string }>();
 
   const [openOffersMobile, setOpenOffersMobile] = useState<boolean>(false);
+  const [showOwnOrders, setShowOwnOrders] = useState<boolean>(false);
+  const [sort, setSort] = useState<SortOrder>(SortOrder.DESC);
+  const [duration, setDuration] = useState<number>(7);
+
   const toggleOffers = () => setOpenOffersMobile((prev) => !prev);
 
-  const editOrder = (order: MarketOrder) => {
-    history.push(
-      `${PATHS.OFFER}/${market?.marketPubkey}/${order?.rawData?.publicKey}`,
-    );
+  const onDurationChange = (nextOption: RBOption<number>) => {
+    setDuration(nextOption.value);
   };
 
-  const isOwnOrder = (order: MarketOrder) =>
-    order?.rawData?.assetReceiver === wallet?.publicKey?.toBase58();
-
-  const [showOwnOrders, setShowOwnOrders] = useState(false);
-  const [sort, setSort] = useState<'asc' | 'desc'>('desc');
-
   const toggleSort = () => {
-    sort === 'desc' ? setSort('asc') : setSort('desc');
+    sort === SortOrder.DESC ? setSort(SortOrder.ASC) : setSort(SortOrder.DESC);
   };
 
   const {
@@ -64,6 +54,7 @@ const OrderBook: FC<OrderBookProps> = ({
     marketPubkey:
       market?.marketPubkey && new web3.PublicKey(market?.marketPubkey),
     sortDirection: sort,
+    filterDuration: duration,
     walletOwned: showOwnOrders,
     ltv: syntheticParams?.ltv,
     size: syntheticParams?.offerSize,
@@ -71,9 +62,6 @@ const OrderBook: FC<OrderBookProps> = ({
     duration: syntheticParams?.durationDays,
   });
 
-  // ltv={offer.ltv}
-  // size={offer.size}
-  // interest={offer.interest}
   const offers = groupWith(
     (offerA, offerB) =>
       offerA.interest === offerB.interest &&
@@ -87,8 +75,6 @@ const OrderBook: FC<OrderBookProps> = ({
       size: accOffer.size + offer.size,
     })),
   );
-  // console.log("offersSquashed: ", offersSquashed)
-  // .reduce((accOffer, offer) => ({...accOffer, size: accOffer.size + }))
 
   const bestOffer = useMemo(() => {
     return offers.at(0)?.synthetic ? offers.at(1) : offers.at(0);
@@ -101,124 +87,127 @@ const OrderBook: FC<OrderBookProps> = ({
         [styles.create]: syntheticParams?.ltv,
       })}
     >
-      {marketLoading && <Loader />}
-      {!marketLoading && (
-        <>
-          <div
-            className={classNames(styles.roundBtn, styles.btnChevron, {
-              [styles.active]: openOffersMobile,
-            })}
-            onClick={toggleOffers}
-          >
-            <Chevron />
-          </div>
+      <>
+        <div
+          className={classNames(styles.roundBtn, styles.btnChevron, {
+            [styles.active]: openOffersMobile,
+          })}
+          onClick={toggleOffers}
+        >
+          <Chevron />
+        </div>
 
-          <div
-            className={classNames(styles.header, {
-              [styles.active]: openOffersMobile,
-              [styles.create]: syntheticParams?.ltv,
-            })}
-          >
-            <h5 className={styles.title}>Offers</h5>
+        <div
+          className={classNames(styles.header, {
+            [styles.active]: openOffersMobile,
+            [styles.create]: syntheticParams?.ltv,
+          })}
+        >
+          <h5 className={styles.title}>Offers</h5>
+          <div className={styles.filters}>
+            <RadioButton
+              className={styles.radioButton}
+              currentOption={{
+                label: `${duration}`,
+                value: duration,
+              }}
+              onOptionChange={onDurationChange}
+              options={DURATION_OPTIONS}
+            />
             <Toggle
-              label="My offers only"
+              label="My offers"
               className={classNames(styles.toggle, {
                 [styles.active]: openOffersMobile,
               })}
               defaultChecked={showOwnOrders}
               onChange={(nextValue) => setShowOwnOrders(nextValue)}
             />
-
-            {offersExist && (
-              <div
-                className={classNames(styles.columnWrapper, {
-                  [styles.active]: openOffersMobile,
-                  [styles.create]: syntheticParams?.ltv,
-                })}
-              >
-                <div className={styles.col}>
-                  <span className={styles.colName}>size</span>
-                  <span>(SOL)</span>
-                </div>
-                <div onClick={toggleSort} className={styles.col}>
-                  <span className={styles.colName}>Interest</span>
-                  <span>(%)</span>
-                  {sort === 'desc' ? (
-                    <ArrowDownTableSort />
-                  ) : (
-                    <ArrowUpTableSort />
-                  )}
-                </div>
-              </div>
-            )}
           </div>
 
           <div
-            className={classNames(styles.content, {
+            className={classNames(styles.columnWrapper, {
               [styles.active]: openOffersMobile,
               [styles.create]: syntheticParams?.ltv,
-              [styles.visible]: !offersExist,
             })}
           >
-            {isLoading && (
-              <Loader
-                size="default"
-                className={classNames(styles.loader, {
-                  [styles.active]: openOffersMobile,
-                  [styles.create]: syntheticParams?.ltv,
-                })}
-              />
-            )}
-
-            {!isLoading && offersExist && (
-              <ul
-                className={classNames(styles.list, {
-                  [styles.create]: syntheticParams?.ltv,
-                  [styles.active]: openOffersMobile,
-                })}
-              >
-                {offers.map((offer, idx) => (
-                  <Offer
-                    ltv={offer.ltv}
-                    size={offer.size}
-                    interest={offer.interest}
-                    order={offer}
-                    bestOffer={bestOffer}
-                    duration={offer.duration}
-                    editOrder={() => editOrder(offer)}
-                    isOwnOrder={isOwnOrder(offer)}
-                    key={idx}
-                  />
-                ))}
-              </ul>
-            )}
-            {!isLoading && !offersExist && !syntheticParams?.ltv && (
-              <div
-                className={classNames(styles.noData, {
-                  [styles.active]: openOffersMobile,
-                  [styles.create]: syntheticParams?.ltv,
-                })}
-              >
-                <PartyHorn />
-                <div className={styles.noDataTitle}>
-                  No active offers at the moment
-                </div>
-                <div className={styles.noDataSubTitle}>
-                  Good chance to be first!
-                </div>
-              </div>
-            )}
-
-            {!syntheticParams?.ltv && (
-              <NavLink to={`${PATHS.OFFER}/${market?.marketPubkey}`}>
-                <Button className={styles.btn} type="secondary">
-                  Place offers
-                </Button>
-              </NavLink>
-            )}
+            <div className={styles.col}>
+              <span className={styles.colName}>size</span>
+              <span>(SOL)</span>
+            </div>
+            <div onClick={toggleSort} className={styles.col}>
+              <span className={styles.colName}>Interest</span>
+              <span>(%)</span>
+              {sort === 'desc' ? <ArrowDownTableSort /> : <ArrowUpTableSort />}
+            </div>
           </div>
-        </>
-      )}
+        </div>
+
+        <div
+          className={classNames(styles.content, {
+            [styles.active]: openOffersMobile,
+            [styles.create]: syntheticParams?.ltv,
+            [styles.visible]: !offersExist,
+          })}
+        >
+          {isLoading && marketPubkey && (
+            <Loader
+              size="default"
+              className={classNames(styles.loader, {
+                [styles.active]: openOffersMobile,
+                [styles.create]: syntheticParams?.ltv,
+              })}
+            />
+          )}
+
+          {!marketPubkey && (
+            <CollectionsList
+              openOffersMobile={openOffersMobile}
+              existSyntheticParams={!!syntheticParams?.ltv}
+              sortDirection={sort}
+            />
+          )}
+
+          {!isLoading && offersExist && (
+            <ul
+              className={classNames(styles.list, {
+                [styles.create]: syntheticParams?.ltv,
+                [styles.active]: openOffersMobile,
+              })}
+            >
+              {offers.map((offer, idx) => (
+                <Offer
+                  ltv={offer.ltv}
+                  size={offer.size}
+                  interest={offer.interest}
+                  order={offer}
+                  bestOffer={bestOffer}
+                  duration={offer.duration}
+                  editOrder={() =>
+                    makeEditOrderPath(offer, market?.marketPubkey)
+                  }
+                  isOwnOrder={isOwnOrder(offer)}
+                  key={idx}
+                />
+              ))}
+            </ul>
+          )}
+          {!isLoading && !offersExist && !syntheticParams?.ltv && (
+            <NoActiveOffers
+              ltv={syntheticParams?.ltv}
+              openOffersMobile={openOffersMobile}
+            />
+          )}
+
+          {!syntheticParams?.ltv && marketPubkey && (
+            <NavigationButton
+              className={styles.btn}
+              path={`${PATHS.OFFER}/${market?.marketPubkey}`}
+            >
+              Place offers
+            </NavigationButton>
+          )}
+        </div>
+      </>
     </div>
   );
 };

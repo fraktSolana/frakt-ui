@@ -1,6 +1,10 @@
 import { Pair } from '@frakt/api/bonds';
+import { PATHS } from '@frakt/constants';
+import { compareNumbers } from '@frakt/utils';
 import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { getTopOrderSize } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+import { useHistory } from 'react-router-dom';
 
 import { MarketOrder } from './types';
 
@@ -48,4 +52,39 @@ export const calcSpotPrice: CalcSpotPrice = ({
   solDepositLamports,
 }) => {
   return (1 - solFeeLamports / solDepositLamports) * BOND_DECIMAL_DELTA;
+};
+
+export const isOwnOrder = (order: MarketOrder): boolean => {
+  const wallet = useWallet();
+  return order?.rawData?.assetReceiver === wallet?.publicKey?.toBase58();
+};
+
+export const makeEditOrderPath = (order: MarketOrder, marketPubkey: string) => {
+  const history = useHistory();
+  history.push(`${PATHS.OFFER}/${marketPubkey}/${order?.rawData?.publicKey}`);
+};
+
+export const sortOffersByInterest = (
+  offers: MarketOrder[],
+  sortDirection = 'desc',
+) =>
+  offers.sort((a, b) => {
+    return compareNumbers(a.interest, b.interest, sortDirection === 'desc');
+  });
+
+export const sortOffersByLtv = (
+  offers: MarketOrder[],
+  sortDirection = 'desc',
+) => {
+  return sortDirection === 'asc'
+    ? offers
+    : offers
+        .reverse()
+        .sort((a, b) => compareNumbers(a.ltv, b.ltv, sortDirection === 'desc'));
+};
+
+export const filterOffersByDuration = (offers: MarketOrder[], duration = 7) => {
+  if (duration > 14) return offers;
+
+  return offers.filter((offer) => offer?.duration === duration);
 };

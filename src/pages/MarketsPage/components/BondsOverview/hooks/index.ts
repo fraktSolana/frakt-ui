@@ -54,6 +54,6 @@ export const useMarketsPage = () => {
   return {
     bonds: walletPubkey && userBonds?.length ? userBonds : bonds,
     hideUserBond,
-    loading: bondsLoanding,
+    loading: false,
   };
 };

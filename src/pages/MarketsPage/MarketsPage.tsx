@@ -20,7 +20,7 @@ const MarketsPreviewPage: FC = () => {
         <CollectionsOverview />
         <BondsOverview />
         <OrderBook
-          market={marketPubkey ? market : null}
+          market={marketPubkey && market}
           marketLoading={marketLoading}
         />
       </div>
