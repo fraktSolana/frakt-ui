@@ -10,6 +10,7 @@ import {
   CollateralBoxType,
   FraktBondState,
   BondFeatures,
+  AutocompoundDeposit,
 } from 'fbonds-core/lib/fbond-protocol/types';
 
 interface FMarket {
@@ -182,4 +183,5 @@ export interface Bond {
   averageBondPrice: number; //? price in lamports for minimal part of bond
   interest: number; //? BasePoint percent (50% === 5000)
   amountOfUserBonds: number;
+  autocompoundDeposits?: AutocompoundDeposit[];
 }
