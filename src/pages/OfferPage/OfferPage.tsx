@@ -41,8 +41,10 @@ export const OfferPage = () => {
     isLoading,
     onEditOffer,
     onRemoveOffer,
-    bondFeature,
-    onBondFeatureChange,
+    autocompoundFeature,
+    onChangeAutocompoundFeature,
+    receiveNftFeature,
+    onChangeReceiveNftFeature,
   } = useOfferPage();
 
   const apr = (parseFloat(interest) / duration) * 365;
@@ -109,10 +111,8 @@ export const OfferPage = () => {
               <div className={styles.toggle}>
                 <Toggle
                   label="Receive liquidated NFT"
-                  value={bondFeature === BondFeatures.ReceiveNftOnLiquidation}
-                  onChange={() =>
-                    onBondFeatureChange(BondFeatures.ReceiveNftOnLiquidation)
-                  }
+                  value={receiveNftFeature}
+                  onChange={onChangeReceiveNftFeature}
                 />
                 <Tooltip
                   placement="bottom"
@@ -155,10 +155,8 @@ export const OfferPage = () => {
               <div className={styles.toggle}>
                 <Toggle
                   label="Autocompound"
-                  value={bondFeature === BondFeatures.Autocompound}
-                  onChange={() =>
-                    onBondFeatureChange(BondFeatures.Autocompound)
-                  }
+                  value={autocompoundFeature}
+                  onChange={onChangeAutocompoundFeature}
                 />
                 <Tooltip placement="bottom" overlay="">
                   <QuestionCircleOutlined className={styles.questionIcon} />

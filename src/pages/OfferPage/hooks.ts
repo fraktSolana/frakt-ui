@@ -59,9 +59,9 @@ export const useOfferPage = () => {
   const [duration, setDuration] = useState<number>(7);
   const [interest, setInterest] = useState<string>('0');
   const [offerSize, setOfferSize] = useState<string>('0');
-  const [bondFeature, setBondFeature] = useState<BondFeatures>(
-    BondFeatures.AutoreceiveSol,
-  );
+  const [receiveNftFeature, setReceiveNftFeature] = useState<boolean>(false);
+  const [autocompoundFeature, setAutocompoundFeature] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (isEdit && !isLoading) {
@@ -82,12 +82,26 @@ export const useOfferPage = () => {
   const onOfferSizeChange = (value: string) => {
     setOfferSize(value);
   };
-  const onBondFeatureChange = (nextOption: BondFeatures) => {
-    if (bondFeature === nextOption) {
-      setBondFeature(BondFeatures.AutoreceiveSol);
-    } else {
-      setBondFeature(nextOption);
-    }
+
+  const onChangeReceiveNftFeature = () => {
+    setReceiveNftFeature(!receiveNftFeature);
+  };
+
+  const onChangeAutocompoundFeature = () => {
+    setAutocompoundFeature(!autocompoundFeature);
+  };
+
+  const findNeededBondFeature = () => {
+    if (receiveNftFeature && autocompoundFeature)
+      return BondFeatures.AutoCompoundAndReceiveNft;
+
+    if (receiveNftFeature && !autocompoundFeature)
+      return BondFeatures.AutoReceiveAndReceiveNft;
+
+    if (autocompoundFeature && !receiveNftFeature)
+      return BondFeatures.Autocompound;
+
+    return BondFeatures.AutoreceiveSol;
   };
 
   const {
@@ -116,7 +130,7 @@ export const useOfferPage = () => {
             solDeposit: parseFloat(offerSize),
             interest: parseFloat(interest),
             marketFloor: market.oracleFloor.floor,
-            bondFeature,
+            bondFeature: findNeededBondFeature(),
             connection,
             wallet,
           });
@@ -286,7 +300,9 @@ export const useOfferPage = () => {
     walletSolBalance: account?.lamports ?? 0,
     market,
     isLoading,
-    bondFeature,
-    onBondFeatureChange,
+    autocompoundFeature,
+    onChangeAutocompoundFeature,
+    receiveNftFeature,
+    onChangeReceiveNftFeature,
   };
 };
