@@ -14,6 +14,7 @@ import {
   createHighestLtvJSX,
   createActiveLoansJSX,
 } from './TableCells';
+import { getStorageItemsByKey } from './helpers';
 import styles from './TableCells/TableCells.module.scss';
 
 export type SortColumns = {
@@ -22,6 +23,24 @@ export type SortColumns = {
 }[];
 
 export const TableList = ({ onChange }) => {
+  const storageMarketPubkeys = getStorageItemsByKey('favourites');
+
+  const sortingFavoriteList = (
+    a: MarketPreview,
+    b: MarketPreview,
+    sortBy: string,
+  ) => {
+    const valueExistInStorageA = storageMarketPubkeys.includes(a.marketPubkey);
+    const valueExistInStorageB = storageMarketPubkeys.includes(b.marketPubkey);
+
+    if (valueExistInStorageA && valueExistInStorageB)
+      return a[sortBy] - b[sortBy];
+    if (valueExistInStorageB) return -1;
+    else if (valueExistInStorageA) return 1;
+
+    return a[sortBy] - b[sortBy];
+  };
+
   const COLUMNS: ColumnsType<MarketPreview> = [
     {
       key: 'collectionName',
@@ -46,7 +65,7 @@ export const TableList = ({ onChange }) => {
         />
       ),
       render: (value) => createActiveLoansJSX(value),
-      sorter: (a, b) => a.activeBondsAmount - b.activeBondsAmount,
+      sorter: (a, b) => sortingFavoriteList(a, b, 'activeBondsAmount'),
       showSorterTooltip: false,
       defaultSortOrder: 'descend',
     },
@@ -79,7 +98,6 @@ export const TableList = ({ onChange }) => {
       sorter: (a, b) => parseFloat(a.offerTVL) - parseFloat(b.offerTVL),
       render: (value) => createOfferTvlJSX(value),
       showSorterTooltip: false,
-      defaultSortOrder: 'descend',
     },
     {
       key: 'duration',
@@ -107,7 +125,7 @@ export const TableList = ({ onChange }) => {
         />
       ),
       render: (value) => createHighestLtvJSX(value),
-      sorter: (a, b) => a.bestLTV - b.bestLTV,
+      sorter: (a, b) => sortingFavoriteList(a, b, 'bestLTV'),
       showSorterTooltip: false,
     },
     {
@@ -122,7 +140,7 @@ export const TableList = ({ onChange }) => {
         />
       ),
       render: (value) => createAprJSX(value),
-      sorter: (a, b) => a.apy - b.apy,
+      sorter: (a, b) => sortingFavoriteList(a, b, 'apy'),
       showSorterTooltip: false,
     },
   ];

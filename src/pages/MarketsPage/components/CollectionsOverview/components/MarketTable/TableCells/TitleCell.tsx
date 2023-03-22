@@ -13,12 +13,11 @@ export const TitleCell: FC<{ market: MarketPreview }> = ({ market }) => {
   const storageMarketPubkeys = getStorageItemsByKey('favourites');
   const isFavourited = storageMarketPubkeys.includes(market.marketPubkey);
 
-  const [isAddedToFavoriteList, setIsAddedToFavoriteList] =
-    useState<boolean>(isFavourited);
+  const [addedToFavoriteList, setAddedToFavoriteList] = useState<string[]>([]);
 
   const addMarketToFavoriteList = (event: Event) => {
     if (isFavourited) return;
-    setIsAddedToFavoriteList(true);
+    setAddedToFavoriteList([...addedToFavoriteList, market?.marketPubkey]);
 
     const storageMarketPubkeys = getStorageItemsByKey('favourites');
     const newMarketPubkeys = [...storageMarketPubkeys, market.marketPubkey];
@@ -28,7 +27,11 @@ export const TitleCell: FC<{ market: MarketPreview }> = ({ market }) => {
   };
 
   const removeMarketFromFavoriteList = (event: Event) => {
-    setIsAddedToFavoriteList(false);
+    setAddedToFavoriteList(
+      addedToFavoriteList.filter(
+        (marketPubkey: string) => marketPubkey !== market?.marketPubkey,
+      ),
+    );
 
     const storageMarketPubkeys = getStorageItemsByKey('favourites');
     const newMarketPubkeys = storageMarketPubkeys.filter(
@@ -42,7 +45,7 @@ export const TitleCell: FC<{ market: MarketPreview }> = ({ market }) => {
   return (
     <div className={classNames(styles.row, styles.rowLeft)}>
       <div className={styles.iconWrapper}>
-        {isAddedToFavoriteList ? (
+        {isFavourited || addedToFavoriteList.includes(market?.marketPubkey) ? (
           <div onClick={(event: Event) => removeMarketFromFavoriteList(event)}>
             <StarActive className={styles.starIcon} />
           </div>
