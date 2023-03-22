@@ -70,7 +70,7 @@ export const fetchWalletBonds: FetchWalletBonds = async ({
   marketPubkey,
 }) => {
   const { data } = await axios.get<Bond[]>(
-    `https://${BACKEND_DOMAIN}/bonds/mm8fDa7jiufFGD6h4foq9vdmTRxDeDSTKB9CZynwQQs/${marketPubkey.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
+    `https://${BACKEND_DOMAIN}/bonds/${walletPubkey?.toBase58()}/${marketPubkey.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data ?? [];
@@ -84,7 +84,7 @@ export const fetchAllUserBonds: FetchAllUserBonds = async ({
   walletPubkey,
 }) => {
   const { data } = await axios.get<Bond[]>(
-    `https://${BACKEND_DOMAIN}/bonds/mm8fDa7jiufFGD6h4foq9vdmTRxDeDSTKB9CZynwQQs?isPrivate=${IS_PRIVATE_MARKETS}`,
+    `https://${BACKEND_DOMAIN}/bonds/${walletPubkey?.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data ?? [];

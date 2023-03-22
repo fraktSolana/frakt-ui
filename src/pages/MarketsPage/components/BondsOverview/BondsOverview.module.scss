@@ -35,12 +35,23 @@
   min-height: 600px;
 }
 
+.toggle {
+  @media (max-width: 1240px) {
+    padding-bottom: 16px;
+  }
+}
+
 .bondsTableHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 0 8px 0;
+  padding-bottom: 8px;
+
+  @media (max-width: 1240px) {
+    flex-direction: column-reverse;
+  }
 }
+
 .bondsTable {
   :global {
     .ant-table-tbody > tr > td:last-child {

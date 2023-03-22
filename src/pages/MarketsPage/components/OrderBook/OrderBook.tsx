@@ -1,13 +1,13 @@
 import { FC, useMemo, useState } from 'react';
-import { NavLink, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { web3 } from 'fbonds-core';
 import { groupWith } from 'ramda';
 
 import { ArrowDownTableSort, ArrowUpTableSort, Chevron } from '@frakt/icons';
 import { RadioButton, RBOption } from '@frakt/components/RadioButton';
+import { NavigationButton } from '@frakt/components/Button';
 import { Loader } from '@frakt/components/Loader';
-import Button from '@frakt/components/Button';
 import Toggle from '@frakt/components/Toggle';
 import { Market } from '@frakt/api/bonds';
 import { PATHS } from '@frakt/constants';
@@ -147,7 +147,6 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
             [styles.active]: openOffersMobile,
             [styles.create]: syntheticParams?.ltv,
             [styles.visible]: !offersExist,
-            [styles.listHeight]: !marketPubkey,
           })}
         >
           {isLoading && marketPubkey && (
@@ -199,12 +198,13 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
             />
           )}
 
-          {!syntheticParams?.ltv && (
-            <NavLink to={`${PATHS.OFFER}/${market?.marketPubkey}`}>
-              <Button className={styles.btn} type="secondary">
-                Place offers
-              </Button>
-            </NavLink>
+          {!syntheticParams?.ltv && marketPubkey && (
+            <NavigationButton
+              className={styles.btn}
+              path={`${PATHS.OFFER}/${market?.marketPubkey}`}
+            >
+              Place offers
+            </NavigationButton>
           )}
         </div>
       </>
