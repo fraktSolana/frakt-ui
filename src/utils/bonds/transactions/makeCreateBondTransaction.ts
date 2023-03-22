@@ -14,7 +14,7 @@ import {
   BOND_DECIMAL_DELTA,
   PRECISION_CORRECTION_LAMPORTS,
 } from '../constants';
-import { mergeBondOrderParamsByPair } from '../utils';
+import { isBondFeaturesAutomated, mergeBondOrderParamsByPair } from '../utils';
 
 type MakeCreateBondTransaction = (params: {
   market: Market;
@@ -92,11 +92,9 @@ export const makeCreateBondTransaction: MakeCreateBondTransaction = async ({
         minAmountToGet:
           (amountToReturn / BOND_DECIMAL_DELTA) * pair.currentSpotPrice, //? SOL lamports
         skipFailed: false,
-        isAutocompoundOrAutoreceiveSol:
-          pair.validation.bondFeatures === BondFeatures.Autocompound ||
-          pair.validation.bondFeatures === BondFeatures.AutoreceiveSol
-            ? true
-            : false,
+        isAutocompoundOrAutoreceiveSol: isBondFeaturesAutomated(
+          pair.validation.bondFeatures,
+        ),
       },
       connection,
       programId: BONDS_PROGRAM_PUBKEY,
@@ -219,11 +217,9 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
               orderParam.orderSize * orderParam.spotPrice -
               PRECISION_CORRECTION_LAMPORTS, //? SOL lamports
             skipFailed: false,
-            isAutocompoundOrAutoreceiveSol:
-              orderParam.bondFeature === BondFeatures.Autocompound ||
-              orderParam.bondFeature === BondFeatures.AutoreceiveSol
-                ? true
-                : false,
+            isAutocompoundOrAutoreceiveSol: isBondFeaturesAutomated(
+              orderParam.bondFeature,
+            ),
           },
           connection,
           programId: BONDS_PROGRAM_PUBKEY,

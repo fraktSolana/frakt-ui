@@ -23,7 +23,7 @@ export const makeRedeemBondTransaction: MakeRedeemBondTransaction = async ({
   wallet,
   connection,
 }) => {
-  if (bond.autocompoundDeposits) {
+  if (bond.autocompoundDeposits && bond.autocompoundDeposits.length) {
     const claimAndRedeemTransactionsAndSigners = await Promise.all(
       bond.autocompoundDeposits.map(async (autocompoundDeposit) => {
         const claimIxsAndSigners = await claimFbondsFromAutocompoundDeposit({

@@ -17,6 +17,7 @@ import {
   BOND_MAX_RETURN_AMOUNT_FILTER,
   BOND_MAX_RETURN_AMOUNT_PROTECTION_BASE_POINTS,
 } from '../constants';
+import { isBondFeaturesAutomated } from '../utils';
 
 type MakeCreatePairTransaction = (params: {
   maxLTV: number; //? % 0-100
@@ -55,11 +56,7 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
 
   const spotPrice = BOND_DECIMAL_DELTA - interest * 100;
 
-  const bidCapMultiplier =
-    bondFeature === BondFeatures.Autocompound ||
-    bondFeature === BondFeatures.AutoCompoundAndReceiveNft
-      ? 10
-      : 1; // multiplying by 10, so autocompound
+  const bidCapMultiplier = isBondFeaturesAutomated(bondFeature) ? 10 : 1; // multiplying by 10, so autocompound
   const amountOfTokensInOrder = Math.floor(solDepositLamports / spotPrice);
 
   const bidCap = amountOfTokensInOrder * bidCapMultiplier;

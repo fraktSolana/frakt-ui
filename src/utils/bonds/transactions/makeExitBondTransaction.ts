@@ -16,7 +16,7 @@ import {
   BONDS_PROGRAM_PUBKEY,
   PRECISION_CORRECTION_LAMPORTS,
 } from '../constants';
-import { mergeBondOrderParamsByPair } from '../utils';
+import { isBondFeaturesAutomated, mergeBondOrderParamsByPair } from '../utils';
 
 type MakeExitBondTransaction = (params: {
   bond: Bond;
@@ -99,11 +99,9 @@ export const makeExitBondTransaction: MakeExitBondTransaction = async ({
       amountToSell: bond.amountOfUserBonds, //? amount of fbond tokens decimals
       minAmountToGet: bond.amountOfUserBonds * pair.currentSpotPrice, //? SOL lamports
       skipFailed: false,
-      isAutocompoundOrAutoreceiveSol:
-        pair.validation.bondFeatures === BondFeatures.Autocompound ||
-        pair.validation.bondFeatures === BondFeatures.AutoreceiveSol
-          ? true
-          : false,
+      isAutocompoundOrAutoreceiveSol: isBondFeaturesAutomated(
+        pair.validation.bondFeatures,
+      ),
     },
     connection,
     programId: BONDS_PROGRAM_PUBKEY,
@@ -172,7 +170,8 @@ export const makeExitBondMultiOrdersTransaction: MakeExitBondMultiOrdersTransact
       bondOrderParams,
     });
 
-    if (bond.autocompoundDeposits) {
+    console.log('bond data: ', bond);
+    if (bond.autocompoundDeposits && bond.autocompoundDeposits.length) {
       const claimAndSellTxnsAndSigners = [];
 
       let affectedOrderParams = mergedPairsOrderParams.filter(
@@ -236,11 +235,9 @@ export const makeExitBondMultiOrdersTransaction: MakeExitBondMultiOrdersTransact
                   amountToSell * orderParam.spotPrice -
                   PRECISION_CORRECTION_LAMPORTS, //? SOL lamports
                 skipFailed: false,
-                isAutocompoundOrAutoreceiveSol:
-                  orderParam.bondFeature === BondFeatures.Autocompound ||
-                  orderParam.bondFeature === BondFeatures.AutoreceiveSol
-                    ? true
-                    : false,
+                isAutocompoundOrAutoreceiveSol: isBondFeaturesAutomated(
+                  orderParam.bondFeature,
+                ),
               },
               connection,
               programId: BONDS_PROGRAM_PUBKEY,
@@ -261,6 +258,7 @@ export const makeExitBondMultiOrdersTransaction: MakeExitBondMultiOrdersTransact
           (orderParam) => orderParam.orderSize > 0,
         );
       }
+      console.log('or gere !!!!!!!!!!!!');
 
       return {
         unsetBondTxnAndSigners,
@@ -299,11 +297,9 @@ export const makeExitBondMultiOrdersTransaction: MakeExitBondMultiOrdersTransact
                 orderParam.orderSize * orderParam.spotPrice -
                 PRECISION_CORRECTION_LAMPORTS, //? SOL lamports
               skipFailed: false,
-              isAutocompoundOrAutoreceiveSol:
-                orderParam.bondFeature === BondFeatures.Autocompound ||
-                orderParam.bondFeature === BondFeatures.AutoreceiveSol
-                  ? true
-                  : false,
+              isAutocompoundOrAutoreceiveSol: isBondFeaturesAutomated(
+                orderParam.bondFeature,
+              ),
             },
             connection,
             programId: BONDS_PROGRAM_PUBKEY,
@@ -318,6 +314,10 @@ export const makeExitBondMultiOrdersTransaction: MakeExitBondMultiOrdersTransact
           ),
           signers: ixsAndSigners.signers,
         }),
+      );
+      console.log(
+        'heresssss: sellingBondsTxnsAndSigners: ',
+        sellingBondsTxnsAndSigners,
       );
       return {
         unsetBondTxnAndSigners,

@@ -1,5 +1,8 @@
 import { maxBy } from 'lodash';
-import { FraktBondState } from 'fbonds-core/lib/fbond-protocol/types';
+import {
+  BondFeatures,
+  FraktBondState,
+} from 'fbonds-core/lib/fbond-protocol/types';
 
 import { Bond, Pair } from '@frakt/api/bonds';
 import { BondOrderParams } from '@frakt/api/nft';
@@ -110,3 +113,11 @@ export const mergeBondOrderParamsByPair: MergeBondOrderParamsByPair = ({
 
   return mergedPairsOrderParams;
 };
+
+export const isBondFeaturesAutomated = (bondFeature: BondFeatures) =>
+  bondFeature === BondFeatures.Autocompound ||
+  bondFeature === BondFeatures.AutoreceiveSol ||
+  bondFeature === BondFeatures.AutoCompoundAndReceiveNft ||
+  bondFeature === BondFeatures.AutoReceiveAndReceiveNft
+    ? true
+    : false;
