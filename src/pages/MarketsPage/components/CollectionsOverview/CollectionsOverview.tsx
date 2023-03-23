@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import { useMarketsPreview } from '../BondsOverview/hooks';
 import { MarketTable } from './components/MarketTable';
-import Chart from './components/Chart';
+import Chart, { useBondChart } from './components/Chart';
 
 import styles from './CollectionsOverview.module.scss';
 import { useWindowSize } from '@frakt/hooks';
@@ -16,6 +16,8 @@ const CollectionsOverview: FC = () => {
   const { marketsPreview, isLoading } = useMarketsPreview();
   const { width } = useWindowSize();
 
+  const { isVisible } = useBondChart();
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.scrollContainer}>
@@ -23,6 +25,7 @@ const CollectionsOverview: FC = () => {
         <MarketTable
           className={classNames(styles.marketTable, {
             [styles.collapsedMarketTable]: marketPubkey,
+            [styles.chartMarketTable]: isVisible && marketPubkey,
           })}
           loading={isLoading}
           data={marketsPreview}
@@ -39,6 +42,7 @@ const CollectionsOverview: FC = () => {
           marketPreview={marketsPreview.find(
             (market) => market?.marketPubkey === marketPubkey,
           )}
+          isVisible={isVisible}
         />
       )}
     </div>

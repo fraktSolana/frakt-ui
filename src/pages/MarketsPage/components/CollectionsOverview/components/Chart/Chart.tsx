@@ -1,6 +1,7 @@
 import { FC } from 'react';
-import { MarketPreview } from '@frakt/api/bonds';
+import classNames from 'classnames';
 
+import { MarketPreview } from '@frakt/api/bonds';
 import { Loader } from '@frakt/components/Loader';
 
 import ChartWidgets from '../ChartWidgets';
@@ -11,11 +12,16 @@ import styles from './Chart.module.scss';
 interface ChartProps {
   isLoading: boolean;
   marketPreview: MarketPreview;
+  isVisible: boolean;
 }
 
-const Chart: FC<ChartProps> = ({ marketPreview, isLoading }) => {
+const Chart: FC<ChartProps> = ({ marketPreview, isLoading, isVisible }) => {
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={classNames(styles.wrapper, {
+        [styles.chartVisible]: isVisible,
+      })}
+    >
       {isLoading ? (
         <Loader />
       ) : (

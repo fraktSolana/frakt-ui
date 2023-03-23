@@ -33,6 +33,7 @@
 
 .activeRowClassName {
   cursor: default;
+  display: table-row !important;
   background: @light-green-color-2;
   z-index: 10;
 
@@ -49,6 +50,15 @@
   & > td:nth-child(2) {
     border-right: @border-light-green !important;
     padding-right: 7px !important;
+  }
+
+  @media (max-width: 1300px) {
+    & > td:nth-child(2) {
+      border-right: 0 !important;
+    }
+    & > td:last-child {
+      border-right: @border-light-green !important;
+    }
   }
 }
 .ant-table-cell-fix-left {

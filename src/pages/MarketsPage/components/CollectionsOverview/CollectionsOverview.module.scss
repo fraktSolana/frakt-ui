@@ -5,14 +5,15 @@
   align-items: center;
   padding: 24px;
   margin-bottom: 16px;
+
+  @media (max-width: 1300px) {
+    flex-direction: column;
+  }
 }
 
 .scrollContainer {
   overflow: auto;
-
-  &::-webkit-scrollbar {
-    height: 0px;
-  }
+  width: 100%;
 }
 
 .title {
@@ -37,6 +38,9 @@
         width: 180px;
       }
     }
+    ::-webkit-scrollbar {
+      height: 0px;
+    }
   }
 }
 
@@ -48,7 +52,6 @@
     .ant-table-tbody > tr > td:nth-child(n + 3) {
       display: none !important;
     }
-
     @media (max-width: 1300px) {
       .ant-table-thead > tr > th:nth-child(n + 3) {
         display: table-cell !important;
@@ -60,5 +63,17 @@
   }
   .ant-table-tbody > tr > td:first-child {
     width: 180px;
+  }
+}
+
+.chartMarketTable {
+  @media (max-width: 1300px) {
+    :global {
+      height: unset;
+
+      .ant-table-row {
+        display: none;
+      }
+    }
   }
 }

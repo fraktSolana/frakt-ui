@@ -16,6 +16,7 @@ export { BellWithBadge } from './BellWithBadge';
 export { Bonds, BondsDark } from './Bonds';
 export { Borrow, BorrowDark } from './Borrow';
 export { ChangeWallet } from './ChangeWallet';
+export { Chart } from './Chart';
 export { Chevron } from './Chevron';
 export { ChevronDown } from './ChevronDown';
 export { Close } from './Close';

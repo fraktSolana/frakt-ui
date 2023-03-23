@@ -1,8 +1,12 @@
-.row {
+.rowCenter {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   gap: 8px;
+}
+
+.row {
+  @extend .rowCenter;
+  justify-content: flex-end;
 }
 
 .rowLeft {
@@ -19,7 +23,7 @@
   color: var(--primary-text);
   font: var(--font-text-6);
   min-width: 124px;
-  max-width: 160px;
+  max-width: 124px;
   z-index: 1;
 }
 
@@ -158,4 +162,14 @@
 .starIcon {
   min-width: 16px;
   min-height: 16px;
+}
+
+.chartIcon {
+  display: none;
+
+  @media (max-width: 1300px) {
+    display: block;
+    height: 28px;
+    width: 28px;
+  }
 }
