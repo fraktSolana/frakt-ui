@@ -1,6 +1,5 @@
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SortOrder } from 'antd/lib/table/interface';
-import { map, sum } from 'lodash';
 
 import { Search } from '@frakt/components/Table/Search';
 import { MarketPreview } from '@frakt/api/bonds';
@@ -14,7 +13,11 @@ import {
   createHighestLtvJSX,
   createActiveLoansJSX,
 } from './TableCells';
-import { getStorageItemsByKey } from './helpers';
+import {
+  formateDuration,
+  formateToNumbers,
+  sortingFavoriteList,
+} from './helpers';
 import styles from './TableCells/TableCells.module.scss';
 
 export type SortColumns = {
@@ -23,24 +26,6 @@ export type SortColumns = {
 }[];
 
 export const TableList = ({ onChange }) => {
-  const storageMarketPubkeys = getStorageItemsByKey('favourites');
-
-  const sortingFavoriteList = (
-    a: MarketPreview,
-    b: MarketPreview,
-    sortBy: string,
-  ) => {
-    const valueExistInStorageA = storageMarketPubkeys.includes(a.marketPubkey);
-    const valueExistInStorageB = storageMarketPubkeys.includes(b.marketPubkey);
-
-    if (valueExistInStorageA && valueExistInStorageB)
-      return a[sortBy] - b[sortBy];
-    if (valueExistInStorageB) return -1;
-    else if (valueExistInStorageA) return 1;
-
-    return a[sortBy] - b[sortBy];
-  };
-
   const COLUMNS: ColumnsType<MarketPreview> = [
     {
       key: 'collectionName',
@@ -69,21 +54,6 @@ export const TableList = ({ onChange }) => {
       showSorterTooltip: false,
       defaultSortOrder: 'descend',
     },
-    // {
-    //   key: 'bestOffer',
-    //   dataIndex: 'bestOffer',
-    //   title: (column) => (
-    //     <HeaderTitleCell
-    //       sortColumns={column?.sortColumns}
-    //       label="Best offer"
-    //       value="bestOffer"
-    //       tooltipText="Highest loan amount offered for that collection"
-    //     />
-    //   ),
-    //   sorter: (a, b) => a.bestOffer - b.bestOffer,
-    //   render: (value) => createBestOfferJSX(value),
-    //   showSorterTooltip: false,
-    // },
     {
       key: 'offerTVL',
       dataIndex: 'offerTVL',
@@ -95,7 +65,7 @@ export const TableList = ({ onChange }) => {
           tooltipText="Total liquidity currently available in active offers"
         />
       ),
-      sorter: (a, b) => parseFloat(a.offerTVL) - parseFloat(b.offerTVL),
+      sorter: (a, b) => sortingFavoriteList(a, b, 'offerTVL', formateToNumbers),
       render: (value) => createOfferTvlJSX(value),
       showSorterTooltip: false,
     },
@@ -109,7 +79,7 @@ export const TableList = ({ onChange }) => {
           value="duration"
         />
       ),
-      sorter: (a, b) => sum(map(a.duration)) - sum(map(b.duration)),
+      sorter: (a, b) => sortingFavoriteList(a, b, 'duration', formateDuration),
       render: (value) => createDurationJSX(value),
       showSorterTooltip: false,
     },
