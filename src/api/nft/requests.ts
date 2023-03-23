@@ -42,7 +42,7 @@ export const fetchBulkSuggestion: FetchBulkSuggestion = async ({
   totalValue,
 }) => {
   const { data } = await axios.get<BulkSuggestion>(
-    `https://${BACKEND_DOMAIN}/nft/suggest2/${publicKey?.toBase58()}?solAmount=${totalValue}`,
+    `https://${BACKEND_DOMAIN}/nft/suggest/${publicKey?.toBase58()}?solAmount=${totalValue}`,
   );
 
   return data ?? null;
