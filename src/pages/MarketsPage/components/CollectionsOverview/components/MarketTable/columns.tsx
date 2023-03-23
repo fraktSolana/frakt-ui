@@ -1,6 +1,5 @@
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SortOrder } from 'antd/lib/table/interface';
-import { map, sum } from 'lodash';
 
 import { Search } from '@frakt/components/Table/Search';
 import { MarketPreview } from '@frakt/api/bonds';
@@ -14,6 +13,11 @@ import {
   createHighestLtvJSX,
   createActiveLoansJSX,
 } from './TableCells';
+import {
+  formateDuration,
+  formateToNumbers,
+  sortingFavoriteList,
+} from './helpers';
 import styles from './TableCells/TableCells.module.scss';
 
 export type SortColumns = {
@@ -46,25 +50,10 @@ export const TableList = ({ onChange }) => {
         />
       ),
       render: (value) => createActiveLoansJSX(value),
-      sorter: (a, b) => a.activeBondsAmount - b.activeBondsAmount,
+      sorter: (a, b) => sortingFavoriteList(a, b, 'activeBondsAmount'),
       showSorterTooltip: false,
       defaultSortOrder: 'descend',
     },
-    // {
-    //   key: 'bestOffer',
-    //   dataIndex: 'bestOffer',
-    //   title: (column) => (
-    //     <HeaderTitleCell
-    //       sortColumns={column?.sortColumns}
-    //       label="Best offer"
-    //       value="bestOffer"
-    //       tooltipText="Highest loan amount offered for that collection"
-    //     />
-    //   ),
-    //   sorter: (a, b) => a.bestOffer - b.bestOffer,
-    //   render: (value) => createBestOfferJSX(value),
-    //   showSorterTooltip: false,
-    // },
     {
       key: 'offerTVL',
       dataIndex: 'offerTVL',
@@ -76,10 +65,9 @@ export const TableList = ({ onChange }) => {
           tooltipText="Total liquidity currently available in active offers"
         />
       ),
-      sorter: (a, b) => parseFloat(a.offerTVL) - parseFloat(b.offerTVL),
+      sorter: (a, b) => sortingFavoriteList(a, b, 'offerTVL', formateToNumbers),
       render: (value) => createOfferTvlJSX(value),
       showSorterTooltip: false,
-      defaultSortOrder: 'descend',
     },
     {
       key: 'duration',
@@ -91,7 +79,7 @@ export const TableList = ({ onChange }) => {
           value="duration"
         />
       ),
-      sorter: (a, b) => sum(map(a.duration)) - sum(map(b.duration)),
+      sorter: (a, b) => sortingFavoriteList(a, b, 'duration', formateDuration),
       render: (value) => createDurationJSX(value),
       showSorterTooltip: false,
     },
@@ -107,7 +95,7 @@ export const TableList = ({ onChange }) => {
         />
       ),
       render: (value) => createHighestLtvJSX(value),
-      sorter: (a, b) => a.bestLTV - b.bestLTV,
+      sorter: (a, b) => sortingFavoriteList(a, b, 'bestLTV'),
       showSorterTooltip: false,
     },
     {
@@ -122,7 +110,7 @@ export const TableList = ({ onChange }) => {
         />
       ),
       render: (value) => createAprJSX(value),
-      sorter: (a, b) => a.apy - b.apy,
+      sorter: (a, b) => sortingFavoriteList(a, b, 'apy'),
       showSorterTooltip: false,
     },
   ];
