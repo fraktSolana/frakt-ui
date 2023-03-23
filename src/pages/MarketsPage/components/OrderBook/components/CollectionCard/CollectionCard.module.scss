@@ -25,8 +25,9 @@
 
 .button {
   @extend .flexCenter;
-  justify-content: center;
+  border: 0;
 
+  justify-content: center;
   position: relative;
 
   height: 24px;
@@ -38,7 +39,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
 
-  width: 14px;
+  width: 24px;
 }
 .active {
   transform: rotate(180deg);

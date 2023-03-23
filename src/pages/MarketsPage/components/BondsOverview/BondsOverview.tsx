@@ -57,7 +57,7 @@ const BondsOverview: FC = () => {
                   loading={loading}
                   data={bonds}
                   haderTitleCellClassName={styles.haderTitleCell}
-                  breakpoints={{ mobile: 768 }}
+                  breakpoints={{ scrollX: 744 }}
                   hideBond={hideUserBond}
                 />
               </div>

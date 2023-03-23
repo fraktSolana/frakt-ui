@@ -8,7 +8,7 @@
 .wrapper {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 24px;
 
   @media (max-width: 1240px) {
     flex-wrap: wrap;
@@ -17,13 +17,8 @@
 
 .block {
   @extend .rowCenter;
-  border: 1px solid var(--primary-border);
-
   justify-content: center;
-  min-width: 188px;
-  height: 34px;
   width: 100%;
-
   @media (max-width: 768px) {
     padding: 0 12px;
   }

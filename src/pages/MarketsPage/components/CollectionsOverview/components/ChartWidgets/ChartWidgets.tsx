@@ -14,10 +14,6 @@ interface ChartWidgetsProps {
 const ChartWidgets: FC<ChartWidgetsProps> = ({ marketPreview }) => {
   return (
     <div className={styles.wrapper}>
-      <CollectionGeneralInfo
-        image={marketPreview?.collectionImage}
-        name={marketPreview?.collectionName}
-      />
       <StatsValues
         label="Offer TVL"
         value={
@@ -49,19 +45,6 @@ const ChartWidgets: FC<ChartWidgetsProps> = ({ marketPreview }) => {
 };
 
 export default ChartWidgets;
-
-const CollectionGeneralInfo = ({
-  image,
-  name,
-}: {
-  image: string;
-  name: string;
-}) => (
-  <div className={styles.collectionGeneralInfo}>
-    <img className={styles.collectionImage} src={image} />
-    <p className={styles.collectionName}>{name}</p>
-  </div>
-);
 
 const StatsValues = ({
   label,

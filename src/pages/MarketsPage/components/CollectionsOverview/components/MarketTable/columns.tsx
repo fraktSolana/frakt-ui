@@ -37,6 +37,7 @@ export const TableList = ({ onChange }) => {
           onChange={onChange}
         />
       ),
+      fixed: 'left',
       render: (_, market: MarketPreview) => <TitleCell market={market} />,
     },
     {
