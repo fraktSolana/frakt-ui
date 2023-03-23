@@ -5,7 +5,6 @@ import { web3 } from 'fbonds-core';
 import { groupWith } from 'ramda';
 
 import { ArrowDownTableSort, ArrowUpTableSort, Chevron } from '@frakt/icons';
-import { RadioButton, RBOption } from '@frakt/components/RadioButton';
 import { NavigationButton } from '@frakt/components/Button';
 import { Loader } from '@frakt/components/Loader';
 import Toggle from '@frakt/components/Toggle';
@@ -16,7 +15,7 @@ import CollectionsList from './components/CollectionsList';
 import { isOwnOrder, makeEditOrderPath } from './helpers';
 import NoActiveOffers from './components/NoActiveOffers';
 import { SortOrder, SyntheticParams } from './types';
-import { DURATION_OPTIONS } from './constants';
+import Filters from './components/Filters';
 import { useMarketOrders } from './hooks';
 import Offer from './components/Offer';
 
@@ -38,8 +37,8 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
 
   const toggleOffers = () => setOpenOffersMobile((prev) => !prev);
 
-  const onDurationChange = (nextOption: RBOption<number>) => {
-    setDuration(nextOption.value);
+  const onDurationChange = (nextValue: number) => {
+    setDuration(nextValue);
   };
 
   const toggleSort = () => {
@@ -105,15 +104,7 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
         >
           <h5 className={styles.title}>Offers</h5>
           <div className={styles.filters}>
-            <RadioButton
-              className={styles.radioButton}
-              currentOption={{
-                label: `${duration}`,
-                value: duration,
-              }}
-              onOptionChange={onDurationChange}
-              options={DURATION_OPTIONS}
-            />
+            <Filters duration={duration} onSortChange={onDurationChange} />
             <Toggle
               label="My offers"
               className={classNames(styles.toggle, {
