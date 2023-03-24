@@ -214,7 +214,7 @@ const borrowBulk: BorrowBulk = async ({
   // onError: () => {},
   // });
 
-  await signAndSendAllTransactionsInSequence({
+  return await signAndSendAllTransactionsInSequence({
     txnsAndSigners: [firstChunk, secondChunk],
     connection,
     wallet,
@@ -224,6 +224,4 @@ const borrowBulk: BorrowBulk = async ({
     onSuccess: () => {},
     onError: () => {},
   });
-
-  return true;
 };
