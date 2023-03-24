@@ -50,3 +50,22 @@
   @extend .flexCenter;
   flex-direction: column;
 }
+
+.emptyCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 160px 0;
+}
+
+.emptyCardTitle {
+  font: var(--font-text-3);
+  font-weight: 700;
+  text-align: center;
+}
+
+.emptyCardSubtitle {
+  font: var(--font-text-4);
+  font-size: 14px;
+  text-align: center;
+}

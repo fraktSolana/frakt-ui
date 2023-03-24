@@ -20,6 +20,7 @@ import { useMarketOrders } from './hooks';
 import Offer from './components/Offer';
 
 import styles from './OrderBook.module.scss';
+import Sort from './components/Sort';
 
 interface OrderBookProps {
   market: Market;
@@ -115,22 +116,14 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
             />
           </div>
 
-          <div
-            className={classNames(styles.columnWrapper, {
-              [styles.active]: openOffersMobile,
-              [styles.create]: syntheticParams?.ltv,
-            })}
-          >
-            <div className={styles.col}>
-              <span className={styles.colName}>size</span>
-              <span>(SOL)</span>
-            </div>
-            <div onClick={toggleSort} className={styles.col}>
-              <span className={styles.colName}>Interest</span>
-              <span>(%)</span>
-              {sort === 'desc' ? <ArrowDownTableSort /> : <ArrowUpTableSort />}
-            </div>
-          </div>
+          {marketPubkey && (
+            <Sort
+              openOffersMobile={openOffersMobile}
+              existSyntheticParams={!!syntheticParams?.ltv}
+              onChangeSort={toggleSort}
+              sort={sort}
+            />
+          )}
         </div>
 
         <div
@@ -154,7 +147,6 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
             <CollectionsList
               openOffersMobile={openOffersMobile}
               existSyntheticParams={!!syntheticParams?.ltv}
-              sortDirection={sort}
             />
           )}
 

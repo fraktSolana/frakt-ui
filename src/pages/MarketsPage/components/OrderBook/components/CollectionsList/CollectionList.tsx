@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import classNames from 'classnames';
 
+import { Loader } from '@frakt/components/Loader';
+
 import { useMarketsPreview } from '../../../BondsOverview/hooks';
 import CollectionCard from '../CollectionCard';
 
@@ -9,17 +11,15 @@ import styles from './CollectionList.module.scss';
 interface CollectionListProps {
   openOffersMobile: boolean;
   existSyntheticParams: boolean;
-  sortDirection: string;
 }
 
 const CollectionList: FC<CollectionListProps> = ({
   openOffersMobile,
   existSyntheticParams,
-  sortDirection = 'desc',
 }) => {
   const { marketsPreview, isLoading } = useMarketsPreview();
 
-  if (isLoading) return <>Loading...</>;
+  if (isLoading) return <Loader />;
 
   return (
     <ul
@@ -29,7 +29,12 @@ const CollectionList: FC<CollectionListProps> = ({
       })}
     >
       {marketsPreview.map((market) => (
-        <CollectionCard key={market.marketPubkey} {...market} />
+        <CollectionCard
+          {...market}
+          key={market.marketPubkey}
+          openOffersMobile={openOffersMobile}
+          existSyntheticParams={existSyntheticParams}
+        />
       ))}
     </ul>
   );
