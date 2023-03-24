@@ -17,7 +17,6 @@ interface HeaderTitleCellProps {
   label: string;
   value: string;
   tooltipText?: string;
-  left?: boolean;
 }
 
 export const HeaderTitleCell: FC<HeaderTitleCellProps> = ({
@@ -25,12 +24,11 @@ export const HeaderTitleCell: FC<HeaderTitleCellProps> = ({
   label,
   value,
   tooltipText,
-  left,
 }) => {
   const sortedColumn = sortColumns?.find(({ column }) => column.key === value);
 
   return (
-    <div className={classNames(styles.row, left && styles.rowLeft)}>
+    <div className={styles.row}>
       <span className={styles.title}>{label}</span>
       {!!tooltipText && (
         <Tooltip placement="top" overlay={tooltipText}>

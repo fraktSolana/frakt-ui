@@ -8,8 +8,9 @@
 
   @media (max-width: 1300px) {
     display: none;
-    padding-top: 12px;
+    padding-top: 9px;
     padding-left: 0;
+    gap: 8px;
   }
 }
 
@@ -19,9 +20,10 @@
 
 .chart {
   height: 220px;
-  width: 458px;
+  max-width: 458px;
+  width: 100%;
 
-  @media (max-width: 1390px) {
-    width: 365px;
+  @media (max-width: 1300px) {
+    height: 105px;
   }
 }

@@ -72,7 +72,6 @@ const BondsOverview: FC = () => {
                   noDataClassName={styles.noDataTableMessage}
                   loading={loading}
                   data={bonds}
-                  haderTitleCellClassName={styles.haderTitleCell}
                   breakpoints={{ scrollX: 744 }}
                   hideBond={hideUserBond}
                 />

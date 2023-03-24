@@ -18,8 +18,6 @@ interface HeaderTitleCellProps {
   value: string;
   tooltipText?: string;
   fixedLeft?: boolean;
-  isMobile?: boolean;
-  className?: string;
 }
 
 export const HeaderTitleCell: FC<HeaderTitleCellProps> = ({
@@ -28,7 +26,6 @@ export const HeaderTitleCell: FC<HeaderTitleCellProps> = ({
   value,
   tooltipText,
   fixedLeft,
-  className,
 }) => {
   const sortedColumn = sortColumns?.find(({ column }) => column.key === value);
 
@@ -40,7 +37,7 @@ export const HeaderTitleCell: FC<HeaderTitleCellProps> = ({
           <QuestionCircleOutlined className={styles.questionIcon} />
         </Tooltip>
       )}
-      <span className={classNames(styles.sortIcon, className)}>
+      <span className={styles.sortIcon}>
         {sortedColumn?.order === 'ascend' && <ArrowUpTableSort />}
         {sortedColumn?.order === 'descend' && <ArrowDownTableSort />}
         {sortedColumn?.order !== 'descend' &&

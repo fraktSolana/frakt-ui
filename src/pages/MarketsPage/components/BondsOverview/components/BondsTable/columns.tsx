@@ -22,7 +22,7 @@ export type SortColumns = {
   order: SortOrder;
 }[];
 
-export const TableList = ({ data, isMobile, hideBond, className }) => {
+export const TableList = ({ data, isMobile, hideBond }) => {
   const [currentMarketAndPairs, setCurrentMarketAndPairs] = useState<{
     market: Market;
     pairs: Pair[];
@@ -34,8 +34,6 @@ export const TableList = ({ data, isMobile, hideBond, className }) => {
       dataIndex: 'nftName',
       title: (column) => (
         <HeaderTitleCell
-          className={className}
-          isMobile={isMobile}
           sortColumns={column?.sortColumns}
           label="Collateral"
           value="nftName"
@@ -46,6 +44,7 @@ export const TableList = ({ data, isMobile, hideBond, className }) => {
         b?.collateralBox.nft.name?.localeCompare(a?.collateralBox.nft.name),
       render: (_, bond: Bond) => <TitleCell isMobile={isMobile} bond={bond} />,
       defaultSortOrder: 'descend',
+      fixed: 'left',
       showSorterTooltip: false,
     },
     {
@@ -53,7 +52,6 @@ export const TableList = ({ data, isMobile, hideBond, className }) => {
       dataIndex: 'size',
       title: (column) => (
         <HeaderTitleCell
-          className={className}
           sortColumns={column?.sortColumns}
           label="Size"
           value="size"
@@ -72,7 +70,6 @@ export const TableList = ({ data, isMobile, hideBond, className }) => {
       dataIndex: 'interest',
       title: (column) => (
         <HeaderTitleCell
-          className={className}
           sortColumns={column?.sortColumns}
           label="Interest"
           value="interest"
@@ -91,7 +88,6 @@ export const TableList = ({ data, isMobile, hideBond, className }) => {
       dataIndex: 'profit',
       title: (column) => (
         <HeaderTitleCell
-          className={className}
           sortColumns={column?.sortColumns}
           value="profit"
           label="Est. Profit"
@@ -107,7 +103,6 @@ export const TableList = ({ data, isMobile, hideBond, className }) => {
       dataIndex: 'expiration',
       title: (column) => (
         <HeaderTitleCell
-          className={className}
           sortColumns={column?.sortColumns}
           label="Expiration"
           value="expiration"
@@ -124,7 +119,6 @@ export const TableList = ({ data, isMobile, hideBond, className }) => {
       dataIndex: 'pnl',
       title: (column) => (
         <HeaderTitleCell
-          className={className}
           sortColumns={column?.sortColumns}
           value="pnl"
           label="PNL"

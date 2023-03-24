@@ -30,12 +30,26 @@
     .ant-table-thead > tr > th {
       border: 0 !important;
       padding-top: 0 !important;
-      width: 100%;
+    }
+
+    .ant-table table {
+      table-layout: fixed !important;
+    }
+
+    .ant-table-thead > tr > th:last-child {
+      padding-right: 0;
+    }
+    .ant-table-tbody > tr > td:last-child {
+      padding-right: 0;
+    }
+
+    .ant-table-tbody > tr > td:first-child {
+      width: 192px;
     }
 
     @media (max-width: 1300px) {
       .ant-table-tbody > tr > td:first-child {
-        width: 180px;
+        width: 240px;
       }
     }
     ::-webkit-scrollbar {

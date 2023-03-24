@@ -9,10 +9,6 @@
   justify-content: flex-end;
 }
 
-.rowLeft {
-  justify-content: flex-start !important;
-}
-
 .title {
   color: var(--secondary-text);
   font: var(--font-text-7);
@@ -137,7 +133,6 @@
 }
 
 .highestLtvColor {
-  padding-right: 16px;
   color: #b39016;
 }
 
@@ -152,7 +147,11 @@
   }
 
   height: 25px !important;
-  width: 135px;
+  width: 192px;
+
+  @media (max-width: 1300px) {
+    width: 220px;
+  }
 }
 
 .iconWrapper {
