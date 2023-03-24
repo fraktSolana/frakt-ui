@@ -49,11 +49,17 @@ export const TitleCell: FC<{ market: MarketPreview }> = ({ market }) => {
     <div className={classNames(styles.row, styles.rowLeft)}>
       <div className={styles.iconWrapper}>
         {isFavourited || addedToFavoriteList.includes(market?.marketPubkey) ? (
-          <div onClick={(event: Event) => removeMarketFromFavoriteList(event)}>
+          <div
+            className={styles.rowCenter}
+            onClick={(event: Event) => removeMarketFromFavoriteList(event)}
+          >
             <StarActive className={styles.starIcon} />
           </div>
         ) : (
-          <div onClick={(event: Event) => addMarketToFavoriteList(event)}>
+          <div
+            className={styles.rowCenter}
+            onClick={(event: Event) => addMarketToFavoriteList(event)}
+          >
             <Star className={styles.starIcon} />
           </div>
         )}

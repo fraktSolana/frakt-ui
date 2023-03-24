@@ -38,10 +38,10 @@
 .activeRowClassName {
   cursor: default;
   display: table-row !important;
-  background: @light-green-color-2;
   z-index: 10;
 
   & > td {
+    background: @light-green-color-2 !important;
     border-top: @border-light-green !important;
     border-bottom: @border-light-green !important;
     padding-top: 7px !important;
@@ -87,7 +87,6 @@
 }
 
 .ant-table-thead th.ant-table-column-sort {
-  padding: 0;
   background: @primary-background;
 }
 
@@ -113,4 +112,8 @@ td.ant-table-column-sort {
 
 .ant-table-thead th.ant-table-column-has-sorters {
   transition: unset;
+}
+
+.ant-table-thead th.ant-table-column-has-sorters.ant-table-cell-fix-left:hover {
+  background: @primary-background;
 }

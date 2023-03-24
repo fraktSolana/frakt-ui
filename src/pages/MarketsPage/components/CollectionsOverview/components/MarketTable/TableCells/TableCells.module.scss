@@ -9,6 +9,10 @@
   justify-content: flex-end;
 }
 
+.rowLeft {
+  justify-content: flex-start !important;
+}
+
 .title {
   color: var(--secondary-text);
   font: var(--font-text-7);

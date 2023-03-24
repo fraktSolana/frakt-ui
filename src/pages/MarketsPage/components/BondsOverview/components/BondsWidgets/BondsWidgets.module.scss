@@ -10,8 +10,13 @@
   align-items: center;
   gap: 24px;
 
-  @media (max-width: 1240px) {
-    flex-wrap: wrap;
+  @media (max-width: 1140px) {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: row;
   }
 }
 
@@ -19,6 +24,11 @@
   @extend .rowCenter;
   justify-content: center;
   width: 100%;
+
+  @media (max-width: 1140px) {
+    justify-content: flex-start;
+  }
+
   @media (max-width: 768px) {
     padding: 0 12px;
   }
