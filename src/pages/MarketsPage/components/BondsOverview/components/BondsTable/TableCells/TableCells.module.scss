@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 4px;
 }
 
 .fixedLeftRow {
@@ -22,6 +22,7 @@
   color: var(--primary-text);
   font: var(--font-text-6);
   min-width: 116px;
+  max-width: 116px;
 }
 .nftNameMobile {
   max-width: unset;
@@ -161,10 +162,6 @@
 
 .sortIcon {
   display: flex;
-
-  @media screen and (max-width: 1380px) {
-    opacity: 0;
-  }
 }
 
 .highestLtvColor {

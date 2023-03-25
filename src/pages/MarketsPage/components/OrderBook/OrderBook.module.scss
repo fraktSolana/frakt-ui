@@ -90,43 +90,6 @@
   }
 }
 
-.columnWrapper {
-  padding: 3px 8px;
-
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-
-  font: var(--font-text-6);
-  color: var(--gray-color-2);
-
-  @media screen and (max-width: 768px) {
-    display: none;
-
-    &.create {
-      display: flex;
-    }
-
-    &.active {
-      display: flex;
-    }
-  }
-}
-
-.col {
-  position: relative;
-
-  display: flex;
-  align-items: center;
-  padding-right: 16px;
-  gap: 2px;
-}
-
-.colName {
-  font: var(--font-text-7);
-  text-transform: uppercase;
-}
-
 .content {
   position: relative;
 

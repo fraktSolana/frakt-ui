@@ -25,20 +25,22 @@
 
 .button {
   @extend .flexCenter;
-  justify-content: center;
+  border: 0;
 
+  justify-content: center;
   position: relative;
 
   height: 24px;
   width: 24px;
 }
 .button svg {
+  fill: var(--primary-icon);
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 
-  width: 14px;
+  width: 24px;
 }
 .active {
   transform: rotate(180deg);
@@ -47,4 +49,23 @@
 .hiddenOffersList {
   @extend .flexCenter;
   flex-direction: column;
+}
+
+.emptyCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 160px 0;
+}
+
+.emptyCardTitle {
+  font: var(--font-text-3);
+  font-weight: 700;
+  text-align: center;
+}
+
+.emptyCardSubtitle {
+  font: var(--font-text-4);
+  font-size: 14px;
+  text-align: center;
 }

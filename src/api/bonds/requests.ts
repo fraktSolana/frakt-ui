@@ -89,3 +89,18 @@ export const fetchAllUserBonds: FetchAllUserBonds = async ({
 
   return data ?? [];
 };
+
+type FetchAllBonds = ({
+  skip,
+  limit,
+}: {
+  skip: number;
+  limit: number;
+}) => Promise<Bond[]>;
+export const fetchAllBonds: FetchAllBonds = async ({ skip, limit }) => {
+  const { data } = await axios.get<Bond[]>(
+    `https://${BACKEND_DOMAIN}/bonds?skip=${skip}&limit=${limit}&`,
+  );
+
+  return data;
+};

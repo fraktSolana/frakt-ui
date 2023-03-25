@@ -7,8 +7,9 @@
 .column {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
   gap: 4px;
+  width: 100%;
 }
 
 .wrapper {
@@ -18,22 +19,10 @@
   width: 100%;
 }
 
-.collectionGeneralInfo {
-  @extend .rowCenter;
-  gap: 8px;
-}
-.collectionImage {
-  height: 32px;
-  width: 32px;
-}
-.collectionName {
-  font: var(--font-text-5);
-  width: 120px;
-}
-
 .label {
   color: var(--secondary-text);
   font: var(--font-text-7);
+  line-height: 18px;
   text-transform: uppercase;
 }
 

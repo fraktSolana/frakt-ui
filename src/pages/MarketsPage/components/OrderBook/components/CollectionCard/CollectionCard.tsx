@@ -15,26 +15,38 @@ import {
 import Offer from '../Offer';
 
 import styles from './CollectionCard.module.scss';
+import { Loader } from '@frakt/components/Loader';
+import { SortOrder } from '../../types';
+import Sort from '../Sort';
 
 interface CollectionCardProps {
   collectionName: string;
   collectionImage: string;
   marketPubkey: string;
+  openOffersMobile: boolean;
+  existSyntheticParams: boolean;
 }
 
 const CollectionCard: FC<CollectionCardProps> = ({
   collectionName,
   collectionImage,
   marketPubkey,
+  openOffersMobile,
+  existSyntheticParams,
 }) => {
   const [isVisibleOfferList, setIsVisibleOfferList] = useState(false);
   const { pairs, isLoading: isLoadingPairs } = useMarketPairs({
     marketPubkey: isVisibleOfferList ? marketPubkey : '',
   });
+  const [sort, setSort] = useState<SortOrder>(SortOrder.DESC);
 
-  const parsedOffers = pairs.map(parseMarketOrder);
-  const sortedOffersByInterest = sortOffersByInterest(parsedOffers);
-  const sortedByLtv = sortOffersByLtv(sortedOffersByInterest);
+  const parsedOffers = pairs.map(parseMarketOrder, sort);
+  const sortedOffersByInterest = sortOffersByInterest(parsedOffers, sort);
+  const sortedByLtv = sortOffersByLtv(sortedOffersByInterest, sort);
+
+  const toggleSort = () => {
+    sort === SortOrder.DESC ? setSort(SortOrder.ASC) : setSort(SortOrder.DESC);
+  };
 
   return (
     <>
@@ -56,7 +68,16 @@ const CollectionCard: FC<CollectionCardProps> = ({
         </Button>
       </div>
       <div className={styles.hiddenOffersList}>
-        {parsedOffers.map((offer, idx) => (
+        {isLoadingPairs && isVisibleOfferList && <Loader />}
+        {!!parsedOffers.length && (
+          <Sort
+            onChangeSort={toggleSort}
+            existSyntheticParams={existSyntheticParams}
+            openOffersMobile={openOffersMobile}
+            sort={sort}
+          />
+        )}
+        {sortedByLtv.map((offer, idx) => (
           <Offer
             ltv={offer.ltv}
             size={offer.size}
@@ -69,9 +90,19 @@ const CollectionCard: FC<CollectionCardProps> = ({
             key={idx}
           />
         ))}
+        {!isLoadingPairs && !parsedOffers.length && isVisibleOfferList && (
+          <EmptyCard />
+        )}
       </div>
     </>
   );
 };
 
 export default CollectionCard;
+
+const EmptyCard = () => (
+  <div className={styles.emptyCard}>
+    <h4 className={styles.emptyCardTitle}>No active offers at the moment</h4>
+    <p className={styles.emptyCardSubtitle}>Good chance to be first!</p>
+  </div>
+);

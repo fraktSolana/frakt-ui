@@ -4,25 +4,32 @@ import classNames from 'classnames';
 
 import { useMarketsPreview } from '../BondsOverview/hooks';
 import { MarketTable } from './components/MarketTable';
-import Chart from './components/Chart';
+import Chart, { useBondChart } from './components/Chart';
 
 import styles from './CollectionsOverview.module.scss';
+import { useWindowSize } from '@frakt/hooks';
+
+const MOBILE_VIEW_SIZE = 1300;
 
 const CollectionsOverview: FC = () => {
   const { marketPubkey } = useParams<{ marketPubkey: string }>();
   const { marketsPreview, isLoading } = useMarketsPreview();
+  const { width } = useWindowSize();
+
+  const { isVisible } = useBondChart();
 
   return (
     <div className={styles.wrapper}>
-      <div>
+      <div className={styles.scrollContainer}>
         <h3 className={styles.title}>Collections</h3>
         <MarketTable
-          className={classNames(styles.rootTable, styles.marketTable, {
+          className={classNames(styles.marketTable, {
             [styles.collapsedMarketTable]: marketPubkey,
+            [styles.chartMarketTable]: isVisible && marketPubkey,
           })}
           loading={isLoading}
           data={marketsPreview}
-          breakpoints={{ mobile: 768, scrollY: 216 }}
+          breakpoints={{ scrollX: width < MOBILE_VIEW_SIZE && 744 }}
           marketPubkey={marketPubkey}
         />
       </div>
@@ -32,6 +39,7 @@ const CollectionsOverview: FC = () => {
           marketPreview={marketsPreview.find(
             (market) => market?.marketPubkey === marketPubkey,
           )}
+          isVisible={isVisible}
         />
       )}
     </div>

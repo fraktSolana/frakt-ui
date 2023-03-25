@@ -11,7 +11,6 @@ export interface BondsTableProps {
   className?: string;
   noDataClassName?: string;
   hideBond?: (bondPubkey: string) => void;
-  haderTitleCellClassName?: string;
   breakpoints?: PartialBreakpoints;
 }
 
@@ -21,7 +20,6 @@ export const BondsTable: FC<BondsTableProps> = ({
   loading,
   className,
   hideBond,
-  haderTitleCellClassName,
   breakpoints,
 }) => {
   const { width } = useWindowSize();
@@ -31,7 +29,6 @@ export const BondsTable: FC<BondsTableProps> = ({
     data,
     isMobile,
     hideBond,
-    className: haderTitleCellClassName,
   });
 
   const { table, search } = useTable({

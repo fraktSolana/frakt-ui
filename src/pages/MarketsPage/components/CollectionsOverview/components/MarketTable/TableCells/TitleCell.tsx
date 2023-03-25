@@ -2,14 +2,17 @@ import { FC, useState, MouseEvent, TouchEvent } from 'react';
 import classNames from 'classnames';
 
 import { MarketPreview } from '@frakt/api/bonds';
-import { Star, StarActive } from '@frakt/icons';
+import { Chart, Star, StarActive } from '@frakt/icons';
 
 import { getStorageItemsByKey, setItemsToStorageByKey } from '../helpers';
+import { useBondChart } from '../../Chart';
+
 import styles from './TableCells.module.scss';
 
 type Event = MouseEvent | TouchEvent;
 
 export const TitleCell: FC<{ market: MarketPreview }> = ({ market }) => {
+  const { toggleVisibility } = useBondChart();
   const storageMarketPubkeys = getStorageItemsByKey('favourites');
   const isFavourited = storageMarketPubkeys.includes(market.marketPubkey);
 
@@ -46,17 +49,34 @@ export const TitleCell: FC<{ market: MarketPreview }> = ({ market }) => {
     <div className={classNames(styles.row, styles.rowLeft)}>
       <div className={styles.iconWrapper}>
         {isFavourited || addedToFavoriteList.includes(market?.marketPubkey) ? (
-          <div onClick={(event: Event) => removeMarketFromFavoriteList(event)}>
+          <div
+            className={styles.rowCenter}
+            onClick={(event: Event) => removeMarketFromFavoriteList(event)}
+          >
             <StarActive className={styles.starIcon} />
           </div>
         ) : (
-          <div onClick={(event: Event) => addMarketToFavoriteList(event)}>
+          <div
+            className={styles.rowCenter}
+            onClick={(event: Event) => addMarketToFavoriteList(event)}
+          >
             <Star className={styles.starIcon} />
           </div>
         )}
       </div>
-      <img src={market.collectionImage} className={styles.nftImage} />
-      <div className={styles.nftName}>{market.collectionName}</div>
+      <div className={styles.rowCenter}>
+        <img src={market.collectionImage} className={styles.nftImage} />
+        <div className={styles.nftName}>{market.collectionName}</div>
+        <div
+          className={styles.chartIcon}
+          onClick={(event: Event) => {
+            toggleVisibility();
+            event.stopPropagation();
+          }}
+        >
+          <Chart />
+        </div>
+      </div>
     </div>
   );
 };
