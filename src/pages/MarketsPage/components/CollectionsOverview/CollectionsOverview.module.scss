@@ -32,13 +32,7 @@
       padding-top: 0 !important;
     }
 
-    .ant-table table {
-      table-layout: fixed !important;
-    }
-
-    .ant-table-thead > tr > th:last-child {
-      padding-right: 0;
-    }
+    .ant-table-thead > tr > th:last-child,
     .ant-table-tbody > tr > td:last-child {
       padding-right: 0;
     }

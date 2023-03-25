@@ -12,9 +12,14 @@ import styles from './Filters.module.scss';
 interface FiltersProps {
   onSortChange: (nextValue: number) => void;
   duration: number;
+  openOffersMobile: boolean;
 }
 
-const Filters: FC<FiltersProps> = ({ onSortChange, duration }) => {
+const Filters: FC<FiltersProps> = ({
+  onSortChange,
+  duration,
+  openOffersMobile,
+}) => {
   const {
     visible: filtersModalVisible,
     close: closeFiltersModal,
@@ -25,7 +30,12 @@ const Filters: FC<FiltersProps> = ({ onSortChange, duration }) => {
   useOnClickOutside(ref, closeFiltersModal);
 
   return (
-    <div className={styles.filters} ref={ref}>
+    <div
+      className={classNames(styles.filters, {
+        [styles.active]: openOffersMobile,
+      })}
+      ref={ref}
+    >
       <Button type="tertiary" onClick={toggleFiltersModal}>
         Duration
       </Button>

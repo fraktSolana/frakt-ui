@@ -29,10 +29,7 @@ const CollectionsOverview: FC = () => {
           })}
           loading={isLoading}
           data={marketsPreview}
-          breakpoints={{
-            scrollY: 216,
-            scrollX: width < MOBILE_VIEW_SIZE && 744,
-          }}
+          breakpoints={{ scrollX: width < MOBILE_VIEW_SIZE && 744 }}
           marketPubkey={marketPubkey}
         />
       </div>

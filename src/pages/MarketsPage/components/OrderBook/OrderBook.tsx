@@ -105,7 +105,11 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
         >
           <h5 className={styles.title}>Offers</h5>
           <div className={styles.filters}>
-            <Filters duration={duration} onSortChange={onDurationChange} />
+            <Filters
+              openOffersMobile={openOffersMobile}
+              duration={duration}
+              onSortChange={onDurationChange}
+            />
             <Toggle
               label="My offers"
               className={classNames(styles.toggle, {
@@ -115,8 +119,7 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
               onChange={(nextValue) => setShowOwnOrders(nextValue)}
             />
           </div>
-
-          {marketPubkey && (
+          {marketPubkey && offersExist && (
             <Sort
               openOffersMobile={openOffersMobile}
               existSyntheticParams={!!syntheticParams?.ltv}
