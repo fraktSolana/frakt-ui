@@ -22,9 +22,16 @@
 .nftName {
   color: var(--primary-text);
   font: var(--font-text-6);
-  min-width: 124px;
-  max-width: 124px;
-  z-index: 1;
+  min-width: 110px;
+  max-width: 110px;
+
+  @media (max-width: 1390px) {
+    min-width: 100px;
+  }
+
+  @media (max-width: 1300px) {
+    min-width: 124px;
+  }
 }
 
 .nftImage {
@@ -151,7 +158,7 @@
   }
 
   height: 25px !important;
-  width: 192px;
+  width: 162px;
 
   @media (max-width: 1300px) {
     width: 220px;
