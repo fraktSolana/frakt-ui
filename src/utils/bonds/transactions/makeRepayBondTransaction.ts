@@ -36,7 +36,7 @@ export const makeRepayBondTransaction: MakeRepayBondTransaction = async ({
     });
 
   const { instructions: getCollateralIxs, signers: getCollateralSigners } =
-    await management.getRepaidCollateral({
+    await management.getRepaidCollateralPnft({
       accounts: {
         collateralTokenMint: new web3.PublicKey(loan.nft.mint),
         fbond: new web3.PublicKey(loan.pubkey),
