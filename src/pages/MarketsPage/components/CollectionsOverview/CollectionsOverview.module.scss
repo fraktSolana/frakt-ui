@@ -45,7 +45,6 @@
 
     .ant-table-tbody > tr > td:first-child {
       width: 192px;
-      z-index: 1;
     }
 
     @media (max-width: 1300px) {
@@ -66,16 +65,13 @@
 
 .collapsedMarketTable {
   :global {
-    .ant-table-thead > tr > th:nth-child(n + 3) {
-      display: none !important;
-    }
+    .ant-table-thead > tr > th:nth-child(n + 3),
     .ant-table-tbody > tr > td:nth-child(n + 3) {
       display: none !important;
     }
+
     @media (max-width: 1300px) {
-      .ant-table-thead > tr > th:nth-child(n + 3) {
-        display: table-cell !important;
-      }
+      .ant-table-thead > tr > th:nth-child(n + 3),
       .ant-table-tbody > tr > td:nth-child(n + 3) {
         display: table-cell !important;
       }

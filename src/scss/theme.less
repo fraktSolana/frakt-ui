@@ -20,18 +20,20 @@
   table-layout: auto !important;
 }
 
+.ant-table-tbody > tr > td,
+.ant-table-thead > tr > th {
+  padding: 8px;
+  transition: unset;
+}
+
 .ant-table-tbody > tr > td {
   border: 0;
-  padding: 8px;
   vertical-align: middle;
-  transition: unset;
 }
 
 .ant-table-thead > tr > th {
   background: @primary-background;
   border-bottom: 1px solid @primary-border;
-  padding: 8px;
-  transition: unset;
   white-space: nowrap;
 }
 
@@ -64,55 +66,49 @@
     }
   }
 }
-.ant-table-cell-fix-left {
-  background: @primary-background;
-}
-// remove sort icon
+
+//? Remove default sort icon
 .ant-table-column-sorter {
   display: none;
 }
 
-.ant-table .ant-table-container::before,
-.ant-table .ant-table-container::after {
-  display: none;
-}
-
+//? Remove shadow cantainer
+.ant-table-container::before,
+.ant-table-container::after,
 .ant-table-cell-fix-left-last::after {
   display: none;
 }
 
-.ant-table-tbody > tr.ant-table-row:hover > td {
-  background: @tabel-row-hover !important;
-}
-
-.ant-table-thead th.ant-table-column-sort {
-  background: @primary-background;
-}
-
-td.ant-table-column-sort {
-  background: @primary-background;
-}
-
-.ant-table-thead th.ant-table-column-has-sorters:hover {
-  background: @primary-background;
-}
-
-.ant-table-empty .ant-table-tbody > tr.ant-table-placeholder {
-  display: none;
-}
-
-.ant-table-cell::before {
-  display: none;
-}
-
-.ant-table-thead th.ant-table-column-sort {
-  background: @primary-background;
-}
-
+//? Unster default transition
 .ant-table-thead th.ant-table-column-has-sorters {
   transition: unset;
 }
 
+//? Remove separete line between cells
+.ant-table-cell::before {
+  display: none;
+}
+
+//? Set color for active column
+td.ant-table-column-sort {
+  background: @primary-background;
+}
+
+//? Remove default "No data" view
+.ant-table-empty .ant-table-tbody > tr.ant-table-placeholder {
+  display: none;
+}
+
+.ant-table-row:hover > td {
+  background: @tabel-row-hover !important;
+}
+
+.ant-table-thead th.ant-table-column-sort,
+.ant-table-thead th.ant-table-column-has-sorters:hover {
+  background: @primary-background;
+}
+
+.ant-table-cell-fix-left,
 .ant-table-thead th.ant-table-column-has-sorters.ant-table-cell-fix-left:hover {
   background: @primary-background;
 }
