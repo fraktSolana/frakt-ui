@@ -5,14 +5,20 @@ import { MarketPreview } from '@frakt/api/bonds';
 import { Chart, Star, StarActive } from '@frakt/icons';
 
 import { getStorageItemsByKey, setItemsToStorageByKey } from '../helpers';
-import { useBondChart } from '../../Chart';
+import { useChartVisible } from '../../Chart';
 
 import styles from './TableCells.module.scss';
+import { useParams } from 'react-router-dom';
 
 type Event = MouseEvent | TouchEvent;
 
-export const TitleCell: FC<{ market: MarketPreview }> = ({ market }) => {
-  const { toggleVisibility } = useBondChart();
+export const TitleCell: FC<{ market: MarketPreview; onRowClick: any }> = ({
+  market,
+  onRowClick,
+}) => {
+  const { marketPubkey } = useParams<{ marketPubkey: string }>();
+
+  const { toggleVisibility, setVisibility } = useChartVisible();
   const storageMarketPubkeys = getStorageItemsByKey('favourites');
   const isFavourited = storageMarketPubkeys.includes(market.marketPubkey);
 
@@ -45,6 +51,16 @@ export const TitleCell: FC<{ market: MarketPreview }> = ({ market }) => {
     event.stopPropagation();
   };
 
+  const onChangeChartVisible = (event: Event) => {
+    if (marketPubkey !== market?.marketPubkey) {
+      onRowClick(market);
+      setVisibility(true);
+    } else {
+      toggleVisibility();
+    }
+    event.stopPropagation();
+  };
+
   return (
     <div className={classNames(styles.row, styles.rowLeft)}>
       <div className={styles.iconWrapper}>
@@ -69,10 +85,7 @@ export const TitleCell: FC<{ market: MarketPreview }> = ({ market }) => {
         <div className={styles.nftName}>{market.collectionName}</div>
         <div
           className={styles.chartIcon}
-          onClick={(event: Event) => {
-            toggleVisibility();
-            event.stopPropagation();
-          }}
+          onClick={(event: Event) => onChangeChartVisible(event)}
         >
           <Chart />
         </div>

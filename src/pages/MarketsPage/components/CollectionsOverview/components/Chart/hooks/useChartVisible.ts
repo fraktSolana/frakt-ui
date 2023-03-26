@@ -1,12 +1,12 @@
 import create from 'zustand';
 
-interface ChartBondsState {
+interface ChartVisibleState {
   isVisible: boolean;
   toggleVisibility: () => void;
   setVisibility: (nextValue: boolean) => void;
 }
 
-export const useBondChart = create<ChartBondsState>((set) => ({
+export const useChartVisible = create<ChartVisibleState>((set) => ({
   isVisible: false,
   toggleVisibility: () =>
     set((state) => ({ ...state, isVisible: !state.isVisible })),

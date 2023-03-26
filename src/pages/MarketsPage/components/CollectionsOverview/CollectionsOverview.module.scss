@@ -2,17 +2,23 @@
   background: var(--primary-background);
   border: 1px solid var(--primary-border);
   display: flex;
-  align-items: center;
+  gap: 24px;
   padding: 24px;
   margin-bottom: 16px;
 
   @media (max-width: 1300px) {
     flex-direction: column;
+    gap: 8px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 16px;
   }
 }
 
 .scrollContainer {
   overflow: auto;
+  min-width: 308px;
   width: 100%;
 }
 
@@ -26,7 +32,7 @@
 
 .marketTable {
   :global {
-    height: 236px;
+    height: 234px;
     .ant-table-thead > tr > th {
       border: 0 !important;
       padding-top: 0 !important;
@@ -39,11 +45,17 @@
 
     .ant-table-tbody > tr > td:first-child {
       width: 192px;
+      z-index: 1;
     }
 
     @media (max-width: 1300px) {
       .ant-table-tbody > tr > td:first-child {
         width: 240px;
+      }
+    }
+    @media (max-width: 768px) {
+      .ant-table-tbody > tr > td:first-child {
+        width: 192px;
       }
     }
     ::-webkit-scrollbar {
@@ -70,7 +82,7 @@
     }
   }
   .ant-table-tbody > tr > td:first-child {
-    width: 180px;
+    width: 170px;
   }
 }
 

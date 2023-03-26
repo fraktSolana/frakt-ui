@@ -25,7 +25,7 @@ export type SortColumns = {
   order: SortOrder;
 }[];
 
-export const TableList = ({ onChange }) => {
+export const TableList = ({ onChange, onRowClick }) => {
   const COLUMNS: ColumnsType<MarketPreview> = [
     {
       key: 'collectionName',
@@ -38,7 +38,9 @@ export const TableList = ({ onChange }) => {
         />
       ),
       fixed: 'left',
-      render: (_, market: MarketPreview) => <TitleCell market={market} />,
+      render: (_, market: MarketPreview) => (
+        <TitleCell market={market} onRowClick={onRowClick} />
+      ),
     },
     {
       key: 'activeBondsAmount',
