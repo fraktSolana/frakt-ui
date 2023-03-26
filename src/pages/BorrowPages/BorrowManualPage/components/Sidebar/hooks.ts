@@ -328,7 +328,8 @@ export const signAndSendAllTransactionsInSequence: SignAndSendAllTransactionsInS
           console.log('currentTxIndex: ', currentTxIndex);
           const txn = signedTransactions[currentTxIndex];
           await connection.sendRawTransaction(txn.serialize(), {
-            skipPreflight: true,
+            skipPreflight: false,
+            preflightCommitment: 'processed',
           });
           currentTxIndex += 1;
         }
