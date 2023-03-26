@@ -53,7 +53,7 @@ const CollectionCard: FC<CollectionCardProps> = ({
         </div>
         <Button
           className={classNames(styles.button, {
-            [styles.active]: offers.length,
+            [styles.active]: isVisibleOfferList,
           })}
           type="tertiary"
         >

@@ -2,12 +2,13 @@ import { FC } from 'react';
 import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
+import { useWindowSize } from '@frakt/hooks';
+
+import Chart, { useChartVisible } from './components/Chart';
 import { useMarketsPreview } from '../BondsOverview/hooks';
 import { MarketTable } from './components/MarketTable';
-import Chart, { useChartVisible } from './components/Chart';
 
 import styles from './CollectionsOverview.module.scss';
-import { useWindowSize } from '@frakt/hooks';
 
 const MOBILE_VIEW_SIZE = 1300;
 

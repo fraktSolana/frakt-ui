@@ -17,7 +17,7 @@
 }
 
 .scrollContainer {
-  overflow: auto;
+  overflow: hidden;
   min-width: 308px;
   width: 100%;
 }
@@ -41,6 +41,10 @@
     .ant-table-thead > tr > th:last-child,
     .ant-table-tbody > tr > td:last-child {
       padding-right: 0;
+    }
+
+    .ant-table-content {
+      max-height: 234px !important;
     }
 
     .ant-table-tbody > tr > td:first-child {

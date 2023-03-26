@@ -8,7 +8,7 @@
   flex-direction: column;
   gap: 7px;
 
-  height: calc(100% - var(--header-height));
+  height: calc(100% - 100px);
 
   &.create {
     height: auto;
