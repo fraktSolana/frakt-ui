@@ -10,13 +10,13 @@
 
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 8px;
 
   border-left: 1px solid var(--primary-border);
   background-color: var(--primary-background);
 
   @media screen and (max-width: 768px) {
-    top: calc(100% - 145px);
+    top: calc(100% - 165px);
     left: 0;
     right: 0;
 
@@ -37,23 +37,17 @@
 
     &.active {
       gap: 8px;
-
-      top: calc(var(--header-height) + 32px);
+      top: calc(var(--header-height) + 24px);
     }
   }
 
   @media screen and (max-width: 550px) {
-    top: calc(100% - 128px);
-    padding: 30px 35px 16px;
-
-    gap: 16px;
-
     &.create {
       gap: 8px;
       top: calc(100% - 154px);
     }
     &.active {
-      top: calc(var(--header-height) + 42px);
+      top: calc(var(--header-height) + 32px);
     }
   }
 }
@@ -66,7 +60,7 @@
 
   @media screen and (max-width: 768px) {
     &.create {
-      gap: 16px;
+      gap: 8px;
     }
   }
 }

@@ -180,6 +180,13 @@
 .starIcon {
   min-width: 16px;
   min-height: 16px;
+
+  &:hover {
+    path {
+      fill: #ffce1f;
+      transition: var(--transition-1);
+    }
+  }
 }
 
 .chartIcon {

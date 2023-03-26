@@ -5,12 +5,12 @@
 
 .collectionInfo {
   @extend .flexCenter;
-  cursor: pointer;
   gap: 4px;
 }
 
 .collectionCard {
   @extend .flexCenter;
+  cursor: pointer;
   justify-content: space-between;
 }
 
