@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { web3 } from 'fbonds-core';
 import { groupWith } from 'ramda';
 
-import { ArrowDownTableSort, ArrowUpTableSort, Chevron } from '@frakt/icons';
+import { Chevron } from '@frakt/icons';
 import { NavigationButton } from '@frakt/components/Button';
 import { Loader } from '@frakt/components/Loader';
 import Toggle from '@frakt/components/Toggle';
@@ -150,6 +150,7 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
             <CollectionsList
               openOffersMobile={openOffersMobile}
               existSyntheticParams={!!syntheticParams?.ltv}
+              showOwnOrders={showOwnOrders}
             />
           )}
 

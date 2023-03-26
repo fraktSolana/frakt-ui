@@ -8,6 +8,7 @@ import FiltersDropdown, {
 } from '@frakt/components/FiltersDropdown';
 
 import styles from './Filters.module.scss';
+import { DURATION_OPTIONS as options } from './constants';
 
 interface FiltersProps {
   onSortChange: (nextValue: number) => void;
@@ -17,7 +18,7 @@ interface FiltersProps {
 
 const Filters: FC<FiltersProps> = ({
   onSortChange,
-  duration,
+  duration = 30,
   openOffersMobile,
 }) => {
   const {
@@ -44,24 +45,18 @@ const Filters: FC<FiltersProps> = ({
           onCancel={closeFiltersModal}
           className={styles.filtersDropdown}
         >
-          <Button
-            className={classNames(styles.button, {
-              [styles.activeButton]: duration === 14,
-            })}
-            type="tertiary"
-            onClick={() => onSortChange(14)}
-          >
-            14 days
-          </Button>
-          <Button
-            className={classNames(styles.button, {
-              [styles.activeButton]: duration === 7,
-            })}
-            type="tertiary"
-            onClick={() => onSortChange(7)}
-          >
-            7 days
-          </Button>
+          {options.map(({ value, label }) => (
+            <Button
+              key={value}
+              className={classNames(styles.button, {
+                [styles.activeButton]: duration === value,
+              })}
+              type="tertiary"
+              onClick={() => onSortChange(value)}
+            >
+              {label}
+            </Button>
+          ))}
         </FiltersDropdown>
       )}
     </div>

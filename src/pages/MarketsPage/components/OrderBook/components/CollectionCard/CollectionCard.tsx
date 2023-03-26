@@ -1,21 +1,14 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import classNames from 'classnames';
 
-import { useMarketPairs } from '@frakt/utils/bonds';
 import { Loader } from '@frakt/components/Loader';
 import Button from '@frakt/components/Button';
 import { ChevronDown } from '@frakt/icons';
 
-import { SortOrder } from '../../types';
+import { isOwnOrder, makeEditOrderPath } from '../../helpers';
+import { useCollectionCard } from './hooks';
 import Offer from '../Offer';
 import Sort from '../Sort';
-import {
-  isOwnOrder,
-  makeEditOrderPath,
-  parseMarketOrder,
-  sortOffersByInterest,
-  sortOffersByLtv,
-} from '../../helpers';
 
 import styles from './CollectionCard.module.scss';
 
@@ -25,6 +18,7 @@ interface CollectionCardProps {
   marketPubkey: string;
   openOffersMobile: boolean;
   existSyntheticParams: boolean;
+  showOwnOrders: boolean;
 }
 
 const CollectionCard: FC<CollectionCardProps> = ({
@@ -33,20 +27,19 @@ const CollectionCard: FC<CollectionCardProps> = ({
   marketPubkey,
   openOffersMobile,
   existSyntheticParams,
+  showOwnOrders,
 }) => {
-  const [isVisibleOfferList, setIsVisibleOfferList] = useState(false);
-  const { pairs, isLoading: isLoadingPairs } = useMarketPairs({
-    marketPubkey: isVisibleOfferList ? marketPubkey : '',
+  const {
+    offers,
+    loading,
+    toggleSortDirection,
+    isVisibleOfferList,
+    setIsVisibleOfferList,
+    sortDirection,
+  } = useCollectionCard({
+    showOwnOrders,
+    marketPubkey,
   });
-  const [sort, setSort] = useState<SortOrder>(SortOrder.DESC);
-
-  const parsedOffers = pairs.map(parseMarketOrder, sort);
-  const sortedOffersByInterest = sortOffersByInterest(parsedOffers, sort);
-  const sortedByLtv = sortOffersByLtv(sortedOffersByInterest, sort);
-
-  const toggleSort = () => {
-    sort === SortOrder.DESC ? setSort(SortOrder.ASC) : setSort(SortOrder.DESC);
-  };
 
   return (
     <>
@@ -60,7 +53,7 @@ const CollectionCard: FC<CollectionCardProps> = ({
         </div>
         <Button
           className={classNames(styles.button, {
-            [styles.active]: parsedOffers.length,
+            [styles.active]: offers.length,
           })}
           type="tertiary"
         >
@@ -68,31 +61,29 @@ const CollectionCard: FC<CollectionCardProps> = ({
         </Button>
       </div>
       <div className={styles.hiddenOffersList}>
-        {isLoadingPairs && isVisibleOfferList && <Loader />}
-        {!!parsedOffers.length && (
+        {loading && isVisibleOfferList && <Loader />}
+        {!!offers.length && (
           <Sort
-            onChangeSort={toggleSort}
+            onChangeSort={toggleSortDirection}
             existSyntheticParams={existSyntheticParams}
             openOffersMobile={openOffersMobile}
-            sort={sort}
+            sort={sortDirection}
           />
         )}
-        {sortedByLtv.map((offer, idx) => (
+        {offers.map((offer, idx) => (
           <Offer
             ltv={offer.ltv}
             size={offer.size}
             interest={offer.interest}
             order={offer}
-            bestOffer={sortedByLtv.at(0)}
+            bestOffer={offers.at(0)}
             duration={offer.duration}
             editOrder={() => makeEditOrderPath(offer, marketPubkey)}
             isOwnOrder={isOwnOrder(offer)}
             key={idx}
           />
         ))}
-        {!isLoadingPairs && !parsedOffers.length && isVisibleOfferList && (
-          <EmptyCard />
-        )}
+        {!loading && !offers.length && isVisibleOfferList && <EmptyCard />}
       </div>
     </>
   );

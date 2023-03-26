@@ -11,11 +11,13 @@ import styles from './CollectionList.module.scss';
 interface CollectionListProps {
   openOffersMobile: boolean;
   existSyntheticParams: boolean;
+  showOwnOrders: boolean;
 }
 
 const CollectionList: FC<CollectionListProps> = ({
   openOffersMobile,
   existSyntheticParams,
+  showOwnOrders,
 }) => {
   const { marketsPreview, isLoading } = useMarketsPreview();
 
@@ -34,6 +36,7 @@ const CollectionList: FC<CollectionListProps> = ({
           key={market.marketPubkey}
           openOffersMobile={openOffersMobile}
           existSyntheticParams={existSyntheticParams}
+          showOwnOrders={showOwnOrders}
         />
       ))}
     </ul>
