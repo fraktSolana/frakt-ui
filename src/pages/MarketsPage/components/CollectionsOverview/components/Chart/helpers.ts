@@ -1,10 +1,10 @@
 import { colorByPercentOffers, getColorByPercent } from '@frakt/utils/bonds';
 
-const renderCertainColorsByData = (data: number[]) => {
+const renderCertainColorsByData = (data: number[]): string[] => {
   return data.map((value) => getColorByPercent(value, colorByPercentOffers));
 };
 
-const getTooltipBackgroundColor = () => {
+const getTooltipBackgroundColor = (): string => {
   const styles = getComputedStyle(document.body);
   const tooltipBackgroundColor = styles.getPropertyValue('--primary-border');
 

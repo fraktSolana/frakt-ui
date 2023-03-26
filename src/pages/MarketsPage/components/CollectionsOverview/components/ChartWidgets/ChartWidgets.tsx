@@ -56,7 +56,7 @@ const StatsValues = ({
   tooltipText?: string;
 }) => (
   <div className={styles.column}>
-    <div className={styles.rowCenter}>
+    <div className={styles.rowGapCenter}>
       <span className={styles.label}>{label}</span>
       {tooltipText && (
         <Tooltip placement="bottom" overlay={tooltipText}>

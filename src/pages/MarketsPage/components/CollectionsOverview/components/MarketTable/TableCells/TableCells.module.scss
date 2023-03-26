@@ -32,11 +32,15 @@
   @media (max-width: 1300px) {
     min-width: 124px;
   }
+
+  @media (max-width: 768px) {
+    min-width: 100px;
+  }
 }
 
 .nftImage {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
 }
 
 .questionIcon {
@@ -157,11 +161,15 @@
     font-size: 14px !important;
   }
 
-  height: 25px !important;
+  height: 23px !important;
   width: 162px;
 
   @media (max-width: 1300px) {
     width: 220px;
+  }
+
+  @media (max-width: 768px) {
+    width: 182px;
   }
 }
 

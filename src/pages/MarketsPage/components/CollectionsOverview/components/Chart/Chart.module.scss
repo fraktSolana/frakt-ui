@@ -1,7 +1,11 @@
-.wrapper {
+.flexCenter {
   display: flex;
-  flex-direction: column;
   align-items: center;
+}
+
+.wrapper {
+  @extend .flexCenter;
+  flex-direction: column;
   gap: 16px;
   width: 100%;
 
@@ -16,11 +20,10 @@
 }
 
 .chart {
-  display: flex;
+  @extend .flexCenter;
   justify-content: center;
-  align-items: center;
 
-  height: 220px;
+  height: 218px;
   width: 420px;
 
   @media (max-width: 1390px) {
@@ -34,10 +37,10 @@
 
   @media (max-width: 1300px) {
     max-width: 420px;
-    height: 105px;
+    height: 102.5px;
 
     & > canvas {
-      height: 105px !important;
+      height: 102.5px !important;
     }
   }
 }
