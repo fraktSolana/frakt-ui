@@ -5,14 +5,14 @@ import { MarketPreview } from '@frakt/api/bonds';
 import { Chart, Star, StarActive } from '@frakt/icons';
 
 import { getStorageItemsByKey, setItemsToStorageByKey } from '../helpers';
-import { useBondChart } from '../../Chart';
+import { useChartVisible } from '../../Chart';
 
 import styles from './TableCells.module.scss';
 
 type Event = MouseEvent | TouchEvent;
 
 export const TitleCell: FC<{ market: MarketPreview }> = ({ market }) => {
-  const { toggleVisibility } = useBondChart();
+  const { toggleVisibility } = useChartVisible();
   const storageMarketPubkeys = getStorageItemsByKey('favourites');
   const isFavourited = storageMarketPubkeys.includes(market.marketPubkey);
 

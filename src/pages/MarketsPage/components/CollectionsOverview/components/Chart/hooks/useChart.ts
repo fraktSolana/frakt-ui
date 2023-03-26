@@ -1,4 +1,3 @@
-import create from 'zustand';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,21 +8,12 @@ import {
   Legend,
 } from 'chart.js';
 
-import { axisOptions, pluginsConfig } from './constants';
-
-interface ChartBondsState {
-  isVisible: boolean;
-  toggleVisibility: () => void;
-  setVisibility: (nextValue: boolean) => void;
-}
-
-export const useBondChart = create<ChartBondsState>((set) => ({
-  isVisible: false,
-  toggleVisibility: () =>
-    set((state) => ({ ...state, isVisible: !state.isVisible })),
-  setVisibility: (nextValue) =>
-    set((state) => ({ ...state, isVisible: nextValue })),
-}));
+import { renderCertainColorsByData } from '../helpers';
+import {
+  ACTIVE_LOANS_BACKGROUND_COLOR,
+  axisOptions,
+  pluginsConfig,
+} from '../constants';
 
 export const useChart = () => {
   ChartJS.register(
@@ -43,6 +33,9 @@ export const useChart = () => {
       y: axisOptions,
     },
     maintainAspectRatio: false,
+    interaction: {
+      mode: 'index',
+    },
   };
 
   const labels = [
@@ -67,13 +60,19 @@ export const useChart = () => {
     datasets: [
       {
         label: 'Active loans',
-        data: [232, 500, 1000],
-        backgroundColor: '#007AFF',
+        data: [
+          232, 500, 1000, 750, 340, 200, 156, 545, 678, 789, 845, 911, 654, 700,
+        ],
+        barPercentage: 1.15,
+        backgroundColor: ACTIVE_LOANS_BACKGROUND_COLOR,
       },
       {
         label: 'Highest LTV',
-        data: [0, 40, 80],
-        backgroundColor: '#FF1F47',
+        barPercentage: 1.15,
+        data: [0, 40, 80, 23, 55, 76, 90, 100, 95, 77],
+        backgroundColor: renderCertainColorsByData([
+          0, 40, 80, 23, 55, 76, 90, 100, 95, 77,
+        ]),
       },
     ],
   };

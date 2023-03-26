@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import { useMarketsPreview } from '../BondsOverview/hooks';
 import { MarketTable } from './components/MarketTable';
-import Chart, { useBondChart } from './components/Chart';
+import Chart, { useChartVisible } from './components/Chart';
 
 import styles from './CollectionsOverview.module.scss';
 import { useWindowSize } from '@frakt/hooks';
@@ -16,7 +16,7 @@ const CollectionsOverview: FC = () => {
   const { marketsPreview, isLoading } = useMarketsPreview();
   const { width } = useWindowSize();
 
-  const { isVisible } = useBondChart();
+  const { isVisible } = useChartVisible();
 
   return (
     <div className={styles.wrapper}>

@@ -5,10 +5,10 @@ import classNames from 'classnames';
 import { MarketPreview } from '@frakt/api/bonds';
 import { Loader } from '@frakt/components/Loader';
 
+import { useChart } from './hooks/useChart';
 import ChartWidgets from '../ChartWidgets';
 
 import styles from './Chart.module.scss';
-import { useChart } from './hooks';
 
 interface ChartProps {
   marketPreview: MarketPreview;
@@ -18,6 +18,7 @@ interface ChartProps {
 
 const Chart: FC<ChartProps> = ({ marketPreview, isLoading, isVisible }) => {
   const { options, data } = useChart();
+
   return (
     <div
       className={classNames(styles.wrapper, {
@@ -30,7 +31,7 @@ const Chart: FC<ChartProps> = ({ marketPreview, isLoading, isVisible }) => {
         <>
           <ChartWidgets marketPreview={marketPreview} />
           <div className={styles.chart}>
-            <Bar options={options} data={data} />
+            <Bar options={options as unknown} data={data} />
           </div>
         </>
       )}
