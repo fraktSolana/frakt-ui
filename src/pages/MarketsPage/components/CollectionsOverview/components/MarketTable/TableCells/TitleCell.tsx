@@ -1,4 +1,5 @@
 import { FC, useState, MouseEvent, TouchEvent } from 'react';
+import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { MarketPreview } from '@frakt/api/bonds';
@@ -8,14 +9,13 @@ import { getStorageItemsByKey, setItemsToStorageByKey } from '../helpers';
 import { useChartVisible } from '../../Chart';
 
 import styles from './TableCells.module.scss';
-import { useParams } from 'react-router-dom';
 
 type Event = MouseEvent | TouchEvent;
 
-export const TitleCell: FC<{ market: MarketPreview; onRowClick: any }> = ({
-  market,
-  onRowClick,
-}) => {
+export const TitleCell: FC<{
+  market: MarketPreview;
+  onRowClick: (market: MarketPreview) => void;
+}> = ({ market, onRowClick }) => {
   const { marketPubkey } = useParams<{ marketPubkey: string }>();
 
   const { toggleVisibility, setVisibility } = useChartVisible();

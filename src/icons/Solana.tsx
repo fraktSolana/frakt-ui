@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 
 const icon = () => {
+  //? Prevent bugs with disappearing svg
   const id = useRef(Math.floor(Math.random() * 10e4)).current;
 
   return (

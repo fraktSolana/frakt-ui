@@ -2,9 +2,13 @@ import { FC, useState } from 'react';
 import classNames from 'classnames';
 
 import { useMarketPairs } from '@frakt/utils/bonds';
+import { Loader } from '@frakt/components/Loader';
 import Button from '@frakt/components/Button';
 import { ChevronDown } from '@frakt/icons';
 
+import { SortOrder } from '../../types';
+import Offer from '../Offer';
+import Sort from '../Sort';
 import {
   isOwnOrder,
   makeEditOrderPath,
@@ -12,12 +16,8 @@ import {
   sortOffersByInterest,
   sortOffersByLtv,
 } from '../../helpers';
-import Offer from '../Offer';
 
 import styles from './CollectionCard.module.scss';
-import { Loader } from '@frakt/components/Loader';
-import { SortOrder } from '../../types';
-import Sort from '../Sort';
 
 interface CollectionCardProps {
   collectionName: string;

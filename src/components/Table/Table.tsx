@@ -1,19 +1,20 @@
+import { useRef } from 'react';
 import { Table as AntdTable } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { DebouncedFunc } from 'lodash';
 import classNames from 'classnames';
 
+import { useOnClickOutside, useWindowSize } from '@frakt/hooks';
+
 import { SortModalMobile, SortModalMobileProps } from './SortModalMobile';
-import { useOnClickOutside, useWindowSize } from '../../hooks';
+import { ActiveRowParams, PartialBreakpoints } from './types';
 import { useFiltersModal } from '../FiltersDropdown';
 import { MobileTable } from './MobileTable';
 import { Loader } from '../Loader';
 import { Search } from './Search';
-import { useRef } from 'react';
 import Button from '../Button';
 
 import styles from './Table.module.scss';
-import { ActiveRowParams, PartialBreakpoints } from './types';
 
 export interface TableProps<T> {
   data: ReadonlyArray<T>;

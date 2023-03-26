@@ -1,12 +1,12 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
+import classNames from 'classnames';
 
 import Tooltip from '@frakt/components/Tooltip';
 import { ArrowDownLeft } from '@frakt/icons';
 import { Bond } from '@frakt/api/bonds';
 
 import styles from './TableCells.module.scss';
-import classNames from 'classnames';
 
 export const TitleCell: FC<{ bond: Bond; isMobile?: boolean }> = ({
   bond,
