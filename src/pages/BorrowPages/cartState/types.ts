@@ -1,7 +1,7 @@
 import { Market } from '@frakt/api/bonds';
 import { LoanType } from '@frakt/api/loans';
 import {
-  BondOrderParams as SuggestedBondOrderParams,
+  BondCartOrder as SuggestedBondOrderParams,
   BorrowNft,
 } from '@frakt/api/nft';
 

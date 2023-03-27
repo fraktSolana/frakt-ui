@@ -8,7 +8,7 @@ import {
 import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 
 import { Bond, Market, Pair, WhitelistType } from '@frakt/api/bonds';
-import { BondOrderParams, getNftMerkleTreeProof } from '@frakt/api/nft';
+import { BondCartOrder, getNftMerkleTreeProof } from '@frakt/api/nft';
 import { PUBKEY_PLACEHOLDER, sendTxnPlaceHolder } from '@frakt/utils';
 
 import {
@@ -120,7 +120,7 @@ export const makeExitBondTransaction: MakeExitBondTransaction = async ({
 type MakeExitBondMultiOrdersTransaction = (params: {
   market: Market;
   // bondOrder: BondOrder;
-  bondOrderParams: BondOrderParams[];
+  bondOrderParams: BondCartOrder[];
   bond: Bond;
   connection: web3.Connection;
   wallet: WalletContextState;

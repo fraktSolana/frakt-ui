@@ -5,7 +5,7 @@ import { validateAndSellNftToTokenToNftPair } from 'fbonds-core/lib/fbond-protoc
 import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 
 import { Market, Pair, WhitelistType } from '@frakt/api/bonds';
-import { BondOrderParams, getNftMerkleTreeProof } from '@frakt/api/nft';
+import { BondCartOrder, getNftMerkleTreeProof } from '@frakt/api/nft';
 import { PUBKEY_PLACEHOLDER, sendTxnPlaceHolder } from '@frakt/utils';
 
 import {
@@ -113,7 +113,7 @@ export const makeCreateBondTransaction: MakeCreateBondTransaction = async ({
 type MakeCreateBondMultiOrdersTransaction = (params: {
   market: Market;
   // bondOrder: BondOrder;
-  bondOrderParams: BondOrderParams[];
+  bondOrderParams: BondCartOrder[];
   nftMint: string;
 
   borrowValue: number; //? lamports

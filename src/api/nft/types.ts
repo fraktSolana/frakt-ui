@@ -38,13 +38,13 @@ export interface BorrowNft {
   };
 }
 
-export interface BondOrderParams {
+export interface BondCartOrder {
   orderSize: number; //? lamports
   spotPrice: number; //? lamports
   pairPubkey: string;
   assetReceiver: string;
   durationFilter: number;
-  bondFeature?: BondFeatures;
+  bondFeature: BondFeatures;
 }
 
 export interface BorrowNftSuggested {
@@ -53,7 +53,7 @@ export interface BorrowNftSuggested {
 
   borrowNft: BorrowNft;
 
-  bondOrderParams?: BondOrderParams[];
+  bondOrderParams?: BondCartOrder[];
 }
 
 export enum BulkTypes {

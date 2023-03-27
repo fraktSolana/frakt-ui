@@ -28,7 +28,7 @@ import { LoanType } from '@frakt/api/loans';
 import { useConnection } from '@frakt/hooks';
 
 import { useBorrow } from '../cartState';
-import { BondOrderParams } from '@frakt/api/nft';
+import { BondCartOrder } from '@frakt/api/nft';
 import {
   signAndSendAllTransactionsInSequence,
   TxnsAndSigners,
@@ -170,6 +170,12 @@ const borrowBulk: BorrowBulk = async ({
 
   const bondTransactionsAndSignersChunks = await Promise.all(
     bondOrders.map((order) => {
+      console.log('makeCreateBondMultiOrdersTransaction args: ', {
+        nftMint: order.borrowNft.mint,
+        market: order.bondOrderParams.market,
+        bondOrderParams: order.bondOrderParams.orderParams,
+        borrowValue: order.loanValue,
+      });
       return makeCreateBondMultiOrdersTransaction({
         nftMint: order.borrowNft.mint,
         market: order.bondOrderParams.market,

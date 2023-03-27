@@ -5,7 +5,7 @@ import {
 } from 'fbonds-core/lib/fbond-protocol/types';
 
 import { Bond, Pair } from '@frakt/api/bonds';
-import { BondOrderParams } from '@frakt/api/nft';
+import { BondCartOrder } from '@frakt/api/nft';
 import { groupBy } from 'ramda';
 
 export const calcRisk = (value: number) => {
@@ -91,8 +91,8 @@ export const pairLtvFilter: PairLtvFilter = ({
 }) => ltvBasePoints <= pair?.validation?.loanToValueFilter;
 
 type MergeBondOrderParamsByPair = (props: {
-  bondOrderParams: BondOrderParams[];
-}) => BondOrderParams[];
+  bondOrderParams: BondCartOrder[];
+}) => BondCartOrder[];
 export const mergeBondOrderParamsByPair: MergeBondOrderParamsByPair = ({
   bondOrderParams,
 }) => {

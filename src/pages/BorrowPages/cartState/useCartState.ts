@@ -89,6 +89,7 @@ export const useCartState = create<CartState>((set, get) => ({
                     pairPubkey: patchedPair.publicKey,
                     assetReceiver: patchedPair.assetReceiver,
                     durationFilter: patchedPair.validation.durationFilter,
+                    bondFeature: patchedPair.validation.bondFeatures,
                   },
                 ],
               },
@@ -101,6 +102,7 @@ export const useCartState = create<CartState>((set, get) => ({
             pairPubkey: patchedPair.publicKey,
             assetReceiver: patchedPair.assetReceiver,
             durationFilter: patchedPair.validation.durationFilter,
+            bondFeature: patchedPair.validation.bondFeatures,
           });
         }
 

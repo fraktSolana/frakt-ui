@@ -17,7 +17,7 @@ import { NotifyType } from '@frakt/utils/solanaUtils';
 import { captureSentryError } from '@frakt/utils/sentry';
 import { makeProposeTransaction } from '@frakt/utils/loans';
 import { LoanType } from '@frakt/api/loans';
-import { BondOrderParams, BorrowNft } from '@frakt/api/nft';
+import { BondCartOrder, BorrowNft } from '@frakt/api/nft';
 
 export const useSidebar = () => {
   const {
@@ -97,7 +97,7 @@ export const useSidebar = () => {
 type BorrowSingle = (props: {
   nft: BorrowNft;
   pair?: Pair;
-  bondOrderParams?: BondOrderParams[];
+  bondOrderParams?: BondCartOrder[];
   market?: Market;
   loanType: LoanType;
   loanValue: number;
@@ -138,7 +138,12 @@ const borrowSingle: BorrowSingle = async ({
   }
 
   console.log('nft.valuation: ', nft.valuation);
-
+  console.log('makeCreateBondMultiOrdersTransaction Single args: ', {
+    nftMint: nft.mint,
+    market,
+    bondOrderParams: bondOrderParams,
+    borrowValue: loanValue,
+  });
   const { createBondTxnAndSigners, sellingBondsTxnsAndSigners } =
     await makeCreateBondMultiOrdersTransaction({
       nftMint: nft.mint,

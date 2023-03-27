@@ -12,7 +12,7 @@ import {
   makeExitBondTransaction,
 } from './makeExitBondTransaction';
 import { Order } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
-import { BondOrderParams } from '@frakt/api/nft';
+import { BondCartOrder } from '@frakt/api/nft';
 import {
   signAndSendAllTransactions,
   signAndSendAllTransactionsInSequence,
@@ -21,7 +21,7 @@ import {
 type ExitBond = (props: {
   bond: Bond;
   market: Market;
-  bondOrderParams: BondOrderParams[];
+  bondOrderParams: BondCartOrder[];
   connection: web3.Connection;
   wallet: WalletContextState;
 }) => Promise<boolean>;

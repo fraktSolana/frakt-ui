@@ -6,12 +6,12 @@ import { LoanType } from '@frakt/api/loans';
 
 import { BondOrder } from './types';
 import { Order } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
-import { BondOrderParams } from '@frakt/api/nft';
+import { BondCartOrder } from '@frakt/api/nft';
 
 type ConvertTakenOrdersToOrderParams = (params: {
   pairs: Pair[];
   takenOrders: Order[];
-}) => BondOrderParams[];
+}) => BondCartOrder[];
 export const convertTakenOrdersToOrderParams: ConvertTakenOrdersToOrderParams =
   ({ pairs, takenOrders }) => {
     return takenOrders.map((takenOrder) => ({
