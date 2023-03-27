@@ -10,6 +10,7 @@ export interface BorrowNft {
   valuation: number; // lamports
   freezable: boolean;
   stakingAvailable: boolean;
+  maxLoanValue: number; // Max borrow value that user can get across all loan type
 
   classicParams?: {
     isLimitExceeded: boolean;
