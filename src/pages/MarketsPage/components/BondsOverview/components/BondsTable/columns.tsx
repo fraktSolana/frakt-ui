@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SortOrder } from 'antd/lib/table/interface';
 
-import { Bond, Market, Pair } from '@frakt/api/bonds';
+import { Bond } from '@frakt/api/bonds';
 
 import {
   ExperationCell,
@@ -13,8 +12,6 @@ import {
   HeaderTitleCell,
   PnlProfitCell,
   ButtontsCell,
-  calcEstimateProfit,
-  calcPnlProfit,
 } from './TableCells';
 
 export type SortColumns = {
@@ -23,11 +20,6 @@ export type SortColumns = {
 }[];
 
 export const TableList = ({ data, isMobile, hideBond }) => {
-  const [currentMarketAndPairs, setCurrentMarketAndPairs] = useState<{
-    market: Market;
-    pairs: Pair[];
-  }>(null);
-
   const COLUMNS: ColumnsType<Bond> = [
     {
       key: 'nftName',
@@ -58,10 +50,7 @@ export const TableList = ({ data, isMobile, hideBond }) => {
           tooltipText="Amount of SOL you want to lend for a specific collection at the chosen LTV & APY"
         />
       ),
-      sorter: (
-        { amountOfUserBonds: amountOfUserBondsA = 0 },
-        { amountOfUserBonds: amountOfUserBondsB = 0 },
-      ) => amountOfUserBondsA - amountOfUserBondsB,
+      sorter: (a, b) => a.stats.size - b.stats.size,
       render: (_, bond: Bond) => <SizeCell isMobile={isMobile} bond={bond} />,
       showSorterTooltip: false,
     },
@@ -80,7 +69,7 @@ export const TableList = ({ data, isMobile, hideBond }) => {
       render: (_, bond: Bond) => (
         <InterestCell isMobile={isMobile} bond={bond} />
       ),
-      sorter: (a, b) => a.interest - b.interest,
+      sorter: (a, b) => a.stats.interest - b.stats.interest,
       showSorterTooltip: false,
     },
     {
@@ -94,7 +83,7 @@ export const TableList = ({ data, isMobile, hideBond }) => {
           tooltipText="Analyzed profit from repaying the loan"
         />
       ),
-      sorter: (a, b) => calcEstimateProfit(a) - calcEstimateProfit(b),
+      sorter: (a, b) => a.stats.estProfit - b.stats.estProfit,
       render: (_, bond: Bond) => <ProfitCell bond={bond} />,
       showSorterTooltip: false,
     },
@@ -110,8 +99,7 @@ export const TableList = ({ data, isMobile, hideBond }) => {
         />
       ),
       render: (_, bond: Bond) => <ExperationCell bond={bond} />,
-      sorter: ({ fbond: fbondA }, { fbond: fbondB }) =>
-        fbondA.liquidatingAt - fbondB.liquidatingAt,
+      sorter: (a, b) => a.stats.expiration - b.stats.expiration,
       showSorterTooltip: false,
     },
     {
@@ -125,26 +113,9 @@ export const TableList = ({ data, isMobile, hideBond }) => {
           tooltipText="Gain/loss if you decide to sell your bond tokens (instantly) to other lenders (“exit”)"
         />
       ),
-      sorter: (a, b) => {
-        return (
-          calcPnlProfit({
-            bond: a,
-            market: currentMarketAndPairs?.market,
-            pairs: currentMarketAndPairs?.pairs,
-          }) -
-          calcPnlProfit({
-            bond: b,
-            market: currentMarketAndPairs?.market,
-            pairs: currentMarketAndPairs?.pairs,
-          })
-        );
-      },
+      sorter: (a, b) => a.stats.pnl - b.stats.pnl,
       render: (_, bond: Bond) => (
-        <PnlProfitCell
-          inMobile={isMobile}
-          setCurrentMarketAndPairs={setCurrentMarketAndPairs}
-          bond={bond}
-        />
+        <PnlProfitCell inMobile={isMobile} bond={bond} />
       ),
       showSorterTooltip: false,
     },

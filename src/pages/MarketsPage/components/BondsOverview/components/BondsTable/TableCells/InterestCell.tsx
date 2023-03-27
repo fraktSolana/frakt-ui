@@ -9,7 +9,7 @@ export const InterestCell: FC<{ bond: Bond; isMobile?: boolean }> = ({
   bond,
   isMobile,
 }) => {
-  const { interest, apy } = bond;
+  const { interest, apy } = bond?.stats;
 
   return (
     <div

@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
@@ -8,7 +8,12 @@ import EmptyList from '@frakt/components/EmptyList';
 import { Loader } from '@frakt/components/Loader';
 import Toggle from '@frakt/components/Toggle';
 
-import { MarketTabsNames, useFetchAllBonds, useMarketsPage } from './hooks';
+import {
+  MarketTabsNames,
+  useBondsSort,
+  useFetchAllBonds,
+  useMarketsPage,
+} from './hooks';
 import BondsWidgets from './components/BondsWidgets';
 import { BondsTable } from './components/BondsTable';
 import { createBondsStats } from './helpers';
@@ -22,6 +27,8 @@ const BondsOverview: FC = () => {
 
   const { loading, hideUserBond } = useMarketsPage();
 
+  const { queryData } = useBondsSort();
+
   const {
     tabs: marketTabs,
     value: tabValue,
@@ -33,7 +40,7 @@ const BondsOverview: FC = () => {
     fetchNextPage,
     isFetchingNextPage,
     isListEnded,
-  } = useFetchAllBonds();
+  } = useFetchAllBonds({ queryData });
 
   useEffect(() => {
     if (inView && !isFetchingNextPage && !isListEnded) {

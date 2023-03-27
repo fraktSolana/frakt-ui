@@ -16,36 +16,21 @@ import { useBondActions } from '../hooks';
 interface PnlProfitCellProps {
   bond: Bond;
   inMobile?: boolean;
-  setCurrentMarketAndPairs?: ({
-    market,
-    pairs,
-  }: {
-    market: Market;
-    pairs: Pair[];
-  }) => void;
 }
 
-export const PnlProfitCell: FC<PnlProfitCellProps> = ({
-  bond,
-  inMobile,
-  setCurrentMarketAndPairs,
-}) => {
+export const PnlProfitCell: FC<PnlProfitCellProps> = ({ bond, inMobile }) => {
   const { market, pairs } = getMarketAndPairsByBond(bond);
 
-  console.log('getMarketAndPairsByBond: ', pairs);
+  const { pnl: pnlLamports } = bond?.stats;
   const { averageBondPrice } = bond;
 
-  const { exitAvailable, bestOrdersAndBorrowValue } = useBondActions({
+  console.log('getMarketAndPairsByBond: ', pairs);
+
+  const { exitAvailable } = useBondActions({
     bond,
     market,
     pairs,
   });
-
-  useEffect(() => {
-    setCurrentMarketAndPairs({ market, pairs });
-  }, [market]);
-
-  const pnlLamports = bestOrdersAndBorrowValue.maxBorrowValue;
 
   const pnlProfit = averageBondPrice
     ? pnlLamports / (averageBondPrice * BOND_SOL_DECIMAIL_DELTA)

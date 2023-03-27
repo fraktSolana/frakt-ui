@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import classNames from 'classnames';
 
 import { QuestionCircleOutlined } from '@ant-design/icons';
@@ -11,6 +11,7 @@ import {
 
 import styles from './TableCells.module.scss';
 import { SortColumns } from '../columns';
+import { useBondsSort } from '../../../hooks';
 
 interface HeaderTitleCellProps {
   sortColumns?: SortColumns;
@@ -27,7 +28,14 @@ export const HeaderTitleCell: FC<HeaderTitleCellProps> = ({
   tooltipText,
   fixedLeft,
 }) => {
+  const { setSortQuery } = useBondsSort();
   const sortedColumn = sortColumns?.find(({ column }) => column.key === value);
+
+  useEffect(() => {
+    if (sortedColumn) {
+      setSortQuery(sortedColumn);
+    }
+  }, [sortedColumn]);
 
   return (
     <div className={classNames(styles.row, fixedLeft && styles.fixedLeftRow)}>

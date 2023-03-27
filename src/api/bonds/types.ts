@@ -173,6 +173,17 @@ interface CollateralBox {
   };
 }
 
+export interface BondStats {
+  interest: number;
+  averageBondPrice: number;
+  apy: number;
+  pnl: number;
+  size: number;
+  ltv: number;
+  estProfit: number;
+  expiration: number;
+}
+
 export interface Bond {
   fbond: FBond;
   collateralBox: CollateralBox;
@@ -180,4 +191,5 @@ export interface Bond {
   averageBondPrice: number; //? price in lamports for minimal part of bond
   interest: number; //? BasePoint percent (50% === 5000)
   amountOfUserBonds: number;
+  stats: BondStats;
 }
