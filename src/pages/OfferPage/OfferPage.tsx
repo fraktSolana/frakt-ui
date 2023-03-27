@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
-import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 
 import Toggle from '@frakt/components/Toggle';
 import { LoadingModal } from '@frakt/components/LoadingModal';
@@ -18,7 +17,11 @@ import { Header } from './components/Header';
 import { useOfferPage } from './hooks';
 import { SOL_TOKEN } from '../../utils';
 import styles from './OfferPage.module.scss';
-import { DURATION_OPTIONS } from './constants';
+import {
+  DURATION_OPTIONS,
+  EARNER_INTEREST_OPTIONS,
+  RECEIVE_OPTIONS,
+} from './constants';
 
 export const OfferPage = () => {
   const {
@@ -107,21 +110,6 @@ export const OfferPage = () => {
               lpBalance={parseFloat((walletSolBalance / 1e9).toFixed(3))}
               toolTipText="Amount of SOL you want to lend for a specific collection at the chosen LTV & APY"
             />
-            {!isEdit && (
-              <div className={styles.toggle}>
-                <Toggle
-                  label="Receive liquidated NFT"
-                  value={receiveNftFeature}
-                  onChange={onChangeReceiveNftFeature}
-                />
-                <Tooltip
-                  placement="bottom"
-                  overlay="When funding full loans, lenders have the option to get defaulted NFTs instead of the SOL recovered from the liquidation"
-                >
-                  <QuestionCircleOutlined className={styles.questionIcon} />
-                </Tooltip>
-              </div>
-            )}
           </div>
 
           <div className={styles.fieldWrapper}>
@@ -152,15 +140,45 @@ export const OfferPage = () => {
               toolTipText="Interest (in %) for the duration of this loan"
             />
             {!isEdit && (
-              <div className={styles.toggle}>
-                <Toggle
-                  label="Autocompound"
-                  value={autocompoundFeature}
-                  onChange={onChangeAutocompoundFeature}
+              <div className={classNames(styles.radio, styles.radioWrapper)}>
+                <div className={styles.radioTitle}>
+                  <h6 className={styles.subtitle}>Earned interest</h6>
+                  <Tooltip
+                    placement="bottom"
+                    overlay="When funding full loans, lenders have the option to get defaulted NFTs instead of the SOL recovered from the liquidation"
+                  >
+                    <QuestionCircleOutlined className={styles.questionIcon} />
+                  </Tooltip>
+                </div>
+                <RadioButton
+                  currentOption={{
+                    label: autocompoundFeature,
+                    value: autocompoundFeature,
+                  }}
+                  onOptionChange={onChangeAutocompoundFeature}
+                  options={EARNER_INTEREST_OPTIONS}
                 />
-                <Tooltip placement="bottom" overlay="">
-                  <QuestionCircleOutlined className={styles.questionIcon} />
-                </Tooltip>
+              </div>
+            )}
+            {!isEdit && (
+              <div className={classNames(styles.radio, styles.radioWrapper)}>
+                <div className={styles.radioTitle}>
+                  <h6 className={styles.subtitle}>Defaults</h6>
+                  <Tooltip
+                    placement="bottom"
+                    overlay="When funding full loans, lenders have the option to get defaulted NFTs instead of the SOL recovered from the liquidation"
+                  >
+                    <QuestionCircleOutlined className={styles.questionIcon} />
+                  </Tooltip>
+                </div>
+                <RadioButton
+                  currentOption={{
+                    label: receiveNftFeature,
+                    value: receiveNftFeature,
+                  }}
+                  onOptionChange={onChangeReceiveNftFeature}
+                  options={RECEIVE_OPTIONS}
+                />
               </div>
             )}
           </div>
