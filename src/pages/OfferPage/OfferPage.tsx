@@ -142,10 +142,10 @@ export const OfferPage = () => {
             {!isEdit && (
               <div className={classNames(styles.radio, styles.radioWrapper)}>
                 <div className={styles.radioTitle}>
-                  <h6 className={styles.subtitle}>Earned interest</h6>
+                  <h6 className={styles.subtitle}>Repayments</h6>
                   <Tooltip
                     placement="bottom"
-                    overlay="When funding full loans, lenders have the option to get defaulted NFTs instead of the SOL recovered from the liquidation"
+                    overlay="Lenders have an option to place same offer right after repayment together with earned interest"
                   >
                     <QuestionCircleOutlined className={styles.questionIcon} />
                   </Tooltip>
