@@ -34,7 +34,7 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
   const [openOffersMobile, setOpenOffersMobile] = useState<boolean>(false);
   const [showOwnOrders, setShowOwnOrders] = useState<boolean>(false);
   const [sort, setSort] = useState<SortOrder>(SortOrder.DESC);
-  const [duration, setDuration] = useState<number>(7);
+  const [duration, setDuration] = useState<number>(30);
 
   const toggleOffers = () => setOpenOffersMobile((prev) => !prev);
 
@@ -151,6 +151,7 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
               openOffersMobile={openOffersMobile}
               existSyntheticParams={!!syntheticParams?.ltv}
               showOwnOrders={showOwnOrders}
+              duration={duration}
             />
           )}
 

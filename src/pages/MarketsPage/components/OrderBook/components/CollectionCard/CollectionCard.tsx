@@ -19,6 +19,7 @@ interface CollectionCardProps {
   openOffersMobile: boolean;
   existSyntheticParams: boolean;
   showOwnOrders: boolean;
+  duration: number;
 }
 
 const CollectionCard: FC<CollectionCardProps> = ({
@@ -28,6 +29,7 @@ const CollectionCard: FC<CollectionCardProps> = ({
   openOffersMobile,
   existSyntheticParams,
   showOwnOrders,
+  duration,
 }) => {
   const {
     offers,
@@ -39,6 +41,7 @@ const CollectionCard: FC<CollectionCardProps> = ({
   } = useCollectionCard({
     showOwnOrders,
     marketPubkey,
+    duration,
   });
 
   return (

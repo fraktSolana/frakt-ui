@@ -12,12 +12,14 @@ interface CollectionListProps {
   openOffersMobile: boolean;
   existSyntheticParams: boolean;
   showOwnOrders: boolean;
+  duration: number;
 }
 
 const CollectionList: FC<CollectionListProps> = ({
   openOffersMobile,
   existSyntheticParams,
   showOwnOrders,
+  duration,
 }) => {
   const { marketsPreview, isLoading } = useMarketsPreview();
 
@@ -37,6 +39,7 @@ const CollectionList: FC<CollectionListProps> = ({
           openOffersMobile={openOffersMobile}
           existSyntheticParams={existSyntheticParams}
           showOwnOrders={showOwnOrders}
+          duration={duration}
         />
       ))}
     </ul>

@@ -1,11 +1,19 @@
 import { useState } from 'react';
 import { useMarketPairs } from '@frakt/utils/bonds';
 
-import { getOnlyOwnerOffers, sortOffers } from './helpers';
-import { parseMarketOrder } from '../../helpers';
+import {
+  filterOffersByDuration,
+  getOnlyOwnerOffers,
+  parseMarketOrder,
+  sortOffers,
+} from '../../helpers';
 import { SortOrder } from '../../types';
 
-export const useCollectionCard = ({ marketPubkey, showOwnOrders }) => {
+export const useCollectionCard = ({
+  marketPubkey,
+  showOwnOrders,
+  duration,
+}) => {
   const [isVisibleOfferList, setIsVisibleOfferList] = useState<boolean>(false);
   const { pairs, isLoading: isLoadingPairs } = useMarketPairs({
     marketPubkey: isVisibleOfferList ? marketPubkey : '',
@@ -22,8 +30,12 @@ export const useCollectionCard = ({ marketPubkey, showOwnOrders }) => {
 
   const ownerOffers = getOnlyOwnerOffers(parsedOffers);
   const sortedOffers = sortOffers(parsedOffers, sortDirection);
+  const fitleredOffersByDuration = filterOffersByDuration(
+    sortedOffers,
+    duration,
+  );
 
-  const offers = showOwnOrders ? ownerOffers : sortedOffers;
+  const offers = showOwnOrders ? ownerOffers : fitleredOffersByDuration;
 
   return {
     offers,

@@ -66,25 +66,41 @@ export const makeEditOrderPath = (order: MarketOrder, marketPubkey: string) => {
 
 export const sortOffersByInterest = (
   offers: MarketOrder[],
-  sortDirection = 'desc',
+  sortDirection: string,
 ) =>
   offers.sort((a, b) => {
     return compareNumbers(a.interest, b.interest, sortDirection === 'desc');
   });
 
 export const sortOffersByLtv = (
-  offers: MarketOrder[],
-  sortDirection = 'desc',
+  sortedOffersByInterest: MarketOrder[],
+  sortDirection: string,
 ) => {
-  return sortDirection === 'asc'
-    ? offers
-    : offers
-        .reverse()
-        .sort((a, b) => compareNumbers(a.ltv, b.ltv, sortDirection === 'desc'));
+  return (
+    sortDirection === 'asc'
+      ? sortedOffersByInterest
+      : sortedOffersByInterest.reverse()
+  ).sort((a, b) => compareNumbers(a.ltv, b.ltv, sortDirection === 'desc'));
 };
 
 export const filterOffersByDuration = (offers: MarketOrder[], duration = 7) => {
-  if (duration > 14) return offers;
+  const MAX_DURATION_DAY = 14;
 
-  return offers.filter((offer) => offer?.duration === duration);
+  if (duration > MAX_DURATION_DAY) return offers;
+  return offers.filter((offer) => offer.duration === duration);
+};
+
+export const sortOffers = (offers: MarketOrder[], sortDirection: string) => {
+  const sortedOffersByInterest = sortOffersByInterest(offers, sortDirection);
+  const sortedByLtv = sortOffersByLtv(sortedOffersByInterest, sortDirection);
+
+  return sortedByLtv;
+};
+
+export const getOnlyOwnerOffers = (offers: MarketOrder[]) => {
+  const { publicKey } = useWallet();
+
+  return offers.filter(
+    (offer) => offer.rawData.publicKey === publicKey?.toBase58(),
+  );
 };
