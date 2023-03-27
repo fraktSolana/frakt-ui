@@ -138,12 +138,7 @@ const borrowSingle: BorrowSingle = async ({
   }
 
   console.log('nft.valuation: ', nft.valuation);
-  console.log('makeCreateBondMultiOrdersTransaction Single args: ', {
-    nftMint: nft.mint,
-    market,
-    bondOrderParams: bondOrderParams,
-    borrowValue: loanValue,
-  });
+
   const { createBondTxnAndSigners, sellingBondsTxnsAndSigners } =
     await makeCreateBondMultiOrdersTransaction({
       nftMint: nft.mint,

@@ -170,12 +170,6 @@ const borrowBulk: BorrowBulk = async ({
 
   const bondTransactionsAndSignersChunks = await Promise.all(
     bondOrders.map((order) => {
-      console.log('makeCreateBondMultiOrdersTransaction args: ', {
-        nftMint: order.borrowNft.mint,
-        market: order.bondOrderParams.market,
-        bondOrderParams: order.bondOrderParams.orderParams,
-        borrowValue: order.loanValue,
-      });
       return makeCreateBondMultiOrdersTransaction({
         nftMint: order.borrowNft.mint,
         market: order.bondOrderParams.market,
