@@ -85,6 +85,7 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
       className={classNames(styles.orderBook, {
         [styles.active]: openOffersMobile,
         [styles.create]: syntheticParams?.ltv,
+        [styles.selected]: marketPubkey,
       })}
     >
       <>

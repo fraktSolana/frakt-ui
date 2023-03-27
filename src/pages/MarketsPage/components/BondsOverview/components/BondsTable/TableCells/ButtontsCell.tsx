@@ -7,12 +7,12 @@ import Button from '@frakt/components/Button';
 import { Bond } from '@frakt/api/bonds';
 
 import { getMarketAndPairsByBond } from '../helpers';
-import styles from './TableCells.module.scss';
 import { useBondActions } from '../hooks';
+
+import styles from './TableCells.module.scss';
 
 interface ButtontsCellProps {
   bond: Bond;
-  isMobile?: boolean;
   bonds: Bond[];
   hideBond: (bondPubkey: string) => void;
 }
@@ -20,7 +20,6 @@ interface ButtontsCellProps {
 export const ButtontsCell: FC<ButtontsCellProps> = ({
   bond,
   bonds,
-  isMobile,
   hideBond,
 }) => {
   const { market, pairs } = getMarketAndPairsByBond(bond);
@@ -31,16 +30,15 @@ export const ButtontsCell: FC<ButtontsCellProps> = ({
     pairs,
   });
 
+  // const isOwner =
+  //   publicKey?.toBase58() === bond?.fbond?.bondCollateralOrSolReceiver;
+
   const { onExit } = useBondsTransactions({ bonds, hideBond, market });
 
   return (
     <div className={styles.btnWrapper}>
       <Button
-        className={classNames(
-          styles.btn,
-          { [styles.btnMobile]: isMobile },
-          styles.btnExit,
-        )}
+        className={classNames(styles.btn, styles.btnExit)}
         disabled={!exitAvailable}
         type="primary"
         // onClick={() => setExitModalVisible(true)}

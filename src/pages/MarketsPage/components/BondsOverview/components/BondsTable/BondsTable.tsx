@@ -1,7 +1,6 @@
 import { FC } from 'react';
 
 import Table, { useTable, PartialBreakpoints } from '@frakt/components/Table';
-import { useWindowSize } from '@frakt/hooks';
 
 import { TableList } from './columns';
 
@@ -22,12 +21,8 @@ export const BondsTable: FC<BondsTableProps> = ({
   hideBond,
   breakpoints,
 }) => {
-  const { width } = useWindowSize();
-  const isMobile = width <= breakpoints?.mobile;
-
   const COLUMNS = TableList({
     data,
-    isMobile,
     hideBond,
   });
 

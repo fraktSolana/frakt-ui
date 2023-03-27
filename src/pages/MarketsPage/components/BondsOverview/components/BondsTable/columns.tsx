@@ -19,7 +19,7 @@ export type SortColumns = {
   order: SortOrder;
 }[];
 
-export const TableList = ({ data, isMobile, hideBond }) => {
+export const TableList = ({ data, hideBond }) => {
   const COLUMNS: ColumnsType<Bond> = [
     {
       key: 'nftName',
@@ -34,7 +34,7 @@ export const TableList = ({ data, isMobile, hideBond }) => {
       ),
       sorter: (a, b) =>
         b?.collateralBox.nft.name?.localeCompare(a?.collateralBox.nft.name),
-      render: (_, bond: Bond) => <TitleCell isMobile={isMobile} bond={bond} />,
+      render: (_, bond: Bond) => <TitleCell bond={bond} />,
       defaultSortOrder: 'descend',
       fixed: 'left',
       showSorterTooltip: false,
@@ -51,7 +51,7 @@ export const TableList = ({ data, isMobile, hideBond }) => {
         />
       ),
       sorter: (a, b) => a.stats.size - b.stats.size,
-      render: (_, bond: Bond) => <SizeCell isMobile={isMobile} bond={bond} />,
+      render: (_, bond: Bond) => <SizeCell bond={bond} />,
       showSorterTooltip: false,
     },
     {
@@ -66,9 +66,7 @@ export const TableList = ({ data, isMobile, hideBond }) => {
         />
       ),
 
-      render: (_, bond: Bond) => (
-        <InterestCell isMobile={isMobile} bond={bond} />
-      ),
+      render: (_, bond: Bond) => <InterestCell bond={bond} />,
       sorter: (a, b) => a.stats.interest - b.stats.interest,
       showSorterTooltip: false,
     },
@@ -114,21 +112,12 @@ export const TableList = ({ data, isMobile, hideBond }) => {
         />
       ),
       sorter: (a, b) => a.stats.pnl - b.stats.pnl,
-      render: (_, bond: Bond) => (
-        <PnlProfitCell inMobile={isMobile} bond={bond} />
-      ),
+      render: (_, bond: Bond) => <PnlProfitCell bond={bond} />,
       showSorterTooltip: false,
     },
     {
       render: (_, bond: Bond) => {
-        return (
-          <ButtontsCell
-            bonds={data}
-            hideBond={hideBond}
-            bond={bond}
-            isMobile={isMobile}
-          />
-        );
+        return <ButtontsCell bonds={data} hideBond={hideBond} bond={bond} />;
       },
     },
   ];

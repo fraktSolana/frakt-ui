@@ -16,7 +16,7 @@
   background-color: var(--primary-background);
 
   @media screen and (max-width: 768px) {
-    top: calc(100% - 165px);
+    top: calc(100% - 125px);
     left: 0;
     right: 0;
 
@@ -32,6 +32,10 @@
 
     &.create {
       gap: 8px;
+      top: calc(100% - 165px);
+    }
+
+    &.selected {
       top: calc(100% - 165px);
     }
 

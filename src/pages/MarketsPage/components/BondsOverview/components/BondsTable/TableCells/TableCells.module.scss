@@ -24,17 +24,10 @@
   min-width: 116px;
   max-width: 116px;
 }
-.nftNameMobile {
-  max-width: unset;
-}
 
 .nftImage {
   width: 26px;
   height: 26px;
-}
-.nftImageMobile {
-  width: 48px;
-  height: 48px;
 }
 
 .questionIcon {
@@ -62,24 +55,17 @@
   gap: 4px;
   align-items: flex-end;
 }
-.columnMobile {
-  flex-direction: row-reverse;
-  gap: 8px;
-}
 
 .btnWrapper {
   display: flex;
   justify-content: flex-end;
+  min-width: 72px;
   width: 100%;
 }
 
 .btn {
   height: 26px;
   width: 72px;
-}
-.btnMobile {
-  height: 40px;
-  width: 100%;
 }
 
 .btnExit {

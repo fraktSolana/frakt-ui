@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import classNames from 'classnames';
 
 import Tooltip from '@frakt/components/Tooltip';
 import { ArrowDownLeft } from '@frakt/icons';
@@ -8,10 +7,7 @@ import { Bond } from '@frakt/api/bonds';
 
 import styles from './TableCells.module.scss';
 
-export const TitleCell: FC<{ bond: Bond; isMobile?: boolean }> = ({
-  bond,
-  isMobile,
-}) => {
+export const TitleCell: FC<{ bond: Bond }> = ({ bond }) => {
   const wallet = useWallet();
   const { collateralBox } = bond;
 
@@ -21,12 +17,7 @@ export const TitleCell: FC<{ bond: Bond; isMobile?: boolean }> = ({
   return (
     <div className={styles.fixedLeftRow}>
       <div className={styles.imageWrapper}>
-        <img
-          src={collateralBox?.nft?.imageUrl}
-          className={classNames(styles.nftImage, {
-            [styles.nftImageMobile]: isMobile,
-          })}
-        />
+        <img src={collateralBox?.nft?.imageUrl} className={styles.nftImage} />
         {isReceiveLiquidatedNfts && (
           <Tooltip
             overlayClassName={styles.receiveIconTooltip}
@@ -39,13 +30,7 @@ export const TitleCell: FC<{ bond: Bond; isMobile?: boolean }> = ({
           </Tooltip>
         )}
       </div>
-      <div
-        className={classNames(styles.nftName, {
-          [styles.nftNameMobile]: isMobile,
-        })}
-      >
-        {collateralBox?.nft?.name}
-      </div>
+      <div className={styles.nftName}>{collateralBox?.nft?.name}</div>
     </div>
   );
 };
