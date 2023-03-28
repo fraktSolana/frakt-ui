@@ -101,7 +101,7 @@ const Table = <T extends unknown>({
   return (
     <AntdTable
       className={classNames(className, {
-        [noDataClassName]: !data.length && !loading,
+        [styles.noDataTableMessage]: !data.length && !loading,
       })}
       rowClassName={(record) => {
         if (!activeRowParams?.field) return 'rowClassName';

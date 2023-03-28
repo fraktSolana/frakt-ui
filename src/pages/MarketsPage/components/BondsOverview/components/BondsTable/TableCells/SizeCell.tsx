@@ -2,14 +2,16 @@ import { FC } from 'react';
 import classNames from 'classnames';
 
 import { colorByPercentOffers, getColorByPercent } from '@frakt/utils/bonds';
-import { Bond } from '@frakt/api/bonds';
 import { Solana } from '@frakt/icons';
 
 import styles from './TableCells.module.scss';
 
-export const SizeCell: FC<{ bond: Bond; isMobile?: boolean }> = ({ bond }) => {
-  const { ltv, size } = bond?.stats;
+interface SizeCellProps {
+  ltv: number;
+  size: number;
+}
 
+export const SizeCell: FC<SizeCellProps> = ({ ltv, size }) => {
   const colorLTV =
     getColorByPercent(ltv, colorByPercentOffers) || colorByPercentOffers[100];
 

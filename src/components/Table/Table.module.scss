@@ -151,3 +151,9 @@
 .arrowDown {
   transform: rotate(180deg);
 }
+
+.noDataTableMessage {
+  :global {
+    display: none;
+  }
+}

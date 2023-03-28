@@ -1,0 +1,49 @@
+import { FC } from 'react';
+import classNames from 'classnames';
+
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import Tooltip from '@frakt/components/Tooltip';
+import {
+  ArrowDownTableSort,
+  ArrowTableSort,
+  ArrowUpTableSort,
+} from '@frakt/icons';
+
+import { SortColumns } from '../columns';
+
+import styles from './TableCells.module.scss';
+
+interface HeaderCellProps {
+  sortColumns?: SortColumns;
+  label: string;
+  value: string;
+  tooltipText?: string;
+  fixedLeft?: boolean;
+}
+
+export const HeaderCell: FC<HeaderCellProps> = ({
+  sortColumns,
+  label,
+  value,
+  tooltipText,
+  fixedLeft,
+}) => {
+  const sortedColumn = sortColumns?.find(({ column }) => column.key === value);
+
+  return (
+    <div className={classNames(styles.row, fixedLeft && styles.fixedLeftRow)}>
+      <span className={styles.title}>{label}</span>
+      {!!tooltipText && (
+        <Tooltip placement="top" overlay={tooltipText}>
+          <QuestionCircleOutlined className={styles.questionIcon} />
+        </Tooltip>
+      )}
+      <span className={styles.sortIcon}>
+        {sortedColumn?.order === 'ascend' && <ArrowUpTableSort />}
+        {sortedColumn?.order === 'descend' && <ArrowDownTableSort />}
+        {sortedColumn?.order !== 'descend' &&
+          sortedColumn?.order !== 'ascend' && <ArrowTableSort />}
+      </span>
+    </div>
+  );
+};

@@ -11,7 +11,7 @@ import {
   ProfitCell,
   HeaderTitleCell,
   PnlProfitCell,
-  ButtontsCell,
+  ExitCell,
 } from './TableCells';
 
 export type SortColumns = {
@@ -32,8 +32,10 @@ export const TableList = ({ data, hideBond }) => {
           fixedLeft
         />
       ),
-      sorter: (a, b) =>
-        b?.collateralBox.nft.name?.localeCompare(a?.collateralBox.nft.name),
+      sorter: ({
+        collateralBox: collateralBoxA,
+        collateralBox: collateralBoxB,
+      }) => collateralBoxB.nft.name?.localeCompare(collateralBoxA.nft.name),
       render: (_, bond: Bond) => <TitleCell bond={bond} />,
       defaultSortOrder: 'descend',
       fixed: 'left',
@@ -50,8 +52,10 @@ export const TableList = ({ data, hideBond }) => {
           tooltipText="Amount of SOL you want to lend for a specific collection at the chosen LTV & APY"
         />
       ),
-      sorter: (a, b) => a.stats.size - b.stats.size,
-      render: (_, bond: Bond) => <SizeCell bond={bond} />,
+      sorter: ({ stats: statsA, stats: statsB }) => statsA.size - statsB.size,
+      render: (_, { stats }) => (
+        <SizeCell ltv={stats?.ltv} size={stats?.size} />
+      ),
       showSorterTooltip: false,
     },
     {
@@ -65,9 +69,11 @@ export const TableList = ({ data, hideBond }) => {
           tooltipText="Interest (in %) for the duration of this loan"
         />
       ),
-
-      render: (_, bond: Bond) => <InterestCell bond={bond} />,
-      sorter: (a, b) => a.stats.interest - b.stats.interest,
+      render: (_, { stats }) => (
+        <InterestCell interest={stats?.interest} apy={stats?.apy} />
+      ),
+      sorter: ({ stats: statsA, stats: statsB }) =>
+        statsA.interest - statsB.interest,
       showSorterTooltip: false,
     },
     {
@@ -81,7 +87,8 @@ export const TableList = ({ data, hideBond }) => {
           tooltipText="Analyzed profit from repaying the loan"
         />
       ),
-      sorter: (a, b) => a.stats.estProfit - b.stats.estProfit,
+      sorter: ({ stats: statsA, stats: statsB }) =>
+        statsA.estProfit - statsB.estProfit,
       render: (_, bond: Bond) => <ProfitCell bond={bond} />,
       showSorterTooltip: false,
     },
@@ -111,14 +118,14 @@ export const TableList = ({ data, hideBond }) => {
           tooltipText="Gain/loss if you decide to sell your bond tokens (instantly) to other lenders (“exit”)"
         />
       ),
-      sorter: (a, b) => a.stats.pnl - b.stats.pnl,
+      sorter: ({ stats: statsA, stats: statsB }) => statsA.pnl - statsB.pnl,
       render: (_, bond: Bond) => <PnlProfitCell bond={bond} />,
       showSorterTooltip: false,
     },
     {
-      render: (_, bond: Bond) => {
-        return <ButtontsCell bonds={data} hideBond={hideBond} bond={bond} />;
-      },
+      render: (_, bond: Bond) => (
+        <ExitCell bonds={data} hideBond={hideBond} bond={bond} />
+      ),
     },
   ];
 
