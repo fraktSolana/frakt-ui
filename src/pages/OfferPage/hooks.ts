@@ -59,9 +59,12 @@ export const useOfferPage = () => {
   const [duration, setDuration] = useState<number>(7);
   const [interest, setInterest] = useState<string>('0');
   const [offerSize, setOfferSize] = useState<string>('0');
-  const [receiveNftFeature, setReceiveNftFeature] = useState<boolean>(false);
-  const [autocompoundFeature, setAutocompoundFeature] =
-    useState<boolean>(false);
+  const [receiveNftFeature, setReceiveNftFeature] = useState<BondFeatures>(
+    BondFeatures.ReceiveNftOnLiquidation,
+  );
+  const [autocompoundFeature, setAutocompoundFeature] = useState<BondFeatures>(
+    BondFeatures.AutoreceiveSol,
+  );
 
   useEffect(() => {
     if (isEdit && !isLoading) {
@@ -83,22 +86,26 @@ export const useOfferPage = () => {
     setOfferSize(value);
   };
 
-  const onChangeReceiveNftFeature = () => {
-    setReceiveNftFeature(!receiveNftFeature);
+  const onChangeReceiveNftFeature = (nextOption: RBOption<BondFeatures>) => {
+    setReceiveNftFeature(nextOption.value);
   };
 
-  const onChangeAutocompoundFeature = () => {
-    setAutocompoundFeature(!autocompoundFeature);
+  const onChangeAutocompoundFeature = (nextOption: RBOption<BondFeatures>) => {
+    setAutocompoundFeature(nextOption.value);
   };
 
   const findNeededBondFeature = () => {
-    if (receiveNftFeature && autocompoundFeature)
+    const isReceitveNftFeature = receiveNftFeature !== BondFeatures.None;
+    const isAutocompoundFeature =
+      autocompoundFeature === BondFeatures.Autocompound;
+
+    if (isReceitveNftFeature && isAutocompoundFeature)
       return BondFeatures.AutoCompoundAndReceiveNft;
 
-    if (receiveNftFeature && !autocompoundFeature)
+    if (isReceitveNftFeature && !isAutocompoundFeature)
       return BondFeatures.AutoReceiveAndReceiveNft;
 
-    if (autocompoundFeature && !receiveNftFeature)
+    if (isAutocompoundFeature && !isReceitveNftFeature)
       return BondFeatures.Autocompound;
 
     return BondFeatures.AutoreceiveSol;
