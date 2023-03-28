@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useWallet } from '@solana/wallet-adapter-react';
-import create from 'zustand';
-import produce from 'immer';
 
-import { fetchAllBonds } from '@frakt/api/bonds';
+import { fetchBondsHistory } from '@frakt/api/bonds';
+import create from 'zustand';
+import { formatSortOrderToNormalValue } from '../../../helpers';
 
 const LIMIT = 20;
 
-export const useFetchAllBonds = ({
+export const useFetchBondsHistory = ({
   queryData,
   showOwnerBonds,
 }: {
@@ -19,14 +19,12 @@ export const useFetchAllBonds = ({
 
   const [isListEnded, setIsListEnded] = useState<boolean>(false);
 
-  const { hiddenBondsPubkeys, hideBond } = useHiddenBondsPubkeys();
-
   const fetchData = async ({ pageParam }: { pageParam: number }) => {
-    const data = await fetchAllBonds({
+    const data = await fetchBondsHistory({
       skip: LIMIT * pageParam,
       limit: LIMIT,
-      sortBy: queryData?.sortBy,
-      order: queryData?.order,
+      sortBy: queryData.sortBy,
+      order: queryData.order,
       walletPubkey: showOwnerBonds && publicKey,
     });
 
@@ -40,7 +38,7 @@ export const useFetchAllBonds = ({
     };
   };
 
-  const { data, fetchNextPage, isFetchingNextPage, isLoading, isFetched } =
+  const { data, fetchNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({
       queryKey: [publicKey, queryData, showOwnerBonds],
       queryFn: ({ pageParam = 0 }) => fetchData({ pageParam }),
@@ -58,28 +56,30 @@ export const useFetchAllBonds = ({
   const bondsData = data?.pages?.map((page) => page.data).flat() || [];
 
   return {
-    data:
-      bondsData?.filter(
-        ({ fbond }) => !hiddenBondsPubkeys.includes(fbond?.publicKey),
-      ) || [],
+    data: bondsData,
     fetchNextPage,
     isFetchingNextPage,
     isListEnded,
-    hideBond,
     loading: isLoading,
   };
 };
 
-interface HiddenBondsPubkeysState {
-  hiddenBondsPubkeys: string[];
-  hideBond: (bondPubkey: string) => void;
+interface HistoryBondsSortState {
+  setSortQuery: (value: any) => void;
+  queryData: {
+    order: string;
+    sortBy: string;
+  };
 }
-const useHiddenBondsPubkeys = create<HiddenBondsPubkeysState>((set) => ({
-  hiddenBondsPubkeys: [],
-  hideBond: (bondPubkey) =>
-    set(
-      produce((state: HiddenBondsPubkeysState) => {
-        state.hiddenBondsPubkeys = [...state.hiddenBondsPubkeys, bondPubkey];
-      }),
-    ),
+
+export const useHistoryBondsSort = create<HistoryBondsSortState>((set) => ({
+  queryData: null,
+  setSortQuery: ({ order = 'desc', column }) =>
+    set((state) => ({
+      ...state,
+      queryData: {
+        order: formatSortOrderToNormalValue(order),
+        sortBy: column.dataIndex || 'nftName',
+      },
+    })),
 }));

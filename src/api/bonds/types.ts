@@ -183,6 +183,10 @@ export interface BondStats {
   ltv: number;
   estProfit: number;
   expiration: number;
+  state?: string;
+  when?: number;
+  autocompoundDeposits?: [];
+  received?: number;
 }
 
 export interface Bond {

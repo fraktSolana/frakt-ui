@@ -8,12 +8,7 @@ import EmptyList from '@frakt/components/EmptyList';
 import { Loader } from '@frakt/components/Loader';
 import Toggle from '@frakt/components/Toggle';
 
-import {
-  useBondsSort,
-  useFetchAllBonds,
-  useFetchBondsStats,
-  useMarketsPage,
-} from './hooks';
+import { useBondsSort, useFetchAllBonds, useFetchBondsStats } from './hooks';
 import { BondsTable } from '../BondsTable';
 import BondsWidgets from '../BondsWidgets';
 
@@ -23,7 +18,6 @@ const BondsTab: FC = () => {
   const { connected } = useWallet();
   const { ref, inView } = useIntersection();
 
-  const { loading, hideUserBond } = useMarketsPage();
   const { queryData } = useBondsSort();
 
   const [showOwnerBonds, setShowOwnerBonds] = useState<boolean>(false);
@@ -33,6 +27,8 @@ const BondsTab: FC = () => {
     fetchNextPage,
     isFetchingNextPage,
     isListEnded,
+    hideBond,
+    loading,
   } = useFetchAllBonds({ queryData, showOwnerBonds });
 
   useEffect(() => {
@@ -45,37 +41,35 @@ const BondsTab: FC = () => {
 
   return (
     <>
-      {!connected && (
+      {!connected && showOwnerBonds && (
         <ConnectWalletSection
           className={styles.emptyList}
           text="Connect your wallet to see my bonds"
         />
       )}
 
-      {connected && (
-        <div className={styles.wrapper}>
-          <div className={styles.bondsTableHeader}>
-            <BondsWidgets
-              locked={bondsStats?.tvl}
-              activeLoans={bondsStats?.activeLoans}
-            />
-            <Toggle
-              onChange={() => setShowOwnerBonds(!showOwnerBonds)}
-              className={styles.toggle}
-              label="My bonds only"
-            />
-          </div>
-          <BondsTable
-            className={styles.bondsTable}
-            loading={loading}
-            data={bonds}
-            breakpoints={{ scrollX: 744 }}
-            hideBond={hideUserBond}
+      <div className={styles.wrapper}>
+        <div className={styles.bondsTableHeader}>
+          <BondsWidgets
+            locked={bondsStats?.tvl}
+            activeLoans={bondsStats?.activeLoans}
           />
-          {!!isFetchingNextPage && <Loader />}
-          <div ref={ref} />
+          <Toggle
+            onChange={() => setShowOwnerBonds(!showOwnerBonds)}
+            className={styles.toggle}
+            label="My bonds only"
+          />
         </div>
-      )}
+        <BondsTable
+          className={styles.bondsTable}
+          loading={loading}
+          data={bonds}
+          breakpoints={{ scrollX: 744 }}
+          hideBond={hideBond}
+        />
+        {!!isFetchingNextPage && <Loader />}
+        <div ref={ref} />
+      </div>
 
       {connected && !bonds.length && !loading && (
         <EmptyList

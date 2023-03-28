@@ -83,20 +83,6 @@ export const fetchWalletBonds: FetchWalletBonds = async ({
   return data ?? [];
 };
 
-type FetchAllUserBonds = (props: {
-  walletPubkey: web3.PublicKey;
-}) => Promise<Bond[]>;
-
-export const fetchAllUserBonds: FetchAllUserBonds = async ({
-  walletPubkey,
-}) => {
-  const { data } = await axios.get<Bond[]>(
-    `https://${BACKEND_DOMAIN}/bonds/${walletPubkey.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
-  );
-
-  return data ?? [];
-};
-
 type FetchAllBonds = ({
   skip,
   limit,
@@ -106,8 +92,8 @@ type FetchAllBonds = ({
 export const fetchAllBonds: FetchAllBonds = async ({
   skip,
   limit,
-  sortBy,
-  order,
+  sortBy = 'nftName',
+  order = 'asc',
   walletPubkey,
 }) => {
   const { data } = await axios.get<Bond[]>(
@@ -123,6 +109,28 @@ type FetchBondsStats = () => Promise<TotalBondsStats>;
 export const fetchBondsStats: FetchBondsStats = async () => {
   const { data } = await axios.get<TotalBondsStats>(
     `https://${BACKEND_DOMAIN}/stats/bonds`,
+  );
+
+  return data;
+};
+
+type FetchBondsHistory = ({
+  skip,
+  limit,
+  sortBy,
+  order,
+}: FetchBondsRequestParams) => Promise<Bond[]>;
+export const fetchBondsHistory: FetchBondsHistory = async ({
+  skip,
+  limit,
+  sortBy,
+  order,
+  walletPubkey,
+}: FetchBondsRequestParams) => {
+  const { data } = await axios.get<Bond[]>(
+    `https://${BACKEND_DOMAIN}/bonds/history?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${
+      walletPubkey ? `wallet=${walletPubkey?.toBase58()}&onlyUser=true` : ''
+    }`,
   );
 
   return data;

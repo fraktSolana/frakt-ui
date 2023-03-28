@@ -3,8 +3,18 @@ import { SortOrder } from 'antd/lib/table/interface';
 
 import { Bond } from '@frakt/api/bonds';
 
-import { InterestCell, SizeCell } from '../BondsTable/TableCells';
-import { HeaderCell, CollateralCell } from './TableCells';
+import {
+  ExperationCell,
+  InterestCell,
+  SizeCell,
+} from '../BondsTable/TableCells';
+import {
+  HeaderCell,
+  CollateralCell,
+  createAutocompoundJSX,
+  createReceiveJSX,
+  createliquidatingAtJSX,
+} from './TableCells';
 
 export type SortColumns = {
   column: ColumnType<Bond>;
@@ -79,7 +89,7 @@ export const COLUMNS: ColumnsType<Bond> = [
     ),
     sorter: ({ stats: statsA, stats: statsB }) =>
       statsA.expiration - statsB.expiration,
-    // render: (_, bond: Bond) => <ProfitCell bond={bond} />,
+    render: (_, { stats }) => createReceiveJSX(stats?.received),
     showSorterTooltip: false,
   },
   {
@@ -93,9 +103,9 @@ export const COLUMNS: ColumnsType<Bond> = [
         tooltipText="When the loan is paid back or liquidated"
       />
     ),
-    // render: (_, bond: Bond) => <ExperationCell bond={bond} />,
+    render: (_, { stats }) => createReceiveJSX(stats?.received),
     sorter: ({ stats: statsA, stats: statsB }) =>
-      statsA.expiration - statsB.expiration,
+      statsA.received - statsB.received,
     showSorterTooltip: false,
   },
   {
@@ -104,9 +114,8 @@ export const COLUMNS: ColumnsType<Bond> = [
     title: (column) => (
       <HeaderCell sortColumns={column?.sortColumns} value="when" label="When" />
     ),
-    sorter: ({ stats: statsA, stats: statsB }) =>
-      statsA.expiration - statsB.expiration,
-    // render: (_, bond: Bond) => <PnlProfitCell bond={bond} />,
+    sorter: ({ stats: statsA, stats: statsB }) => statsA.when - statsB.when,
+    render: (_, { stats }) => createliquidatingAtJSX(stats?.when),
     showSorterTooltip: false,
   },
 ];

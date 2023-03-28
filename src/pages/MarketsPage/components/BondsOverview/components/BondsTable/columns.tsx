@@ -103,7 +103,9 @@ export const TableList = ({ data, hideBond }) => {
           tooltipText="When the loan is paid back or liquidated"
         />
       ),
-      render: (_, bond: Bond) => <ExperationCell bond={bond} />,
+      render: (_, bond: Bond) => (
+        <ExperationCell liquidatingAt={bond?.stats?.expiration} />
+      ),
       sorter: (a, b) => a.stats.expiration - b.stats.expiration,
       showSorterTooltip: false,
     },

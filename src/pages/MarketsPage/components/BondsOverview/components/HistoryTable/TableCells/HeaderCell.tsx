@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import classNames from 'classnames';
 
 import { QuestionCircleOutlined } from '@ant-design/icons';
@@ -9,6 +9,7 @@ import {
   ArrowUpTableSort,
 } from '@frakt/icons';
 
+import { useHistoryBondsSort } from '../../HistoryTab/hooks';
 import { SortColumns } from '../columns';
 
 import styles from './TableCells.module.scss';
@@ -28,7 +29,14 @@ export const HeaderCell: FC<HeaderCellProps> = ({
   tooltipText,
   fixedLeft,
 }) => {
+  const { setSortQuery } = useHistoryBondsSort();
   const sortedColumn = sortColumns?.find(({ column }) => column.key === value);
+
+  useEffect(() => {
+    if (sortedColumn) {
+      setSortQuery(sortedColumn);
+    }
+  }, [sortedColumn]);
 
   return (
     <div className={classNames(styles.row, fixedLeft && styles.fixedLeftRow)}>
