@@ -75,6 +75,7 @@ const HistoryTab: FC = () => {
           className={styles.table}
           data={bondsHistory}
           breakpoints={{ scrollX: 744 }}
+          loading={loading}
         />
         {!!isFetchingNextPage && <Loader />}
         <div ref={ref} />

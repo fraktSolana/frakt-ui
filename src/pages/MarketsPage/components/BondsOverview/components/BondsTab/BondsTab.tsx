@@ -41,13 +41,6 @@ const BondsTab: FC = () => {
 
   return (
     <>
-      {!connected && showOwnerBonds && (
-        <ConnectWalletSection
-          className={styles.emptyList}
-          text="Connect your wallet to see my bonds"
-        />
-      )}
-
       <div className={styles.wrapper}>
         <div className={styles.bondsTableHeader}>
           <BondsWidgets
@@ -60,17 +53,26 @@ const BondsTab: FC = () => {
             label="My bonds only"
           />
         </div>
-        <BondsTable
-          className={styles.bondsTable}
-          loading={loading}
-          data={bonds}
-          breakpoints={{ scrollX: 744 }}
-          hideBond={hideBond}
-        />
-        {!!isFetchingNextPage && <Loader />}
-        <div ref={ref} />
-      </div>
 
+        {!connected && showOwnerBonds ? (
+          <ConnectWalletSection
+            className={styles.emptyList}
+            text="Connect your wallet to see my bonds"
+          />
+        ) : (
+          <>
+            <BondsTable
+              className={styles.bondsTable}
+              loading={loading}
+              data={bonds}
+              breakpoints={{ scrollX: 744 }}
+              hideBond={hideBond}
+            />
+            {!!isFetchingNextPage && <Loader />}
+            <div ref={ref} />
+          </>
+        )}
+      </div>
       {connected && !bonds.length && !loading && (
         <EmptyList
           className={styles.emptyList}
