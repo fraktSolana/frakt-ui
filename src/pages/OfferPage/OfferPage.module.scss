@@ -122,10 +122,24 @@
   }
 }
 
+.radioWrapper {
+  padding-top: 24px;
+
+  @media screen and (max-width: 768px) {
+    padding-top: 16px;
+  }
+}
+
 .radio {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.radioTitle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .checkbox {
