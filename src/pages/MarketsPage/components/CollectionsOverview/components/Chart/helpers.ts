@@ -4,11 +4,10 @@ const renderCertainColorsByData = (data: number[]): string[] => {
   return data.map((value) => getColorByPercent(value, colorByPercentOffers));
 };
 
-const getTooltipBackgroundColor = (): string => {
+const getComputedStyleByVaraible = (varaible: string): string => {
   const styles = getComputedStyle(document.body);
-  const tooltipBackgroundColor = styles.getPropertyValue('--primary-border');
-
-  return tooltipBackgroundColor;
+  const value = styles.getPropertyValue(varaible);
+  return value;
 };
 
-export { renderCertainColorsByData, getTooltipBackgroundColor };
+export { renderCertainColorsByData, getComputedStyleByVaraible };

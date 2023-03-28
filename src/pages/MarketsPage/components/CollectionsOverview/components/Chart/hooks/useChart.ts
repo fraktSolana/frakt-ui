@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,14 +10,20 @@ import {
   Legend,
 } from 'chart.js';
 
-import { renderCertainColorsByData } from '../helpers';
+import { selectTheme } from '@frakt/state/theme/selectors';
+
+import { axisOptions, fontTitleOptions } from '../constants';
 import {
-  ACTIVE_LOANS_BACKGROUND_COLOR,
-  axisOptions,
-  pluginsConfig,
-} from '../constants';
+  getComputedStyleByVaraible,
+  renderCertainColorsByData,
+} from '../helpers';
 
 export const useChart = () => {
+  const theme: string = useSelector(selectTheme);
+  const [tooltipBackgroundColor, setTooltipBackgroundColor] =
+    useState<string>('');
+  const [barBackgroundColor, setBarBackgroundColor] = useState<string>('');
+
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -26,7 +34,35 @@ export const useChart = () => {
   );
 
   const options = {
-    plugins: pluginsConfig,
+    plugins: {
+      legend: {
+        display: false,
+      },
+
+      tooltip: {
+        titleFont: fontTitleOptions,
+        bodyFont: fontTitleOptions,
+        usePointStyle: true,
+        callbacks: {
+          labelColor: function (context) {
+            const isActiveLoansDataset = context?.datasetIndex === 0;
+
+            context.dataset.label = context.dataset.label.toUpperCase();
+            if (!isActiveLoansDataset) {
+              context.formattedValue = `${context.formattedValue} %`;
+            }
+
+            return {
+              backgroundColor: isActiveLoansDataset
+                ? context.dataset.backgroundColor
+                : context.dataset.backgroundColor[context.dataIndex],
+              borderRadius: 5,
+            };
+          },
+        },
+        backgroundColor: tooltipBackgroundColor,
+      },
+    },
     responsive: true,
     scales: {
       x: axisOptions,
@@ -37,6 +73,16 @@ export const useChart = () => {
       mode: 'index',
     },
   };
+
+  useEffect(() => {
+    const tooltipBackgroundColor =
+      getComputedStyleByVaraible('--primary-border');
+
+    const barBackgroundColor = getComputedStyleByVaraible('--blue-color');
+
+    setTooltipBackgroundColor(tooltipBackgroundColor);
+    setBarBackgroundColor(barBackgroundColor);
+  }, [theme]);
 
   const labels = [
     '3/1',
@@ -64,7 +110,7 @@ export const useChart = () => {
           232, 500, 1000, 750, 340, 200, 156, 545, 678, 789, 845, 911, 654, 700,
         ],
         barPercentage: 1.15,
-        backgroundColor: ACTIVE_LOANS_BACKGROUND_COLOR,
+        backgroundColor: barBackgroundColor,
       },
       {
         label: 'Highest LTV',
