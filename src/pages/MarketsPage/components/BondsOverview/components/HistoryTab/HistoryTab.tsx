@@ -4,7 +4,7 @@ import { useIntersection } from '@frakt/hooks/useIntersection';
 import { Loader } from '@frakt/components/Loader';
 import Toggle from '@frakt/components/Toggle';
 
-import { useBondsSort, useFetchAllBonds } from '../../hooks';
+import { useBondsSort, useFetchAllBonds } from '../BondsTab/hooks';
 
 import { RadioButton, RBOption } from '@frakt/components/RadioButton';
 

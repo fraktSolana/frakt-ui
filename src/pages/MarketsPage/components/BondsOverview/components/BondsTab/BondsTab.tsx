@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { useIntersection } from '@frakt/hooks/useIntersection';
@@ -8,8 +8,12 @@ import EmptyList from '@frakt/components/EmptyList';
 import { Loader } from '@frakt/components/Loader';
 import Toggle from '@frakt/components/Toggle';
 
-import { useBondsSort, useFetchAllBonds, useMarketsPage } from '../../hooks';
-import { createBondsStats } from '../../helpers';
+import {
+  useBondsSort,
+  useFetchAllBonds,
+  useFetchBondsStats,
+  useMarketsPage,
+} from './hooks';
 import { BondsTable } from '../BondsTable';
 import BondsWidgets from '../BondsWidgets';
 
@@ -22,12 +26,14 @@ const BondsTab: FC = () => {
   const { loading, hideUserBond } = useMarketsPage();
   const { queryData } = useBondsSort();
 
+  const [showOwnerBonds, setShowOwnerBonds] = useState<boolean>(false);
+
   const {
     data: bonds,
     fetchNextPage,
     isFetchingNextPage,
     isListEnded,
-  } = useFetchAllBonds({ queryData });
+  } = useFetchAllBonds({ queryData, showOwnerBonds });
 
   useEffect(() => {
     if (inView && !isFetchingNextPage && !isListEnded) {
@@ -35,7 +41,7 @@ const BondsTab: FC = () => {
     }
   }, [inView, fetchNextPage, isFetchingNextPage, isListEnded]);
 
-  const { locked, activeLoans } = createBondsStats(bonds);
+  const { bondsStats } = useFetchBondsStats();
 
   return (
     <>
@@ -49,8 +55,15 @@ const BondsTab: FC = () => {
       {connected && (
         <div className={styles.wrapper}>
           <div className={styles.bondsTableHeader}>
-            <BondsWidgets locked={locked} activeLoans={activeLoans} />
-            <Toggle className={styles.toggle} label="My bonds only" />
+            <BondsWidgets
+              locked={bondsStats?.tvl}
+              activeLoans={bondsStats?.activeLoans}
+            />
+            <Toggle
+              onChange={() => setShowOwnerBonds(!showOwnerBonds)}
+              className={styles.toggle}
+              label="My bonds only"
+            />
           </div>
           <BondsTable
             className={styles.bondsTable}

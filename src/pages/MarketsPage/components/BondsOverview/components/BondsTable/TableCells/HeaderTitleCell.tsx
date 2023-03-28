@@ -11,7 +11,7 @@ import {
 
 import styles from './TableCells.module.scss';
 import { SortColumns } from '../columns';
-import { useBondsSort } from '../../../hooks';
+import { useBondsSort } from '../../BondsTab/hooks';
 
 interface HeaderTitleCellProps {
   sortColumns?: SortColumns;

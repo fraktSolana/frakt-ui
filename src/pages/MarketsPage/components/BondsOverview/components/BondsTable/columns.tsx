@@ -37,7 +37,7 @@ export const TableList = ({ data, hideBond }) => {
         collateralBox: collateralBoxB,
       }) => collateralBoxB.nft.name?.localeCompare(collateralBoxA.nft.name),
       render: (_, bond: Bond) => <TitleCell bond={bond} />,
-      defaultSortOrder: 'descend',
+      defaultSortOrder: 'ascend',
       fixed: 'left',
       showSorterTooltip: false,
     },
@@ -77,12 +77,12 @@ export const TableList = ({ data, hideBond }) => {
       showSorterTooltip: false,
     },
     {
-      key: 'profit',
-      dataIndex: 'profit',
+      key: 'setProfit',
+      dataIndex: 'setProfit',
       title: (column) => (
         <HeaderTitleCell
           sortColumns={column?.sortColumns}
-          value="profit"
+          value="setProfit"
           label="Est. Profit"
           tooltipText="Analyzed profit from repaying the loan"
         />

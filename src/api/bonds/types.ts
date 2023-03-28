@@ -1,3 +1,4 @@
+import { web3 } from '@frakt-protocol/frakt-sdk';
 import {
   BondingCurveType,
   PairAuthorityType,
@@ -192,4 +193,17 @@ export interface Bond {
   interest: number; //? BasePoint percent (50% === 5000)
   amountOfUserBonds: number;
   stats: BondStats;
+}
+
+export interface FetchBondsRequestParams {
+  skip: number;
+  limit: number;
+  sortBy: string;
+  order: string;
+  walletPubkey: web3.PublicKey;
+}
+
+export interface TotalBondsStats {
+  activeLoans: number;
+  tvl: number;
 }

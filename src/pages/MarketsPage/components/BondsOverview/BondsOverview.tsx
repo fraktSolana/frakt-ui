@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { Tabs, useTabs } from '@frakt/components/Tabs';
 
-import { MarketTabsNames } from './hooks';
+import { MarketTabsNames } from './components/BondsTab/hooks';
 import { MARKET_TABS } from './constants';
 
 import styles from './BondsOverview.module.scss';
