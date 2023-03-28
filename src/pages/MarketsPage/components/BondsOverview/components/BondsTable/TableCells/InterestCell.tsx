@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import classNames from 'classnames';
 
 import { Bond } from '@frakt/api/bonds';
 
@@ -10,7 +11,9 @@ export const InterestCell: FC<{ bond: Bond }> = ({ bond }) => {
   return (
     <div className={styles.column}>
       <span className={styles.value}> {(interest / 100 || 0).toFixed(0)}%</span>
-      <span className={styles.value}>{apy?.toFixed(0)}% APR</span>
+      <span className={classNames(styles.value, styles.valueSmall)}>
+        {apy?.toFixed(0)}% APR
+      </span>
     </div>
   );
 };

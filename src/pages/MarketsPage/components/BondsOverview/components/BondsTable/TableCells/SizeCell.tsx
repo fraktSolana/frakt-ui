@@ -21,7 +21,11 @@ export const SizeCell: FC<{ bond: Bond; isMobile?: boolean }> = ({ bond }) => {
       </span>
       <span
         style={{ color: colorLTV }}
-        className={classNames(styles.value, styles.highestLtvColor)}
+        className={classNames(
+          styles.value,
+          styles.valueSmall,
+          styles.highestLtvColor,
+        )}
       >
         {(ltv || 0)?.toFixed(0)}% LTV
       </span>
