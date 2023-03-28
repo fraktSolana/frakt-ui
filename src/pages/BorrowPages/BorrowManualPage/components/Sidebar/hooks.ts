@@ -158,7 +158,12 @@ const borrowSingle: BorrowSingle = async ({
     // commitment = 'finalized',
     onBeforeApprove: () => {},
     onAfterSend: () => {},
-    onSuccess: () => {},
+    onSuccess: () => {
+      notify({
+        message: 'Borrowed successfully!',
+        type: NotifyType.SUCCESS,
+      });
+    },
     onError: () => {},
   });
 };
@@ -360,10 +365,6 @@ export const signAndSendAllTransactionsInSequence: SignAndSendAllTransactionsInS
       await new Promise((r) => setTimeout(r, 5000));
 
       onSuccess?.();
-      notify({
-        message: 'Borrowed successfully!',
-        type: NotifyType.SUCCESS,
-      });
 
       return true;
     } catch (error) {

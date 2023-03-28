@@ -221,7 +221,12 @@ const borrowBulk: BorrowBulk = async ({
     // commitment = 'finalized',
     onBeforeApprove: () => {},
     onAfterSend: () => {},
-    onSuccess: () => {},
+    onSuccess: () => {
+      notify({
+        message: 'Borrowed successfully!',
+        type: NotifyType.SUCCESS,
+      });
+    },
     onError: () => {},
   });
 };

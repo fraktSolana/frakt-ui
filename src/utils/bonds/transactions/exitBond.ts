@@ -49,7 +49,12 @@ export const exitBond: ExitBond = async ({
     // commitment = 'finalized',
     onBeforeApprove: () => {},
     onAfterSend: () => {},
-    onSuccess: () => {},
+    onSuccess: () => {
+      notify({
+        message: 'Exit successfully!',
+        type: NotifyType.SUCCESS,
+      });
+    },
     onError: () => {},
   });
 
