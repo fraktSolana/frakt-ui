@@ -11,7 +11,9 @@ const LIMIT = 20;
 export const useFetchBondsHistory = ({
   queryData,
   showOwnerBonds,
+  eventType,
 }: {
+  eventType: string;
   queryData: any;
   showOwnerBonds: boolean;
 }) => {
@@ -26,6 +28,7 @@ export const useFetchBondsHistory = ({
       sortBy: queryData.sortBy,
       order: queryData.order,
       walletPubkey: showOwnerBonds && publicKey,
+      eventType,
     });
 
     if (!data?.length) {
@@ -40,7 +43,7 @@ export const useFetchBondsHistory = ({
 
   const { data, fetchNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({
-      queryKey: [publicKey, queryData, showOwnerBonds],
+      queryKey: [publicKey, queryData, showOwnerBonds, eventType],
       queryFn: ({ pageParam = 0 }) => fetchData({ pageParam }),
       getNextPageParam: (lastPage, allPages) => {
         const nextPage = allPages.length + 1;

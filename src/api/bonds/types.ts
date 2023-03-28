@@ -205,6 +205,7 @@ export interface FetchBondsRequestParams {
   sortBy: string;
   order: string;
   walletPubkey: web3.PublicKey;
+  eventType?: string;
 }
 
 export interface TotalBondsStats {

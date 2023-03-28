@@ -119,6 +119,7 @@ type FetchBondsHistory = ({
   limit,
   sortBy,
   order,
+  eventType,
 }: FetchBondsRequestParams) => Promise<Bond[]>;
 export const fetchBondsHistory: FetchBondsHistory = async ({
   skip,
@@ -126,11 +127,12 @@ export const fetchBondsHistory: FetchBondsHistory = async ({
   sortBy,
   order,
   walletPubkey,
+  eventType,
 }: FetchBondsRequestParams) => {
   const { data } = await axios.get<Bond[]>(
     `https://${BACKEND_DOMAIN}/bonds/history?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${
       walletPubkey ? `wallet=${walletPubkey?.toBase58()}&onlyUser=true` : ''
-    }`,
+    }&${eventType ? `eventType=${eventType}` : ''}`,
   );
 
   return data;

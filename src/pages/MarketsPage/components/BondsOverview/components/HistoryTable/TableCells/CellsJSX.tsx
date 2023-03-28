@@ -17,11 +17,8 @@ export const createReceiveJSX = (value = 0) => {
   );
 };
 
-export const createliquidatingAtJSX = (value = 0) => {
-  console.log(value);
-  return (
-    <span className={styles.value}>
-      {moment(moment.unix(value)).fromNow(false)}
-    </span>
-  );
-};
+export const createliquidatingAtJSX = (value = 0) => (
+  <span className={styles.value}>
+    {moment(moment.unix(value)).fromNow(false)}
+  </span>
+);

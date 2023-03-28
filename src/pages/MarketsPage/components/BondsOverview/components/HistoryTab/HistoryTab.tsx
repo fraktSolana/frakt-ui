@@ -21,6 +21,7 @@ const HistoryTab: FC = () => {
   const { queryData } = useHistoryBondsSort();
 
   const [showOwnerBonds, setShowOwnerBonds] = useState<boolean>(false);
+  const [filterOption, setFilterOption] = useState<string>(options[0].value);
 
   const {
     data: bondsHistory,
@@ -28,15 +29,17 @@ const HistoryTab: FC = () => {
     isFetchingNextPage,
     isListEnded,
     loading,
-  } = useFetchBondsHistory({ queryData, showOwnerBonds });
+  } = useFetchBondsHistory({
+    queryData,
+    showOwnerBonds,
+    eventType: filterOption,
+  });
 
   useEffect(() => {
     if (inView && !isFetchingNextPage && !isListEnded) {
       fetchNextPage();
     }
   }, [inView, fetchNextPage, isFetchingNextPage, isListEnded]);
-
-  const [filterOption, setFilterOption] = useState<string>(options[0].label);
 
   const onChangeFilterOption = (nextOption: RBOption<string>) => {
     setFilterOption(nextOption.value);
@@ -65,7 +68,6 @@ const HistoryTab: FC = () => {
           </div>
           <Toggle
             onChange={() => setShowOwnerBonds(!showOwnerBonds)}
-            className={styles.toggle}
             label="My history only"
           />
         </div>

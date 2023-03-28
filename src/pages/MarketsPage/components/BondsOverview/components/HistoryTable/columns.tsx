@@ -3,15 +3,10 @@ import { SortOrder } from 'antd/lib/table/interface';
 
 import { Bond } from '@frakt/api/bonds';
 
-import {
-  ExperationCell,
-  InterestCell,
-  SizeCell,
-} from '../BondsTable/TableCells';
+import { InterestCell, SizeCell } from '../BondsTable/TableCells';
 import {
   HeaderCell,
   CollateralCell,
-  createAutocompoundJSX,
   createReceiveJSX,
   createliquidatingAtJSX,
 } from './TableCells';

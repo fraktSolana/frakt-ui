@@ -2,17 +2,16 @@
   padding: 24px;
 }
 
-.toggle {
-  @media (max-width: 550px) {
-    padding-bottom: 16px;
-  }
-}
-
 .bondsTableHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-bottom: 16px;
+
+  @media (max-width: 1150px) {
+    flex-direction: column-reverse;
+    gap: 16px;
+  }
 
   @media (max-width: 550px) {
     flex-direction: column-reverse;
