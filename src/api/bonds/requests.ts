@@ -3,7 +3,14 @@ import { IS_PRIVATE_MARKETS } from '@frakt/config';
 import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
 import axios from 'axios';
 
-import { MarketPreview, Market, Pair, Bond } from './types';
+import {
+  MarketPreview,
+  Market,
+  Pair,
+  Bond,
+  FetchBondsRequestParams,
+  TotalBondsStats,
+} from './types';
 
 const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN;
 
@@ -76,39 +83,57 @@ export const fetchWalletBonds: FetchWalletBonds = async ({
   return data ?? [];
 };
 
-type FetchAllUserBonds = (props: {
-  walletPubkey: web3.PublicKey;
-}) => Promise<Bond[]>;
-
-export const fetchAllUserBonds: FetchAllUserBonds = async ({
-  walletPubkey,
-}) => {
-  const { data } = await axios.get<Bond[]>(
-    `https://${BACKEND_DOMAIN}/bonds/${walletPubkey.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
-  );
-
-  return data ?? [];
-};
-
 type FetchAllBonds = ({
   skip,
   limit,
   sortBy,
   order,
-}: {
-  skip: number;
-  limit: number;
-  sortBy: string;
-  order: string;
-}) => Promise<Bond[]>;
+}: FetchBondsRequestParams) => Promise<Bond[]>;
 export const fetchAllBonds: FetchAllBonds = async ({
+  skip,
+  limit,
+  sortBy = 'nftName',
+  order = 'asc',
+  walletPubkey,
+  marketPubkey,
+}) => {
+  const { data } = await axios.get<Bond[]>(
+    `https://${BACKEND_DOMAIN}/bonds?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${
+      marketPubkey ? `marketPubKey=${marketPubkey}&` : ''
+    }${walletPubkey ? `wallet=${walletPubkey?.toBase58()}&onlyUser=true` : ''}`,
+  );
+
+  return data;
+};
+
+type FetchBondsStats = () => Promise<TotalBondsStats>;
+export const fetchBondsStats: FetchBondsStats = async () => {
+  const { data } = await axios.get<TotalBondsStats>(
+    `https://${BACKEND_DOMAIN}/stats/bonds`,
+  );
+
+  return data;
+};
+
+type FetchBondsHistory = ({
   skip,
   limit,
   sortBy,
   order,
-}) => {
+  eventType,
+}: FetchBondsRequestParams) => Promise<Bond[]>;
+export const fetchBondsHistory: FetchBondsHistory = async ({
+  skip,
+  limit,
+  sortBy,
+  order,
+  walletPubkey,
+  eventType,
+}: FetchBondsRequestParams) => {
   const { data } = await axios.get<Bond[]>(
-    `https://${BACKEND_DOMAIN}/bonds?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}`,
+    `https://${BACKEND_DOMAIN}/bonds/history?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${
+      walletPubkey ? `wallet=${walletPubkey?.toBase58()}&onlyUser=true` : ''
+    }&${eventType ? `eventType=${eventType}` : ''}`,
   );
 
   return data;

@@ -11,17 +11,13 @@ import { useBondActions } from '../hooks';
 
 import styles from './TableCells.module.scss';
 
-interface ButtontsCellProps {
+interface ExitCellProps {
   bond: Bond;
   bonds: Bond[];
   hideBond: (bondPubkey: string) => void;
 }
 
-export const ButtontsCell: FC<ButtontsCellProps> = ({
-  bond,
-  bonds,
-  hideBond,
-}) => {
+export const ExitCell: FC<ExitCellProps> = ({ bond, bonds, hideBond }) => {
   const { market, pairs } = getMarketAndPairsByBond(bond);
 
   const { exitAvailable, bestOrdersAndBorrowValue } = useBondActions({

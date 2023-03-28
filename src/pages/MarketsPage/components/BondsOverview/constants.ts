@@ -10,3 +10,8 @@ export const MARKET_TABS: Tab[] = [
     value: 'history',
   },
 ];
+
+export enum MarketTabsNames {
+  HISTORY = 'history',
+  BONDS = 'bonds',
+}

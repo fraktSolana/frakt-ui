@@ -1,5 +1,5 @@
 import { FC, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { web3 } from 'fbonds-core';
 import { groupWith } from 'ramda';
@@ -12,7 +12,7 @@ import { Market } from '@frakt/api/bonds';
 import { PATHS } from '@frakt/constants';
 
 import CollectionsList from './components/CollectionsList';
-import { isOwnOrder, makeEditOrderPath } from './helpers';
+import { isOwnOrder } from './helpers';
 import NoActiveOffers from './components/NoActiveOffers';
 import { SortOrder, SyntheticParams } from './types';
 import Filters from './components/Filters';
@@ -30,6 +30,7 @@ interface OrderBookProps {
 
 const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
   const { marketPubkey } = useParams<{ marketPubkey: string }>();
+  const history = useHistory();
 
   const [openOffersMobile, setOpenOffersMobile] = useState<boolean>(false);
   const [showOwnOrders, setShowOwnOrders] = useState<boolean>(false);
@@ -79,6 +80,9 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
   const bestOffer = useMemo(() => {
     return offers.at(0)?.synthetic ? offers.at(1) : offers.at(0);
   }, [offers]);
+
+  const goToEditOffer = (orderPubkey: string) =>
+    history.push(`${PATHS.OFFER}/${marketPubkey}/${orderPubkey}`);
 
   return (
     <div
@@ -171,9 +175,7 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
                   order={offer}
                   bestOffer={bestOffer}
                   duration={offer.duration}
-                  editOrder={() =>
-                    makeEditOrderPath(offer, market?.marketPubkey)
-                  }
+                  editOrder={() => goToEditOffer(offer?.rawData?.publicKey)}
                   isOwnOrder={isOwnOrder(offer)}
                   key={idx}
                 />

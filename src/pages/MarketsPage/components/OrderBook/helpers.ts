@@ -1,10 +1,10 @@
-import { Pair } from '@frakt/api/bonds';
-import { PATHS } from '@frakt/constants';
-import { compareNumbers } from '@frakt/utils';
-import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { web3 } from '@frakt-protocol/frakt-sdk';
 import { getTopOrderSize } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
-import { useHistory } from 'react-router-dom';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { Pair } from '@frakt/api/bonds';
+
+import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
+import { compareNumbers } from '@frakt/utils';
 
 import { MarketOrder } from './types';
 
@@ -59,11 +59,6 @@ export const isOwnOrder = (order: MarketOrder): boolean => {
   return order?.rawData?.assetReceiver === wallet?.publicKey?.toBase58();
 };
 
-export const makeEditOrderPath = (order: MarketOrder, marketPubkey: string) => {
-  const history = useHistory();
-  history.push(`${PATHS.OFFER}/${marketPubkey}/${order?.rawData?.publicKey}`);
-};
-
 export const sortOffersByInterest = (
   offers: MarketOrder[],
   sortDirection: string,
@@ -97,10 +92,11 @@ export const sortOffers = (offers: MarketOrder[], sortDirection: string) => {
   return sortedByLtv;
 };
 
-export const getOnlyOwnerOffers = (offers: MarketOrder[]) => {
-  const { publicKey } = useWallet();
-
+export const getOnlyOwnerOffers = (
+  offers: MarketOrder[],
+  pubkey: web3.PublicKey,
+) => {
   return offers.filter(
-    (offer) => offer.rawData.publicKey === publicKey?.toBase58(),
+    (offer) => offer.rawData.publicKey === pubkey?.toBase58(),
   );
 };

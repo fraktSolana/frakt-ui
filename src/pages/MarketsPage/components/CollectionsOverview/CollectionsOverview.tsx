@@ -5,8 +5,8 @@ import classNames from 'classnames';
 import { useWindowSize } from '@frakt/hooks';
 
 import Chart, { useChartVisible } from './components/Chart';
-import { useMarketsPreview } from '../BondsOverview/hooks';
 import { MarketTable } from './components/MarketTable';
+import { useMarketsPreview } from '../../hooks';
 
 import styles from './CollectionsOverview.module.scss';
 

@@ -1,13 +1,14 @@
 import { FC } from 'react';
 
 import { useCountdown } from '@frakt/hooks';
-import { Bond } from '@frakt/api/bonds';
 import { Timer } from '@frakt/icons';
 
 import styles from './TableCells.module.scss';
 
-export const ExperationCell: FC<{ bond: Bond }> = ({ bond }) => {
-  const { timeLeft } = useCountdown(bond?.fbond.liquidatingAt);
+export const ExperationCell: FC<{ liquidatingAt: number }> = ({
+  liquidatingAt,
+}) => {
+  const { timeLeft } = useCountdown(liquidatingAt);
 
   return (
     <div className={styles.value}>

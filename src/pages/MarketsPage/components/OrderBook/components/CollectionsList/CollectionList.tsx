@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import classNames from 'classnames';
 
+import { useMarketsPreview } from '@frakt/pages/MarketsPage/hooks';
 import { Loader } from '@frakt/components/Loader';
 
-import { useMarketsPreview } from '../../../BondsOverview/hooks';
 import CollectionCard from '../CollectionCard';
 
 import styles from './CollectionList.module.scss';

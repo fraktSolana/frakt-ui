@@ -9,26 +9,29 @@ import {
   ArrowUpTableSort,
 } from '@frakt/icons';
 
-import styles from './TableCells.module.scss';
+import { useHistoryBondsSort } from '../../HistoryTab/hooks';
 import { SortColumns } from '../columns';
-import { useBondsSort } from '../../BondsTab/hooks';
 
-interface HeaderTitleCellProps {
+import styles from './TableCells.module.scss';
+
+interface HeaderCellProps {
   sortColumns?: SortColumns;
   label: string;
   value: string;
   tooltipText?: string;
   fixedLeft?: boolean;
+  removeSort?: boolean;
 }
 
-export const HeaderTitleCell: FC<HeaderTitleCellProps> = ({
+export const HeaderCell: FC<HeaderCellProps> = ({
   sortColumns,
   label,
   value,
   tooltipText,
   fixedLeft,
+  removeSort,
 }) => {
-  const { setSortQuery } = useBondsSort();
+  const { setSortQuery } = useHistoryBondsSort();
   const sortedColumn = sortColumns?.find(({ column }) => column.key === value);
 
   useEffect(() => {
@@ -45,12 +48,14 @@ export const HeaderTitleCell: FC<HeaderTitleCellProps> = ({
           <QuestionCircleOutlined className={styles.questionIcon} />
         </Tooltip>
       )}
-      <span className={styles.sortIcon}>
-        {sortedColumn?.order === 'ascend' && <ArrowUpTableSort />}
-        {sortedColumn?.order === 'descend' && <ArrowDownTableSort />}
-        {sortedColumn?.order !== 'descend' &&
-          sortedColumn?.order !== 'ascend' && <ArrowTableSort />}
-      </span>
+      {removeSort && (
+        <span className={styles.sortIcon}>
+          {sortedColumn?.order === 'ascend' && <ArrowUpTableSort />}
+          {sortedColumn?.order === 'descend' && <ArrowDownTableSort />}
+          {sortedColumn?.order !== 'descend' &&
+            sortedColumn?.order !== 'ascend' && <ArrowTableSort />}
+        </span>
+      )}
     </div>
   );
 };

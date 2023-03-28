@@ -1,19 +1,26 @@
 import { useState } from 'react';
-import { useMarketPairs } from '@frakt/utils/bonds';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useHistory } from 'react-router-dom';
 
+import { useMarketPairs } from '@frakt/utils/bonds';
+import { PATHS } from '@frakt/constants';
+
+import { SortOrder } from '../../types';
 import {
   filterOffersByDuration,
   getOnlyOwnerOffers,
   parseMarketOrder,
   sortOffers,
 } from '../../helpers';
-import { SortOrder } from '../../types';
 
 export const useCollectionCard = ({
   marketPubkey,
   showOwnOrders,
   duration,
 }) => {
+  const { publicKey } = useWallet();
+  const history = useHistory();
+
   const [isVisibleOfferList, setIsVisibleOfferList] = useState<boolean>(false);
   const { pairs, isLoading: isLoadingPairs } = useMarketPairs({
     marketPubkey: isVisibleOfferList ? marketPubkey : '',
@@ -28,12 +35,15 @@ export const useCollectionCard = ({
       : setSortDirection(SortOrder.DESC);
   };
 
-  const ownerOffers = getOnlyOwnerOffers(parsedOffers);
+  const ownerOffers = getOnlyOwnerOffers(parsedOffers, publicKey);
   const sortedOffers = sortOffers(parsedOffers, sortDirection);
   const fitleredOffersByDuration = filterOffersByDuration(
     sortedOffers,
     duration,
   );
+
+  const goToEditOffer = (orderPubkey: string) =>
+    history.push(`${PATHS.OFFER}/${marketPubkey}/${orderPubkey}`);
 
   const offers = showOwnOrders ? ownerOffers : fitleredOffersByDuration;
 
@@ -44,5 +54,6 @@ export const useCollectionCard = ({
     isVisibleOfferList,
     setIsVisibleOfferList,
     sortDirection,
+    goToEditOffer,
   };
 };
