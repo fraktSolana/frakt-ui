@@ -21,15 +21,17 @@ export const redeemAllBonds: RedeemAllBonds = async ({
   wallet,
 }): Promise<boolean> => {
   try {
-    const transactionsAndSigners = await Promise.all(
-      bonds.map((bond) =>
-        makeRedeemBondTransaction({
-          bond,
-          connection,
-          wallet,
-        }),
-      ),
-    );
+    const transactionsAndSigners = (
+      await Promise.all(
+        bonds.map((bond) =>
+          makeRedeemBondTransaction({
+            bond,
+            connection,
+            wallet,
+          }),
+        ),
+      )
+    ).flat();
 
     const { blockhash, lastValidBlockHeight } =
       await connection.getLatestBlockhash();

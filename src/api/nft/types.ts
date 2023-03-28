@@ -1,3 +1,4 @@
+import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 import { Market, Pair } from '../bonds';
 import { LoanType } from '../loans';
 
@@ -38,12 +39,13 @@ export interface BorrowNft {
   };
 }
 
-export interface BondOrderParams {
+export interface BondCartOrder {
   orderSize: number; //? lamports
   spotPrice: number; //? lamports
   pairPubkey: string;
   assetReceiver: string;
   durationFilter: number;
+  bondFeature: BondFeatures;
 }
 
 export interface BorrowNftSuggested {
@@ -52,7 +54,7 @@ export interface BorrowNftSuggested {
 
   borrowNft: BorrowNft;
 
-  bondOrderParams?: BondOrderParams[];
+  bondOrderParams?: BondCartOrder[];
 }
 
 export enum BulkTypes {

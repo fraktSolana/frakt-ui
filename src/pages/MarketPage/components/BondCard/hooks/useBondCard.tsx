@@ -37,14 +37,12 @@ export const useBondCardActions = ({
     });
   }, [pairs, bond, market]);
 
-  console.log('bestOrdersAndBorrowValue: ', bestOrdersAndBorrowValue);
-
   const exitAvailable =
     bond.fbond.fraktBondState === FraktBondState.Active &&
     bestOrdersAndBorrowValue.takenOrders.reduce(
       (sum, order) => order.orderSize + sum,
       0,
-    );
+    ) >= bond.amountOfUserBonds;
 
   return {
     exitAvailable,

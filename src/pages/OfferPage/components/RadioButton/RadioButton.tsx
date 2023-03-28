@@ -21,19 +21,22 @@ export const RadioButton = <T extends unknown>({
 }: RadioButtonProps<T>) => {
   return (
     <div className={classNames(styles.radioButton, className)}>
-      {options.map((option) => (
-        <div className={styles.btn} key={option.label}>
-          <input
-            type="radio"
-            id={option.label}
-            name={option.label}
-            value={option.label}
-            checked={option.label === currentOption.label}
-            onChange={() => onOptionChange(option)}
-          />
-          <label htmlFor={option.label}>{option.label}</label>
-        </div>
-      ))}
+      {options.map((option) => {
+        const stringValue = option.value.toString();
+        return (
+          <div className={styles.btn} key={option.label}>
+            <input
+              type="radio"
+              id={stringValue}
+              name={stringValue}
+              value={stringValue}
+              checked={option.value === currentOption.value}
+              onChange={() => onOptionChange(option)}
+            />
+            <label htmlFor={stringValue}>{option.label}</label>
+          </div>
+        );
+      })}
     </div>
   );
 };

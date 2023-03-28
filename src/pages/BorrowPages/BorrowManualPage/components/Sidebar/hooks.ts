@@ -17,7 +17,7 @@ import { NotifyType } from '@frakt/utils/solanaUtils';
 import { captureSentryError } from '@frakt/utils/sentry';
 import { makeProposeTransaction } from '@frakt/utils/loans';
 import { LoanType } from '@frakt/api/loans';
-import { BondOrderParams, BorrowNft } from '@frakt/api/nft';
+import { BondCartOrder, BorrowNft } from '@frakt/api/nft';
 
 export const useSidebar = () => {
   const {
@@ -97,7 +97,7 @@ export const useSidebar = () => {
 type BorrowSingle = (props: {
   nft: BorrowNft;
   pair?: Pair;
-  bondOrderParams?: BondOrderParams[];
+  bondOrderParams?: BondCartOrder[];
   market?: Market;
   loanType: LoanType;
   loanValue: number;
@@ -328,7 +328,8 @@ export const signAndSendAllTransactionsInSequence: SignAndSendAllTransactionsInS
           console.log('currentTxIndex: ', currentTxIndex);
           const txn = signedTransactions[currentTxIndex];
           await connection.sendRawTransaction(txn.serialize(), {
-            skipPreflight: true,
+            skipPreflight: false,
+            preflightCommitment: 'processed',
           });
           currentTxIndex += 1;
         }
