@@ -20,6 +20,7 @@ interface HeaderCellProps {
   value: string;
   tooltipText?: string;
   fixedLeft?: boolean;
+  removeSort?: boolean;
 }
 
 export const HeaderCell: FC<HeaderCellProps> = ({
@@ -28,6 +29,7 @@ export const HeaderCell: FC<HeaderCellProps> = ({
   value,
   tooltipText,
   fixedLeft,
+  removeSort,
 }) => {
   const { setSortQuery } = useHistoryBondsSort();
   const sortedColumn = sortColumns?.find(({ column }) => column.key === value);
@@ -46,12 +48,14 @@ export const HeaderCell: FC<HeaderCellProps> = ({
           <QuestionCircleOutlined className={styles.questionIcon} />
         </Tooltip>
       )}
-      <span className={styles.sortIcon}>
-        {sortedColumn?.order === 'ascend' && <ArrowUpTableSort />}
-        {sortedColumn?.order === 'descend' && <ArrowDownTableSort />}
-        {sortedColumn?.order !== 'descend' &&
-          sortedColumn?.order !== 'ascend' && <ArrowTableSort />}
-      </span>
+      {removeSort && (
+        <span className={styles.sortIcon}>
+          {sortedColumn?.order === 'ascend' && <ArrowUpTableSort />}
+          {sortedColumn?.order === 'descend' && <ArrowDownTableSort />}
+          {sortedColumn?.order !== 'descend' &&
+            sortedColumn?.order !== 'ascend' && <ArrowTableSort />}
+        </span>
+      )}
     </div>
   );
 };

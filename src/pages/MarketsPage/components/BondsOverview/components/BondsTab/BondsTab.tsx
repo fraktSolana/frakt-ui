@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { useParams } from 'react-router-dom';
 
 import { useIntersection } from '@frakt/hooks/useIntersection';
 
@@ -15,8 +16,9 @@ import BondsWidgets from '../BondsWidgets';
 import styles from './BondsTab.module.scss';
 
 const BondsTab: FC = () => {
-  const { connected } = useWallet();
+  const { marketPubkey } = useParams<{ marketPubkey: string }>();
   const { ref, inView } = useIntersection();
+  const { connected } = useWallet();
 
   const { queryData } = useBondsSort();
 
@@ -29,7 +31,7 @@ const BondsTab: FC = () => {
     isListEnded,
     hideBond,
     loading,
-  } = useFetchAllBonds({ queryData, showOwnerBonds });
+  } = useFetchAllBonds({ queryData, showOwnerBonds, marketPubkey });
 
   useEffect(() => {
     if (inView && !isFetchingNextPage && !isListEnded) {

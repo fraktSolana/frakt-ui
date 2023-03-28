@@ -95,11 +95,12 @@ export const fetchAllBonds: FetchAllBonds = async ({
   sortBy = 'nftName',
   order = 'asc',
   walletPubkey,
+  marketPubkey,
 }) => {
   const { data } = await axios.get<Bond[]>(
     `https://${BACKEND_DOMAIN}/bonds?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${
-      walletPubkey ? `wallet=${walletPubkey?.toBase58()}&onlyUser=true` : ''
-    }`,
+      marketPubkey ? `marketPubKey=${marketPubkey}&` : ''
+    }${walletPubkey ? `wallet=${walletPubkey?.toBase58()}&onlyUser=true` : ''}`,
   );
 
   return data;

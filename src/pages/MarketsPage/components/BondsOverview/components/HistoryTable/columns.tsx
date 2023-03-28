@@ -82,10 +82,7 @@ export const COLUMNS: ColumnsType<Bond> = [
         tooltipText="Analyzed profit from repaying the loan"
       />
     ),
-    sorter: ({ stats: statsA, stats: statsB }) =>
-      statsA.expiration - statsB.expiration,
     render: (_, { stats }) => createReceiveJSX(stats?.received),
-    showSorterTooltip: false,
   },
   {
     key: 'received',
@@ -96,6 +93,7 @@ export const COLUMNS: ColumnsType<Bond> = [
         label="Received"
         value="received"
         tooltipText="When the loan is paid back or liquidated"
+        removeSort
       />
     ),
     render: (_, { stats }) => createReceiveJSX(stats?.received),

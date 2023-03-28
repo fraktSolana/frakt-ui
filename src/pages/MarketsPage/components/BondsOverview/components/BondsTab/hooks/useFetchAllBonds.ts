@@ -11,9 +11,11 @@ const LIMIT = 20;
 export const useFetchAllBonds = ({
   queryData,
   showOwnerBonds,
+  marketPubkey,
 }: {
   queryData: any;
   showOwnerBonds: boolean;
+  marketPubkey: string;
 }) => {
   const { publicKey } = useWallet();
 
@@ -28,6 +30,7 @@ export const useFetchAllBonds = ({
       sortBy: queryData?.sortBy,
       order: queryData?.order,
       walletPubkey: showOwnerBonds && publicKey,
+      marketPubkey,
     });
 
     if (!data?.length) {
@@ -40,9 +43,9 @@ export const useFetchAllBonds = ({
     };
   };
 
-  const { data, fetchNextPage, isFetchingNextPage, isLoading, isFetched } =
+  const { data, fetchNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({
-      queryKey: [publicKey, queryData, showOwnerBonds],
+      queryKey: [publicKey, queryData, showOwnerBonds, marketPubkey],
       queryFn: ({ pageParam = 0 }) => fetchData({ pageParam }),
       getNextPageParam: (lastPage, allPages) => {
         const nextPage = allPages.length + 1;

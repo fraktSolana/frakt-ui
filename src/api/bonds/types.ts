@@ -206,6 +206,7 @@ export interface FetchBondsRequestParams {
   order: string;
   walletPubkey: web3.PublicKey;
   eventType?: string;
+  marketPubkey?: string;
 }
 
 export interface TotalBondsStats {
