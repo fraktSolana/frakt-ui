@@ -116,7 +116,7 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
               onSortChange={onDurationChange}
             />
             <Toggle
-              label="My offers"
+              label="My offers only"
               className={classNames(styles.toggle, {
                 [styles.active]: openOffersMobile,
               })}

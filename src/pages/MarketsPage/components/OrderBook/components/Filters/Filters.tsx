@@ -3,6 +3,7 @@ import classNames from 'classnames';
 
 import { useOnClickOutside } from '@frakt/hooks';
 import Button from '@frakt/components/Button';
+import { Chevron } from '@frakt/icons';
 import FiltersDropdown, {
   useFiltersModal,
 } from '@frakt/components/FiltersDropdown';
@@ -37,8 +38,14 @@ const Filters: FC<FiltersProps> = ({
       })}
       ref={ref}
     >
-      <Button type="tertiary" onClick={toggleFiltersModal}>
-        Duration
+      <Button
+        className={classNames(styles.filterButton, {
+          [styles.active]: filtersModalVisible,
+        })}
+        type="tertiary"
+        onClick={toggleFiltersModal}
+      >
+        Duration <Chevron />
       </Button>
       {filtersModalVisible && (
         <FiltersDropdown

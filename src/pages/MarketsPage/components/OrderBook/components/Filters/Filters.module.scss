@@ -54,3 +54,23 @@
   color: var(--button-text);
   background: var(--light-green-color);
 }
+
+.filterButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  width: 110px;
+
+  svg {
+    width: 11px;
+  }
+
+  svg path {
+    fill: var(--primary-text);
+  }
+
+  &.active svg {
+    transform: rotate(180deg);
+  }
+}
