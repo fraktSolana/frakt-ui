@@ -47,8 +47,12 @@
     justify-content: center;
     font-size: 14px !important;
     padding: 3px !important;
-    height: 24px !important;
-    width: 104px !important;
+    height: 24px;
+    width: 104px;
+
+    @media (max-width: 550px) {
+      width: 90px;
+    }
   }
 }
 

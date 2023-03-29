@@ -41,7 +41,7 @@
 
     &.active {
       gap: 8px;
-      top: calc(var(--header-height) + 24px);
+      top: calc(var(--header-height) + 32px);
     }
   }
 
@@ -51,7 +51,7 @@
       top: calc(100% - 154px);
     }
     &.active {
-      top: calc(var(--header-height) + 32px);
+      top: calc(var(--header-height) + 42px);
     }
   }
 }
@@ -106,7 +106,7 @@
 
   @media screen and (max-width: 768px) {
     &.active {
-      height: calc(100vh - var(--header-height) - 206px);
+      height: calc(100vh - var(--header-height) - 220px);
     }
 
     &.visible.active {
@@ -164,7 +164,7 @@
 
     &.active {
       display: flex;
-      height: calc(100% - var(--header-height) - 16px);
+      height: calc(100% - var(--header-height) - 22px);
       overflow-y: scroll;
     }
 
