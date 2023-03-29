@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { useParams } from 'react-router-dom';
 
 import { RadioButton, RBOption } from '@frakt/components/RadioButton';
 import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
@@ -15,6 +16,7 @@ import { HistoryTable } from '../HistoryTable';
 import styles from './HistoryTab.module.scss';
 
 const HistoryTab: FC = () => {
+  const { marketPubkey } = useParams<{ marketPubkey: string }>();
   const { connected } = useWallet();
 
   const { ref, inView } = useIntersection();
@@ -33,6 +35,7 @@ const HistoryTab: FC = () => {
     queryData,
     showOwnerBonds,
     eventType: filterOption,
+    marketPubkey,
   });
 
   useEffect(() => {
@@ -47,12 +50,6 @@ const HistoryTab: FC = () => {
 
   return (
     <>
-      {!connected && showOwnerBonds && (
-        <ConnectWalletSection
-          className={styles.emptyList}
-          text="Connect your wallet to see my history"
-        />
-      )}
       <div className={styles.wrapper}>
         <div className={styles.bondsTableHeader}>
           <div className={styles.radio}>
@@ -71,16 +68,25 @@ const HistoryTab: FC = () => {
             label="My history only"
           />
         </div>
-        <HistoryTable
-          className={styles.table}
-          data={bondsHistory}
-          breakpoints={{ scrollX: 744 }}
-          loading={loading}
-        />
-        {!!isFetchingNextPage && <Loader />}
-        <div ref={ref} />
+        {!connected && showOwnerBonds ? (
+          <ConnectWalletSection
+            className={styles.emptyList}
+            text="Connect your wallet to see my history"
+          />
+        ) : (
+          <>
+            <HistoryTable
+              className={styles.table}
+              data={bondsHistory}
+              breakpoints={{ scrollX: 744 }}
+              loading={loading}
+            />
+            {!!isFetchingNextPage && <Loader />}
+            <div ref={ref} />
+          </>
+        )}
       </div>
-      {connected && !bondsHistory.length && !loading && (
+      {connected && showOwnerBonds && !bondsHistory.length && !loading && (
         <EmptyList
           className={styles.emptyList}
           text="You don't have any bonds"

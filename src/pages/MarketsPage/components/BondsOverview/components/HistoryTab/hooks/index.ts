@@ -15,10 +15,12 @@ export const useFetchBondsHistory = ({
   queryData,
   showOwnerBonds,
   eventType,
+  marketPubkey,
 }: {
   eventType: string;
   queryData: { sortBy: string; order: string };
   showOwnerBonds: boolean;
+  marketPubkey: string;
 }) => {
   const { publicKey } = useWallet();
 
@@ -28,10 +30,11 @@ export const useFetchBondsHistory = ({
     const data = await fetchBondsHistory({
       skip: LIMIT * pageParam,
       limit: LIMIT,
-      sortBy: queryData.sortBy,
-      order: queryData.order,
+      sortBy: queryData?.sortBy,
+      order: queryData?.order,
       walletPubkey: showOwnerBonds && publicKey,
       eventType,
+      marketPubkey,
     });
 
     if (!data?.length) {
