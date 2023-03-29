@@ -40,6 +40,10 @@
       padding-top: 0 !important;
     }
 
+    .ant-table-thead > tr > th:first-child {
+      padding-bottom: 0 !important;
+    }
+
     .ant-table-thead > tr > th:last-child,
     .ant-table-tbody > tr > td:last-child {
       padding-right: 0;

@@ -24,9 +24,13 @@
       width: 110px !important;
     }
     .ant-table-tbody > tr > td:first-child {
-      padding-left: 0;
       width: 192px;
     }
+    .ant-table-thead > tr > th:first-child,
+    .ant-table-tbody > tr > td:first-child {
+      padding-left: 0;
+    }
+    .ant-table-thead > tr > th:last-child,
     .ant-table-tbody > tr > td:last-child {
       padding-right: 0;
     }
@@ -38,6 +42,11 @@
 
 .radio {
   display: flex;
+
+  @media screen and (max-width: 768px) {
+    justify-content: center;
+    width: 100%;
+  }
 }
 
 .radioButton {
