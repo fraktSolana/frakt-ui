@@ -56,6 +56,8 @@ const BondsTab: FC = () => {
           />
         </div>
 
+        {!bonds.length && loading && <Loader />}
+
         {!connected && showOwnerBonds ? (
           <ConnectWalletSection
             className={styles.emptyList}
@@ -65,7 +67,6 @@ const BondsTab: FC = () => {
           <>
             <BondsTable
               className={styles.bondsTable}
-              loading={loading}
               data={bonds}
               breakpoints={{ scrollX: 744 }}
               hideBond={hideBond}

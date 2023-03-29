@@ -69,7 +69,7 @@ export const useFetchBondsHistory = ({
     fetchNextPage,
     isFetchingNextPage,
     isListEnded,
-    loading: isLoading,
+    isLoading,
   };
 };
 

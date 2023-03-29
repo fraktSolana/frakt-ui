@@ -30,7 +30,7 @@ const HistoryTab: FC = () => {
     fetchNextPage,
     isFetchingNextPage,
     isListEnded,
-    loading,
+    isLoading,
   } = useFetchBondsHistory({
     queryData,
     showOwnerBonds,
@@ -68,6 +68,9 @@ const HistoryTab: FC = () => {
             label="My history only"
           />
         </div>
+
+        {!bondsHistory.length && isLoading && <Loader />}
+
         {!connected && showOwnerBonds ? (
           <ConnectWalletSection
             className={styles.emptyList}
@@ -79,18 +82,15 @@ const HistoryTab: FC = () => {
               className={styles.table}
               data={bondsHistory}
               breakpoints={{ scrollX: 744 }}
-              loading={loading}
             />
             {!!isFetchingNextPage && <Loader />}
             <div ref={ref} />
           </>
         )}
       </div>
-      {connected && showOwnerBonds && !bondsHistory.length && !loading && (
-        <EmptyList
-          className={styles.emptyList}
-          text="You don't have any bonds"
-        />
+
+      {!bondsHistory.length && !isLoading && (
+        <EmptyList className={styles.emptyList} text="No bonds at the moment" />
       )}
     </>
   );

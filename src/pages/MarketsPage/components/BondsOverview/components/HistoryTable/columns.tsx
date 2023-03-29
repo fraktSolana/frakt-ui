@@ -33,7 +33,6 @@ export const COLUMNS: ColumnsType<Bond> = [
       collateralBox: collateralBoxB,
     }) => collateralBoxB.nft.name?.localeCompare(collateralBoxA.nft.name),
     render: (_, bond: Bond) => <CollateralCell bond={bond} />,
-    defaultSortOrder: 'ascend',
     showSorterTooltip: false,
     fixed: 'left',
   },
@@ -110,5 +109,6 @@ export const COLUMNS: ColumnsType<Bond> = [
     sorter: ({ stats: statsA, stats: statsB }) => statsA.when - statsB.when,
     render: (_, { stats }) => createliquidatingAtJSX(stats?.when),
     showSorterTooltip: false,
+    defaultSortOrder: 'descend',
   },
 ];
