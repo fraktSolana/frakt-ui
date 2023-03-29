@@ -49,7 +49,7 @@ export const useFetchBondsHistory = ({
 
   const { data, fetchNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({
-      queryKey: [publicKey, queryData, showOwnerBonds, eventType],
+      queryKey: [publicKey, queryData, showOwnerBonds, eventType, marketPubkey],
       queryFn: ({ pageParam = 0 }) => fetchData({ pageParam }),
       getNextPageParam: (lastPage, allPages) => {
         const nextPage = allPages.length + 1;
