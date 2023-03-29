@@ -11,6 +11,7 @@ interface RadioButtonProps<T> {
   onOptionChange: (nextOption: RBOption<T>) => void;
   options: RBOption<T>[];
   className?: string;
+  disabled?: boolean;
 }
 
 export const RadioButton = <T extends unknown>({
@@ -18,6 +19,7 @@ export const RadioButton = <T extends unknown>({
   options,
   onOptionChange,
   className,
+  disabled,
 }: RadioButtonProps<T>) => {
   return (
     <div className={classNames(styles.radioButton, className)}>
@@ -32,6 +34,7 @@ export const RadioButton = <T extends unknown>({
               value={stringValue}
               checked={option.value === currentOption.value}
               onChange={() => onOptionChange(option)}
+              disabled={disabled}
             />
             <label htmlFor={stringValue}>{option.label}</label>
           </div>

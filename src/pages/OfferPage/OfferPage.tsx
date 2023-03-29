@@ -139,48 +139,46 @@ export const OfferPage = () => {
               ]}
               toolTipText="Interest (in %) for the duration of this loan"
             />
-            {!isEdit && (
-              <div className={classNames(styles.radio, styles.radioWrapper)}>
-                <div className={styles.radioTitle}>
-                  <h6 className={styles.subtitle}>Repayments</h6>
-                  <Tooltip
-                    placement="bottom"
-                    overlay="Lenders have an option to place same offer right after repayment together with earned interest"
-                  >
-                    <QuestionCircleOutlined className={styles.questionIcon} />
-                  </Tooltip>
-                </div>
-                <RadioButton
-                  currentOption={{
-                    label: autocompoundFeature,
-                    value: autocompoundFeature,
-                  }}
-                  onOptionChange={onChangeAutocompoundFeature}
-                  options={EARNER_INTEREST_OPTIONS}
-                />
+            <div className={classNames(styles.radio, styles.radioWrapper)}>
+              <div className={styles.radioTitle}>
+                <h6 className={styles.subtitle}>Repayments</h6>
+                <Tooltip
+                  placement="bottom"
+                  overlay="Lenders have an option to place same offer right after repayment together with earned interest"
+                >
+                  <QuestionCircleOutlined className={styles.questionIcon} />
+                </Tooltip>
               </div>
-            )}
-            {!isEdit && (
-              <div className={classNames(styles.radio, styles.radioWrapper)}>
-                <div className={styles.radioTitle}>
-                  <h6 className={styles.subtitle}>Defaults</h6>
-                  <Tooltip
-                    placement="bottom"
-                    overlay="When funding full loans, lenders have the option to get defaulted NFTs instead of the SOL recovered from the liquidation"
-                  >
-                    <QuestionCircleOutlined className={styles.questionIcon} />
-                  </Tooltip>
-                </div>
-                <RadioButton
-                  currentOption={{
-                    label: receiveNftFeature,
-                    value: receiveNftFeature,
-                  }}
-                  onOptionChange={onChangeReceiveNftFeature}
-                  options={RECEIVE_OPTIONS}
-                />
+              <RadioButton
+                currentOption={{
+                  label: autocompoundFeature,
+                  value: autocompoundFeature,
+                }}
+                disabled={isEdit}
+                onOptionChange={onChangeAutocompoundFeature}
+                options={EARNER_INTEREST_OPTIONS}
+              />
+            </div>
+            <div className={classNames(styles.radio, styles.radioWrapper)}>
+              <div className={styles.radioTitle}>
+                <h6 className={styles.subtitle}>Defaults</h6>
+                <Tooltip
+                  placement="bottom"
+                  overlay="When funding full loans, lenders have the option to get defaulted NFTs instead of the SOL recovered from the liquidation"
+                >
+                  <QuestionCircleOutlined className={styles.questionIcon} />
+                </Tooltip>
               </div>
-            )}
+              <RadioButton
+                currentOption={{
+                  label: receiveNftFeature,
+                  value: receiveNftFeature,
+                }}
+                disabled={isEdit}
+                onOptionChange={onChangeReceiveNftFeature}
+                options={RECEIVE_OPTIONS}
+              />
+            </div>
           </div>
 
           <TotalOverview
