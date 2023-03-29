@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SortOrder } from 'antd/lib/table/interface';
 
@@ -26,6 +27,8 @@ export type SortColumns = {
 }[];
 
 export const TableList = ({ onChange, onRowClick }) => {
+  const [resortTableList, setResortTableList] = useState<boolean>(false);
+
   const COLUMNS: ColumnsType<MarketPreview> = [
     {
       key: 'collectionName',
@@ -39,7 +42,11 @@ export const TableList = ({ onChange, onRowClick }) => {
       ),
       fixed: 'left',
       render: (_, market: MarketPreview) => (
-        <TitleCell market={market} onRowClick={onRowClick} />
+        <TitleCell
+          market={market}
+          onRowClick={onRowClick}
+          resortTableList={() => setResortTableList(!resortTableList)}
+        />
       ),
     },
     {
