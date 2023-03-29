@@ -75,7 +75,13 @@ const BondsTab: FC = () => {
           </>
         )}
       </div>
-      {connected && !bonds.length && !loading && (
+      {!showOwnerBonds && !bonds.length && !loading && (
+        <EmptyList
+          className={styles.emptyList}
+          text="No active bonds at the moment"
+        />
+      )}
+      {connected && showOwnerBonds && !bonds.length && !loading && (
         <EmptyList
           className={styles.emptyList}
           text="You don't have any bonds"

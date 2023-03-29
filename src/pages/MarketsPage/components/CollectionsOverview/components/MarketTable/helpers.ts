@@ -1,6 +1,7 @@
 import { map, sum } from 'lodash';
 
 import { MarketPreview } from '@frakt/api/bonds';
+import { useCallback } from 'react';
 
 export const getStorageItemsByKey = (key: string) => {
   return JSON.parse(localStorage.getItem(key)) || [];
