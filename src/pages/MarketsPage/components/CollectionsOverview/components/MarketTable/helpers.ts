@@ -14,13 +14,14 @@ export const formateDuration = (value: number[]) => sum(map(value));
 
 export const formateToNumbers = (value: string) => parseFloat(value);
 
+const storageMarketPubkeys = getStorageItemsByKey('favourites');
+
 export const sortingFavoriteList = (
   a: MarketPreview,
   b: MarketPreview,
   sortBy: string,
   formateFunction?: (value: any) => any,
 ) => {
-  const storageMarketPubkeys = getStorageItemsByKey('favourites');
   const valueExistInStorageA = storageMarketPubkeys.includes(a.marketPubkey);
   const valueExistInStorageB = storageMarketPubkeys.includes(b.marketPubkey);
 
