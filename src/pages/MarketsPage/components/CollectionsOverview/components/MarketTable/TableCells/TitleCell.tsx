@@ -2,8 +2,8 @@ import { FC, useState, MouseEvent, TouchEvent } from 'react';
 import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
-import { MarketPreview } from '@frakt/api/bonds';
 import { Chart, Star, StarActive } from '@frakt/icons';
+import { MarketPreview } from '@frakt/api/bonds';
 
 import { getStorageItemsByKey, setItemsToStorageByKey } from '../helpers';
 import { useChartVisible } from '../../Chart';

@@ -1,9 +1,18 @@
+import { Bond } from '@frakt/api/bonds';
+import { SortOrder } from 'antd/lib/table/interface';
+import { ColumnType } from 'antd/es/table';
 import create from 'zustand';
 
 import { formatSortOrderToNormalValue } from '../../../helpers';
 
 interface BondsSortState {
-  setSortQuery: (value: any) => void;
+  setSortQuery: ({
+    column,
+    order,
+  }: {
+    column: ColumnType<Bond>;
+    order: SortOrder;
+  }) => void;
   queryData: {
     order: string;
     sortBy: string;
@@ -17,7 +26,7 @@ export const useBondsSort = create<BondsSortState>((set) => ({
       ...state,
       queryData: {
         order: formatSortOrderToNormalValue(order),
-        sortBy: column.dataIndex || 'nftName',
+        sortBy: column.dataIndex?.toString() || 'nftName',
       },
     })),
 }));

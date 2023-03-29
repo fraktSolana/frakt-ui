@@ -106,7 +106,8 @@ export const TableList = ({ data, hideBond }) => {
       render: (_, bond: Bond) => (
         <ExperationCell liquidatingAt={bond?.stats?.expiration} />
       ),
-      sorter: (a, b) => a.stats.expiration - b.stats.expiration,
+      sorter: ({ stats: statsA, stats: statsB }) =>
+        statsA.expiration - statsB.expiration,
       showSorterTooltip: false,
     },
     {

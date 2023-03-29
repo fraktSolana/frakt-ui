@@ -13,7 +13,7 @@ export const useFetchAllBonds = ({
   showOwnerBonds,
   marketPubkey,
 }: {
-  queryData: any;
+  queryData: { sortBy: string; order: string };
   showOwnerBonds: boolean;
   marketPubkey: string;
 }) => {

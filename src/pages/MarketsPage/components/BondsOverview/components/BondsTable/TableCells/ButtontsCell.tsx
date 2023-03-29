@@ -26,9 +26,6 @@ export const ExitCell: FC<ExitCellProps> = ({ bond, bonds, hideBond }) => {
     pairs,
   });
 
-  // const isOwner =
-  //   publicKey?.toBase58() === bond?.fbond?.bondCollateralOrSolReceiver;
-
   const { onExit } = useBondsTransactions({ bonds, hideBond, market });
 
   return (

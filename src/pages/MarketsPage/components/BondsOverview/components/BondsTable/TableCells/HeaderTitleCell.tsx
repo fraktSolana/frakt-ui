@@ -9,9 +9,10 @@ import {
   ArrowUpTableSort,
 } from '@frakt/icons';
 
-import styles from './TableCells.module.scss';
-import { SortColumns } from '../columns';
 import { useBondsSort } from '../../BondsTab/hooks';
+import { SortColumns } from '../columns';
+
+import styles from './TableCells.module.scss';
 
 interface HeaderTitleCellProps {
   sortColumns?: SortColumns;

@@ -1,5 +1,7 @@
-import { Solana } from '@frakt/icons';
 import moment from 'moment';
+
+import { Solana } from '@frakt/icons';
+
 import styles from './TableCells.module.scss';
 
 export const createAutocompoundJSX = (autocompound: string) => (

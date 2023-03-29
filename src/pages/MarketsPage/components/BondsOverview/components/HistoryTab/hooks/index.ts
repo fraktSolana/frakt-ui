@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useWallet } from '@solana/wallet-adapter-react';
 
-import { fetchBondsHistory } from '@frakt/api/bonds';
+import { Bond, fetchBondsHistory } from '@frakt/api/bonds';
 import create from 'zustand';
 import { formatSortOrderToNormalValue } from '../../../helpers';
+import { ColumnType } from 'antd/es/table';
+import { SortOrder } from 'antd/lib/table/interface';
 
 const LIMIT = 20;
 
@@ -68,7 +70,13 @@ export const useFetchBondsHistory = ({
 };
 
 interface HistoryBondsSortState {
-  setSortQuery: (value: any) => void;
+  setSortQuery: ({
+    column,
+    order,
+  }: {
+    column: ColumnType<Bond>;
+    order: SortOrder;
+  }) => void;
   queryData: {
     order: string;
     sortBy: string;
@@ -82,7 +90,7 @@ export const useHistoryBondsSort = create<HistoryBondsSortState>((set) => ({
       ...state,
       queryData: {
         order: formatSortOrderToNormalValue(order),
-        sortBy: column.dataIndex || 'nftName',
+        sortBy: column.dataIndex?.toString() || 'nftName',
       },
     })),
 }));
