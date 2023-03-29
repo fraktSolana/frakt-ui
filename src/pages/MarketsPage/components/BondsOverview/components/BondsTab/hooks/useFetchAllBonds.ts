@@ -6,7 +6,7 @@ import produce from 'immer';
 
 import { fetchAllBonds } from '@frakt/api/bonds';
 
-const LIMIT = 20;
+const LIMIT = 10;
 
 export const useFetchAllBonds = ({
   queryData,

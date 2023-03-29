@@ -21,11 +21,14 @@
 .table {
   :global {
     .ant-table-tbody > tr > td:last-child {
-      width: 70px !important;
+      width: 110px !important;
     }
     .ant-table-tbody > tr > td:first-child {
       padding-left: 0;
       width: 192px;
+    }
+    .ant-table-tbody > tr > td:last-child {
+      padding-right: 0;
     }
   }
   ::-webkit-scrollbar {

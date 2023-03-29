@@ -28,6 +28,9 @@
       padding-left: 0;
       width: 192px;
     }
+    .ant-table-tbody > tr > td:last-child {
+      padding-right: 0;
+    }
   }
   ::-webkit-scrollbar {
     height: 0px;

@@ -1,14 +1,15 @@
 import { useState } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { SortOrder } from 'antd/lib/table/interface';
+import { ColumnType } from 'antd/es/table';
+import create from 'zustand';
 
 import { Bond, fetchBondsHistory } from '@frakt/api/bonds';
-import create from 'zustand';
-import { formatSortOrderToNormalValue } from '../../../helpers';
-import { ColumnType } from 'antd/es/table';
-import { SortOrder } from 'antd/lib/table/interface';
 
-const LIMIT = 20;
+import { formatSortOrderToNormalValue } from '../../../helpers';
+
+const LIMIT = 10;
 
 export const useFetchBondsHistory = ({
   queryData,
@@ -16,7 +17,7 @@ export const useFetchBondsHistory = ({
   eventType,
 }: {
   eventType: string;
-  queryData: any;
+  queryData: { sortBy: string; order: string };
   showOwnerBonds: boolean;
 }) => {
   const { publicKey } = useWallet();
