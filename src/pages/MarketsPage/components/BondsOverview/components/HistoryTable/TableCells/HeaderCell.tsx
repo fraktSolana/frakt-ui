@@ -48,7 +48,7 @@ export const HeaderCell: FC<HeaderCellProps> = ({
           <QuestionCircleOutlined className={styles.questionIcon} />
         </Tooltip>
       )}
-      {removeSort && (
+      {!removeSort && (
         <span className={styles.sortIcon}>
           {sortedColumn?.order === 'ascend' && <ArrowUpTableSort />}
           {sortedColumn?.order === 'descend' && <ArrowDownTableSort />}

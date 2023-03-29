@@ -77,12 +77,12 @@ export const TableList = ({ data, hideBond }) => {
       showSorterTooltip: false,
     },
     {
-      key: 'setProfit',
-      dataIndex: 'setProfit',
+      key: 'estProfit',
+      dataIndex: 'estProfit',
       title: (column) => (
         <HeaderTitleCell
           sortColumns={column?.sortColumns}
-          value="setProfit"
+          value="estProfit"
           label="Est. Profit"
           tooltipText="Analyzed profit from repaying the loan"
         />

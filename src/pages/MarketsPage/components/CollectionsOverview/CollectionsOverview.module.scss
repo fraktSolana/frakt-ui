@@ -33,6 +33,7 @@
 .marketTable {
   :global {
     height: 234px;
+    display: block !important;
     .ant-table-thead > tr > th {
       border: 0 !important;
       padding-top: 0 !important;

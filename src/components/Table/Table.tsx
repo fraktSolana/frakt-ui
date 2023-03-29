@@ -25,7 +25,6 @@ export interface TableProps<T> {
   noDataMessage?: string;
   className?: string;
   defaultField?: string;
-  noDataClassName?: string;
   search?: {
     placeHolderText?: string;
     onChange: DebouncedFunc<(event: any) => void>;
@@ -47,7 +46,6 @@ const Table = <T extends unknown>({
   setSort,
   loading = false,
   search,
-  noDataClassName,
   className,
   breakpoints,
   activeRowParams,

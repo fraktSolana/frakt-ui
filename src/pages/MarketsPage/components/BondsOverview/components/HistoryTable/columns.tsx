@@ -80,6 +80,7 @@ export const COLUMNS: ColumnsType<Bond> = [
         value="autocompound"
         label="Autocompound"
         tooltipText="Analyzed profit from repaying the loan"
+        removeSort
       />
     ),
     render: (_, { stats }) => createReceiveJSX(stats?.received),
@@ -93,7 +94,6 @@ export const COLUMNS: ColumnsType<Bond> = [
         label="Received"
         value="received"
         tooltipText="When the loan is paid back or liquidated"
-        removeSort
       />
     ),
     render: (_, { stats }) => createReceiveJSX(stats?.received),
