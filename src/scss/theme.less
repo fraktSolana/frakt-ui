@@ -74,6 +74,12 @@
       border-right: @border-light-green !important;
     }
   }
+
+  @media (max-width: 500px) {
+    & > td:nth-child(2) {
+      border-right: @border-light-green !important;
+    }
+  }
 }
 
 //? Remove default sort icon
@@ -120,4 +126,8 @@ td.ant-table-column-sort {
 .ant-table-cell-fix-left,
 .ant-table-thead th.ant-table-column-has-sorters.ant-table-cell-fix-left:hover {
   background: @primary-background;
+}
+
+.ant-table-container table > thead > tr:first-child th:first-child {
+  border-radius: 0;
 }
