@@ -15,8 +15,7 @@ type Event = MouseEvent | TouchEvent;
 export const TitleCell: FC<{
   market: MarketPreview;
   onRowClick: (market: MarketPreview) => void;
-  resortTableList: any;
-}> = ({ market, onRowClick, resortTableList }) => {
+}> = ({ market, onRowClick }) => {
   const { marketPubkey } = useParams<{ marketPubkey: string }>();
 
   const { toggleVisibility, setVisibility } = useChartVisible();
@@ -33,7 +32,6 @@ export const TitleCell: FC<{
     const newMarketPubkeys = [...storageMarketPubkeys, market.marketPubkey];
 
     setItemsToStorageByKey('favourites', newMarketPubkeys);
-    resortTableList();
     event.stopPropagation();
   };
 

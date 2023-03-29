@@ -27,8 +27,6 @@ export type SortColumns = {
 }[];
 
 export const TableList = ({ onChange, onRowClick }) => {
-  const [resortTableList, setResortTableList] = useState<boolean>(false);
-
   const COLUMNS: ColumnsType<MarketPreview> = [
     {
       key: 'collectionName',
@@ -42,11 +40,7 @@ export const TableList = ({ onChange, onRowClick }) => {
       ),
       fixed: 'left',
       render: (_, market: MarketPreview) => (
-        <TitleCell
-          market={market}
-          onRowClick={onRowClick}
-          resortTableList={() => setResortTableList(!resortTableList)}
-        />
+        <TitleCell market={market} onRowClick={onRowClick} />
       ),
     },
     {
