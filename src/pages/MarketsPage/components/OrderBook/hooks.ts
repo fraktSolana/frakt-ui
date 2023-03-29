@@ -32,7 +32,7 @@ type UseMarketOrders = (props: {
 export const useMarketOrders: UseMarketOrders = ({
   marketPubkey,
   sortDirection = 'desc',
-  walletOwned = false,
+  walletOwned,
   ltv,
   size,
   interest,
@@ -67,11 +67,14 @@ export const useMarketOrders: UseMarketOrders = ({
       },
     };
 
-    const parsedOffers = pairs
-      .filter((pair) => {
-        return !walletOwned || pair?.assetReceiver === publicKey?.toBase58();
-      })
-      .map(parseMarketOrder);
+    const parsedOffers = walletOwned
+      ? pairs
+          .filter(
+            (pair) =>
+              !walletOwned || pair?.assetReceiver === publicKey?.toBase58(),
+          )
+          .map(parseMarketOrder)
+      : pairs.map(parseMarketOrder);
 
     const parsedEditabledOffers = [];
 

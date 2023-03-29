@@ -37,7 +37,6 @@ export const TableList = ({ data, hideBond }) => {
         collateralBox: collateralBoxB,
       }) => collateralBoxB.nft.name?.localeCompare(collateralBoxA.nft.name),
       render: (_, bond: Bond) => <TitleCell bond={bond} />,
-      defaultSortOrder: 'ascend',
       fixed: 'left',
       showSorterTooltip: false,
     },
@@ -108,6 +107,7 @@ export const TableList = ({ data, hideBond }) => {
       ),
       sorter: ({ stats: statsA, stats: statsB }) =>
         statsA.expiration - statsB.expiration,
+      defaultSortOrder: 'ascend',
       showSorterTooltip: false,
     },
     {

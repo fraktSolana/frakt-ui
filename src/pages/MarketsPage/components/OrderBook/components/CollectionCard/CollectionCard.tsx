@@ -5,7 +5,6 @@ import { Loader } from '@frakt/components/Loader';
 import Button from '@frakt/components/Button';
 import { ChevronDown } from '@frakt/icons';
 
-import { isOwnOrder } from '../../helpers';
 import { useCollectionCard } from './hooks';
 import Offer from '../Offer';
 import Sort from '../Sort';
@@ -39,6 +38,7 @@ const CollectionCard: FC<CollectionCardProps> = ({
     setIsVisibleOfferList,
     sortDirection,
     goToEditOffer,
+    isOwnOrder,
   } = useCollectionCard({
     showOwnOrders,
     marketPubkey,

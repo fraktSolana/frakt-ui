@@ -1,6 +1,5 @@
 import { web3 } from '@frakt-protocol/frakt-sdk';
 import { getTopOrderSize } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
-import { useWallet } from '@solana/wallet-adapter-react';
 import { Pair } from '@frakt/api/bonds';
 
 import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
@@ -54,11 +53,6 @@ export const calcSpotPrice: CalcSpotPrice = ({
   return (1 - solFeeLamports / solDepositLamports) * BOND_DECIMAL_DELTA;
 };
 
-export const isOwnOrder = (order: MarketOrder): boolean => {
-  const wallet = useWallet();
-  return order?.rawData?.assetReceiver === wallet?.publicKey?.toBase58();
-};
-
 export const sortOffersByInterest = (
   offers: MarketOrder[],
   sortDirection: string,
@@ -90,13 +84,4 @@ export const sortOffers = (offers: MarketOrder[], sortDirection: string) => {
   const sortedByLtv = sortOffersByLtv(sortedOffersByInterest, sortDirection);
 
   return sortedByLtv;
-};
-
-export const getOnlyOwnerOffers = (
-  offers: MarketOrder[],
-  pubkey: web3.PublicKey,
-) => {
-  return offers.filter(
-    (offer) => offer.rawData.publicKey === pubkey?.toBase58(),
-  );
 };

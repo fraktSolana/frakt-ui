@@ -1,17 +1,28 @@
 import { fetchBondsStats, TotalBondsStats } from '@frakt/api/bonds';
+import { web3 } from '@frakters/raffle-sdk';
 import { useQuery } from '@tanstack/react-query';
 
-type UseFetchBondsStats = () => {
+type UseFetchBondsStats = ({
+  marketPubkey,
+  walletPubkey,
+}: {
+  marketPubkey: string;
+  walletPubkey: web3.PublicKey;
+}) => {
   bondsStats: TotalBondsStats;
   isLoading: boolean;
 };
 
-export const useFetchBondsStats: UseFetchBondsStats = () => {
+export const useFetchBondsStats: UseFetchBondsStats = ({
+  marketPubkey,
+  walletPubkey,
+}) => {
   const { data, isLoading } = useQuery(
-    ['useFetchBondsStats'],
-    () => fetchBondsStats(),
+    ['useFetchBondsStats', marketPubkey, walletPubkey],
+    () => fetchBondsStats({ marketPubkey, walletPubkey }),
     {
       staleTime: 60 * 1000,
+      keepPreviousData: true,
       refetchOnWindowFocus: false,
     },
   );

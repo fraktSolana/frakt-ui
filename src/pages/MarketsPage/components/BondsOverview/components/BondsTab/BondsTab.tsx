@@ -18,7 +18,7 @@ import styles from './BondsTab.module.scss';
 const BondsTab: FC = () => {
   const { marketPubkey } = useParams<{ marketPubkey: string }>();
   const { ref, inView } = useIntersection();
-  const { connected } = useWallet();
+  const { connected, publicKey } = useWallet();
 
   const { queryData } = useBondsSort();
 
@@ -39,7 +39,10 @@ const BondsTab: FC = () => {
     }
   }, [inView, fetchNextPage, isFetchingNextPage, isListEnded]);
 
-  const { bondsStats } = useFetchBondsStats();
+  const { bondsStats } = useFetchBondsStats({
+    marketPubkey,
+    walletPubkey: showOwnerBonds && publicKey,
+  });
 
   return (
     <>

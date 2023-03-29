@@ -5,10 +5,9 @@ import { useHistory } from 'react-router-dom';
 import { useMarketPairs } from '@frakt/utils/bonds';
 import { PATHS } from '@frakt/constants';
 
-import { SortOrder } from '../../types';
+import { MarketOrder, SortOrder } from '../../types';
 import {
   filterOffersByDuration,
-  getOnlyOwnerOffers,
   parseMarketOrder,
   sortOffers,
 } from '../../helpers';
@@ -35,8 +34,14 @@ export const useCollectionCard = ({
       : setSortDirection(SortOrder.DESC);
   };
 
-  const ownerOffers = getOnlyOwnerOffers(parsedOffers, publicKey);
-  const sortedOffers = sortOffers(parsedOffers, sortDirection);
+  const isOwnOrder = (order: MarketOrder): boolean => {
+    return order?.rawData?.assetReceiver === publicKey?.toBase58();
+  };
+
+  const ownerOffers = showOwnOrders
+    ? parsedOffers.filter(isOwnOrder)
+    : parsedOffers;
+  const sortedOffers = sortOffers(ownerOffers, sortDirection);
   const fitleredOffersByDuration = filterOffersByDuration(
     sortedOffers,
     duration,
@@ -45,15 +50,14 @@ export const useCollectionCard = ({
   const goToEditOffer = (orderPubkey: string) =>
     history.push(`${PATHS.OFFER}/${marketPubkey}/${orderPubkey}`);
 
-  const offers = showOwnOrders ? ownerOffers : fitleredOffersByDuration;
-
   return {
-    offers,
+    offers: fitleredOffersByDuration,
     toggleSortDirection,
     loading: isLoadingPairs,
     isVisibleOfferList,
     setIsVisibleOfferList,
     sortDirection,
     goToEditOffer,
+    isOwnOrder,
   };
 };

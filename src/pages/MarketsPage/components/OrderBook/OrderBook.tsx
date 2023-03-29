@@ -1,4 +1,5 @@
 import { FC, useMemo, useState } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { useHistory, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { web3 } from 'fbonds-core';
@@ -12,9 +13,8 @@ import { Market } from '@frakt/api/bonds';
 import { PATHS } from '@frakt/constants';
 
 import CollectionsList from './components/CollectionsList';
-import { isOwnOrder } from './helpers';
 import NoActiveOffers from './components/NoActiveOffers';
-import { SortOrder, SyntheticParams } from './types';
+import { MarketOrder, SortOrder, SyntheticParams } from './types';
 import Filters from './components/Filters';
 import { useMarketOrders } from './hooks';
 import Offer from './components/Offer';
@@ -31,6 +31,7 @@ interface OrderBookProps {
 const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
   const { marketPubkey } = useParams<{ marketPubkey: string }>();
   const history = useHistory();
+  const wallet = useWallet();
 
   const [openOffersMobile, setOpenOffersMobile] = useState<boolean>(false);
   const [showOwnOrders, setShowOwnOrders] = useState<boolean>(false);
@@ -45,6 +46,10 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
 
   const toggleSort = () => {
     sort === SortOrder.DESC ? setSort(SortOrder.ASC) : setSort(SortOrder.DESC);
+  };
+
+  const isOwnOrder = (order: MarketOrder): boolean => {
+    return order?.rawData?.assetReceiver === wallet?.publicKey?.toBase58();
   };
 
   const {

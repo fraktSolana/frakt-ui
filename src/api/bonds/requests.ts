@@ -90,10 +90,22 @@ export const fetchAllBonds: FetchAllBonds = async ({
   return data;
 };
 
-type FetchBondsStats = () => Promise<TotalBondsStats>;
-export const fetchBondsStats: FetchBondsStats = async () => {
+type FetchBondsStats = ({
+  walletPubkey,
+  marketPubkey,
+}: {
+  marketPubkey: string;
+  walletPubkey: web3.PublicKey;
+}) => Promise<TotalBondsStats>;
+export const fetchBondsStats: FetchBondsStats = async ({
+  marketPubkey,
+  walletPubkey,
+}) => {
+  const marketQuery = marketPubkey ? `marketPubKey=${marketPubkey}&` : '';
+  const walletQuery = walletPubkey ? `walletPubkey=${walletPubkey}` : '';
+
   const { data } = await axios.get<TotalBondsStats>(
-    `https://${BACKEND_DOMAIN}/stats/bonds`,
+    `https://${BACKEND_DOMAIN}/stats/bonds?${marketQuery}${walletQuery}`,
   );
 
   return data;
