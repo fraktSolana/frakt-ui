@@ -188,7 +188,7 @@ export interface BondStats {
   expiration: number;
   state?: string;
   when?: number;
-  autocompoundDeposits?: string;
+  autocompound?: string;
   received?: number;
 }
 
@@ -216,4 +216,10 @@ export interface FetchBondsRequestParams {
 export interface TotalBondsStats {
   activeLoans: number;
   tvl: number;
+}
+
+export interface MarketHistory {
+  time: string;
+  activeBonds: number;
+  highestLTV: number;
 }

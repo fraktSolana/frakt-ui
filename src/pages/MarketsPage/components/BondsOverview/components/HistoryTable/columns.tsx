@@ -9,6 +9,7 @@ import {
   CollateralCell,
   createReceiveJSX,
   createliquidatingAtJSX,
+  createAutocompoundJSX,
 } from './TableCells';
 
 export type SortColumns = {
@@ -82,7 +83,7 @@ export const COLUMNS: ColumnsType<Bond> = [
         removeSort
       />
     ),
-    render: (_, { stats }) => createReceiveJSX(stats?.received),
+    render: (_, { stats }) => createAutocompoundJSX(stats?.autocompound),
   },
   {
     key: 'received',

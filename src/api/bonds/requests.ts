@@ -10,6 +10,7 @@ import {
   Bond,
   FetchBondsRequestParams,
   TotalBondsStats,
+  MarketHistory,
 } from './types';
 
 const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN;
@@ -83,7 +84,7 @@ export const fetchAllBonds: FetchAllBonds = async ({
 }) => {
   const marketQuery = marketPubkey ? `marketPubKey=${marketPubkey}&` : '';
   const walletQuery = walletPubkey
-    ? `walletPubkey=${walletPubkey?.toBase58()}&onlyUser=true`
+    ? `wallet=${walletPubkey?.toBase58()}&onlyUser=true`
     : '';
 
   const { data } = await axios.get<Bond[]>(
@@ -105,7 +106,7 @@ export const fetchBondsStats: FetchBondsStats = async ({
   walletPubkey,
 }) => {
   const marketQuery = marketPubkey ? `marketPubKey=${marketPubkey}&` : '';
-  const walletQuery = walletPubkey ? `walletPubkey=${walletPubkey}` : '';
+  const walletQuery = walletPubkey ? `wallet=${walletPubkey}` : '';
 
   const { data } = await axios.get<TotalBondsStats>(
     `https://${BACKEND_DOMAIN}/stats/bonds?${marketQuery}${walletQuery}`,
@@ -132,12 +133,25 @@ export const fetchBondsHistory: FetchBondsHistory = async ({
 }: FetchBondsRequestParams) => {
   const marketQuery = marketPubkey ? `marketPubKey=${marketPubkey}&` : '';
   const walletQuery = walletPubkey
-    ? `walletPubkey=${walletPubkey?.toBase58()}&onlyUser=true&`
+    ? `wallet=${walletPubkey?.toBase58()}&onlyUser=true&`
     : '';
   const eventTypeQuery = eventType ? `eventType=${eventType}` : '';
 
   const { data } = await axios.get<Bond[]>(
     `https://${BACKEND_DOMAIN}/bonds/history?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}${eventTypeQuery}`,
+  );
+
+  return data;
+};
+
+type FetchMarketHistory = (props: {
+  marketPubkey: string;
+}) => Promise<MarketHistory>;
+export const fetchMarketHistory: FetchMarketHistory = async ({
+  marketPubkey,
+}) => {
+  const { data } = await axios.get<MarketHistory>(
+    `https://${BACKEND_DOMAIN}/stats/bonds/history?marketPubKey=${marketPubkey}`,
   );
 
   return data;

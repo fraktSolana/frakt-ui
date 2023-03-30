@@ -31,7 +31,7 @@ const Chart: FC<ChartProps> = ({ marketPreview, isLoading, isVisible }) => {
         <>
           <ChartWidgets marketPreview={marketPreview} />
           <div className={styles.chart}>
-            <Bar options={options as unknown} data={data} />
+            <Bar options={options as unknown} data={data as any} />
           </div>
         </>
       )}
