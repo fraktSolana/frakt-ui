@@ -1,28 +1,16 @@
 import { FC } from 'react';
-import classNames from 'classnames';
-import styles from './Sort.module.scss';
+
 import { ArrowDownTableSort, ArrowUpTableSort } from '@frakt/icons';
+import styles from './Sort.module.scss';
 
 interface SortProps {
-  openOffersMobile: boolean;
-  existSyntheticParams: boolean;
   onChangeSort: () => void;
   sort: string;
 }
 
-const Sort: FC<SortProps> = ({
-  openOffersMobile,
-  existSyntheticParams,
-  onChangeSort,
-  sort,
-}) => {
+const Sort: FC<SortProps> = ({ onChangeSort, sort }) => {
   return (
-    <div
-      className={classNames(styles.columnWrapper, {
-        [styles.active]: openOffersMobile,
-        [styles.create]: existSyntheticParams,
-      })}
-    >
+    <div className={styles.columnWrapper}>
       <div className={styles.col}>
         <span className={styles.colName}>size</span>
         <span>(SOL)</span>

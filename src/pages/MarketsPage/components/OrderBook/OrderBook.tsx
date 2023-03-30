@@ -114,7 +114,12 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
           })}
         >
           <h5 className={styles.title}>Offers</h5>
-          <div className={styles.filters}>
+          <div
+            className={classNames(styles.filters, {
+              [styles.active]: openOffersMobile,
+              [styles.create]: !!syntheticParams?.ltv,
+            })}
+          >
             <Filters
               openOffersMobile={openOffersMobile}
               duration={duration}
@@ -130,12 +135,7 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
             />
           </div>
           {marketPubkey && offersExist && (
-            <Sort
-              openOffersMobile={openOffersMobile}
-              existSyntheticParams={!!syntheticParams?.ltv}
-              onChangeSort={toggleSort}
-              sort={sort}
-            />
+            <Sort onChangeSort={toggleSort} sort={sort} />
           )}
         </div>
 

@@ -26,7 +26,7 @@
 
 .ant-table-thead {
   position: sticky;
-  top: 0;
+  top: -1px;
   z-index: 3;
 }
 
@@ -129,5 +129,6 @@ td.ant-table-column-sort {
 }
 
 .ant-table-container table > thead > tr:first-child th:first-child {
-  border-radius: 0;
+  border-top-left-radius: 1px;
+  border: 0 !important;
 }

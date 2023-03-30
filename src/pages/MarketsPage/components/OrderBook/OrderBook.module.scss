@@ -16,7 +16,7 @@
   background-color: var(--primary-background);
 
   @media screen and (max-width: 768px) {
-    top: calc(100% - 120px);
+    top: calc(100% - 100px);
     left: 0;
     right: 0;
 
@@ -32,26 +32,16 @@
 
     &.create {
       gap: 8px;
-      top: calc(100% - 165px);
+      top: calc(100% - 140px);
     }
 
     &.selected {
-      top: calc(100% - 165px);
+      top: calc(100% - 140px);
     }
 
     &.active {
       gap: 8px;
-      top: calc(var(--header-height) + 32px);
-    }
-  }
-
-  @media screen and (max-width: 550px) {
-    &.create {
-      gap: 8px;
-      top: calc(100% - 154px);
-    }
-    &.active {
-      top: calc(var(--header-height) + 42px);
+      top: calc(var(--header-height) + 80px);
     }
   }
 }
@@ -244,6 +234,18 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+
+    &.create {
+      display: flex;
+    }
+
+    &.active {
+      display: flex;
+    }
+  }
 }
 
 .radioButton {
