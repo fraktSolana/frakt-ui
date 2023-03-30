@@ -96,7 +96,7 @@
 
   @media screen and (max-width: 768px) {
     &.active {
-      height: calc(100vh - var(--header-height) - 220px);
+      height: calc(100vh - var(--header-height) - 210px);
     }
 
     &.visible.active {
