@@ -56,7 +56,7 @@ export const fetchMaxBorrowValue: FetchMaxBorrowValue = async ({
   publicKey,
 }) => {
   const { data } = await axios.get<{ maxBorrow: number }>(
-    `https://${BACKEND_DOMAIN}/nft/max-borrow/${publicKey?.toBase58()}`,
+    `https://${BACKEND_DOMAIN}/nft/max-borrow/${publicKey?.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data?.maxBorrow ?? 0;
