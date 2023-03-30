@@ -83,11 +83,11 @@ export const fetchAllBonds: FetchAllBonds = async ({
 }) => {
   const marketQuery = marketPubkey ? `marketPubKey=${marketPubkey}&` : '';
   const walletQuery = walletPubkey
-    ? `walletPubkey=${walletPubkey?.toBase58()}&onlyUser=true`
+    ? `wallet=${walletPubkey?.toBase58()}&onlyUser=true`
     : '';
 
   const { data } = await axios.get<Bond[]>(
-    `https://${BACKEND_DOMAIN}/bonds?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}`,
+    `https://${BACKEND_DOMAIN}/bonds?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}&isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data;
@@ -105,10 +105,10 @@ export const fetchBondsStats: FetchBondsStats = async ({
   walletPubkey,
 }) => {
   const marketQuery = marketPubkey ? `marketPubKey=${marketPubkey}&` : '';
-  const walletQuery = walletPubkey ? `walletPubkey=${walletPubkey}` : '';
+  const walletQuery = walletPubkey ? `wallet=${walletPubkey}` : '';
 
   const { data } = await axios.get<TotalBondsStats>(
-    `https://${BACKEND_DOMAIN}/stats/bonds?${marketQuery}${walletQuery}`,
+    `https://${BACKEND_DOMAIN}/stats/bonds?${marketQuery}${walletQuery}&isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data;
@@ -132,12 +132,12 @@ export const fetchBondsHistory: FetchBondsHistory = async ({
 }: FetchBondsRequestParams) => {
   const marketQuery = marketPubkey ? `marketPubKey=${marketPubkey}&` : '';
   const walletQuery = walletPubkey
-    ? `walletPubkey=${walletPubkey?.toBase58()}&onlyUser=true&`
+    ? `wallet=${walletPubkey?.toBase58()}&onlyUser=true&`
     : '';
   const eventTypeQuery = eventType ? `eventType=${eventType}` : '';
 
   const { data } = await axios.get<Bond[]>(
-    `https://${BACKEND_DOMAIN}/bonds/history?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}${eventTypeQuery}`,
+    `https://${BACKEND_DOMAIN}/bonds/history?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}${eventTypeQuery}&isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data;

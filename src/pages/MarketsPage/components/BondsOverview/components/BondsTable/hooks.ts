@@ -5,6 +5,7 @@ import { FraktBondState } from 'fbonds-core/lib/fbond-protocol/types';
 
 import { Bond, Market, Pair } from '@frakt/api/bonds';
 import {
+  BOND_DECIMAL_DELTA,
   isBondAvailableToRedeem,
   pairLoanDurationFilter,
 } from '@frakt/utils/bonds';
@@ -46,6 +47,11 @@ export const useBondActions = ({
       0,
     ) >= bond.amountOfUserBonds;
 
+  // const amountOfUserBonds = getMyBondBalance(bond) ? getMyBondBalance(bond) : (bond.fbond.amountToReturn / BOND_DECIMAL_DELTA) /
+  // const amountOfUserBondsUi = amountOfUserBonds / BOND_SOL_DECIMAL_DELTA
+  // const size = bond.fbond.actualReturnedAmount > 0 ?
+  // bond.fbond.actualReturnedAmount / (bond.fbond.amountToReturn / BOND_DECIMAL_DELTA) * amountOfUserBonds
+  // : amountOfUserBonds * BOND_DECIMAL_DELTA
   return {
     exitAvailable,
     redeemAvailable,
