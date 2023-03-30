@@ -65,7 +65,7 @@ const HistoryTab: FC = () => {
           </div>
           <Toggle
             onChange={() => setShowOwnerBonds(!showOwnerBonds)}
-            label="My history only"
+            label="My history"
           />
         </div>
 

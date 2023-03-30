@@ -10,6 +10,7 @@ import {
   Bond,
   FetchBondsRequestParams,
   TotalBondsStats,
+  MarketHistory,
 } from './types';
 
 const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN;
@@ -138,6 +139,19 @@ export const fetchBondsHistory: FetchBondsHistory = async ({
 
   const { data } = await axios.get<Bond[]>(
     `https://${BACKEND_DOMAIN}/bonds/history?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}${eventTypeQuery}&isPrivate=${IS_PRIVATE_MARKETS}`,
+  );
+
+  return data;
+};
+
+type FetchMarketHistory = (props: {
+  marketPubkey: string;
+}) => Promise<MarketHistory>;
+export const fetchMarketHistory: FetchMarketHistory = async ({
+  marketPubkey,
+}) => {
+  const { data } = await axios.get<MarketHistory>(
+    `https://${BACKEND_DOMAIN}/stats/bonds/history?marketPubKey=${marketPubkey}`,
   );
 
   return data;

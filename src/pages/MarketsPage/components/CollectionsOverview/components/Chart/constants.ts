@@ -4,8 +4,7 @@ const fontTitleOptions = {
 };
 
 const fontOptions = {
-  fontFamily: 'Chakra Petch',
-  size: 10,
+  size: 9,
 };
 
 const axisOptions = {
