@@ -2,7 +2,6 @@ import { FC } from 'react';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
 
-import Toggle from '@frakt/components/Toggle';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import Tooltip from '@frakt/components/Tooltip';
 
