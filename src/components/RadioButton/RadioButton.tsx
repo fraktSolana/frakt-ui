@@ -26,7 +26,12 @@ export const RadioButton = <T extends unknown>({
       {options.map((option) => {
         const stringValue = option.value.toString();
         return (
-          <div className={styles.btn} key={option.label}>
+          <div
+            className={classNames(styles.btn, {
+              [styles.disabledButton]: disabled,
+            })}
+            key={option.label}
+          >
             <input
               type="radio"
               id={stringValue}
@@ -34,7 +39,6 @@ export const RadioButton = <T extends unknown>({
               value={stringValue}
               checked={option.value === currentOption.value}
               onChange={() => onOptionChange(option)}
-              disabled={disabled}
             />
             <label htmlFor={stringValue}>{option.label}</label>
           </div>
