@@ -185,7 +185,7 @@ export interface BondStats {
   expiration: number;
   state?: string;
   when?: number;
-  autocompoundDeposits?: [];
+  autocompoundDeposits?: string;
   received?: number;
 }
 

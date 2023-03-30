@@ -30,8 +30,8 @@ export const useFetchBondsHistory = ({
     const data = await fetchBondsHistory({
       skip: LIMIT * pageParam,
       limit: LIMIT,
-      sortBy: queryData?.sortBy,
-      order: queryData?.order,
+      sortBy: queryData?.sortBy || 'when',
+      order: queryData?.order || 'asc',
       walletPubkey: showOwnerBonds && publicKey,
       eventType,
       marketPubkey,

@@ -81,10 +81,13 @@ export const fetchAllBonds: FetchAllBonds = async ({
   walletPubkey,
   marketPubkey,
 }) => {
+  const marketQuery = marketPubkey ? `marketPubKey=${marketPubkey}&` : '';
+  const walletQuery = walletPubkey
+    ? `walletPubkey=${walletPubkey?.toBase58()}&onlyUser=true`
+    : '';
+
   const { data } = await axios.get<Bond[]>(
-    `https://${BACKEND_DOMAIN}/bonds?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${
-      marketPubkey ? `marketPubKey=${marketPubkey}&` : ''
-    }${walletPubkey ? `wallet=${walletPubkey?.toBase58()}&onlyUser=true` : ''}`,
+    `https://${BACKEND_DOMAIN}/bonds?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}`,
   );
 
   return data;
@@ -127,12 +130,14 @@ export const fetchBondsHistory: FetchBondsHistory = async ({
   eventType,
   marketPubkey,
 }: FetchBondsRequestParams) => {
+  const marketQuery = marketPubkey ? `marketPubKey=${marketPubkey}&` : '';
+  const walletQuery = walletPubkey
+    ? `walletPubkey=${walletPubkey?.toBase58()}&onlyUser=true&`
+    : '';
+  const eventTypeQuery = eventType ? `eventType=${eventType}` : '';
+
   const { data } = await axios.get<Bond[]>(
-    `https://${BACKEND_DOMAIN}/bonds/history?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${
-      marketPubkey ? `marketPubKey=${marketPubkey}&` : ''
-    }${
-      walletPubkey ? `wallet=${walletPubkey?.toBase58()}&onlyUser=true&` : ''
-    }${eventType ? `eventType=${eventType}` : ''}`,
+    `https://${BACKEND_DOMAIN}/bonds/history?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}${eventTypeQuery}`,
   );
 
   return data;

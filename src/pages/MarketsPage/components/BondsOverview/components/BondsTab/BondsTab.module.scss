@@ -19,34 +19,30 @@
   }
 }
 
-.bondsTable {
-  :global {
-    .ant-table-tbody > tr > td:last-child {
-      width: 70px !important;
-    }
-    .ant-table-tbody > tr > td:first-child {
-      width: 192px;
-    }
-    .ant-table-thead > tr > th:first-child,
-    .ant-table-tbody > tr > td:first-child {
-      padding-left: 0;
-    }
-    .ant-table-thead > tr > th:last-child,
-    .ant-table-tbody > tr > td:last-child {
-      padding-right: 0;
-    }
+// Reset default ant-design styles
+.bondsTable :global {
+  .ant-table-thead > tr > th:first-child,
+  .ant-table-tbody > tr > td:first-child {
+    padding-left: 0;
+  }
+  .ant-table-thead > tr > th:last-child,
+  .ant-table-tbody > tr > td:last-child {
+    padding-right: 0;
   }
   ::-webkit-scrollbar {
     height: 0px;
   }
 }
 
-.emptyList {
-  padding: 120px 0 160px !important;
+.bondsTable :global {
+  .ant-table-tbody > tr > td:last-child {
+    width: 70px !important;
+  }
+  .ant-table-tbody > tr > td:first-child {
+    width: 192px;
+  }
 }
 
-.noDataTableMessage {
-  :global {
-    display: none;
-  }
+.emptyList {
+  padding: 120px 0 160px !important;
 }
