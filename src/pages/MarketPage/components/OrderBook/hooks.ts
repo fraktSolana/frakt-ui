@@ -70,7 +70,7 @@ export const useMarketOrders: UseMarketOrders = ({
     if (editOfferPubkey) {
       const offers = parsedOffers.map((offer) => {
         const isEditOffer = offer?.rawData?.publicKey === editOfferPubkey;
-        if (isEditOffer) return { ...offer, ...myOffer };
+        if (isEditOffer) return { ...myOffer, ...offer };
         return offer;
       });
 
