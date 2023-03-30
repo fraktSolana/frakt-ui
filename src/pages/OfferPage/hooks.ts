@@ -167,7 +167,7 @@ export const useOfferPage = () => {
           type: NotifyType.SUCCESS,
         });
 
-        history.push(`${PATHS.BOND}/${marketPubkey}`);
+        history.push(`${PATHS.BONDS}/${marketPubkey}`);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.warn(error?.logs);
@@ -231,7 +231,7 @@ export const useOfferPage = () => {
           type: NotifyType.SUCCESS,
         });
 
-        history.push(`${PATHS.BOND}/${marketPubkey}`);
+        history.push(`${PATHS.BONDS}/${marketPubkey}`);
       } catch (error) {
         console.error(error);
 
@@ -271,7 +271,7 @@ export const useOfferPage = () => {
           type: NotifyType.SUCCESS,
         });
 
-        history.push(`${PATHS.BOND}/${marketPubkey}`);
+        history.push(`${PATHS.BONDS}/${marketPubkey}`);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.warn(error?.logs?.join('\n'));
