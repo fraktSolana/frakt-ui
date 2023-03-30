@@ -42,7 +42,7 @@ export const signAndConfirmTransaction: SignAndConfirmTransaction = async ({
   const signedTransaction = await wallet.signTransaction(transaction);
   const txid = await connection.sendRawTransaction(
     signedTransaction.serialize(),
-    { skipPreflight: true },
+    { skipPreflight: false, preflightCommitment: 'processed' },
   );
 
   onAfterSend?.();

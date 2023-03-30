@@ -2,9 +2,10 @@ import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
 import { fbondFactory } from 'fbonds-core/lib/fbond-protocol/functions';
 import { validateAndSellNftToTokenToNftPair } from 'fbonds-core/lib/fbond-protocol/functions/router';
+import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 
 import { Market, Pair, WhitelistType } from '@frakt/api/bonds';
-import { BondOrderParams, getNftMerkleTreeProof } from '@frakt/api/nft';
+import { BondCartOrder, getNftMerkleTreeProof } from '@frakt/api/nft';
 import { PUBKEY_PLACEHOLDER, sendTxnPlaceHolder } from '@frakt/utils';
 
 import {
@@ -13,8 +14,7 @@ import {
   BOND_DECIMAL_DELTA,
   PRECISION_CORRECTION_LAMPORTS,
 } from '../constants';
-import { groupBy } from 'ramda';
-import { mergeBondOrderParamsByPair } from '../utils';
+import { isBondFeaturesAutomated, mergeBondOrderParamsByPair } from '../utils';
 
 type MakeCreateBondTransaction = (params: {
   market: Market;
@@ -49,7 +49,7 @@ export const makeCreateBondTransaction: MakeCreateBondTransaction = async ({
     fbondTokenMint: bondTokenMint,
     instructions: createBondIxns,
     signers: createBondSigners,
-  } = await fbondFactory.createBondWithSingleCollateral({
+  } = await fbondFactory.createBondWithSingleCollateralPnft({
     accounts: {
       tokenMint: new web3.PublicKey(nftMint),
       userPubkey: wallet.publicKey,
@@ -92,7 +92,9 @@ export const makeCreateBondTransaction: MakeCreateBondTransaction = async ({
         minAmountToGet:
           (amountToReturn / BOND_DECIMAL_DELTA) * pair.currentSpotPrice, //? SOL lamports
         skipFailed: false,
-        isAutocompoundOrAutoreceiveSol: false,
+        isAutocompoundOrAutoreceiveSol: isBondFeaturesAutomated(
+          pair.validation.bondFeatures,
+        ),
       },
       connection,
       programId: BONDS_PROGRAM_PUBKEY,
@@ -111,7 +113,7 @@ export const makeCreateBondTransaction: MakeCreateBondTransaction = async ({
 type MakeCreateBondMultiOrdersTransaction = (params: {
   market: Market;
   // bondOrder: BondOrder;
-  bondOrderParams: BondOrderParams[];
+  bondOrderParams: BondCartOrder[];
   nftMint: string;
 
   borrowValue: number; //? lamports
@@ -215,7 +217,9 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
               orderParam.orderSize * orderParam.spotPrice -
               PRECISION_CORRECTION_LAMPORTS, //? SOL lamports
             skipFailed: false,
-            isAutocompoundOrAutoreceiveSol: false,
+            isAutocompoundOrAutoreceiveSol: isBondFeaturesAutomated(
+              orderParam.bondFeature,
+            ),
           },
           connection,
           programId: BONDS_PROGRAM_PUBKEY,

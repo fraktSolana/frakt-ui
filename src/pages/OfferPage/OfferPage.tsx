@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
 
+import Toggle from '@frakt/components/Toggle';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import Tooltip from '@frakt/components/Tooltip';
 
@@ -16,7 +17,11 @@ import { Header } from './components/Header';
 import { useOfferPage } from './hooks';
 import { SOL_TOKEN } from '../../utils';
 import styles from './OfferPage.module.scss';
-import { DURATION_OPTIONS } from './constants';
+import {
+  DURATION_OPTIONS,
+  EARNER_INTEREST_OPTIONS,
+  RECEIVE_OPTIONS,
+} from './constants';
 
 export const OfferPage = () => {
   const {
@@ -39,10 +44,10 @@ export const OfferPage = () => {
     isLoading,
     onEditOffer,
     onRemoveOffer,
-    // autocompound,
-    // toggleAutocompound,
-    receiveLiquidatedNfts,
-    toggleReceiveLiquidatedNfts,
+    autocompoundFeature,
+    onChangeAutocompoundFeature,
+    receiveNftFeature,
+    onChangeReceiveNftFeature,
   } = useOfferPage();
 
   const apr = (parseFloat(interest) / duration) * 365;
@@ -96,81 +101,85 @@ export const OfferPage = () => {
               options={DURATION_OPTIONS}
             />
           </div>
+          <div className={styles.fieldWrapper}>
+            <SizeField
+              value={offerSize}
+              onValueChange={onOfferSizeChange}
+              label="SIZE"
+              currentToken={SOL_TOKEN}
+              lpBalance={parseFloat((walletSolBalance / 1e9).toFixed(3))}
+              toolTipText="Amount of SOL you want to lend for a specific collection at the chosen LTV & APY"
+            />
+          </div>
 
-          <SizeField
-            value={offerSize}
-            onValueChange={onOfferSizeChange}
-            label="SIZE"
-            currentToken={SOL_TOKEN}
-            lpBalance={parseFloat((walletSolBalance / 1e9).toFixed(3))}
-            toolTipText="Amount of SOL you want to lend for a specific collection at the chosen LTV & APY"
-          />
-          <TokenField
-            value={interest}
-            onValueChange={onInterestChange}
-            label="Interest"
-            labelRightNode={
-              <div className={styles.labelRow}>
-                APR: <span>{(apr || 0).toFixed(2)} %</span>
+          <div className={styles.fieldWrapper}>
+            <TokenField
+              value={interest}
+              onValueChange={onInterestChange}
+              label="Interest"
+              labelRightNode={
+                <div className={styles.labelRow}>
+                  APR: <span>{(apr || 0).toFixed(2)} %</span>
+                  <Tooltip
+                    placement="bottom"
+                    overlay={'Analyzed profit from repaying the loan'}
+                  >
+                    <QuestionCircleOutlined className={styles.questionIcon} />
+                  </Tooltip>
+                </div>
+              }
+              currentToken={{
+                ...SOL_TOKEN,
+                symbol: '%',
+                logoURI: null,
+                name: null,
+              }}
+              tokensList={[
+                { ...SOL_TOKEN, symbol: '%', logoURI: null, name: null },
+              ]}
+              toolTipText="Interest (in %) for the duration of this loan"
+            />
+            <div className={classNames(styles.radio, styles.radioWrapper)}>
+              <div className={styles.radioTitle}>
+                <h6 className={styles.subtitle}>Repayments</h6>
                 <Tooltip
                   placement="bottom"
-                  overlay={'Analyzed profit from repaying the loan'}
+                  overlay="Lenders have an option to place same offer right after repayment together with earned interest"
                 >
                   <QuestionCircleOutlined className={styles.questionIcon} />
                 </Tooltip>
               </div>
-            }
-            currentToken={{
-              ...SOL_TOKEN,
-              symbol: '%',
-              logoURI: null,
-              name: null,
-            }}
-            tokensList={[
-              { ...SOL_TOKEN, symbol: '%', logoURI: null, name: null },
-            ]}
-            toolTipText="Interest (in %) for the duration of this loan"
-          />
-
-          {/* <div className={styles.checkbox}>
-            <label className={styles.checkboxLabel}>
-              <input
-                className={styles.checkboxInput}
-                type="checkbox"
-                name="checkbox"
-                checked={autocompound}
-                onChange={toggleAutocompound}
+              <RadioButton
+                currentOption={{
+                  label: autocompoundFeature,
+                  value: autocompoundFeature,
+                }}
+                disabled={isEdit}
+                onOptionChange={onChangeAutocompoundFeature}
+                options={EARNER_INTEREST_OPTIONS}
               />
-              Autocompound
-            </label>
-            <Tooltip
-              placement="bottom"
-              overlay="Deposit rewards back into offer"
-            >
-              <QuestionCircleOutlined className={styles.questionIcon} />
-            </Tooltip>
-          </div> */}
-
-          {!isEdit && (
-            <div className={styles.checkbox}>
-              <label className={styles.checkboxLabel}>
-                <input
-                  className={styles.checkboxInput}
-                  type="checkbox"
-                  name="checkbox"
-                  checked={receiveLiquidatedNfts}
-                  onChange={toggleReceiveLiquidatedNfts}
-                />
-                Receive liquidated NFTs
-              </label>
-              <Tooltip
-                placement="bottom"
-                overlay="When funding full loans, lenders have the option to get defaulted NFTs instead of the SOL recovered from the liquidation"
-              >
-                <QuestionCircleOutlined className={styles.questionIcon} />
-              </Tooltip>
             </div>
-          )}
+            <div className={classNames(styles.radio, styles.radioWrapper)}>
+              <div className={styles.radioTitle}>
+                <h6 className={styles.subtitle}>Defaults</h6>
+                <Tooltip
+                  placement="bottom"
+                  overlay="When funding full loans, lenders have the option to get defaulted NFTs instead of the SOL recovered from the liquidation"
+                >
+                  <QuestionCircleOutlined className={styles.questionIcon} />
+                </Tooltip>
+              </div>
+              <RadioButton
+                currentOption={{
+                  label: receiveNftFeature,
+                  value: receiveNftFeature,
+                }}
+                disabled={isEdit}
+                onOptionChange={onChangeReceiveNftFeature}
+                options={RECEIVE_OPTIONS}
+              />
+            </div>
+          </div>
 
           <TotalOverview
             size={parseFloat(offerSize)}

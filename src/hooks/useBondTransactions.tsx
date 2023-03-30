@@ -11,7 +11,7 @@ import {
 
 import { useConnection } from './useConnection';
 import { Order } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
-import { BondOrderParams } from '@frakt/api/nft';
+import { BondCartOrder } from '@frakt/api/nft';
 
 type UseBondsTransactions = ({
   bonds,
@@ -29,7 +29,7 @@ type UseBondsTransactions = ({
     bondOrderParams,
   }: {
     bond: Bond;
-    bondOrderParams: BondOrderParams[];
+    bondOrderParams: BondCartOrder[];
   }) => Promise<void>;
 };
 
@@ -86,7 +86,7 @@ export const useBondsTransactions: UseBondsTransactions = ({
     bondOrderParams,
   }: {
     bond: Bond;
-    bondOrderParams: BondOrderParams[];
+    bondOrderParams: BondCartOrder[];
   }) => {
     try {
       const result = await exitBond({

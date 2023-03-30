@@ -11,6 +11,7 @@ interface RadioButtonProps<T> {
   onOptionChange: (nextOption: RBOption<T>) => void;
   options: RBOption<T>[];
   className?: string;
+  disabled?: boolean;
 }
 
 export const RadioButton = <T extends unknown>({
@@ -18,22 +19,27 @@ export const RadioButton = <T extends unknown>({
   options,
   onOptionChange,
   className,
+  disabled,
 }: RadioButtonProps<T>) => {
   return (
     <div className={classNames(styles.radioButton, className)}>
-      {options.map((option) => (
-        <div className={styles.btn} key={option.label}>
-          <input
-            type="radio"
-            id={option.label}
-            name={option.label}
-            value={option.label}
-            checked={option.value === currentOption.value}
-            onChange={() => onOptionChange(option)}
-          />
-          <label htmlFor={option.label}>{option.label}</label>
-        </div>
-      ))}
+      {options.map((option) => {
+        const stringValue = option.value.toString();
+        return (
+          <div className={styles.btn} key={option.label}>
+            <input
+              type="radio"
+              id={stringValue}
+              name={stringValue}
+              value={stringValue}
+              checked={option.value === currentOption.value}
+              onChange={() => onOptionChange(option)}
+              disabled={disabled}
+            />
+            <label htmlFor={stringValue}>{option.label}</label>
+          </div>
+        );
+      })}
     </div>
   );
 };
