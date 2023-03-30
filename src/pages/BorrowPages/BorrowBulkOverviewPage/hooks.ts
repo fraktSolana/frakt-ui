@@ -28,7 +28,7 @@ import { LoanType } from '@frakt/api/loans';
 import { useConnection } from '@frakt/hooks';
 
 import { useBorrow } from '../cartState';
-import { BondOrderParams } from '@frakt/api/nft';
+import { BondCartOrder } from '@frakt/api/nft';
 import {
   signAndSendAllTransactionsInSequence,
   TxnsAndSigners,
@@ -221,7 +221,12 @@ const borrowBulk: BorrowBulk = async ({
     // commitment = 'finalized',
     onBeforeApprove: () => {},
     onAfterSend: () => {},
-    onSuccess: () => {},
+    onSuccess: () => {
+      notify({
+        message: 'Borrowed successfully!',
+        type: NotifyType.SUCCESS,
+      });
+    },
     onError: () => {},
   });
 };

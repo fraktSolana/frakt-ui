@@ -1,8 +1,11 @@
 import { maxBy } from 'lodash';
-import { FraktBondState } from 'fbonds-core/lib/fbond-protocol/types';
+import {
+  BondFeatures,
+  FraktBondState,
+} from 'fbonds-core/lib/fbond-protocol/types';
 
 import { Bond, Pair } from '@frakt/api/bonds';
-import { BondOrderParams } from '@frakt/api/nft';
+import { BondCartOrder } from '@frakt/api/nft';
 import { groupBy } from 'ramda';
 
 export const calcRisk = (value: number) => {
@@ -88,8 +91,8 @@ export const pairLtvFilter: PairLtvFilter = ({
 }) => ltvBasePoints <= pair?.validation?.loanToValueFilter;
 
 type MergeBondOrderParamsByPair = (props: {
-  bondOrderParams: BondOrderParams[];
-}) => BondOrderParams[];
+  bondOrderParams: BondCartOrder[];
+}) => BondCartOrder[];
 export const mergeBondOrderParamsByPair: MergeBondOrderParamsByPair = ({
   bondOrderParams,
 }) => {
@@ -110,3 +113,11 @@ export const mergeBondOrderParamsByPair: MergeBondOrderParamsByPair = ({
 
   return mergedPairsOrderParams;
 };
+
+export const isBondFeaturesAutomated = (bondFeature: BondFeatures) =>
+  bondFeature === BondFeatures.Autocompound ||
+  bondFeature === BondFeatures.AutoreceiveSol ||
+  bondFeature === BondFeatures.AutoCompoundAndReceiveNft ||
+  bondFeature === BondFeatures.AutoReceiveAndReceiveNft
+    ? true
+    : false;

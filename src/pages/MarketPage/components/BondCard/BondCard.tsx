@@ -60,7 +60,7 @@ export const BondCard: FC<BondCardProps> = ({
   const pnlLamports = bestOrdersAndBorrowValue.maxBorrowValue;
 
   const pnlProfit = averageBondPrice
-    ? pnlLamports / (averageBondPrice * BOND_SOL_DECIMAIL_DELTA)
+    ? (pnlLamports - averageBondPrice * amountOfUserBonds) / 1e9
     : 0;
 
   console.log({

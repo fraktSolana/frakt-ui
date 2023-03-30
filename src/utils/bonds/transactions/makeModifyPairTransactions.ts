@@ -4,9 +4,11 @@ import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
 import { virtual as pairs } from 'fbonds-core/lib/fbond-protocol/functions/market-factory/pair';
 import * as fBondsValidation from 'fbonds-core/lib/fbond-protocol/functions/validation';
+import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 import { getTopOrderSize } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
 
 import { BONDS_PROGRAM_PUBKEY, BOND_DECIMAL_DELTA } from '../constants';
+import { isBondFeaturesAutomated } from '../utils';
 
 type MakeModifyPairTransactions = (params: {
   maxLTV: number; //? % 0-100
@@ -40,11 +42,16 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
   const solDepositLamports = solDeposit * 1e9;
   const spotPrice = BOND_DECIMAL_DELTA - interest * 100;
 
-  const bidCap = Math.floor(solDepositLamports / spotPrice);
+  const bidCapMultiplier = isBondFeaturesAutomated(pair.validation.bondFeatures)
+    ? 10
+    : 1; // multiplying by 10, so autocompound
+  const amountOfTokensInOrder = Math.floor(solDepositLamports / spotPrice);
+
+  const bidCap = amountOfTokensInOrder * bidCapMultiplier;
 
   const topOrderSize = getTopOrderSize(pair);
 
-  const amountTokenToUpdate = Math.abs(bidCap - topOrderSize);
+  const amountTokenToUpdate = Math.abs(amountOfTokensInOrder - topOrderSize);
 
   const { instructions: instructions1, signers: signers1 } =
     await pairs.mutations.modifyPair({
@@ -66,7 +73,7 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
 
   const depositInstructionsAndSigners = [];
 
-  if (!!amountTokenToUpdate && bidCap > topOrderSize) {
+  if (!!amountTokenToUpdate && amountOfTokensInOrder > topOrderSize) {
     const { instructions, signers } = await pairs.deposits.depositSolToPair({
       accounts: {
         authorityAdapter: new web3.PublicKey(pair.authorityAdapterPublicKey),
@@ -84,7 +91,7 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
     depositInstructionsAndSigners.push({ instructions, signers });
   }
 
-  if (!!amountTokenToUpdate && bidCap < topOrderSize) {
+  if (!!amountTokenToUpdate && amountOfTokensInOrder < topOrderSize) {
     const { instructions, signers } =
       await pairs.withdrawals.withdrawSolFromPair({
         accounts: {

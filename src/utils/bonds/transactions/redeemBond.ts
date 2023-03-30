@@ -21,7 +21,7 @@ export const redeemBond: RedeemBond = async ({
   wallet,
 }): Promise<boolean> => {
   try {
-    const { transaction, signers } = await makeRedeemBondTransaction({
+    const transactionsAndSigners = await makeRedeemBondTransaction({
       bond,
       connection,
       wallet,
@@ -30,17 +30,24 @@ export const redeemBond: RedeemBond = async ({
     const { blockhash, lastValidBlockHeight } =
       await connection.getLatestBlockhash();
 
-    transaction.recentBlockhash = blockhash;
-    transaction.feePayer = wallet?.publicKey;
+    const transactions = transactionsAndSigners.map(
+      ({ transaction, signers }) => {
+        transaction.recentBlockhash = blockhash;
+        transaction.feePayer = wallet?.publicKey;
+        if (signers.length) {
+          transaction.sign(...signers);
+        }
 
-    if (signers.length) {
-      transaction.sign(...signers);
-    }
+        return transaction;
+      },
+    );
 
-    const signedTransaction = await wallet?.signTransaction(transaction);
+    const signedTransactions = await wallet?.signAllTransactions(transactions);
 
-    const txid = await connection.sendRawTransaction(
-      signedTransaction.serialize(),
+    const txids = await Promise.all(
+      signedTransactions.map((signedTransaction) =>
+        connection.sendRawTransaction(signedTransaction.serialize()),
+      ),
     );
 
     notify({
@@ -48,9 +55,13 @@ export const redeemBond: RedeemBond = async ({
       type: NotifyType.INFO,
     });
 
-    await connection.confirmTransaction(
-      { signature: txid, blockhash, lastValidBlockHeight },
-      'confirmed',
+    await Promise.all(
+      txids.map((txid) =>
+        connection.confirmTransaction(
+          { signature: txid, blockhash, lastValidBlockHeight },
+          'confirmed',
+        ),
+      ),
     );
 
     notify({

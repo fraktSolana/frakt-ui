@@ -21,17 +21,24 @@ export const DURATION_OPTIONS: RBOption<number>[] = [
   },
 ];
 
-export const BOND_FEATURE_OPTIONS: RBOption<BondFeatures>[] = [
+export const EARNER_INTEREST_OPTIONS: RBOption<BondFeatures>[] = [
   {
-    label: 'None',
+    label: 'Compound',
+    value: BondFeatures.Autocompound,
+  },
+  {
+    label: 'Receive in wallet',
+    value: BondFeatures.AutoreceiveSol,
+  },
+];
+
+export const RECEIVE_OPTIONS: RBOption<BondFeatures>[] = [
+  {
+    label: 'Liquidate',
     value: BondFeatures.None,
   },
   {
-    label: 'Receive liquidated NFT',
+    label: 'Receive in wallet',
     value: BondFeatures.ReceiveNftOnLiquidation,
-  },
-  {
-    label: 'Autocompound',
-    value: BondFeatures.Autocompound,
   },
 ];
