@@ -55,7 +55,7 @@ const BondsTab: FC = () => {
           <Toggle
             onChange={() => setShowOwnerBonds(!showOwnerBonds)}
             className={styles.toggle}
-            label="My bonds only"
+            label="My bonds"
           />
         </div>
 
