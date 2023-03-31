@@ -100,6 +100,9 @@
 }
 
 .infoValueSpan {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   color: var(--light-green-hover);
   font: var(--font-text-9);
   line-height: 16px;

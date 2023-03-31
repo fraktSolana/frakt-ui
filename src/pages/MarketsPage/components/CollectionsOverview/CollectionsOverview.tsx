@@ -28,9 +28,11 @@ const CollectionsOverview: FC = () => {
       <div className={styles.scrollContainer}>
         <div className={styles.headerWrapper}>
           <h3 className={styles.title}>Collections</h3>
-          <a onClick={unselectActiveCollection} className={styles.showMore}>
-            See all
-          </a>
+          {marketPubkey && (
+            <a onClick={unselectActiveCollection} className={styles.showMore}>
+              See all
+            </a>
+          )}
         </div>
 
         <MarketTable

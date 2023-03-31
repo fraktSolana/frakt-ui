@@ -19,14 +19,16 @@ export const PnlProfitCell: FC<PnlProfitCellProps> = ({ bond }) => {
       {isExitAvailable && (
         <div className={classNames(styles.value, styles.column)}>
           {pnlValue ? (
-            <span>
+            <span
+              className={classNames(styles.infoValueSpan, {
+                [styles.negative]: pnlProfit < 0,
+              })}
+            >
               {(pnlValue || 0)?.toFixed(3)} <Solana />
             </span>
           ) : (
             <>--</>
           )}
-
-          <span></span>
           {!!pnlProfit && (
             <span
               className={classNames(styles.infoValueSpan, {
