@@ -46,7 +46,7 @@ export const TableList = ({ data, hideBond }) => {
       title: (column) => (
         <HeaderTitleCell
           sortColumns={column?.sortColumns}
-          label="Size"
+          label="Lent"
           value="size"
           tooltipText="Amount of SOL you want to lend for a specific collection at the chosen LTV & APY"
         />
