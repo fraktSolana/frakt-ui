@@ -9,6 +9,7 @@ import {
   isBondAvailableToRedeem,
   pairLoanDurationFilter,
 } from '@frakt/utils/bonds';
+import moment from 'moment';
 
 export const useBondActions = ({
   bond,
@@ -20,7 +21,6 @@ export const useBondActions = ({
   pairs: Pair[];
 }) => {
   const redeemAvailable = isBondAvailableToRedeem(bond);
-
   console.log('pairs for exit: ', pairs);
   const bestOrdersAndBorrowValue = useMemo(() => {
     const { fbond, amountOfUserBonds } = bond;
@@ -34,7 +34,8 @@ export const useBondActions = ({
       pairs: pairs.filter((p) =>
         pairLoanDurationFilter({
           pair: p,
-          duration: (fbond.liquidatingAt - fbond.activatedAt) / (24 * 60 * 60),
+          duration:
+            (fbond.liquidatingAt - moment.utc().unix()) / (24 * 60 * 60),
         }),
       ),
     });
