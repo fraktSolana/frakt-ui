@@ -197,7 +197,7 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
           {!syntheticParams?.ltv && marketPubkey && (
             <NavigationButton
               className={styles.btn}
-              path={`${PATHS.OFFER}/${market?.marketPubkey}`}
+              path={`${PATHS.OFFER}/${marketPubkey}`}
             >
               Place offers
             </NavigationButton>

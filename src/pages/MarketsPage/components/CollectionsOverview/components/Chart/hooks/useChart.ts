@@ -23,6 +23,7 @@ import {
 } from '../helpers';
 
 defaults.font.family = 'Chakra Petch';
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -32,7 +33,7 @@ ChartJS.register(
   Legend,
 );
 
-const DEFAULT_BAR_BACKGROUND_COLOR = '007aff';
+const DEFAULT_BAR_BACKGROUND_COLOR = '#007aff';
 
 export const useChart = () => {
   const theme: string = useSelector(selectTheme);
