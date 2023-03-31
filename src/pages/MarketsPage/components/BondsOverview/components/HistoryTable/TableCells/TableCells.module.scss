@@ -38,8 +38,7 @@
   }
 }
 
-.value,
-.infoValueSpan {
+.value {
   color: var(--primary-text);
   display: flex;
   align-items: center;
@@ -48,13 +47,13 @@
   gap: 4px;
   font-size: 14px;
   white-space: nowrap;
-}
-
-.infoValueSpan {
-  color: var(--light-green-hover);
+  text-transform: capitalize;
 
   &.negative {
     color: var(--red-error-color);
+  }
+  &.positive {
+    color: var(--light-green-hover);
   }
 }
 

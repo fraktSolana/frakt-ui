@@ -7,9 +7,9 @@ import { InterestCell, SizeCell } from '../BondsTable/TableCells';
 import {
   HeaderCell,
   CollateralCell,
-  createReceiveJSX,
   createliquidatingAtJSX,
   createAutocompoundJSX,
+  ReceiveCell,
 } from './TableCells';
 
 export type SortColumns = {
@@ -96,7 +96,7 @@ export const COLUMNS: ColumnsType<Bond> = [
         tooltipText="When the loan is paid back or liquidated"
       />
     ),
-    render: (_, { stats }) => createReceiveJSX(stats?.received),
+    render: (_, { stats }) => <ReceiveCell stats={stats} />,
     sorter: ({ stats: statsA, stats: statsB }) =>
       statsA.received - statsB.received,
     showSorterTooltip: false,
