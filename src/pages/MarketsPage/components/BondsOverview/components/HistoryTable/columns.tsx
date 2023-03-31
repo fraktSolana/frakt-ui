@@ -43,9 +43,9 @@ export const COLUMNS: ColumnsType<Bond> = [
     title: (column) => (
       <HeaderCell
         sortColumns={column?.sortColumns}
-        label="Size"
+        label="Lent"
         value="size"
-        tooltipText="Amount of SOL you want to lend for a specific collection at the chosen LTV & APY"
+        tooltipText="Amount of SOL that was lent at the chosen LTV & APY"
       />
     ),
     sorter: ({ stats: statsA, stats: statsB }) => statsA.size - statsB.size,
@@ -79,7 +79,6 @@ export const COLUMNS: ColumnsType<Bond> = [
         sortColumns={column?.sortColumns}
         value="status"
         label="Status"
-        tooltipText="Analyzed profit from repaying the loan"
         removeSort
       />
     ),
@@ -93,7 +92,7 @@ export const COLUMNS: ColumnsType<Bond> = [
         sortColumns={column?.sortColumns}
         label="Received"
         value="received"
-        tooltipText="When the loan is paid back or liquidated"
+        tooltipText="Lender's profit or loss"
       />
     ),
     render: (_, { stats }) => <ReceiveCell stats={stats} />,

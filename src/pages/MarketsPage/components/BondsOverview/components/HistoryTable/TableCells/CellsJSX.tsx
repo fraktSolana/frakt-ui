@@ -1,12 +1,13 @@
 import moment from 'moment';
 import classNames from 'classnames';
 
-import { BondStats, BondsStatsStatus } from '@frakt/api/bonds';
+import { BondStats } from '@frakt/api/bonds';
 import { Solana } from '@frakt/icons';
 
 import styles from './TableCells.module.scss';
+import { FraktBondState } from 'fbonds-core/lib/fbond-protocol/types';
 
-export const createAutocompoundJSX = (status: BondsStatsStatus) => (
+export const createAutocompoundJSX = (status: FraktBondState) => (
   <span
     className={classNames(
       styles.value,
@@ -15,6 +16,7 @@ export const createAutocompoundJSX = (status: BondsStatsStatus) => (
       {
         [styles.negative]: status === 'liquidated' || status === 'liquidating',
       },
+      { [styles.primary]: status === 'active' },
     )}
   >
     {status || '--'}

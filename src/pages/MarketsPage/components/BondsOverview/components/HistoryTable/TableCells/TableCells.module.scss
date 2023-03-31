@@ -58,6 +58,9 @@
   &.negative {
     color: var(--red-error-color);
   }
+  &.primary {
+    color: var(--primary-text);
+  }
 }
 
 .valueSmall {

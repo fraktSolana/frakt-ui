@@ -82,8 +82,8 @@ export const TableList = ({ data, hideBond }) => {
         <HeaderTitleCell
           sortColumns={column?.sortColumns}
           value="estProfit"
-          label="Est. Profit"
-          tooltipText="Analyzed profit from repaying the loan"
+          label="Pending"
+          tooltipText="Pending interest in SOL"
         />
       ),
       sorter: ({ stats: statsA, stats: statsB }) =>
