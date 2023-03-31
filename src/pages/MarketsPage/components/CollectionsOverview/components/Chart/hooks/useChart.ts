@@ -19,7 +19,7 @@ import { useChartOptions } from './useChartOptions';
 import {
   getComputedStyleByVaraible,
   getMarketHistoryInfo,
-  renderCertainColorsByData,
+  // renderCertainColorsByData,
 } from '../helpers';
 
 defaults.font.family = 'Chakra Petch';
@@ -32,6 +32,8 @@ ChartJS.register(
   Legend,
 );
 
+const DEFAULT_BAR_BACKGROUND_COLOR = '007aff';
+
 export const useChart = () => {
   const theme: string = useSelector(selectTheme);
   const { marketPubkey } = useParams<{ marketPubkey: string }>();
@@ -41,7 +43,9 @@ export const useChart = () => {
   });
 
   const { options } = useChartOptions(marketHistory);
-  const [barBackground, setBarBackground] = useState<string>('');
+  const [barBackground, setBarBackground] = useState<string>(
+    DEFAULT_BAR_BACKGROUND_COLOR,
+  );
 
   useEffect(() => {
     const barBackground = getComputedStyleByVaraible('--blue-color');
@@ -50,8 +54,7 @@ export const useChart = () => {
 
   const data = useMemo(() => {
     if (!loading && !!marketHistory.length) {
-      const { labels, activeLoans, highestLTVs } =
-        getMarketHistoryInfo(marketHistory);
+      const { labels, activeLoans } = getMarketHistoryInfo(marketHistory);
 
       return {
         labels,
@@ -62,12 +65,12 @@ export const useChart = () => {
             barPercentage: 1.15,
             backgroundColor: barBackground,
           },
-          {
-            label: 'Highest LTV',
-            barPercentage: 1.15,
-            data: [highestLTVs],
-            backgroundColor: renderCertainColorsByData(highestLTVs),
-          },
+          // {
+          //   label: 'Highest LTV',
+          //   barPercentage: 1.15,
+          //   data: [highestLTVs],
+          //   backgroundColor: renderCertainColorsByData(highestLTVs),
+          // },
         ],
       };
     }
