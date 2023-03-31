@@ -72,18 +72,18 @@ export const COLUMNS: ColumnsType<Bond> = [
     showSorterTooltip: false,
   },
   {
-    key: 'autocompound',
-    dataIndex: 'autocompound',
+    key: 'status',
+    dataIndex: 'status',
     title: (column) => (
       <HeaderCell
         sortColumns={column?.sortColumns}
-        value="autocompound"
-        label="Autocompound"
+        value="status"
+        label="Status"
         tooltipText="Analyzed profit from repaying the loan"
         removeSort
       />
     ),
-    render: (_, { stats }) => createAutocompoundJSX(stats?.autocompound),
+    render: (_, { stats }) => createAutocompoundJSX(stats?.status),
   },
   {
     key: 'received',

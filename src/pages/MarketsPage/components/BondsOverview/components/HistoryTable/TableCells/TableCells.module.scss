@@ -38,7 +38,8 @@
   }
 }
 
-.value {
+.value,
+.infoValueSpan {
   color: var(--primary-text);
   display: flex;
   align-items: center;
@@ -47,6 +48,14 @@
   gap: 4px;
   font-size: 14px;
   white-space: nowrap;
+}
+
+.infoValueSpan {
+  color: var(--light-green-hover);
+
+  &.negative {
+    color: var(--red-error-color);
+  }
 }
 
 .valueSmall {

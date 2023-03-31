@@ -8,7 +8,7 @@
   justify-content: space-between;
   padding-bottom: 16px;
 
-  @media (max-width: 1150px) {
+  @media (max-width: 1240px) {
     flex-direction: column-reverse;
     gap: 16px;
   }
@@ -60,7 +60,7 @@
     width: 104px;
   }
 
-  @media screen and (max-width: 550px) {
+  @media screen and (max-width: 1080px) {
     flex-wrap: wrap;
 
     & > div {

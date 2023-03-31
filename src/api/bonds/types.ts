@@ -190,6 +190,7 @@ export interface BondStats {
   when?: number;
   autocompound?: string;
   received?: number;
+  status?: string;
 }
 
 export interface Bond {

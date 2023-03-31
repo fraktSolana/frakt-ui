@@ -1,4 +1,5 @@
 import moment from 'moment';
+import classNames from 'classnames';
 
 import { Solana } from '@frakt/icons';
 
@@ -13,7 +14,11 @@ export const createReceiveJSX = (value = 0) => {
     return <span className={styles.value}>{value}</span>;
 
   return (
-    <span className={styles.value}>
+    <span
+      className={classNames(styles.infoValueSpan, {
+        [styles.negative]: value < 0,
+      })}
+    >
       {value?.toFixed(2) || '--'} <Solana />
     </span>
   );

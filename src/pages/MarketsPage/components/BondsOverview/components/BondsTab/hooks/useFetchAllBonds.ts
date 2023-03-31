@@ -47,9 +47,11 @@ export const useFetchAllBonds = ({
     useInfiniteQuery({
       queryKey: [publicKey, queryData, showOwnerBonds, marketPubkey],
       queryFn: ({ pageParam = 0 }) => fetchData({ pageParam }),
-      getNextPageParam: (lastPage, allPages) => {
-        const nextPage = allPages.length + 1;
-        return lastPage.data.length !== 0 ? nextPage : undefined;
+      getPreviousPageParam: (firstPage) => {
+        return firstPage.pageParam - 1 ?? undefined;
+      },
+      getNextPageParam: (lastPage) => {
+        return lastPage.data?.length ? lastPage.pageParam + 1 : undefined;
       },
       staleTime: 60 * 1000,
       cacheTime: 100_000,
