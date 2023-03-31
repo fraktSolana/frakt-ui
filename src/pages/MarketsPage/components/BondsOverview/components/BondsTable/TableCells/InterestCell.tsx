@@ -10,7 +10,7 @@ interface InterestCellProps {
 
 export const InterestCell: FC<InterestCellProps> = ({ interest, apy }) => (
   <div className={styles.column}>
-    <span className={styles.value}> {(interest / 100 || 0).toFixed(1)}%</span>
+    <span className={styles.value}> {(interest / 100 || 0).toFixed(2)}%</span>
     <span className={classNames(styles.value, styles.valueSmall)}>
       {apy?.toFixed(0)}% APR
     </span>

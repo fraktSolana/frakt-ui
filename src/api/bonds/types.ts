@@ -198,6 +198,7 @@ export interface BondStats {
   autocompound?: string;
   received?: number;
   status?: BondsStatsStatus;
+  pnlProfit?: number;
 }
 
 export interface Bond {

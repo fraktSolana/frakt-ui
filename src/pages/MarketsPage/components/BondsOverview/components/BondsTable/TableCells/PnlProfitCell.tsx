@@ -12,19 +12,14 @@ interface PnlProfitCellProps {
 }
 
 export const PnlProfitCell: FC<PnlProfitCellProps> = ({ bond }) => {
-  const { averageBondPrice } = bond;
-  const { isExitAvailable, pnl: pnlValue } = bond?.stats;
-
-  const pnlProfit = averageBondPrice
-    ? pnlValue / (averageBondPrice * BOND_SOL_DECIMAIL_DELTA)
-    : 0;
+  const { isExitAvailable, pnl: pnlValue, pnlProfit } = bond?.stats;
 
   return (
     <>
       {isExitAvailable && (
         <div className={classNames(styles.value, styles.column)}>
           <span>
-            {pnlValue?.toFixed(3)} <Solana />
+            {(pnlValue || 0)?.toFixed(3)} <Solana />
           </span>
           {!!pnlProfit && (
             <span
