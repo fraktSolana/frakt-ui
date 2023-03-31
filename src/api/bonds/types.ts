@@ -192,6 +192,7 @@ export interface BondStats {
   ltv: number;
   estProfit: number;
   expiration: number;
+  isExitAvailable?: boolean;
   state?: string;
   when?: number;
   autocompound?: string;

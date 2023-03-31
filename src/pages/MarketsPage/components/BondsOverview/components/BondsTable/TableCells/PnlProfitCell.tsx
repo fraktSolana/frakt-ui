@@ -5,9 +5,6 @@ import { BOND_SOL_DECIMAIL_DELTA } from '@frakt/utils/bonds';
 import { Bond } from '@frakt/api/bonds';
 import { Solana } from '@frakt/icons';
 
-import { getMarketAndPairsByBond } from '../helpers';
-import { useBondActions } from '../hooks';
-
 import styles from './TableCells.module.scss';
 
 interface PnlProfitCellProps {
@@ -15,29 +12,19 @@ interface PnlProfitCellProps {
 }
 
 export const PnlProfitCell: FC<PnlProfitCellProps> = ({ bond }) => {
-  const { market, pairs } = getMarketAndPairsByBond(bond);
-
-  const { pnl: pnlLamports } = bond?.stats;
   const { averageBondPrice } = bond;
-
-  console.log('getMarketAndPairsByBond: ', pairs);
-
-  const { exitAvailable } = useBondActions({
-    bond,
-    market,
-    pairs,
-  });
+  const { isExitAvailable, pnl: pnlValue } = bond?.stats;
 
   const pnlProfit = averageBondPrice
-    ? pnlLamports / (averageBondPrice * BOND_SOL_DECIMAIL_DELTA)
+    ? pnlValue / (averageBondPrice * BOND_SOL_DECIMAIL_DELTA)
     : 0;
 
   return (
     <>
-      {!!exitAvailable && (
+      {isExitAvailable && (
         <div className={classNames(styles.value, styles.column)}>
           <span>
-            {(pnlLamports / 1e9).toFixed(3)} <Solana />
+            {pnlValue?.toFixed(3)} <Solana />
           </span>
           {!!pnlProfit && (
             <span
@@ -51,7 +38,7 @@ export const PnlProfitCell: FC<PnlProfitCellProps> = ({ bond }) => {
           )}
         </div>
       )}
-      {!exitAvailable && <EmptyValue />}
+      {!isExitAvailable && <EmptyValue />}
     </>
   );
 };
