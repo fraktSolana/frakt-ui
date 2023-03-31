@@ -207,6 +207,7 @@ export interface Bond {
   interest: number; //? BasePoint percent (50% === 5000)
   amountOfUserBonds: number;
   autocompoundDeposits?: AutocompoundDeposit[];
+  ownerPubkey?: string;
   stats: BondStats;
 }
 

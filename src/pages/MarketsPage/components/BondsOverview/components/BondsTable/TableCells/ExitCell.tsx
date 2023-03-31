@@ -27,26 +27,29 @@ export const ExitCell: FC<ExitCellProps> = ({ bond, bonds, hideBond }) => {
   });
 
   const { onExit } = useBondsTransactions({ bonds, hideBond, market });
+  const isOwner = !!bond?.ownerPubkey;
 
   return (
     <div className={styles.btnWrapper}>
-      <Button
-        className={classNames(styles.btn, styles.btnExit)}
-        disabled={!exitAvailable}
-        type="primary"
-        // onClick={() => setExitModalVisible(true)}
-        onClick={() =>
-          onExit({
-            bond,
-            bondOrderParams: convertTakenOrdersToOrderParams({
-              pairs,
-              takenOrders: bestOrdersAndBorrowValue.takenOrders,
-            }),
-          })
-        }
-      >
-        Exit
-      </Button>
+      {isOwner && (
+        <Button
+          className={classNames(styles.btn, styles.btnExit)}
+          disabled={!exitAvailable}
+          type="primary"
+          // onClick={() => setExitModalVisible(true)}
+          onClick={() =>
+            onExit({
+              bond,
+              bondOrderParams: convertTakenOrdersToOrderParams({
+                pairs,
+                takenOrders: bestOrdersAndBorrowValue.takenOrders,
+              }),
+            })
+          }
+        >
+          Exit
+        </Button>
+      )}
     </div>
   );
 };
