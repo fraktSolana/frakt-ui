@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { useWindowSize } from '@frakt/hooks';
@@ -9,6 +9,7 @@ import { MarketTable } from './components/MarketTable';
 import { useMarketsPreview } from '../../hooks';
 
 import styles from './CollectionsOverview.module.scss';
+import { PATHS } from '@frakt/constants';
 
 const MOBILE_VIEW_SIZE = 1300;
 
@@ -16,13 +17,22 @@ const CollectionsOverview: FC = () => {
   const { marketPubkey } = useParams<{ marketPubkey: string }>();
   const { marketsPreview, isLoading } = useMarketsPreview();
   const { width } = useWindowSize();
+  const history = useHistory();
 
   const { isVisible } = useChartVisible();
+
+  const unselectActiveCollection = () => history.push(PATHS.BONDS);
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.scrollContainer}>
-        <h3 className={styles.title}>Collections</h3>
+        <div className={styles.headerWrapper}>
+          <h3 className={styles.title}>Collections</h3>
+          <a onClick={unselectActiveCollection} className={styles.showMore}>
+            See all
+          </a>
+        </div>
+
         <MarketTable
           className={classNames(styles.marketTable, {
             [styles.collapsedMarketTable]: marketPubkey,

@@ -113,3 +113,15 @@
     }
   }
 }
+
+.headerWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.showMore {
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: underline;
+}
