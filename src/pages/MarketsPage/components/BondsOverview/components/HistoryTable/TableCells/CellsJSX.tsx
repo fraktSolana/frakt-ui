@@ -1,14 +1,23 @@
 import moment from 'moment';
 import classNames from 'classnames';
 
+import { BondStats, BondsStatsStatus } from '@frakt/api/bonds';
 import { Solana } from '@frakt/icons';
-import { BondStats } from '@frakt/api/bonds';
 
 import styles from './TableCells.module.scss';
 
-export const createAutocompoundJSX = (autocompound: string) => (
-  <span className={classNames(styles.value, styles.capitalizeValue)}>
-    {autocompound || '--'}
+export const createAutocompoundJSX = (status: BondsStatsStatus) => (
+  <span
+    className={classNames(
+      styles.value,
+      styles.capitalizeValue,
+      styles.positive,
+      {
+        [styles.negative]: status === 'liquidated' || status === 'liquidating',
+      },
+    )}
+  >
+    {status || '--'}
   </span>
 );
 

@@ -52,11 +52,11 @@
   font-size: 14px;
   white-space: nowrap;
 
-  &.negative {
-    color: var(--red-error-color);
-  }
   &.positive {
     color: var(--light-green-hover);
+  }
+  &.negative {
+    color: var(--red-error-color);
   }
 }
 

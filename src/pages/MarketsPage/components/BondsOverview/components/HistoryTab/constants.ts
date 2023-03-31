@@ -13,8 +13,4 @@ export const HISTORY_FILTER_OPTIONS: RBOption<string>[] = [
     label: 'Liquidated',
     value: 'liquidated',
   },
-  {
-    label: 'Liquidating',
-    value: 'liquidating',
-  },
 ];

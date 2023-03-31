@@ -177,6 +177,12 @@ interface CollateralBox {
   };
 }
 
+export type BondsStatsStatus =
+  | 'creation'
+  | 'repay'
+  | 'liquidated'
+  | 'liquidating';
+
 export interface BondStats {
   interest: number;
   averageBondPrice: number;
@@ -190,7 +196,7 @@ export interface BondStats {
   when?: number;
   autocompound?: string;
   received?: number;
-  status?: string;
+  status?: BondsStatsStatus;
 }
 
 export interface Bond {
