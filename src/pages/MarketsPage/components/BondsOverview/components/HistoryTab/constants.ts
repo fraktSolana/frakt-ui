@@ -6,11 +6,15 @@ export const HISTORY_FILTER_OPTIONS: RBOption<string>[] = [
     value: 'repay',
   },
   {
-    label: 'Liquidating',
-    value: 'liquidating',
+    label: 'Issued',
+    value: 'creation',
   },
   {
     label: 'Liquidated',
     value: 'liquidated',
+  },
+  {
+    label: 'Liquidating',
+    value: 'liquidating',
   },
 ];

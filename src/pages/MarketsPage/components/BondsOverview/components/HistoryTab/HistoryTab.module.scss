@@ -58,8 +58,12 @@
     padding: 3px !important;
     height: 24px;
     width: 104px;
+  }
 
-    @media (max-width: 550px) {
+  @media screen and (max-width: 550px) {
+    flex-wrap: wrap;
+
+    & > div {
       width: 90px;
     }
   }
