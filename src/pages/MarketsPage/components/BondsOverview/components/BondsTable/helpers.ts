@@ -7,12 +7,12 @@ export const getMarketAndPairsByBond = (bond: Bond) => {
   const { publicKey } = useWallet();
 
   const { market, isLoading: marketLoading } = useMarket({
-    marketPubkey: bond?.fbond?.marketPubkey,
+    marketPubkey: bond?.marketPubkey,
   });
 
   //? Filter wallet pairs (to prevent selling to yourself)
   const { pairs: rawPairs, isLoading: pairsLoading } = useMarketPairs({
-    marketPubkey: bond?.fbond?.marketPubkey,
+    marketPubkey: bond?.marketPubkey,
   });
 
   const pairs = rawPairs.filter(

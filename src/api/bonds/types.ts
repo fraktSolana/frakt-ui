@@ -209,6 +209,7 @@ export interface Bond {
   amountOfUserBonds: number;
   autocompoundDeposits?: AutocompoundDeposit[];
   ownerPubkey?: string;
+  marketPubkey: string;
   stats: BondStats;
 }
 
