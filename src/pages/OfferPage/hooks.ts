@@ -68,12 +68,12 @@ export const useOfferPage = () => {
     BondFeatures.AutoreceiveSol,
   );
 
-  const repaymentBondFeature =
+  const editRepaymentBondFeature =
     isEdit && isAutocompoundBondFeature(autocompoundFeature)
       ? BondFeatures.Autocompound
       : BondFeatures.AutoreceiveSol;
 
-  const receiveBondFeature =
+  const editReceiveBondFeature =
     isEdit && isLiquidatedBondFeature(receiveNftFeature)
       ? BondFeatures.None
       : BondFeatures.ReceiveNftOnLiquidation;
@@ -321,9 +321,11 @@ export const useOfferPage = () => {
     walletSolBalance: account?.lamports ?? 0,
     market,
     isLoading,
-    autocompoundFeature: repaymentBondFeature,
+    autocompoundFeature: isEdit
+      ? editRepaymentBondFeature
+      : autocompoundFeature,
     onChangeAutocompoundFeature,
-    receiveNftFeature: receiveBondFeature,
+    receiveNftFeature: isEdit ? editReceiveBondFeature : receiveNftFeature,
     onChangeReceiveNftFeature,
   };
 };
