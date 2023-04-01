@@ -24,6 +24,7 @@ export const useFetchBondsStats: UseFetchBondsStats = ({
       staleTime: 60 * 1000,
       keepPreviousData: true,
       refetchOnWindowFocus: false,
+      enabled: !!walletPubkey,
     },
   );
 

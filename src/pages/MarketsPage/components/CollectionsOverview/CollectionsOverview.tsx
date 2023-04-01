@@ -5,13 +5,14 @@ import classNames from 'classnames';
 import { useWindowSize } from '@frakt/hooks';
 
 import Chart, { useChartVisible } from './components/Chart';
+import { calcFirstColumnWidth } from './components/MarketTable/helpers';
 import { MarketTable } from './components/MarketTable';
 import { useMarketsPreview } from '../../hooks';
 
 import styles from './CollectionsOverview.module.scss';
 import { PATHS } from '@frakt/constants';
 
-const MOBILE_VIEW_SIZE = 1300;
+const SMALL_DESKTOP_SIZE = 1300;
 
 const CollectionsOverview: FC = () => {
   const { marketPubkey } = useParams<{ marketPubkey: string }>();
@@ -28,7 +29,7 @@ const CollectionsOverview: FC = () => {
       <div className={styles.scrollContainer}>
         <div className={styles.headerWrapper}>
           <h3 className={styles.title}>Collections</h3>
-          {marketPubkey && (
+          {marketPubkey && !isLoading && (
             <a onClick={unselectActiveCollection} className={styles.showMore}>
               See all
             </a>
@@ -42,7 +43,11 @@ const CollectionsOverview: FC = () => {
           })}
           loading={isLoading}
           data={marketsPreview}
-          breakpoints={{ scrollX: width < MOBILE_VIEW_SIZE && 744 }}
+          breakpoints={{
+            scrollX: width < SMALL_DESKTOP_SIZE && 744,
+            scrollY: 236,
+            mobile: calcFirstColumnWidth(width, !!marketPubkey),
+          }}
           marketPubkey={marketPubkey}
         />
       </div>

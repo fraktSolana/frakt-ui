@@ -35,7 +35,6 @@ export const COLUMNS: ColumnsType<Bond> = [
     }) => collateralBoxB.nft.name?.localeCompare(collateralBoxA.nft.name),
     render: (_, bond: Bond) => <CollateralCell bond={bond} />,
     showSorterTooltip: false,
-    fixed: 'left',
   },
   {
     key: 'size',

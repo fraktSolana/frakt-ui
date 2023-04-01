@@ -4,15 +4,15 @@ import { ColumnsType } from 'antd/es/table';
 import { DebouncedFunc } from 'lodash';
 import classNames from 'classnames';
 
-import { useOnClickOutside, useWindowSize } from '@frakt/hooks';
+// import { useOnClickOutside, useWindowSize } from '@frakt/hooks';
 
-import { SortModalMobile, SortModalMobileProps } from './SortModalMobile';
+import { SortModalMobileProps } from './SortModalMobile';
 import { ActiveRowParams, PartialBreakpoints } from './types';
-import { useFiltersModal } from '../FiltersDropdown';
-import { MobileTable } from './MobileTable';
+// import { useFiltersModal } from '../FiltersDropdown';
+// import { MobileTable } from './MobileTable';
 import { Loader } from '../Loader';
 import { Search } from './Search';
-import Button from '../Button';
+// import Button from '../Button';
 
 import styles from './Table.module.scss';
 
@@ -42,59 +42,56 @@ const Table = <T extends unknown>({
   columns,
   onRowClick,
   rowKeyField = 'id',
-  sort,
-  setSort,
+  // sort,
+  // setSort,
   loading = false,
-  search,
+  // search,
   className,
   breakpoints,
   activeRowParams,
 }: TablePropsWithSortModalMobileProps<T>): JSX.Element => {
-  const { width } = useWindowSize();
-  const isMobile = width <= breakpoints?.mobile;
+  // const {
+  //   visible: sortModalMobileVisible,
+  //   close: closeModalMobile,
+  //   toggle: toggleModalMobile,
+  // } = useFiltersModal();
 
-  const {
-    visible: sortModalMobileVisible,
-    close: closeModalMobile,
-    toggle: toggleModalMobile,
-  } = useFiltersModal();
-
-  const ref = useRef(null);
-  useOnClickOutside(ref, closeModalMobile);
+  // const ref = useRef(null);
+  // useOnClickOutside(ref, closeModalMobile);
 
   if (loading) return <Loader />;
 
-  if (isMobile) {
-    return (
-      <>
-        <div className={isMobile && styles.sortWrapper}>
-          <Search
-            onChange={search?.onChange}
-            className={styles.searchInput}
-            placeHolderText={search?.placeHolderText}
-          />
-          <div ref={ref}>
-            <Button type="tertiary" onClick={toggleModalMobile}>
-              Sorting
-            </Button>
-            <SortModalMobile
-              columns={columns}
-              setSort={setSort}
-              sort={sort}
-              sortModalMobileVisible={sortModalMobileVisible}
-            />
-          </div>
-        </div>
+  // if (isMobile) {
+  //   return (
+  //     <>
+  //       <div className={isMobile && styles.sortWrapper}>
+  //         <Search
+  //           onChange={search?.onChange}
+  //           className={styles.searchInput}
+  //           placeHolderText={search?.placeHolderText}
+  //         />
+  //         <div ref={ref}>
+  //           <Button type="tertiary" onClick={toggleModalMobile}>
+  //             Sorting
+  //           </Button>
+  //           <SortModalMobile
+  //             columns={columns}
+  //             setSort={setSort}
+  //             sort={sort}
+  //             sortModalMobileVisible={sortModalMobileVisible}
+  //           />
+  //         </div>
+  //       </div>
 
-        <MobileTable
-          data={data}
-          columns={columns}
-          onRowClick={onRowClick}
-          rowKeyField={rowKeyField}
-        />
-      </>
-    );
-  }
+  //       <MobileTable
+  //         data={data}
+  //         columns={columns}
+  //         onRowClick={onRowClick}
+  //         rowKeyField={rowKeyField}
+  //       />
+  //     </>
+  //   );
+  // }
 
   return (
     <AntdTable
