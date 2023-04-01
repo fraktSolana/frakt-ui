@@ -9,7 +9,7 @@ import { useLoadingModal } from '@frakt/components/LoadingModal';
 import {
   getPairAccount,
   isAutocompoundBondFeature,
-  isReceiveNftBondFeature,
+  isLiquidatedBondFeature,
   makeCreatePairTransaction,
   makeRemoveOrderTransaction,
   useMarket,
@@ -68,15 +68,15 @@ export const useOfferPage = () => {
     BondFeatures.AutoreceiveSol,
   );
 
-  const repaymentBondFeature =
+  const editRepaymentBondFeature =
     isEdit && isAutocompoundBondFeature(autocompoundFeature)
       ? BondFeatures.Autocompound
-      : autocompoundFeature;
+      : BondFeatures.AutoreceiveSol;
 
-  const receiveBondFeature =
-    isEdit && isReceiveNftBondFeature(receiveNftFeature)
-      ? BondFeatures.ReceiveNftOnLiquidation
-      : receiveNftFeature;
+  const editReceiveBondFeature =
+    isEdit && isLiquidatedBondFeature(receiveNftFeature)
+      ? BondFeatures.None
+      : BondFeatures.ReceiveNftOnLiquidation;
 
   useEffect(() => {
     if (isEdit && !isLoading) {
@@ -321,9 +321,11 @@ export const useOfferPage = () => {
     walletSolBalance: account?.lamports ?? 0,
     market,
     isLoading,
-    autocompoundFeature: repaymentBondFeature,
+    autocompoundFeature: isEdit
+      ? editRepaymentBondFeature
+      : autocompoundFeature,
     onChangeAutocompoundFeature,
-    receiveNftFeature: receiveBondFeature,
+    receiveNftFeature: isEdit ? editReceiveBondFeature : receiveNftFeature,
     onChangeReceiveNftFeature,
   };
 };
