@@ -1,3 +1,5 @@
+import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
+
 export interface MarketOrder {
   ltv: number;
   size: number;
@@ -9,6 +11,7 @@ export interface MarketOrder {
     assetReceiver: string;
     authorityAdapter: string;
     edgeSettlement: number;
+    bondFeature: BondFeatures;
   };
 }
 
