@@ -37,7 +37,6 @@ export const TableList = ({ data, hideBond }) => {
         collateralBox: collateralBoxB,
       }) => collateralBoxB.nft.name?.localeCompare(collateralBoxA.nft.name),
       render: (_, bond: Bond) => <TitleCell bond={bond} />,
-      fixed: 'left',
       showSorterTooltip: false,
     },
     {
