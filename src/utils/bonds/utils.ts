@@ -122,3 +122,12 @@ export const isBondFeaturesAutomated = (bondFeature: BondFeatures) =>
   bondFeature === BondFeatures.AutoReceiveAndReceiveNft
     ? true
     : false;
+
+export const isAutocompoundBondFeature = (bondFeature: BondFeatures) =>
+  bondFeature === BondFeatures.Autocompound ||
+  bondFeature === BondFeatures.AutoCompoundAndReceiveNft
+    ? true
+    : false;
+
+export const isLiquidatedBondFeature = (bondFeature: BondFeatures) =>
+  bondFeature === BondFeatures.None;
