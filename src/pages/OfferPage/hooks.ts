@@ -46,8 +46,6 @@ export const useOfferPage = () => {
 
   const isEdit = !!pairPubkey;
   const initialPairValues = parseMarketOrder(pair);
-  console.log(pair);
-
   const { hidePair } = useMarketPairs({ marketPubkey: marketPubkey });
 
   const queryClient = useQueryClient();
