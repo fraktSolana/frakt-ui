@@ -22,9 +22,9 @@ import { useNativeAccount } from '@frakt/utils/accounts';
 import { PATHS } from '@frakt/constants';
 import { Pair } from '@frakt/api/bonds';
 
-import { RBOption } from './components/RadioButton';
+import { RBOption } from '../../components/RadioButton';
 import { makeModifyPairTransactions } from '@frakt/utils/bonds/transactions/makeModifyPairTransactions';
-import { parseMarketOrder } from '../MarketPage/components/OrderBook/helpers';
+import { parseMarketOrder } from '../MarketsPage/components/OrderBook/helpers';
 
 export const useOfferPage = () => {
   const history = useHistory();
@@ -167,7 +167,7 @@ export const useOfferPage = () => {
           type: NotifyType.SUCCESS,
         });
 
-        history.push(`${PATHS.BOND}/${marketPubkey}`);
+        history.push(`${PATHS.BONDS}/${marketPubkey}`);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.warn(error?.logs);
@@ -231,7 +231,7 @@ export const useOfferPage = () => {
           type: NotifyType.SUCCESS,
         });
 
-        history.push(`${PATHS.BOND}/${marketPubkey}`);
+        history.push(`${PATHS.BONDS}/${marketPubkey}`);
       } catch (error) {
         console.error(error);
 
@@ -271,7 +271,7 @@ export const useOfferPage = () => {
           type: NotifyType.SUCCESS,
         });
 
-        history.push(`${PATHS.BOND}/${marketPubkey}`);
+        history.push(`${PATHS.BONDS}/${marketPubkey}`);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.warn(error?.logs?.join('\n'));

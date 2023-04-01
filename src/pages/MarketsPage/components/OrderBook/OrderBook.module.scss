@@ -1,0 +1,262 @@
+.orderBook {
+  position: fixed;
+  top: var(--header-height);
+  right: 0px;
+  z-index: 3;
+
+  padding: 32px;
+  width: 344px;
+  height: calc(100% - var(--header-height));
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  border-left: 1px solid var(--primary-border);
+  background-color: var(--primary-background);
+
+  @media screen and (max-width: 768px) {
+    top: calc(100% - 100px);
+    left: 0;
+    right: 0;
+
+    gap: 24px;
+    padding: 32px 43px 24px;
+    width: 100%;
+    height: auto;
+
+    border-top: 1px solid var(--primary-border);
+    border-left: none;
+    box-shadow: 0px -5px 80px rgba(0, 0, 0, 0.25);
+    transition: top 0.2s linear;
+
+    &.create {
+      gap: 8px;
+      top: calc(100% - 140px);
+    }
+
+    &.selected {
+      top: calc(100% - 140px);
+    }
+
+    &.active {
+      gap: 8px;
+      top: calc(var(--header-height) + 80px);
+    }
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+
+  @media screen and (max-width: 768px) {
+    &.create {
+      gap: 8px;
+    }
+  }
+}
+
+.title {
+  font: var(--font-text-2);
+  text-align: center;
+}
+
+.toggle {
+  display: flex;
+  justify-content: center;
+  font: var(--font-text-8);
+
+  @media screen and (max-width: 768px) {
+    display: none;
+
+    &.active {
+      display: flex;
+    }
+  }
+}
+
+.content {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  height: calc(100% - var(--header-height) - 60px);
+
+  &.visible {
+    height: 100%;
+  }
+
+  &.create {
+    height: calc(100% - var(--header-height) - 66px);
+  }
+
+  @media screen and (max-width: 768px) {
+    &.active {
+      height: calc(100vh - var(--header-height) - 210px);
+    }
+
+    &.visible.active {
+      height: calc(100vh - var(--header-height) - 116px);
+    }
+
+    &.create.active {
+      height: calc(100vh - var(--header-height) - 190px);
+    }
+  }
+
+  @media screen and (max-width: 550px) {
+    gap: 16px;
+  }
+}
+
+.loader {
+  @media screen and (max-width: 768px) {
+    display: none;
+    &.create {
+      display: block;
+    }
+    &.active {
+      display: block;
+    }
+  }
+}
+
+.list {
+  margin-top: 8px;
+  margin: 0 -52px;
+  padding: 0 52px;
+  overflow-y: scroll;
+
+  display: flex;
+  flex-direction: column;
+
+  height: calc(100% - var(--header-height));
+
+  &.create {
+    height: auto;
+  }
+
+  @media screen and (max-width: 768px) {
+    display: none;
+
+    margin: 0 -42px;
+    padding: 0 42px;
+
+    &.create {
+      display: flex;
+      height: 47px;
+      overflow: hidden;
+    }
+
+    &.active {
+      display: flex;
+      height: calc(100% - var(--header-height) - 22px);
+      overflow-y: scroll;
+    }
+
+    &.create.active {
+      height: calc(100% - var(--header-height));
+    }
+  }
+
+  @media screen and (max-width: 550px) {
+    display: none;
+    &.create {
+      display: flex;
+    }
+  }
+}
+
+.btn {
+  padding: 14px;
+  width: 100%;
+}
+
+.roundBtn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+
+  background-color: var(--primary-background);
+  border: 1px solid var(--primary-border);
+  border-radius: 50%;
+
+  svg {
+    & path {
+      fill: var(--black-color);
+    }
+  }
+}
+
+.btnChevron {
+  transform: rotate(180deg);
+  &.active {
+    transform: rotate(0deg);
+  }
+
+  @media screen and (max-width: 768px) {
+    display: flex;
+    position: absolute;
+    top: -16px;
+    left: calc(50% - 16px);
+  }
+}
+
+.btnTrash {
+  display: flex;
+  flex-shrink: 0;
+
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+
+  cursor: pointer;
+  @media screen and (max-width: 768px) {
+    width: 28px;
+    height: 28px;
+    svg {
+      width: 16.8px;
+      height: 16.8px;
+    }
+  }
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+
+    &.create {
+      display: flex;
+    }
+
+    &.active {
+      display: flex;
+    }
+  }
+}
+
+.radioButton {
+  label {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 12px;
+
+    height: 22px;
+    width: 32px !important;
+  }
+}

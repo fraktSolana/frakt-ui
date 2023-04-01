@@ -43,8 +43,8 @@ const MyLoans: FC<{ userLoans: Loan[] }> = ({ userLoans }) => {
   const loansInfo = [
     { name: 'Flip', value: flipRepayValue?.toFixed(3) },
     { name: 'Perpetual', value: perpetualRepayValue?.toFixed(3) },
-    { name: 'On grace', value: graceLoansValue?.toFixed(3) },
     { name: 'Bond', value: bondRepayValue?.toFixed(3) },
+    { name: 'On grace', value: graceLoansValue?.toFixed(3) },
   ];
 
   return (

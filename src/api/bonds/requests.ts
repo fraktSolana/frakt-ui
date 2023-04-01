@@ -3,7 +3,15 @@ import { IS_PRIVATE_MARKETS } from '@frakt/config';
 import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
 import axios from 'axios';
 
-import { MarketPreview, Market, Pair, Bond } from './types';
+import {
+  MarketPreview,
+  Market,
+  Pair,
+  Bond,
+  FetchBondsRequestParams,
+  TotalBondsStats,
+  MarketHistory,
+} from './types';
 
 const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN;
 
@@ -60,32 +68,91 @@ export const fetchMarketPair: FetchMarketPair = async ({ pairPubkey }) => {
   return data;
 };
 
-type FetchWalletBonds = (props: {
-  walletPubkey: web3.PublicKey;
-  marketPubkey: web3.PublicKey;
-}) => Promise<Bond[]>;
-
-export const fetchWalletBonds: FetchWalletBonds = async ({
+type FetchAllBonds = ({
+  skip,
+  limit,
+  sortBy,
+  order,
+}: FetchBondsRequestParams) => Promise<Bond[]>;
+export const fetchAllBonds: FetchAllBonds = async ({
+  skip,
+  limit,
+  sortBy = 'nftName',
+  order = 'asc',
   walletPubkey,
   marketPubkey,
 }) => {
+  const marketQuery = marketPubkey ? `marketPubKey=${marketPubkey}&` : '';
+  const walletQuery = walletPubkey
+    ? `wallet=${walletPubkey?.toBase58()}&onlyUser=true`
+    : '';
+
   const { data } = await axios.get<Bond[]>(
-    `https://${BACKEND_DOMAIN}/bonds/${walletPubkey.toBase58()}/${marketPubkey.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
+    `https://${BACKEND_DOMAIN}/bonds?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}&isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
-  return data ?? [];
+  return data;
 };
 
-type FetchAllUserBonds = (props: {
+type FetchBondsStats = ({
+  walletPubkey,
+  marketPubkey,
+}: {
+  marketPubkey: string;
   walletPubkey: web3.PublicKey;
-}) => Promise<Bond[]>;
-
-export const fetchAllUserBonds: FetchAllUserBonds = async ({
+}) => Promise<TotalBondsStats>;
+export const fetchBondsStats: FetchBondsStats = async ({
+  marketPubkey,
   walletPubkey,
 }) => {
-  const { data } = await axios.get<Bond[]>(
-    `https://${BACKEND_DOMAIN}/bonds/${walletPubkey.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
+  const marketQuery = marketPubkey ? `marketPubKey=${marketPubkey}&` : '';
+  const walletQuery = walletPubkey ? `wallet=${walletPubkey}` : '';
+
+  const { data } = await axios.get<TotalBondsStats>(
+    `https://${BACKEND_DOMAIN}/stats/bonds?${marketQuery}${walletQuery}&isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
-  return data ?? [];
+  return data;
+};
+
+type FetchBondsHistory = ({
+  skip,
+  limit,
+  sortBy,
+  order,
+  eventType,
+}: FetchBondsRequestParams) => Promise<Bond[]>;
+export const fetchBondsHistory: FetchBondsHistory = async ({
+  skip,
+  limit,
+  sortBy,
+  order,
+  walletPubkey,
+  eventType,
+  marketPubkey,
+}: FetchBondsRequestParams) => {
+  const marketQuery = marketPubkey ? `marketPubKey=${marketPubkey}&` : '';
+  const walletQuery = walletPubkey
+    ? `wallet=${walletPubkey?.toBase58()}&onlyUser=true&`
+    : '';
+  const eventTypeQuery = eventType ? `eventType=${eventType}` : '';
+
+  const { data } = await axios.get<Bond[]>(
+    `https://${BACKEND_DOMAIN}/bonds/history?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}${eventTypeQuery}&isPrivate=${IS_PRIVATE_MARKETS}`,
+  );
+
+  return data;
+};
+
+type FetchMarketHistory = (props: {
+  marketPubkey: string;
+}) => Promise<MarketHistory>;
+export const fetchMarketHistory: FetchMarketHistory = async ({
+  marketPubkey,
+}) => {
+  const { data } = await axios.get<MarketHistory>(
+    `https://${BACKEND_DOMAIN}/stats/bonds/history?marketPubKey=${marketPubkey}`,
+  );
+
+  return data;
 };

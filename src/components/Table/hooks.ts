@@ -4,6 +4,7 @@ import { ColumnsType } from 'antd/es/table';
 import { SortModalMobileProps } from './SortModalMobile';
 import { TableProps, TablePropsWithSortModalMobileProps } from './Table';
 import { flatObject } from '@frakt/utils';
+import { PartialSearchParams } from './types';
 
 type UseSearch = <T>(props: {
   data: ReadonlyArray<T>;
@@ -97,11 +98,7 @@ export const useSortModalMobile: UseSortModalMobile = ({
 };
 
 interface UseTableProps<T> extends TableProps<T> {
-  searchParams?: {
-    searchField?: string | string[];
-    debounceWait?: number;
-    placeHolderText?: string;
-  };
+  searchParams?: PartialSearchParams;
 }
 
 type UseTable = <T>(props: UseTableProps<T>) => {
