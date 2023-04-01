@@ -64,9 +64,11 @@
     table-layout: fixed !important;
   }
 
-  .ant-table-tbody > tr > td:first-child {
-    max-width: 560px !important;
-    width: 100% !important;
+  @media (min-width: 1300px) {
+    .ant-table-tbody > tr > td:first-child {
+      max-width: 560px !important;
+      width: 100% !important;
+    }
   }
 
   @media (max-width: 500px) {
@@ -84,8 +86,10 @@
       display: none !important;
     }
 
-    .ant-table table {
-      table-layout: auto !important;
+    @media (min-width: 1300px) {
+      .ant-table table {
+        table-layout: auto !important;
+      }
     }
 
     @media (max-width: 1300px) {
