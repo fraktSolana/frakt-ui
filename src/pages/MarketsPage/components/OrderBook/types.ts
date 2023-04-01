@@ -11,7 +11,7 @@ export interface MarketOrder {
     assetReceiver: string;
     authorityAdapter: string;
     edgeSettlement: number;
-    bondFeature: BondFeatures;
+    bondFeature?: BondFeatures;
   };
 }
 
