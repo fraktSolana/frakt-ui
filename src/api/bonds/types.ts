@@ -180,6 +180,7 @@ interface CollateralBox {
 export interface BondStats {
   interest: number;
   averageBondPrice: number;
+  amountOfUserBonds: number;
   apy: number;
   pnl: number;
   size: number;
@@ -198,10 +199,6 @@ export interface BondStats {
 export interface Bond {
   fbond: FBond;
   collateralBox: CollateralBox;
-  apy: number; //? Percent (50%)
-  averageBondPrice: number; //? price in lamports for minimal part of bond
-  interest: number; //? BasePoint percent (50% === 5000)
-  amountOfUserBonds: number;
   autocompoundDeposits?: AutocompoundDeposit[];
   ownerPubkey?: string;
   marketPubkey: string;
