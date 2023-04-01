@@ -24,6 +24,7 @@ export const parseMarketOrder = (pair: Pair): MarketOrder => {
       assetReceiver: pair?.assetReceiver || '',
       edgeSettlement: pair ? getTopOrderSize(pair) : 0,
       authorityAdapter: pair?.authorityAdapterPublicKey || '',
+      bondFeature: pair?.validation?.bondFeatures,
     },
   };
 };
