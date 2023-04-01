@@ -8,6 +8,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import {
   getPairAccount,
+  isAutocompoundBondFeature,
+  isReceiveNftBondFeature,
   makeCreatePairTransaction,
   makeRemoveOrderTransaction,
   useMarket,
@@ -66,13 +68,25 @@ export const useOfferPage = () => {
     BondFeatures.AutoreceiveSol,
   );
 
+  const repaymentBondFeature =
+    isEdit && isAutocompoundBondFeature(autocompoundFeature)
+      ? BondFeatures.Autocompound
+      : autocompoundFeature;
+
+  const receiveBondFeature =
+    isEdit && isReceiveNftBondFeature(receiveNftFeature)
+      ? BondFeatures.ReceiveNftOnLiquidation
+      : receiveNftFeature;
+
   useEffect(() => {
     if (isEdit && !isLoading) {
-      const { duration, interest, size, ltv } = initialPairValues;
+      const { duration, interest, size, ltv, rawData } = initialPairValues;
       setDuration(duration || 0);
       setInterest((interest * 100)?.toFixed(2));
       setOfferSize((size || 0).toFixed(2));
       setLtv(ltv || 0);
+      setAutocompoundFeature(rawData?.bondFeature);
+      setReceiveNftFeature(rawData?.bondFeature);
     }
   }, [isEdit, isLoading, pair]);
 
@@ -307,9 +321,9 @@ export const useOfferPage = () => {
     walletSolBalance: account?.lamports ?? 0,
     market,
     isLoading,
-    autocompoundFeature,
+    autocompoundFeature: repaymentBondFeature,
     onChangeAutocompoundFeature,
-    receiveNftFeature,
+    receiveNftFeature: receiveBondFeature,
     onChangeReceiveNftFeature,
   };
 };
