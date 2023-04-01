@@ -26,7 +26,7 @@ export const PnlProfitCell: FC<PnlProfitCellProps> = ({ bond }) => {
             {(pnlValue || 0)?.toFixed(3)} <Solana />
           </span>
 
-          {pnlValue !== 0 && (
+          {isExitAvailable && (
             <span
               className={classNames(styles.infoValueSpan, {
                 [styles.negative]: pnlProfit < 0,
