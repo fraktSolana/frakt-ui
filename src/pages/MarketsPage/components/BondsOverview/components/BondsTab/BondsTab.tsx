@@ -22,8 +22,6 @@ const BondsTab: FC = () => {
 
   const { queryData } = useBondsSort();
 
-  const [showOwnerBonds, setShowOwnerBonds] = useState<boolean>(false);
-
   const {
     data: bonds,
     fetchNextPage,
@@ -31,7 +29,7 @@ const BondsTab: FC = () => {
     isListEnded,
     hideBond,
     loading,
-  } = useFetchAllBonds({ queryData, showOwnerBonds, marketPubkey });
+  } = useFetchAllBonds({ queryData, marketPubkey });
 
   useEffect(() => {
     if (inView && !isFetchingNextPage && !isListEnded) {
@@ -41,7 +39,7 @@ const BondsTab: FC = () => {
 
   const { bondsStats } = useFetchBondsStats({
     marketPubkey,
-    walletPubkey: showOwnerBonds && publicKey,
+    walletPubkey: publicKey,
   });
 
   return (
@@ -52,16 +50,11 @@ const BondsTab: FC = () => {
             locked={bondsStats?.tvl}
             activeLoans={bondsStats?.activeLoans}
           />
-          <Toggle
-            onChange={() => setShowOwnerBonds(!showOwnerBonds)}
-            className={styles.toggle}
-            label="My bonds"
-          />
         </div>
 
         {!bonds.length && loading && <Loader />}
 
-        {!connected && showOwnerBonds ? (
+        {!connected ? (
           <ConnectWalletSection
             className={styles.emptyList}
             text="Connect your wallet to see my bonds"
@@ -79,13 +72,7 @@ const BondsTab: FC = () => {
           </>
         )}
       </div>
-      {!showOwnerBonds && !bonds.length && !loading && (
-        <EmptyList
-          className={styles.emptyList}
-          text="No active bonds at the moment"
-        />
-      )}
-      {connected && showOwnerBonds && !bonds.length && !loading && (
+      {connected && !bonds.length && !loading && (
         <EmptyList
           className={styles.emptyList}
           text="You don't have any bonds"

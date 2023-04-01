@@ -130,4 +130,6 @@ export const isAutocompoundBondFeature = (bondFeature: BondFeatures) =>
     : false;
 
 export const isLiquidatedBondFeature = (bondFeature: BondFeatures) =>
-  bondFeature === BondFeatures.None;
+  bondFeature === BondFeatures.None ||
+  bondFeature === BondFeatures.Autocompound ||
+  bondFeature === BondFeatures.AutoreceiveSol;
