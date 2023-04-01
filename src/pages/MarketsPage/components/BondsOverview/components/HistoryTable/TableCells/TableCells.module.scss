@@ -1,0 +1,110 @@
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.fixedLeftRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.title {
+  color: var(--secondary-text);
+  font: var(--font-text-7);
+  text-transform: uppercase;
+}
+
+.nftName {
+  color: var(--primary-text);
+  font: var(--font-text-6);
+  min-width: 116px;
+  max-width: 116px;
+}
+
+.nftImage {
+  width: 26px;
+  height: 26px;
+}
+
+.questionIcon {
+  svg {
+    fill: var(--blue-color);
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.capitalizeValue {
+  text-transform: capitalize;
+}
+
+.value {
+  color: var(--primary-text);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font: var(--font-text-8);
+  gap: 4px;
+  font-size: 14px;
+  white-space: nowrap;
+
+  &.positive {
+    color: #6db315;
+  }
+  &.negative {
+    color: var(--red-error-color);
+  }
+  &.primary {
+    color: var(--primary-text);
+  }
+}
+
+.valueSmall {
+  font-size: 12px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+}
+
+.tooltip {
+  width: 100%;
+}
+
+.timer {
+  width: 12px;
+  height: 12px;
+
+  path {
+    fill: var(--gray-color-2);
+  }
+}
+
+.countdown {
+  display: block;
+}
+
+.imageWrapper {
+  display: flex;
+  position: relative;
+}
+
+.sortIcon {
+  display: flex;
+}
+
+.highestLtvColor {
+  color: #b39016;
+}
+
+.value {
+  font: var(--font-text-8);
+  font-size: 14px;
+}

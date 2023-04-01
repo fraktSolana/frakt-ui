@@ -4,7 +4,7 @@ import { Doughnut } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export const defaultColors = ['#FFC01F', '#1FAEFF', '#FF701F', '#1FFF50'];
+export const defaultColors = ['#FFC01F', '#1FAEFF', '#1FFF50', '#FF701F'];
 
 interface ChartPieProps {
   rawData?: any[];

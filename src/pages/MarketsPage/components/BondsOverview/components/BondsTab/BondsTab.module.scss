@@ -1,0 +1,48 @@
+.wrapper {
+  padding: 24px;
+}
+
+.toggle {
+  @media (max-width: 550px) {
+    padding-bottom: 16px;
+  }
+}
+
+.bondsTableHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+
+  @media (max-width: 550px) {
+    flex-direction: column-reverse;
+  }
+}
+
+// Reset default ant-design styles
+.bondsTable :global {
+  .ant-table-thead > tr > th:first-child,
+  .ant-table-tbody > tr > td:first-child {
+    padding-left: 0;
+  }
+  .ant-table-thead > tr > th:last-child,
+  .ant-table-tbody > tr > td:last-child {
+    padding-right: 0;
+  }
+  ::-webkit-scrollbar {
+    height: 0px;
+  }
+}
+
+.bondsTable :global {
+  .ant-table-tbody > tr > td:last-child {
+    width: 70px !important;
+  }
+  .ant-table-tbody > tr > td:first-child {
+    width: 192px;
+  }
+}
+
+.emptyList {
+  padding: 120px 0 160px !important;
+}

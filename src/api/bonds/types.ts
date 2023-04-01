@@ -1,3 +1,4 @@
+import { web3 } from '@frakt-protocol/frakt-sdk';
 import {
   BondingCurveType,
   PairAuthorityType,
@@ -176,12 +177,51 @@ interface CollateralBox {
   };
 }
 
+export interface BondStats {
+  interest: number;
+  averageBondPrice: number;
+  amountOfUserBonds: number;
+  apy: number;
+  pnl: number;
+  size: number;
+  ltv: number;
+  estProfit: number;
+  expiration: number;
+  isExitAvailable?: boolean;
+  state?: string;
+  when?: number;
+  autocompound?: string;
+  received?: number;
+  status?: FraktBondState;
+  pnlProfit?: number;
+}
+
 export interface Bond {
   fbond: FBond;
   collateralBox: CollateralBox;
-  apy: number; //? Percent (50%)
-  averageBondPrice: number; //? price in lamports for minimal part of bond
-  interest: number; //? BasePoint percent (50% === 5000)
-  amountOfUserBonds: number;
   autocompoundDeposits?: AutocompoundDeposit[];
+  ownerPubkey?: string;
+  marketPubkey: string;
+  stats: BondStats;
+}
+
+export interface FetchBondsRequestParams {
+  skip: number;
+  limit: number;
+  sortBy: string;
+  order: string;
+  walletPubkey: web3.PublicKey;
+  eventType?: string;
+  marketPubkey?: string;
+}
+
+export interface TotalBondsStats {
+  activeLoans: number;
+  tvl: number;
+}
+
+export interface MarketHistory {
+  time: string;
+  activeBonds: number;
+  highestLTV: number;
 }

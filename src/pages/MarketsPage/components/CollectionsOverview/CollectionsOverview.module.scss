@@ -1,0 +1,127 @@
+.wrapper {
+  background: var(--primary-background);
+  border: 1px solid var(--primary-border);
+  display: flex;
+  gap: 24px;
+  padding: 24px;
+  margin-bottom: 16px;
+  min-height: 324px;
+
+  @media (max-width: 1300px) {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+}
+
+.scrollContainer {
+  overflow: hidden;
+  min-width: 308px;
+  width: 100%;
+}
+
+.title {
+  color: var(--primary-text);
+  font: var(--font-text-2);
+  font-size: 20px;
+  line-height: 24px;
+  padding-bottom: 16px;
+}
+
+.collapsedMarketTable {
+  :global {
+    .ant-table-thead > tr > th:nth-child(n + 3),
+    .ant-table-tbody > tr > td:nth-child(n + 3) {
+      display: none !important;
+    }
+
+    @media (max-width: 1300px) {
+      .ant-table-thead > tr > th:nth-child(n + 3),
+      .ant-table-tbody > tr > td:nth-child(n + 3) {
+        display: table-cell !important;
+      }
+    }
+  }
+}
+
+// Reset default ant-design styles
+.marketTable :global {
+  .ant-table-thead > tr > th {
+    border: 0 !important;
+    padding-top: 0 !important;
+  }
+  .ant-table-thead > tr > th:first-child {
+    padding-bottom: 0 !important;
+  }
+  .ant-table-thead > tr > th:first-child {
+    padding-bottom: 0 !important;
+  }
+  .ant-table-thead > tr > th:last-child,
+  .ant-table-tbody > tr > td:last-child {
+    padding-right: 0;
+  }
+  ::-webkit-scrollbar {
+    height: 0px;
+  }
+}
+
+.marketTable :global {
+  height: 234px;
+  display: block !important;
+
+  .ant-table-content {
+    max-height: 234px !important;
+  }
+
+  @media (max-width: 1300px) {
+    .ant-table-tbody > tr > td:first-child {
+      width: 240px;
+    }
+  }
+  @media (max-width: 768px) and (min-width: 1300px) {
+    .ant-table-tbody > tr > td:first-child {
+      width: 192px;
+    }
+  }
+  @media (max-width: 500px) {
+    .ant-table table {
+      width: unset !important;
+    }
+    .ant-table-content {
+      overflow: hidden auto !important;
+    }
+    .ant-table-thead > tr > th:nth-child(n + 3),
+    .ant-table-tbody > tr > td:nth-child(n + 3) {
+      display: none !important;
+    }
+    .ant-table-thead > tr > th:first-child,
+    .ant-table-tbody > tr > td:first-child {
+      padding-right: 0;
+    }
+  }
+}
+
+.chartMarketTable :global {
+  @media (max-width: 1300px) {
+    height: unset;
+
+    .ant-table-row {
+      display: none;
+    }
+  }
+}
+
+.headerWrapper {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.showMore {
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: underline;
+}

@@ -137,6 +137,11 @@ type MakeExitBondMultiOrdersTransaction = (params: {
 
 export const makeExitBondMultiOrdersTransaction: MakeExitBondMultiOrdersTransaction =
   async ({ market, bondOrderParams, bond, connection, wallet }) => {
+    console.log('makeExitBondMultiOrdersTransaction args: ', {
+      market,
+      bondOrderParams,
+      bond,
+    });
     const isReceiveLiquidatedNfts =
       wallet?.publicKey?.toBase58() ===
       bond?.fbond?.bondCollateralOrSolReceiver;

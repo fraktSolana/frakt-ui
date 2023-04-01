@@ -1,0 +1,40 @@
+.wrapper {
+  @extend .rowGapCenter;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.rowGapCenter {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.column {
+  @extend .rowGapCenter;
+  flex-direction: column;
+  width: 100%;
+}
+
+.label {
+  color: var(--secondary-text);
+  font: var(--font-text-7);
+  line-height: 18px;
+  text-transform: uppercase;
+}
+
+.value {
+  font: var(--font-text-8);
+  font-size: 14px;
+}
+
+.highlightPositiveText {
+  color: #6db315;
+}
+
+.questionIcon svg {
+  fill: var(--blue-color);
+  width: 18px;
+  height: 18px;
+}

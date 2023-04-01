@@ -1,0 +1,46 @@
+.flexCenter {
+  display: flex;
+  align-items: center;
+}
+
+.wrapper {
+  @extend .flexCenter;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+
+  @media (max-width: 1300px) {
+    display: none;
+    gap: 8px;
+  }
+}
+
+.chartVisible {
+  display: flex;
+}
+
+.chart {
+  @extend .flexCenter;
+  justify-content: center;
+
+  height: 218px;
+  width: 420px;
+
+  @media (max-width: 1390px) {
+    max-width: 378px;
+    width: 100%;
+  }
+
+  @media (max-width: 1370px) {
+    max-width: 328px;
+  }
+
+  @media (max-width: 1300px) {
+    max-width: 420px;
+    height: 102.5px;
+
+    & > canvas {
+      height: 102.5px !important;
+    }
+  }
+}

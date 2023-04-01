@@ -1,0 +1,46 @@
+.list {
+  margin: 0 -52px;
+  margin-top: 16px;
+  padding: 0 52px;
+  overflow-y: scroll;
+
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  height: calc(100% - 100px);
+
+  &.create {
+    height: auto;
+  }
+
+  @media screen and (max-width: 768px) {
+    display: none;
+
+    margin: 0 -42px;
+    padding: 0 42px;
+
+    &.create {
+      display: flex;
+      height: 47px;
+      overflow: hidden;
+    }
+
+    &.active {
+      display: flex;
+      height: calc(100% - var(--header-height) - 32px);
+      overflow-y: scroll;
+    }
+
+    &.create.active {
+      height: calc(100% - var(--header-height));
+    }
+  }
+
+  @media screen and (max-width: 550px) {
+    display: none;
+    &.create {
+      display: flex;
+    }
+  }
+}
