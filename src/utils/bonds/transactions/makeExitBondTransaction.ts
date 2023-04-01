@@ -96,8 +96,8 @@ export const makeExitBondTransaction: MakeExitBondTransaction = async ({
     },
     args: {
       proof: proof,
-      amountToSell: bond.amountOfUserBonds, //? amount of fbond tokens decimals
-      minAmountToGet: bond.amountOfUserBonds * pair.currentSpotPrice, //? SOL lamports
+      amountToSell: bond.stats.amountOfUserBonds, //? amount of fbond tokens decimals
+      minAmountToGet: bond.stats.amountOfUserBonds * pair.currentSpotPrice, //? SOL lamports
       skipFailed: false,
       isAutocompoundOrAutoreceiveSol: isBondFeaturesAutomated(
         pair.validation.bondFeatures,
