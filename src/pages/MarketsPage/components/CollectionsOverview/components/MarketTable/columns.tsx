@@ -25,7 +25,7 @@ export type SortColumns = {
   order: SortOrder;
 }[];
 
-export const TableList = ({ onChange, onRowClick, isMobile }) => {
+export const TableList = ({ onChange, onRowClick, mobileWidth }) => {
   const COLUMNS: ColumnsType<MarketPreview> = [
     {
       key: 'collectionName',
@@ -40,7 +40,7 @@ export const TableList = ({ onChange, onRowClick, isMobile }) => {
       render: (_, market: MarketPreview) => (
         <TitleCell market={market} onRowClick={onRowClick} />
       ),
-      width: isMobile ? 190 : 240,
+      width: mobileWidth,
     },
     {
       key: 'activeBondsAmount',
@@ -87,9 +87,8 @@ export const TableList = ({ onChange, onRowClick, isMobile }) => {
       sorter: (a, b) => sortingFavoriteList(a, b, 'duration', formateDuration),
       render: (value) => createDurationJSX(value),
       showSorterTooltip: false,
-      width: 120,
+      width: 100,
     },
-
     {
       key: 'bestLTV',
       dataIndex: 'bestLTV',
@@ -104,7 +103,7 @@ export const TableList = ({ onChange, onRowClick, isMobile }) => {
       render: (value) => createHighestLtvJSX(value),
       sorter: (a, b) => sortingFavoriteList(a, b, 'bestLTV'),
       showSorterTooltip: false,
-      width: 120,
+      width: 125,
     },
     {
       key: 'apy',
@@ -120,7 +119,7 @@ export const TableList = ({ onChange, onRowClick, isMobile }) => {
       render: (value) => createAprJSX(value),
       sorter: (a, b) => sortingFavoriteList(a, b, 'apy'),
       showSorterTooltip: false,
-      width: 120,
+      width: 110,
     },
   ];
 

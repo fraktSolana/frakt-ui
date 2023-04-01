@@ -10,6 +10,7 @@
 
 .row {
   @extend .rowCenter;
+  gap: 4px;
   justify-content: flex-end;
 }
 

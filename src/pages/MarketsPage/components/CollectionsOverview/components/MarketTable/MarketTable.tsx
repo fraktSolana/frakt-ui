@@ -51,7 +51,11 @@ export const MarketTable: FC<MarketTableProps> = ({
     searchField: 'collectionName',
   });
 
-  const COLUMNS = TableList({ onChange, onRowClick, isMobile });
+  const COLUMNS = TableList({
+    onChange,
+    onRowClick,
+    mobileWidth: breakpoints?.mobile,
+  });
 
   const { table } = useTable({
     data: filteredData,
