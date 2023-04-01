@@ -37,10 +37,10 @@ export const TableList = ({ onChange, onRowClick }) => {
           onChange={onChange}
         />
       ),
-      fixed: 'left',
       render: (_, market: MarketPreview) => (
         <TitleCell market={market} onRowClick={onRowClick} />
       ),
+      width: 240,
     },
     {
       key: 'activeBondsAmount',
@@ -56,6 +56,7 @@ export const TableList = ({ onChange, onRowClick }) => {
       sorter: (a, b) => sortingFavoriteList(a, b, 'activeBondsAmount'),
       showSorterTooltip: false,
       defaultSortOrder: 'descend',
+      width: 120,
     },
     {
       key: 'offerTVL',
@@ -71,6 +72,7 @@ export const TableList = ({ onChange, onRowClick }) => {
       sorter: (a, b) => sortingFavoriteList(a, b, 'offerTVL', formateToNumbers),
       render: (value) => createOfferTvlJSX(value),
       showSorterTooltip: false,
+      width: 120,
     },
     {
       key: 'duration',
@@ -85,7 +87,9 @@ export const TableList = ({ onChange, onRowClick }) => {
       sorter: (a, b) => sortingFavoriteList(a, b, 'duration', formateDuration),
       render: (value) => createDurationJSX(value),
       showSorterTooltip: false,
+      width: 120,
     },
+
     {
       key: 'bestLTV',
       dataIndex: 'bestLTV',
@@ -100,6 +104,7 @@ export const TableList = ({ onChange, onRowClick }) => {
       render: (value) => createHighestLtvJSX(value),
       sorter: (a, b) => sortingFavoriteList(a, b, 'bestLTV'),
       showSorterTooltip: false,
+      width: 120,
     },
     {
       key: 'apy',
@@ -115,6 +120,7 @@ export const TableList = ({ onChange, onRowClick }) => {
       render: (value) => createAprJSX(value),
       sorter: (a, b) => sortingFavoriteList(a, b, 'apy'),
       showSorterTooltip: false,
+      width: 120,
     },
   ];
 
