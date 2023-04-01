@@ -9,7 +9,7 @@ import { useLoadingModal } from '@frakt/components/LoadingModal';
 import {
   getPairAccount,
   isAutocompoundBondFeature,
-  isReceiveNftBondFeature,
+  isLiquidatedBondFeature,
   makeCreatePairTransaction,
   makeRemoveOrderTransaction,
   useMarket,
@@ -71,12 +71,12 @@ export const useOfferPage = () => {
   const repaymentBondFeature =
     isEdit && isAutocompoundBondFeature(autocompoundFeature)
       ? BondFeatures.Autocompound
-      : autocompoundFeature;
+      : BondFeatures.AutoreceiveSol;
 
   const receiveBondFeature =
-    isEdit && isReceiveNftBondFeature(receiveNftFeature)
-      ? BondFeatures.ReceiveNftOnLiquidation
-      : receiveNftFeature;
+    isEdit && isLiquidatedBondFeature(receiveNftFeature)
+      ? BondFeatures.None
+      : BondFeatures.ReceiveNftOnLiquidation;
 
   useEffect(() => {
     if (isEdit && !isLoading) {
