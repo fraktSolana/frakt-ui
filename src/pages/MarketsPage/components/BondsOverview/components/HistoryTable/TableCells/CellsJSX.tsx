@@ -35,7 +35,7 @@ export const ReceiveCell = ({ stats }: { stats: BondStats }) => {
   if (typeof received === 'string')
     return (
       <span className={classNames(styles.value, styles.capitalizeValue)}>
-        {received}
+        NFT collateral
       </span>
     );
 
