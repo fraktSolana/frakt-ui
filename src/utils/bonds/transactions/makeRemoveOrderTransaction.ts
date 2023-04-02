@@ -7,7 +7,6 @@ import { BONDS_PROGRAM_PUBKEY } from '../constants';
 type MakeRemoveOrderTransaction = (params: {
   pairPubkey: web3.PublicKey;
   authorityAdapter: web3.PublicKey;
-  edgeSettlement: number; //? Raw value
   connection: web3.Connection;
   wallet: WalletContextState;
 }) => Promise<{
@@ -18,7 +17,6 @@ type MakeRemoveOrderTransaction = (params: {
 export const makeRemoveOrderTransaction: MakeRemoveOrderTransaction = async ({
   pairPubkey,
   authorityAdapter,
-  edgeSettlement,
   connection,
   wallet,
 }) => {
