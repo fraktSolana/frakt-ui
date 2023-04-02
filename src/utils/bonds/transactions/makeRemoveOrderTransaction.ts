@@ -22,20 +22,20 @@ export const makeRemoveOrderTransaction: MakeRemoveOrderTransaction = async ({
   connection,
   wallet,
 }) => {
-  const { instructions: instructions1, signers: signers1 } =
-    await pairs.withdrawals.withdrawSolFromPair({
-      accounts: {
-        authorityAdapter,
-        pair: pairPubkey,
-        userPubkey: wallet.publicKey,
-      },
-      args: {
-        amountOfTokensToWithdraw: edgeSettlement,
-      },
-      programId: BONDS_PROGRAM_PUBKEY,
-      connection,
-      sendTxn: sendTxnPlaceHolder,
-    });
+  // const { instructions: instructions1, signers: signers1 } =
+  //   await pairs.withdrawals.withdrawSolFromPair({
+  //     accounts: {
+  //       authorityAdapter,
+  //       pair: pairPubkey,
+  //       userPubkey: wallet.publicKey,
+  //     },
+  //     args: {
+  //       amountOfTokensToWithdraw: edgeSettlement,
+  //     },
+  //     programId: BONDS_PROGRAM_PUBKEY,
+  //     connection,
+  //     sendTxn: sendTxnPlaceHolder,
+  //   });
 
   const { instructions: instructions2, signers: signers2 } =
     await pairs.mutations.closeVirtualPair({
@@ -50,9 +50,7 @@ export const makeRemoveOrderTransaction: MakeRemoveOrderTransaction = async ({
     });
 
   return {
-    transaction: new web3.Transaction().add(
-      ...[instructions1, instructions2].flat(),
-    ),
-    signers: [...signers1, ...signers2],
+    transaction: new web3.Transaction().add(...[instructions2].flat()),
+    signers: [...signers2],
   };
 };
