@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
 import classNames from 'classnames';
 
 import { useMarketsPreview } from '@frakt/pages/MarketsPage/hooks';
@@ -21,7 +22,10 @@ const CollectionList: FC<CollectionListProps> = ({
   showOwnOrders,
   duration,
 }) => {
-  const { marketsPreview, isLoading } = useMarketsPreview({ showOwnOrders });
+  const { publicKey } = useWallet();
+  const { marketsPreview, isLoading } = useMarketsPreview(
+    showOwnOrders && publicKey,
+  );
 
   if (isLoading) return <Loader />;
 

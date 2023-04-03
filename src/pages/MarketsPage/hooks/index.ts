@@ -1,21 +1,19 @@
-import { useWallet } from '@solana/wallet-adapter-react';
 import { useQuery } from '@tanstack/react-query';
+import { web3 } from 'fbonds-core';
 
 import { fetchMarketsPreview, MarketPreview } from '@frakt/api/bonds';
 
-type UseMarketsPreview = (props?: { showOwnOrders: boolean }) => {
+type UseMarketsPreview = (walletPubkey?: web3.PublicKey) => {
   marketsPreview: MarketPreview[];
   isLoading: boolean;
 };
 
-export const useMarketsPreview: UseMarketsPreview = (props) => {
-  const { publicKey } = useWallet();
-
+export const useMarketsPreview: UseMarketsPreview = (walletPubkey) => {
   const { data, isLoading } = useQuery(
-    ['marketsPreview', props?.showOwnOrders],
+    ['marketsPreview', walletPubkey],
     () =>
       fetchMarketsPreview({
-        walletPubkey: props?.showOwnOrders && publicKey,
+        walletPubkey,
       }),
     {
       staleTime: 5000,
