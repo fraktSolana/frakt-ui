@@ -4,9 +4,8 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
 import { Loan } from '@frakt/api/loans';
 
-import { LoansList } from '../LoansList';
-
 import styles from './LoansPageContent.module.scss';
+import { LoansTable } from '../LoansTable';
 
 interface LoansPageContentProps {
   loans: Loan[];
@@ -22,7 +21,7 @@ export const LoansPageContent: FC<LoansPageContentProps> = ({
   return (
     <div className={styles.container}>
       {connected ? (
-        <LoansList loans={loans} isLoading={isLoading} />
+        <LoansTable data={loans} loading={isLoading} />
       ) : (
         <ConnectWalletSection text="Connect your wallet to check if you have any active loans" />
       )}

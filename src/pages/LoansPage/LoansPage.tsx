@@ -1,6 +1,5 @@
 import { FC, useMemo } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import classNames from 'classnames';
 
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
 
@@ -27,12 +26,7 @@ const LoansPage: FC = () => {
 
   return (
     <AppLayout>
-      <div
-        className={classNames([
-          styles.content,
-          { [styles.contentSidebarVisible]: !!selection.length },
-        ])}
-      >
+      <div className={styles.content}>
         <LoansGeneralInfo allLoans={filteredLoans} />
         <LoansPageContent loans={filteredLoans} isLoading={isLoading} />
       </div>

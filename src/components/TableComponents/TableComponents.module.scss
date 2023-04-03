@@ -1,0 +1,46 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.fixedLeftRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.headerCellTitle {
+  color: var(--secondary-text);
+  font: var(--font-text-7);
+  text-transform: uppercase;
+}
+
+.collectionInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.collectionName {
+  color: var(--primary-text);
+  font: var(--font-text-6);
+  min-width: 116px;
+  max-width: 116px;
+}
+.collectionImage {
+  width: 26px;
+  height: 26px;
+}
+
+.value {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.questionIcon svg {
+  fill: var(--blue-color);
+  width: 18px;
+  height: 18px;
+}
