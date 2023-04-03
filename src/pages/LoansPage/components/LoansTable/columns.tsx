@@ -10,9 +10,11 @@ import {
   HeaderCell,
 } from '@frakt/components/TableComponents';
 
-import styles from './LoansTable.module.scss';
+import MoreActionsCell from './LoansTableCells/MoreActionsCell';
 import { useSelectedLoans } from '../../loansState';
 import { RepayLoanCell } from './LoansTableCells';
+
+import styles from './LoansTable.module.scss';
 
 export type SortColumns = {
   column: ColumnType<Loan>;
@@ -94,6 +96,9 @@ export const TableList = ({ onChange }) => {
     },
     {
       render: (_, loan) => <RepayLoanCell loan={loan} />,
+    },
+    {
+      render: (_, loan) => <MoreActionsCell loan={loan} />,
     },
   ];
 
