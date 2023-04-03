@@ -21,7 +21,7 @@ const CollectionList: FC<CollectionListProps> = ({
   showOwnOrders,
   duration,
 }) => {
-  const { marketsPreview, isLoading } = useMarketsPreview();
+  const { marketsPreview, isLoading } = useMarketsPreview({ showOwnOrders });
 
   if (isLoading) return <Loader />;
 
