@@ -12,6 +12,7 @@ import {
 
 import styles from './LoansTable.module.scss';
 import { useSelectedLoans } from '../../loansState';
+import { RepayLoanCell } from './LoansTableCells';
 
 export type SortColumns = {
   column: ColumnType<Loan>;
@@ -90,6 +91,9 @@ export const TableList = ({ onChange }) => {
       ),
       render: (_) => createSolValueJSX(0),
       showSorterTooltip: false,
+    },
+    {
+      render: (_) => <RepayLoanCell />,
     },
   ];
 

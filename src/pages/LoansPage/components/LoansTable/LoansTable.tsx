@@ -1,20 +1,20 @@
 import { FC, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { Loan } from '@frakt/api/loans';
 import Table, {
   PartialBreakpoints,
   useSearch,
   useTable,
 } from '@frakt/components/Table';
 
-import { TableList } from './columns';
 import { useSelectedLoans } from '../../loansState';
-import { Loan } from '@frakt/api/loans';
+import { TableList } from './columns';
 
 export interface MarketTableProps {
   data: ReadonlyArray<any>;
+  loading: boolean;
   className?: string;
-  loading?: boolean;
   breakpoints?: PartialBreakpoints;
 }
 

@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import styles from './TableComponents.module.scss';
+
+import styles from '../LoansTable.module.scss';
 
 interface CollectionInfoCellProps {
   nftImage: string;
