@@ -1,5 +1,6 @@
 import { ColumnTitleProps } from 'antd/lib/table/interface';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import classNames from 'classnames';
 
 import {
   ArrowDownTableSort,
@@ -32,7 +33,7 @@ export const HeaderCell = <T extends unknown>({
   const sortedOrder = sortedColumn?.order;
 
   return (
-    <div className={styles.row}>
+    <div className={classNames(styles.row, styles.rowFixedRight)}>
       <span className={styles.headerCellTitle}>{label}</span>
       {!!tooltipText && (
         <Tooltip placement="top" overlay={tooltipText}>

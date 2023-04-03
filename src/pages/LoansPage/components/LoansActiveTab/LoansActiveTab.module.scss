@@ -1,0 +1,19 @@
+.loansTable :global {
+  .ant-table-thead > tr > th:first-child,
+  .ant-table-tbody > tr > td:first-child {
+    padding-left: 23px;
+  }
+  .ant-table-thead > tr > th:last-child,
+  .ant-table-tbody > tr > td:last-child {
+    padding-right: 23px;
+  }
+  ::-webkit-scrollbar {
+    height: 0px;
+  }
+}
+
+.loansTable :global {
+  .ant-table-tbody > tr > td:last-child {
+    width: 70px !important;
+  }
+}

@@ -4,6 +4,10 @@
   gap: 4px;
 }
 
+.rowFixedRight {
+  justify-content: flex-end;
+}
+
 .fixedLeftRow {
   display: flex;
   align-items: center;

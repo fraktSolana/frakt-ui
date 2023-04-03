@@ -93,7 +93,7 @@ export const TableList = ({ onChange }) => {
       showSorterTooltip: false,
     },
     {
-      render: (_) => <RepayLoanCell />,
+      render: (_, loan) => <RepayLoanCell loan={loan} />,
     },
   ];
 
