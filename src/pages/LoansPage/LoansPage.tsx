@@ -5,7 +5,6 @@ import classNames from 'classnames';
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
 
 import { LoansGeneralInfo } from './components/LoansGeneralInfo';
-import { Sidebar } from './components/Sidebar';
 import { LoansPageContent } from './components/LoansPageContent';
 import { useWalletLoans } from './hooks';
 import { useHiddenLoansPubkeys, useSelectedLoans } from './loansState';
@@ -28,20 +27,13 @@ const LoansPage: FC = () => {
 
   return (
     <AppLayout>
-      {!!selection.length && <Sidebar />}
       <div
         className={classNames([
           styles.content,
           { [styles.contentSidebarVisible]: !!selection.length },
         ])}
       >
-        <LoansGeneralInfo
-          allLoans={filteredLoans}
-          selection={selection}
-          setSelection={setSelection}
-          clearSelection={clearSelection}
-        />
-
+        <LoansGeneralInfo allLoans={filteredLoans} />
         <LoansPageContent loans={filteredLoans} isLoading={isLoading} />
       </div>
     </AppLayout>
