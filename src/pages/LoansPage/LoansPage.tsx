@@ -13,7 +13,6 @@ const LoansPage: FC = () => {
   const wallet = useWallet();
 
   const { hiddenLoansPubkeys } = useHiddenLoansPubkeys();
-  const { selection, setSelection, clearSelection } = useSelectedLoans();
 
   const { loans, isLoading } = useWalletLoans({
     walletPublicKey: wallet.publicKey,

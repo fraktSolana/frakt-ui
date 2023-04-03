@@ -11,6 +11,7 @@ import {
 } from '@frakt/components/TableComponents';
 
 import styles from './LoansTable.module.scss';
+import { useSelectedLoans } from '../../loansState';
 
 export type SortColumns = {
   column: ColumnType<Loan>;
@@ -18,6 +19,8 @@ export type SortColumns = {
 }[];
 
 export const TableList = ({ onChange }) => {
+  const { findLoanInSelection } = useSelectedLoans();
+
   const COLUMNS: ColumnsType<Loan> = [
     {
       key: 'collectionName',
@@ -29,8 +32,12 @@ export const TableList = ({ onChange }) => {
           onChange={onChange}
         />
       ),
-      render: (_, { nft }) => (
-        <CollectionInfoCell nftName={nft.name} nftImage={nft.imageUrl} />
+      render: (_, { nft, pubkey }) => (
+        <CollectionInfoCell
+          nftName={nft.name}
+          nftImage={nft.imageUrl}
+          selected={!!findLoanInSelection(pubkey)}
+        />
       ),
     },
     {
@@ -63,7 +70,7 @@ export const TableList = ({ onChange }) => {
       title: (column) => (
         <HeaderCell column={column} label="Borrow interest" value="interest" />
       ),
-      render: (_, { repayValue }) => createPercentValueJSX(repayValue),
+      render: (_) => createPercentValueJSX(0),
       showSorterTooltip: false,
     },
     {
@@ -72,7 +79,7 @@ export const TableList = ({ onChange }) => {
       title: (column) => (
         <HeaderCell column={column} label="Health" value="health" />
       ),
-      render: (_, { repayValue }) => createPercentValueJSX(repayValue),
+      render: (_) => createPercentValueJSX(0),
       showSorterTooltip: false,
     },
     {
@@ -81,7 +88,7 @@ export const TableList = ({ onChange }) => {
       title: (column) => (
         <HeaderCell column={column} label="Duration" value="duration" />
       ),
-      render: (_, { repayValue }) => createSolValueJSX(repayValue),
+      render: (_) => createSolValueJSX(0),
       showSorterTooltip: false,
     },
   ];

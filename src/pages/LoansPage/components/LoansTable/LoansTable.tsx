@@ -1,7 +1,6 @@
 import { FC, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { MarketPreview } from '@frakt/api/bonds';
 import Table, {
   PartialBreakpoints,
   useSearch,
@@ -9,6 +8,8 @@ import Table, {
 } from '@frakt/components/Table';
 
 import { TableList } from './columns';
+import { useSelectedLoans } from '../../loansState';
+import { Loan } from '@frakt/api/loans';
 
 export interface MarketTableProps {
   data: ReadonlyArray<any>;
@@ -23,11 +24,13 @@ export const LoansTable: FC<MarketTableProps> = ({
   loading,
   breakpoints,
 }) => {
+  const { toggleLoanInSelection } = useSelectedLoans();
+
   const history = useHistory();
 
   const onRowClick = useCallback(
-    (dataItem: MarketPreview) => {
-      //
+    (dataItem: Loan) => {
+      toggleLoanInSelection(dataItem);
     },
     [history],
   );
@@ -53,10 +56,6 @@ export const LoansTable: FC<MarketTableProps> = ({
       breakpoints={breakpoints}
       search={{ onChange }}
       className={className}
-      //   activeRowParams={{
-      //     field: 'marketPubkey',
-      //     value: marketPubkey,
-      //   }}
     />
   );
 };

@@ -28,14 +28,33 @@
   min-width: 116px;
   max-width: 116px;
 }
-.collectionImage {
+.collectionImage,
+.selectedCollectionOverlay {
   width: 26px;
   height: 26px;
+}
+.selectedCollectionOverlay {
+  background-color: var(--light-green-color);
+  border: 1px solid var(--button-text);
+  position: relative;
+
+  &:after {
+    content: '';
+    display: block;
+    background: var(--button-text);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 1.2px;
+    width: 11px;
+  }
 }
 
 .value {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 4px;
 }
 
