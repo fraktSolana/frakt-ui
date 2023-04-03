@@ -1,11 +1,12 @@
 import { FC } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
 
-import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
+import { Tabs, useTabs } from '@frakt/components/Tabs';
 import { Loan } from '@frakt/api/loans';
 
+import { LOANS_TABS, LoansTabsNames } from '../../constants';
+import LoansActiveTab from '../LoansActiveTab/LoansActiveTab';
+
 import styles from './LoansPageContent.module.scss';
-import { LoansTable } from '../LoansTable';
 
 interface LoansPageContentProps {
   loans: Loan[];
@@ -16,15 +17,25 @@ export const LoansPageContent: FC<LoansPageContentProps> = ({
   loans,
   isLoading,
 }) => {
-  const { connected } = useWallet();
+  const {
+    tabs: marketTabs,
+    value: tabValue,
+    setValue: setTabValue,
+  } = useTabs({ tabs: LOANS_TABS, defaultValue: LOANS_TABS[0].value });
 
   return (
-    <div className={styles.container}>
-      {connected ? (
-        <LoansTable data={loans} loading={isLoading} />
-      ) : (
-        <ConnectWalletSection text="Connect your wallet to check if you have any active loans" />
-      )}
+    <div className={styles.content}>
+      <Tabs
+        className={styles.tab}
+        tabs={marketTabs}
+        value={tabValue}
+        setValue={setTabValue}
+      />
+      <div className={styles.tabContent}>
+        {tabValue === LoansTabsNames.ACTIVE && (
+          <LoansActiveTab loans={loans} isLoading={isLoading} />
+        )}
+      </div>
     </div>
   );
 };

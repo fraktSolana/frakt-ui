@@ -5,8 +5,9 @@ import { AppLayout } from '@frakt/components/Layout/AppLayout';
 
 import { LoansGeneralInfo } from './components/LoansGeneralInfo';
 import { LoansPageContent } from './components/LoansPageContent';
+import { useHiddenLoansPubkeys } from './loansState';
 import { useWalletLoans } from './hooks';
-import { useHiddenLoansPubkeys, useSelectedLoans } from './loansState';
+
 import styles from './LoansPage.module.scss';
 
 const LoansPage: FC = () => {
