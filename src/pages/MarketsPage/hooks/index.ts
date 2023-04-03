@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { fetchMarketsPreview, MarketPreview } from '@frakt/api/bonds';
 
-type UseMarketsPreview = (props: { showOwnOrders: boolean }) => {
+type UseMarketsPreview = (props?: { showOwnOrders: boolean }) => {
   marketsPreview: MarketPreview[];
   isLoading: boolean;
 };
