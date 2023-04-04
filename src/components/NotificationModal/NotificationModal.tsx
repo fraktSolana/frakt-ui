@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import moment from 'moment';
 
 import { useLocalStorage } from '@frakt/hooks';
 import { Modal } from '@frakt/components/Modal';
@@ -8,8 +7,6 @@ import { CloseModal } from '@frakt/icons';
 import { fetchTopNotification } from '@frakt/api/common';
 
 import styles from './NotificationModal.module.scss';
-
-const HIDE_NOTIFICATION_TIME = 60 * 60; //? Don't show notification after closing or following a link for X seconds
 
 export const NotificationModal = () => {
   const { data: topNotificationHtml } = useQuery(
@@ -21,24 +18,31 @@ export const NotificationModal = () => {
     },
   );
 
-  //? Store in localstorage unix timestamp when user closed notification
-  const [closedByUserTimestamp, setClosedByUserTimeStamp] = useLocalStorage<
-    number | null
-  >('userClosedNotificationModal', null);
+  //? Store in localstorage prev notification
+  const [previousClosedNotification, setPreviousClosedNotification] =
+    useLocalStorage<string | null>('userClosedNotificationModal', null);
 
-  //? If hide time expired -- show notification again
+  //? If its a new notification -- show notification again
   useEffect(() => {
-    if (
-      closedByUserTimestamp &&
-      moment().unix() - closedByUserTimestamp > HIDE_NOTIFICATION_TIME
-    ) {
-      setClosedByUserTimeStamp(null);
+    if (!topNotificationHtml) {
+      return;
     }
-  }, [closedByUserTimestamp, setClosedByUserTimeStamp]);
+    if (!previousClosedNotification) {
+      return;
+    }
+    if (topNotificationHtml === previousClosedNotification) {
+      return;
+    }
+    setPreviousClosedNotification(null);
+  }, [
+    previousClosedNotification,
+    setPreviousClosedNotification,
+    topNotificationHtml,
+  ]);
 
   const onCancel = useCallback(
-    () => setClosedByUserTimeStamp(moment().unix()),
-    [setClosedByUserTimeStamp],
+    () => setPreviousClosedNotification(topNotificationHtml),
+    [setPreviousClosedNotification, topNotificationHtml],
   );
 
   //? Add event listener for each link in html from BE. To auto hide and close modal when user clicks on link
@@ -50,9 +54,12 @@ export const NotificationModal = () => {
     }
   }, [topNotificationHtml, onCancel]);
 
+  const showModal =
+    topNotificationHtml && topNotificationHtml !== previousClosedNotification;
+
   return (
     <Modal
-      visible={!!(!closedByUserTimestamp && topNotificationHtml)} //? Show notification when html exists and modal is not hidden
+      visible={showModal} //? Show notification when html exists and modal is not hidden
       centered
       onCancel={onCancel}
       width={500}
