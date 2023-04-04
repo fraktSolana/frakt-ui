@@ -12,7 +12,7 @@ import {
 
 import MoreActionsCell from './LoansTableCells/MoreActionsCell';
 import { useSelectedLoans } from '../../loansState';
-import { RepayLoanCell } from './LoansTableCells';
+import { RepayLoanCell, DurationCell } from './LoansTableCells';
 
 import styles from './LoansTable.module.scss';
 
@@ -26,8 +26,6 @@ export const TableList = ({ onChange }) => {
 
   const COLUMNS: ColumnsType<Loan> = [
     {
-      key: 'collectionName',
-      dataIndex: 'collectionName',
       title: () => (
         <Search
           placeHolderText="Search by name"
@@ -44,27 +42,46 @@ export const TableList = ({ onChange }) => {
       ),
     },
     {
-      key: 'debt',
-      dataIndex: 'debt',
+      key: 'loanValue',
+      dataIndex: 'loanValue',
       title: (column) => (
-        <HeaderCell column={column} label="Debt" value="debt" />
+        <HeaderCell column={column} label="Borrowed" value="loanValue" />
       ),
-      sorter: ({ repayValue: repayValueA, repayValue: repayValueB }) =>
+      sorter: ({ loanValue: loanValueA }, { loanValue: loanValueB }) =>
+        loanValueA - loanValueB,
+      render: (_, { loanValue }) => createSolValueJSX(loanValue),
+      showSorterTooltip: false,
+      defaultSortOrder: 'ascend',
+    },
+    {
+      key: 'repayValue',
+      dataIndex: 'repayValue',
+      title: (column) => (
+        <HeaderCell column={column} label="Debt" value="repayValue" />
+      ),
+      sorter: ({ repayValue: repayValueA }, { repayValue: repayValueB }) =>
         repayValueA - repayValueB,
       render: (_, { repayValue }) => createSolValueJSX(repayValue),
       showSorterTooltip: false,
     },
     {
-      key: 'LiquidationPrice',
-      dataIndex: 'LiquidationPrice',
+      key: 'liquidationPrice',
+      dataIndex: 'liquidationPrice',
       title: (column) => (
         <HeaderCell
           column={column}
           label="Liquidation price"
-          value="LiquidationPrice"
+          value="liquidationPrice"
         />
       ),
-      render: (_, { repayValue }) => createSolValueJSX(repayValue),
+      render: (_, { classicParams }) =>
+        createSolValueJSX(classicParams?.priceBased?.liquidationPrice),
+      sorter: (
+        { classicParams: classicParamsA },
+        { classicParams: classicParamsB },
+      ) =>
+        classicParamsA?.priceBased?.liquidationPrice -
+        classicParamsB?.priceBased?.liquidationPrice,
       showSorterTooltip: false,
     },
     {
@@ -73,7 +90,14 @@ export const TableList = ({ onChange }) => {
       title: (column) => (
         <HeaderCell column={column} label="Borrow interest" value="interest" />
       ),
-      render: (_) => createPercentValueJSX(0),
+      sorter: (
+        { classicParams: classicParamsA },
+        { classicParams: classicParamsB },
+      ) =>
+        classicParamsA?.priceBased?.borrowAPRPercent -
+        classicParamsB?.priceBased?.borrowAPRPercent,
+      render: (_, { classicParams }) =>
+        createPercentValueJSX(classicParams?.priceBased?.borrowAPRPercent),
       showSorterTooltip: false,
     },
     {
@@ -82,7 +106,13 @@ export const TableList = ({ onChange }) => {
       title: (column) => (
         <HeaderCell column={column} label="Health" value="health" />
       ),
-      render: (_) => createPercentValueJSX(0),
+      render: (_, { classicParams }) =>
+        createPercentValueJSX(classicParams?.priceBased?.health),
+      sorter: (
+        { classicParams: classicParamsA },
+        { classicParams: classicParamsB },
+      ) =>
+        classicParamsA?.priceBased?.health - classicParamsB?.priceBased?.health,
       showSorterTooltip: false,
     },
     {
@@ -91,7 +121,7 @@ export const TableList = ({ onChange }) => {
       title: (column) => (
         <HeaderCell column={column} label="Duration" value="duration" />
       ),
-      render: (_) => createSolValueJSX(0),
+      render: (_, loan) => <DurationCell loan={loan} />,
       showSorterTooltip: false,
     },
     {

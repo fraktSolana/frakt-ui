@@ -37,7 +37,7 @@ export const LoansTable: FC<MarketTableProps> = ({
 
   const { filteredData, onChange } = useSearch({
     data,
-    searchField: 'collectionName',
+    searchField: ['nft.name'],
   });
 
   const COLUMNS = TableList({ onChange });
@@ -47,7 +47,6 @@ export const LoansTable: FC<MarketTableProps> = ({
     columns: COLUMNS,
     onRowClick,
     loading,
-    defaultField: 'activeBondsAmount',
   });
 
   return (

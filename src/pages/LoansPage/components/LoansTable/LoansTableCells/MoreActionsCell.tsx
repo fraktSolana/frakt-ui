@@ -23,7 +23,7 @@ const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
   const ref = useRef();
   useOnClickOutside(ref, () => closeModal);
 
-  const isStakingSupport = !!loan?.classicParams?.rewards.stakeState;
+  const isStakingSupport = !!loan?.classicParams?.rewards?.stakeState;
 
   return (
     <div className={styles.filters} ref={ref}>

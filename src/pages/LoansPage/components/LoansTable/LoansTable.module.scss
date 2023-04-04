@@ -1,7 +1,23 @@
 .searchInput {
-  max-width: 173px;
-  margin-right: 20px;
-  width: unset;
+  input {
+    font: var(--font-text-4) !important;
+    font-size: 14px !important;
+  }
+  height: 23px !important;
+  width: 143px;
+
+  @media (max-width: 1300px) {
+    width: 220px;
+  }
+
+  @media (max-width: 768px) {
+    width: 182px;
+  }
+
+  @media (max-width: 500px) {
+    width: 170px;
+    padding-right: 0;
+  }
 }
 
 .collectionInfo {
@@ -103,4 +119,14 @@
 }
 .stakingButtonWrapper button {
   width: 88px;
+}
+
+.value {
+  color: var(--primary-text);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font: var(--font-text-4);
+  font-size: 14px;
+  gap: 4px;
 }

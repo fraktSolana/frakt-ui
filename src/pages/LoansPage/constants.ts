@@ -2,11 +2,11 @@ import { Tab } from '@frakt/components/Tabs';
 
 export const LOANS_TABS: Tab[] = [
   {
-    label: 'Active loans',
+    label: 'Active',
     value: 'active',
   },
   {
-    label: 'Loans history',
+    label: 'History',
     value: 'history',
   },
 ];
