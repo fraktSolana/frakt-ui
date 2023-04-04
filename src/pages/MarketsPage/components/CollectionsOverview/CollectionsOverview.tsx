@@ -45,7 +45,6 @@ const CollectionsOverview: FC = () => {
           data={marketsPreview}
           breakpoints={{
             scrollX: width < SMALL_DESKTOP_SIZE && 744,
-            scrollY: 236,
             mobile: calcFirstColumnWidth(width, !!marketPubkey),
           }}
           marketPubkey={marketPubkey}
