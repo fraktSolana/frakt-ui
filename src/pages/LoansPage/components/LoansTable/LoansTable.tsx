@@ -40,7 +40,7 @@ export const LoansTable: FC<LoansTableProps> = ({
     searchField: ['nft.name'],
   });
 
-  const COLUMNS = TableList({ onChange });
+  const COLUMNS = TableList({ onChange, data });
 
   const { table } = useTable({
     data: filteredData,

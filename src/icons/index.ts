@@ -29,6 +29,7 @@ export { Docs, DocsDark } from './Docs';
 export { Done } from './Done';
 export { FRKT } from './FRKT';
 export { Github, GithubDark } from './Github';
+export { HorizontalDots } from './HorizontalDots';
 export { Ledger } from './Ledger';
 export { Lending, LendingDark } from './Lending';
 export { Logo } from './Logo';

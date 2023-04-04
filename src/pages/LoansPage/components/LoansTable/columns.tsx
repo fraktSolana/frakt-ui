@@ -15,23 +15,40 @@ import { useSelectedLoans } from '../../loansState';
 import { RepayLoanCell, DurationCell } from './LoansTableCells';
 
 import styles from './LoansTable.module.scss';
+import Checkbox from '@frakt/components/Checkbox/Checkbox';
 
 export type SortColumns = {
   column: ColumnType<Loan>;
   order: SortOrder;
 }[];
 
-export const TableList = ({ onChange }) => {
-  const { findLoanInSelection } = useSelectedLoans();
+export const TableList = ({ onChange, data }) => {
+  const { findLoanInSelection, setSelection, selection, clearSelection } =
+    useSelectedLoans();
+
+  const onChangeCheckbox = (): void => {
+    if (selection?.length) {
+      clearSelection();
+    } else {
+      setSelection(data);
+    }
+  };
 
   const COLUMNS: ColumnsType<Loan> = [
     {
       title: () => (
-        <Search
-          placeHolderText="Search by name"
-          className={styles.searchInput}
-          onChange={onChange}
-        />
+        <div className={styles.rowCenter}>
+          <Checkbox
+            className={styles.checkbox}
+            onChange={onChangeCheckbox}
+            checked={!!selection?.length}
+          />
+          <Search
+            placeHolderText="Search by name"
+            className={styles.searchInput}
+            onChange={onChange}
+          />
+        </div>
       ),
       render: (_, { nft, pubkey }) => (
         <CollectionInfoCell

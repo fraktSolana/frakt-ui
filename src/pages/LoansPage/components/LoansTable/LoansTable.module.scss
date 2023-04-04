@@ -5,25 +5,16 @@
   }
   height: 23px !important;
   width: 143px;
-
-  @media (max-width: 1300px) {
-    width: 220px;
-  }
-
-  @media (max-width: 768px) {
-    width: 182px;
-  }
-
-  @media (max-width: 500px) {
-    width: 170px;
-    padding-right: 0;
-  }
 }
 
-.collectionInfo {
+.rowCenter {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.collectionInfo {
+  @extend .rowCenter;
 }
 .collectionName {
   color: var(--primary-text);
@@ -60,6 +51,7 @@
 }
 
 .moreActionsButton {
+  padding: 0;
   height: 32px;
   width: 32px;
 }
@@ -129,4 +121,14 @@
   font: var(--font-text-4);
   font-size: 14px;
   gap: 4px;
+}
+
+.horizontalDots {
+  path {
+    fill: var(--primary-text);
+  }
+}
+
+.checkbox {
+  height: 16px;
 }

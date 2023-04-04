@@ -2,6 +2,7 @@ import { FC, useRef } from 'react';
 
 import { useOnClickOutside } from '@frakt/hooks';
 import { Loan } from '@frakt/api/loans/types';
+import { HorizontalDots } from '@frakt/icons';
 import Button from '@frakt/components/Button';
 import FiltersDropdown, {
   useFiltersModal,
@@ -35,7 +36,7 @@ const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
         className={styles.moreActionsButton}
         type="tertiary"
       >
-        ***
+        <HorizontalDots className={styles.horizontalDots} />
       </Button>
       {modalVisible && (
         <FiltersDropdown className={styles.filtersDropdown}>

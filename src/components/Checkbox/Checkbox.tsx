@@ -4,8 +4,8 @@ import classNames from 'classnames';
 import styles from './Checkbox.module.scss';
 
 interface CheckboxProps {
-  label: string;
-  onChange: () => void;
+  label?: string;
+  onChange: any;
   checked: boolean;
   className?: string;
 }

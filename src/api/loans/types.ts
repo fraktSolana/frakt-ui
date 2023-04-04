@@ -62,3 +62,12 @@ export interface Loan {
     expiredAt: number; //? unix timestamp
   };
 }
+
+export interface LoansHistory {
+  nftName: string;
+  nftImage: string;
+  loanValue: number;
+  repayValue: number;
+  status: string;
+  when: number;
+}

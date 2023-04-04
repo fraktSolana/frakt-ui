@@ -1,18 +1,12 @@
-import { useRef } from 'react';
 import { Table as AntdTable } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { DebouncedFunc } from 'lodash';
 import classNames from 'classnames';
 
-// import { useOnClickOutside, useWindowSize } from '@frakt/hooks';
-
-import { SortModalMobileProps } from './SortModalMobile';
 import { ActiveRowParams, PartialBreakpoints } from './types';
-// import { useFiltersModal } from '../FiltersDropdown';
-// import { MobileTable } from './MobileTable';
+import { SortModalMobileProps } from './SortModalMobile';
 import { Loader } from '../Loader';
 import { Search } from './Search';
-// import Button from '../Button';
 
 import styles from './Table.module.scss';
 
@@ -42,56 +36,12 @@ const Table = <T extends unknown>({
   columns,
   onRowClick,
   rowKeyField = 'id',
-  // sort,
-  // setSort,
   loading = false,
-  // search,
   className,
   breakpoints,
   activeRowParams,
 }: TablePropsWithSortModalMobileProps<T>): JSX.Element => {
-  // const {
-  //   visible: sortModalMobileVisible,
-  //   close: closeModalMobile,
-  //   toggle: toggleModalMobile,
-  // } = useFiltersModal();
-
-  // const ref = useRef(null);
-  // useOnClickOutside(ref, closeModalMobile);
-
   if (loading) return <Loader />;
-
-  // if (isMobile) {
-  //   return (
-  //     <>
-  //       <div className={isMobile && styles.sortWrapper}>
-  //         <Search
-  //           onChange={search?.onChange}
-  //           className={styles.searchInput}
-  //           placeHolderText={search?.placeHolderText}
-  //         />
-  //         <div ref={ref}>
-  //           <Button type="tertiary" onClick={toggleModalMobile}>
-  //             Sorting
-  //           </Button>
-  //           <SortModalMobile
-  //             columns={columns}
-  //             setSort={setSort}
-  //             sort={sort}
-  //             sortModalMobileVisible={sortModalMobileVisible}
-  //           />
-  //         </div>
-  //       </div>
-
-  //       <MobileTable
-  //         data={data}
-  //         columns={columns}
-  //         onRowClick={onRowClick}
-  //         rowKeyField={rowKeyField}
-  //       />
-  //     </>
-  //   );
-  // }
 
   return (
     <AntdTable

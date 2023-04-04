@@ -1,4 +1,5 @@
 .loansTable :global {
+  display: block !important;
   .ant-table-thead > tr > th:first-child,
   .ant-table-tbody > tr > td:first-child {
     padding-left: 24px;
