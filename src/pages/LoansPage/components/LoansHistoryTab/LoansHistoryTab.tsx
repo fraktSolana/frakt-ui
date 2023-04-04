@@ -5,6 +5,7 @@ import { Loan } from '@frakt/api/loans';
 import { LoansHistoryTable } from '../LoansHistoryTable';
 
 import styles from './LoansHistoryTab.module.scss';
+// import { useFetchLoansHistory } from './hooks';
 
 interface LoansHistoryTabProps {
   loans: Loan[];
@@ -12,6 +13,7 @@ interface LoansHistoryTabProps {
 }
 
 const LoansHistoryTab: FC<LoansHistoryTabProps> = ({ loans, isLoading }) => {
+  //   const { data, isLoading } = useFetchLoansHistory();
   return (
     <LoansHistoryTable
       className={styles.rootTable}

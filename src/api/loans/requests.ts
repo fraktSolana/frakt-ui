@@ -16,3 +16,17 @@ export const fetchWalletLoans: FetchWalletLoans = async ({ publicKey }) => {
 
   return data ?? [];
 };
+
+type FetchLoansHistory = (props: {
+  walletPubkey: web3.PublicKey;
+}) => Promise<Loan[]>;
+
+export const fetchLoansHistory: FetchLoansHistory = async ({
+  walletPubkey,
+}) => {
+  const { data } = await axios.get<Loan[]>(
+    `https://${BACKEND_DOMAIN}/loan/history/${walletPubkey?.toBase58()}`,
+  );
+
+  return data ?? [];
+};
