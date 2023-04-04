@@ -1,5 +1,6 @@
 import { FC } from 'react';
 
+import { LoadingModal } from '@frakt/components/LoadingModal';
 import { Button } from '@frakt/components/Button';
 import { Loan } from '@frakt/api/loans';
 
@@ -7,7 +8,6 @@ import { LoansTable } from '../LoansTable';
 import { useActiveLoans } from './hooks';
 
 import styles from './LoansActiveTab.module.scss';
-import { LoadingModal } from '@frakt/components/LoadingModal';
 
 interface LoansActiveTabProps {
   loans: Loan[];

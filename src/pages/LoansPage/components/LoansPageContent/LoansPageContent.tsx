@@ -5,8 +5,8 @@ import { Loan } from '@frakt/api/loans';
 
 import { LOANS_TABS, LoansTabsNames } from '../../constants';
 import LoansActiveTab from '../LoansActiveTab/LoansActiveTab';
-
 import styles from './LoansPageContent.module.scss';
+import LoansHistoryTab from '../LoansHistoryTab';
 
 interface LoansPageContentProps {
   loans: Loan[];
@@ -34,6 +34,9 @@ export const LoansPageContent: FC<LoansPageContentProps> = ({
       <div className={styles.tabContent}>
         {tabValue === LoansTabsNames.ACTIVE && (
           <LoansActiveTab loans={loans} isLoading={isLoading} />
+        )}
+        {tabValue === LoansTabsNames.HISTORY && (
+          <LoansHistoryTab loans={loans} isLoading={isLoading} />
         )}
       </div>
     </div>

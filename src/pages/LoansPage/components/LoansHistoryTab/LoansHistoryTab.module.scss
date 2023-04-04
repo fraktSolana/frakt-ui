@@ -1,4 +1,4 @@
-.loansTable :global {
+.rootTable :global {
   .ant-table-thead > tr > th:first-child,
   .ant-table-tbody > tr > td:first-child {
     padding-left: 24px;
@@ -10,21 +10,4 @@
   ::-webkit-scrollbar {
     height: 0px;
   }
-}
-
-.loansTable :global {
-  .ant-table-tbody > tr > td:last-child {
-    width: 32px !important;
-  }
-}
-
-.repayButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 16px;
-}
-
-.loanActiveTab {
-  padding-top: 16px;
 }

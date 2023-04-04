@@ -18,6 +18,7 @@ interface HeaderCellProps<T> {
   label: string;
   value: string;
   tooltipText?: string;
+  fixedLeft?: boolean;
 }
 
 export const HeaderCell = <T extends unknown>({
@@ -25,6 +26,7 @@ export const HeaderCell = <T extends unknown>({
   label,
   value,
   tooltipText,
+  fixedLeft,
 }: HeaderCellProps<T>) => {
   const sortedColumn = column?.sortColumns?.find(
     ({ column }) => column.key === value,
@@ -33,7 +35,11 @@ export const HeaderCell = <T extends unknown>({
   const sortedOrder = sortedColumn?.order;
 
   return (
-    <div className={classNames(styles.row, styles.rowFixedRight)}>
+    <div
+      className={classNames(styles.row, styles.rowFixedRight, {
+        [styles.fixedLeftRow]: fixedLeft,
+      })}
+    >
       <span className={styles.headerCellTitle}>{label}</span>
       {!!tooltipText && (
         <Tooltip placement="top" overlay={tooltipText}>
