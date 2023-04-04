@@ -81,3 +81,8 @@ export const NotificationModal = () => {
     </Modal>
   );
 };
+
+// raw html example
+{
+  /* <h1 style='text-align: center; font-size: 72px'>🎉</h1> <h1 style='text-align: center'>BONDS ARE HERE!</h1><p style='text-align: center; margin-bottom: 12px;'>High LTV, low fees and the most flexible <a href='/bonds'>lending</a> and <a href='/borrow'>borrowing</a> experience on Solana</p><a href='/bonds' style='color: #000000;text-align: center;display: flex;align-items: center;font-size: 14px;background: #9CFF1F;padding: 12px;width: 100%;border: unset; display: block'>Some action</a> */
+}
