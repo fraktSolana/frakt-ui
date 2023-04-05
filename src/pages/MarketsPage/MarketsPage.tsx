@@ -19,10 +19,7 @@ const MarketsPreviewPage: FC = () => {
       <div className={styles.container}>
         <CollectionsOverview />
         <BondsOverview />
-        <OrderBook
-          market={marketPubkey && market}
-          marketLoading={marketLoading}
-        />
+        <OrderBook market={market} marketLoading={marketLoading} />
       </div>
     </AppLayout>
   );
