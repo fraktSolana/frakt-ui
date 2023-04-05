@@ -206,6 +206,7 @@ export const useOfferPage = () => {
           await makeModifyPairTransactions({
             solDeposit: parseFloat(offerSize),
             interest: parseFloat(interest),
+            marketFloor: market.oracleFloor.floor,
             pair,
             connection,
             maxDuration: duration,
