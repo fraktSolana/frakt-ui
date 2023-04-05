@@ -22,16 +22,14 @@ export const RepayLoanCell: FC<{ loan: Loan }> = ({ loan }) => {
     transactionsLeft,
   } = useLoanCard(loan);
 
-  const onClickRepayLoan = (event: Event) => {
-    onPayback();
-    event.stopPropagation();
-  };
-
   return (
     <>
       <Button
         type="secondary"
-        onClick={(event: Event) => onClickRepayLoan(event)}
+        onClick={(event: Event) => {
+          onPayback();
+          event.stopPropagation();
+        }}
         className={styles.repayButton}
       >
         Repay
