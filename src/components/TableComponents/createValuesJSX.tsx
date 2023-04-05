@@ -4,7 +4,12 @@ import styles from './TableComponents.module.scss';
 
 export const createSolValueJSX = (value: number) => (
   <span className={styles.value}>
-    {(value / 1e9 || 0).toFixed(2)} <Solana />
+    {!!value && (
+      <>
+        {(value / 1e9 || 0).toFixed(2)} <Solana />
+      </>
+    )}
+    {!value && '--'}
   </span>
 );
 
