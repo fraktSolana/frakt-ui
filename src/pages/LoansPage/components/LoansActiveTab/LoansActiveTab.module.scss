@@ -2,11 +2,11 @@
   display: block !important;
   .ant-table-thead > tr > th:first-child,
   .ant-table-tbody > tr > td:first-child {
-    padding-left: 24px;
+    padding-left: 0;
   }
   .ant-table-thead > tr > th:last-child,
   .ant-table-tbody > tr > td:last-child {
-    padding-right: 24px;
+    padding-right: 0;
   }
   ::-webkit-scrollbar {
     height: 0px;
@@ -14,8 +14,15 @@
 }
 
 .loansTable :global {
-  .ant-table-tbody > tr > td:last-child {
-    width: 32px !important;
+  .ant-table-tbody > tr > td:nth-last-child(-n + 2) {
+    text-align: end;
+  }
+  .ant-table-thead > tr > th {
+    vertical-align: middle;
+  }
+  padding: 0 23px;
+  @media (max-width: 768px) {
+    padding: 0 16px;
   }
 }
 

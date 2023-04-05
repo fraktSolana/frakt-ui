@@ -31,7 +31,7 @@ export const RepayLoanCell: FC<{ loan: Loan }> = ({ loan }) => {
     <>
       <Button
         type="secondary"
-        onClick={onClickRepayLoan}
+        onClick={(event: Event) => onClickRepayLoan(event)}
         className={styles.repayButton}
       >
         Repay

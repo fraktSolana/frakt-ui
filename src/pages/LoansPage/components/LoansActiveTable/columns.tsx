@@ -72,7 +72,8 @@ export const TableList = ({ onChange, data }) => {
         loanValueA - loanValueB,
       render: (_, { loanValue }) => createSolValueJSX(loanValue),
       showSorterTooltip: false,
-      defaultSortOrder: 'ascend',
+      defaultSortOrder: 'descend',
+      width: 92,
     },
     {
       key: 'repayValue',
@@ -84,6 +85,7 @@ export const TableList = ({ onChange, data }) => {
         repayValueA - repayValueB,
       render: (_, { repayValue }) => createSolValueJSX(repayValue),
       showSorterTooltip: false,
+      width: 88,
     },
     {
       key: 'liquidationPrice',
@@ -104,6 +106,7 @@ export const TableList = ({ onChange, data }) => {
         classicParamsA?.priceBased?.liquidationPrice -
         classicParamsB?.priceBased?.liquidationPrice,
       showSorterTooltip: false,
+      width: 136,
     },
     {
       key: 'interest',
@@ -120,6 +123,7 @@ export const TableList = ({ onChange, data }) => {
       render: (_, { classicParams }) =>
         createPercentValueJSX(classicParams?.priceBased?.borrowAPRPercent),
       showSorterTooltip: false,
+      width: 136,
     },
     {
       key: 'health',
@@ -135,6 +139,7 @@ export const TableList = ({ onChange, data }) => {
       ) =>
         classicParamsA?.priceBased?.health - classicParamsB?.priceBased?.health,
       showSorterTooltip: false,
+      width: 72,
     },
     {
       key: 'duration',
@@ -144,12 +149,15 @@ export const TableList = ({ onChange, data }) => {
       ),
       render: (_, loan) => <DurationCell loan={loan} />,
       showSorterTooltip: false,
+      width: 88,
     },
     {
       render: (_, loan) => <RepayLoanCell loan={loan} />,
+      width: 60,
     },
     {
       render: (_, loan) => <MoreActionsCell loan={loan} />,
+      width: 32,
     },
   ];
 

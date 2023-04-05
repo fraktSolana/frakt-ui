@@ -10,6 +10,7 @@
   @media (max-width: 768px) {
     align-items: flex-start;
     flex-direction: column;
+    padding: 16px;
     gap: 16px;
   }
 }
@@ -23,6 +24,10 @@
   display: flex;
   align-items: center;
   gap: 24px;
+
+  @media (max-width: 768px) {
+    gap: 16px;
+  }
 }
 
 .values {
@@ -34,5 +39,12 @@
 }
 
 .values span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   margin-top: unset;
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
 }

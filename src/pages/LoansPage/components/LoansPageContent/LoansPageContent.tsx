@@ -5,8 +5,9 @@ import { Loan } from '@frakt/api/loans';
 
 import { LOANS_TABS, LoansTabsNames } from '../../constants';
 import LoansActiveTab from '../LoansActiveTab/LoansActiveTab';
-import styles from './LoansPageContent.module.scss';
 import LoansHistoryTab from '../LoansHistoryTab';
+
+import styles from './LoansPageContent.module.scss';
 
 interface LoansPageContentProps {
   loans: Loan[];

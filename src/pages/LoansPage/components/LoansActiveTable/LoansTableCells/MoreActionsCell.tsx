@@ -22,44 +22,46 @@ export const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
   } = useFiltersModal();
 
   const ref = useRef();
-  useOnClickOutside(ref, () => closeModal);
+  useOnClickOutside(ref, closeModal);
 
   const isStakingSupport = !!loan?.classicParams?.rewards?.stakeState;
 
   return (
     <div className={styles.filters} ref={ref}>
-      <Button
-        onClick={(event) => {
-          toggleModal();
-          event.stopPropagation();
-        }}
-        className={styles.moreActionsButton}
-        type="tertiary"
-      >
-        <HorizontalDots className={styles.horizontalDots} />
-      </Button>
-      {modalVisible && (
-        <FiltersDropdown className={styles.filtersDropdown}>
-          <div className={styles.liquidateButtonWrapper}>
+      {isStakingSupport && (
+        <>
+          <Button
+            onClick={(event) => {
+              toggleModal();
+              event.stopPropagation();
+            }}
+            className={styles.moreActionsButton}
+            type="tertiary"
+          >
+            <HorizontalDots className={styles.horizontalDots} />
+          </Button>
+          {modalVisible && (
+            <FiltersDropdown className={styles.filtersDropdown}>
+              {/* <div className={styles.liquidateButtonWrapper}>
             <Button className={styles.liquidateButton} type="secondary">
               Liquidate for +10.32 SOL
             </Button>
             <Button className={styles.liquidateButton} type="secondary">
               Refinance for -10.32 SOL
             </Button>
-          </div>
-          {isStakingSupport && (
-            <div className={styles.stakingContent}>
-              <h4 className={styles.stakingTitle}>Staking</h4>
-              <div className={styles.stakingButtonWrapper}>
-                <Button type="secondary" disabled>
+          </div> */}
+              <div className={styles.stakingContent}>
+                <h4 className={styles.stakingTitle}>Staking</h4>
+                <div className={styles.stakingButtonWrapper}>
+                  {/* <Button type="secondary" disabled>
                   Claim
-                </Button>
-                <Button onClick={onCardinalUnstake}>Unstake</Button>
+                </Button> */}
+                  <Button onClick={onCardinalUnstake}>Unstake</Button>
+                </div>
               </div>
-            </div>
+            </FiltersDropdown>
           )}
-        </FiltersDropdown>
+        </>
       )}
     </div>
   );

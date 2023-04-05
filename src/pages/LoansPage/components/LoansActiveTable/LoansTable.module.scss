@@ -19,8 +19,10 @@
 .collectionName {
   color: var(--primary-text);
   font: var(--font-text-6);
-  min-width: 116px;
-  max-width: 116px;
+  width: 141px;
+  @media (max-width: 768px) {
+    width: 104px;
+  }
 }
 .collectionImage,
 .selectedCollectionOverlay {
@@ -101,6 +103,7 @@
 .stakingTitle {
   color: var(--secondary-text);
   font: var(--font-text-6);
+  text-align: left;
   text-transform: uppercase;
   line-height: 20px;
 }
@@ -110,7 +113,7 @@
   gap: 8px;
 }
 .stakingButtonWrapper button {
-  width: 88px;
+  width: 100%;
 }
 
 .value {

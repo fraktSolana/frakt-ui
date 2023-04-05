@@ -9,5 +9,7 @@ export const createSolValueJSX = (value: number) => (
 );
 
 export const createPercentValueJSX = (value: number) => (
-  <span className={styles.value}>{value?.toFixed(0) || '--'} %</span>
+  <span className={styles.value}>
+    {value ? `${value.toFixed(0)} %` : '--'}
+  </span>
 );
