@@ -22,6 +22,7 @@ const LoansActiveTab: FC<LoansActiveTabProps> = ({ loans, isLoading }) => {
     <>
       <div className={styles.loanActiveTab}>
         <Button
+          type="secondary"
           onClick={onBulkRepay}
           className={styles.repayButton}
           disabled={!totalBorrowed}

@@ -6,6 +6,12 @@
   align-items: center;
   padding: 24px;
   width: 100%;
+
+  @media (max-width: 768px) {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+  }
 }
 
 .title {

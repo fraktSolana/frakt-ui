@@ -5,6 +5,7 @@ import { StatsValues } from '@frakt/components/StatsValues';
 import { Loan } from '@frakt/api/loans';
 
 import styles from './LoansGeneralInfo.module.scss';
+import { Solana } from '@frakt/icons';
 
 interface LoansGeneralInfoProps {
   allLoans: Loan[];
@@ -19,16 +20,18 @@ export const LoansGeneralInfo: FC<LoansGeneralInfoProps> = ({ allLoans }) => {
       <h2 className={styles.title}>My Loans</h2>
       <div className={styles.stats}>
         <StatsValues className={styles.values} label={'Total borrowed:'}>
-          <StatsValue value={totalBorrowed} />
+          <SolAmount value={totalBorrowed} />
         </StatsValues>
         <StatsValues className={styles.values} label={'Total Debt:'}>
-          <StatsValue value={totalDebt} />
+          <SolAmount value={totalDebt} />
         </StatsValues>
       </div>
     </div>
   );
 };
 
-const StatsValue = ({ value }: { value: number }) => (
-  <>{value ? value?.toFixed(2) : '--'} SOL</>
+const SolAmount = ({ value = 0 }) => (
+  <>
+    {value ? value?.toFixed(2) : '--'} <Solana />
+  </>
 );
