@@ -11,12 +11,13 @@ import {
   HeaderCell,
 } from '@frakt/components/TableComponents';
 
+import { useSelectedLoans } from '../../loansState';
 import {
   RepayLoanCell,
   DurationCell,
   MoreActionsCell,
+  StakingSupportCell,
 } from './LoansTableCells';
-import { useSelectedLoans } from '../../loansState';
 
 import styles from './LoansTable.module.scss';
 
@@ -61,6 +62,10 @@ export const TableList = ({ onChange, data }) => {
           selected={!!findLoanInSelection(pubkey)}
         />
       ),
+    },
+    {
+      render: (_, loan) => <StakingSupportCell loan={loan} />,
+      width: 103,
     },
     {
       key: 'loanValue',
