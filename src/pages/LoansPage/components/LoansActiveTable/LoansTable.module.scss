@@ -24,6 +24,9 @@
     width: 104px;
   }
 }
+.collectionImageWrapper {
+  position: relative;
+}
 .collectionImage,
 .selectedCollectionOverlay {
   width: 26px;
@@ -32,7 +35,9 @@
 .selectedCollectionOverlay {
   background-color: var(--light-green-color);
   border: 1px solid var(--button-text);
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
 
   &:after {
     content: '';
@@ -99,6 +104,10 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  @media screen and (max-width: 767px) {
+    width: 100%;
+  }
 }
 .stakingTitle {
   color: var(--secondary-text);
@@ -106,6 +115,10 @@
   text-align: left;
   text-transform: uppercase;
   line-height: 20px;
+
+  @media screen and (max-width: 767px) {
+    text-align: center;
+  }
 }
 .stakingButtonWrapper {
   display: flex;

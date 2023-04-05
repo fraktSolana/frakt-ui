@@ -15,8 +15,10 @@ export const CollectionInfoCell: FC<CollectionInfoCellProps> = ({
 }) => {
   return (
     <div className={styles.collectionInfo}>
-      {selected && <div className={styles.selectedCollectionOverlay}></div>}
-      {!selected && <img src={nftImage} className={styles.collectionImage} />}
+      <div className={styles.collectionImageWrapper}>
+        <img src={nftImage} className={styles.collectionImage} />
+        {selected && <div className={styles.selectedCollectionOverlay}></div>}
+      </div>
       <p className={styles.collectionName}>{nftName}</p>
     </div>
   );

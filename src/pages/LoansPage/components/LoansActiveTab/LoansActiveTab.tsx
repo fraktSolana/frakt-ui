@@ -5,6 +5,7 @@ import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import EmptyList from '@frakt/components/EmptyList';
 import { Button } from '@frakt/components/Button';
+import { Loader } from '@frakt/components/Loader';
 
 import { useActiveLoans, useFetchAllLoans } from './hooks';
 import { LoansActiveTable } from '../LoansActiveTable';
@@ -21,12 +22,15 @@ const LoansActiveTab: FC = () => {
   return (
     <>
       <div className={styles.loanActiveTab}>
-        {!connected ? (
+        {!loans.length && isLoading && <Loader />}
+
+        {!connected && !isLoading && (
           <ConnectWalletSection
             className={styles.emptyList}
             text="Connect your wallet to see my loans"
           />
-        ) : (
+        )}
+        {connected && !!loans.length && (
           <>
             <Button
               type="secondary"
@@ -36,11 +40,7 @@ const LoansActiveTab: FC = () => {
             >
               Bulk repay {totalBorrowed?.toFixed(2)} SOL
             </Button>
-            <LoansActiveTable
-              className={styles.loansTable}
-              data={loans}
-              loading={isLoading}
-            />
+            <LoansActiveTable className={styles.loansTable} data={loans} />
           </>
         )}
       </div>

@@ -13,7 +13,7 @@ import { TableList } from './columns';
 
 export interface LoansActiveTableProps {
   data: ReadonlyArray<Loan>;
-  loading: boolean;
+  loading?: boolean;
   className?: string;
   breakpoints?: PartialBreakpoints;
 }
