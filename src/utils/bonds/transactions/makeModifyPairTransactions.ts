@@ -7,7 +7,12 @@ import * as fBondsValidation from 'fbonds-core/lib/fbond-protocol/functions/vali
 import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 import { getTopOrderSize } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
 
-import { BONDS_PROGRAM_PUBKEY, BOND_DECIMAL_DELTA } from '../constants';
+import {
+  BASE_POINTS,
+  BONDS_PROGRAM_PUBKEY,
+  BOND_DECIMAL_DELTA,
+  BOND_MAX_RETURN_AMOUNT_PROTECTION_BASE_POINTS,
+} from '../constants';
 import { isBondFeaturesAutomated } from '../utils';
 
 type MakeModifyPairTransactions = (params: {
@@ -15,6 +20,7 @@ type MakeModifyPairTransactions = (params: {
   maxDuration: number; //? days 7or14
   solDeposit: number; //? Amount of deposit in SOL. Normal values (F.e. 1, 20, 100)
   interest: number; //? % 0-Infinity
+  marketFloor: number; //? % 0-Infinity
   connection: web3.Connection;
   wallet: WalletContextState;
   pair: Pair;
@@ -30,6 +36,7 @@ type MakeModifyPairTransactions = (params: {
 export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
   solDeposit,
   interest,
+  marketFloor,
   connection,
   wallet,
   pair,
@@ -52,6 +59,14 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
   const topOrderSize = getTopOrderSize(pair);
 
   const amountTokenToUpdate = Math.abs(amountOfTokensInOrder - topOrderSize);
+  const maxReturnAmountFilter = Math.ceil(
+    (marketFloor *
+      ((maxLTVRaw *
+        (BASE_POINTS + BOND_MAX_RETURN_AMOUNT_PROTECTION_BASE_POINTS)) /
+        BASE_POINTS)) /
+      BASE_POINTS,
+  );
+  console.log({ maxReturnAmountFilter, marketFloor, maxLTVRaw });
 
   const { instructions: instructions1, signers: signers1 } =
     await pairs.mutations.modifyPair({
@@ -120,6 +135,7 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
       args: {
         loanToValueFilter: maxLTVRaw,
         maxDurationFilter: maxDurationSec,
+        maxReturnAmountFilter: maxReturnAmountFilter,
       },
       connection,
       programId: BONDS_PROGRAM_PUBKEY,
