@@ -50,10 +50,11 @@ const Table = <T extends unknown>({
       })}
       rowClassName={(record) => {
         if (!activeRowParams?.field) return 'rowClassName';
-        return (
-          record[activeRowParams?.field] === activeRowParams.value &&
-          'activeRowClassName'
-        );
+        const field = record[activeRowParams?.field];
+        const value = activeRowParams.value;
+
+        if (!!field && !value) return activeRowParams?.className;
+        return value && field === value && 'activeRowClassName';
       }}
       columns={columns as ColumnsType}
       dataSource={data as any}

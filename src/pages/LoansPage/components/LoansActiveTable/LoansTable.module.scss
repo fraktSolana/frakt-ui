@@ -124,6 +124,7 @@
   font: var(--font-text-4);
   font-size: 14px;
   gap: 4px;
+  position: relative;
 }
 
 .horizontalDots {
@@ -153,4 +154,12 @@
   justify-content: center;
   height: 20px;
   width: 103px;
+}
+
+.badgeOnGrace {
+  color: var(--orange-color);
+  font: var(--font-text-9);
+  font-weight: 400;
+  position: absolute;
+  top: -13px;
 }

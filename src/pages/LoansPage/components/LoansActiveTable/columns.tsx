@@ -3,7 +3,7 @@ import { SortOrder } from 'antd/lib/table/interface';
 
 import { Search } from '@frakt/components/Table/Search';
 import Checkbox from '@frakt/components/Checkbox';
-import { Loan } from '@frakt/api/loans';
+import { Loan, LoanType } from '@frakt/api/loans';
 import {
   CollectionInfoCell,
   createPercentValueJSX,
@@ -62,6 +62,7 @@ export const TableList = ({ onChange, data }) => {
           selected={!!findLoanInSelection(pubkey)}
         />
       ),
+      width: 177,
     },
     {
       render: (_, loan) => <StakingSupportCell loan={loan} />,
@@ -77,7 +78,6 @@ export const TableList = ({ onChange, data }) => {
         loanValueA - loanValueB,
       render: (_, { loanValue }) => createSolValueJSX(loanValue),
       showSorterTooltip: false,
-      defaultSortOrder: 'descend',
       width: 92,
     },
     {
@@ -154,7 +154,18 @@ export const TableList = ({ onChange, data }) => {
       ),
       render: (_, loan) => <DurationCell loan={loan} />,
       showSorterTooltip: false,
-      width: 88,
+      sorter: (a, b) => {
+        if (a.loanType === LoanType.PRICE_BASED) return 1;
+        if (b.loanType === LoanType.PRICE_BASED) return -1;
+
+        const timeBasedExpiredAtA = a?.classicParams?.timeBased?.expiredAt;
+        const timeBasedExpiredAtB = b?.classicParams?.timeBased?.expiredAt;
+
+        if (timeBasedExpiredAtA || timeBasedExpiredAtB)
+          timeBasedExpiredAtA - timeBasedExpiredAtB;
+      },
+      defaultSortOrder: 'ascend',
+      width: 118,
     },
     {
       render: (_, loan) => <RepayLoanCell loan={loan} />,

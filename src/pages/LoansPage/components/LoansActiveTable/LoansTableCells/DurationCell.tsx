@@ -14,6 +14,7 @@ export const DurationCell = ({ loan }: { loan: Loan }) => {
 
   return (
     <div className={styles.value}>
+      {!!loan?.gracePeriod && <p className={styles.badgeOnGrace}>On grace</p>}
       {timeLeft.days}d<p>:</p>
       {timeLeft.hours}h<p>:</p>
       {timeLeft.minutes}m

@@ -55,6 +55,10 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
       breakpoints={breakpoints}
       search={{ onChange }}
       className={className}
+      activeRowParams={{
+        field: 'gracePeriod',
+        className: 'graceRowClassName',
+      }}
     />
   );
 };

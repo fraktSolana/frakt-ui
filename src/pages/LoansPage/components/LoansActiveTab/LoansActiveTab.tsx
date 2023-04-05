@@ -3,6 +3,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 
 import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
 import { LoadingModal } from '@frakt/components/LoadingModal';
+import EmptyList from '@frakt/components/EmptyList';
 import { Button } from '@frakt/components/Button';
 
 import { useActiveLoans, useFetchAllLoans } from './hooks';
@@ -43,6 +44,12 @@ const LoansActiveTab: FC = () => {
           </>
         )}
       </div>
+      {connected && !loans.length && !isLoading && (
+        <EmptyList
+          className={styles.emptyList}
+          text="You don't have any loans"
+        />
+      )}
       <LoadingModal
         title="Please approve transaction"
         visible={loadingModalVisible}
