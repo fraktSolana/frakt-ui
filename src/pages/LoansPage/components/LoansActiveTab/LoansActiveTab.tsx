@@ -1,39 +1,47 @@
 import { FC } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
 
+import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import { Button } from '@frakt/components/Button';
-import { Loan } from '@frakt/api/loans';
 
+import { useActiveLoans, useFetchAllLoans } from './hooks';
 import { LoansTable } from '../LoansTable';
-import { useActiveLoans } from './hooks';
 
 import styles from './LoansActiveTab.module.scss';
 
-interface LoansActiveTabProps {
-  loans: Loan[];
-  isLoading: boolean;
-}
+const LoansActiveTab: FC = () => {
+  const { connected } = useWallet();
+  const { loans, isLoading } = useFetchAllLoans();
 
-const LoansActiveTab: FC<LoansActiveTabProps> = ({ loans, isLoading }) => {
   const { onBulkRepay, totalBorrowed, loadingModalVisible, closeLoadingModal } =
     useActiveLoans();
 
   return (
     <>
       <div className={styles.loanActiveTab}>
-        <Button
-          type="secondary"
-          onClick={onBulkRepay}
-          className={styles.repayButton}
-          disabled={!totalBorrowed}
-        >
-          Bulk repay {totalBorrowed?.toFixed(2)} SOL
-        </Button>
-        <LoansTable
-          className={styles.loansTable}
-          data={loans}
-          loading={isLoading}
-        />
+        {!connected ? (
+          <ConnectWalletSection
+            className={styles.emptyList}
+            text="Connect your wallet to see my bonds"
+          />
+        ) : (
+          <>
+            <Button
+              type="secondary"
+              onClick={onBulkRepay}
+              className={styles.repayButton}
+              disabled={!totalBorrowed}
+            >
+              Bulk repay {totalBorrowed?.toFixed(2)} SOL
+            </Button>
+            <LoansTable
+              className={styles.loansTable}
+              data={loans}
+              loading={isLoading}
+            />
+          </>
+        )}
       </div>
       <LoadingModal
         title="Please approve transaction"

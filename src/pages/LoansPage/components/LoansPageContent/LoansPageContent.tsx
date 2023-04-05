@@ -32,9 +32,7 @@ export const LoansPageContent: FC<LoansPageContentProps> = ({
         setValue={setTabValue}
       />
       <div className={styles.tabContent}>
-        {tabValue === LoansTabsNames.ACTIVE && (
-          <LoansActiveTab loans={loans} isLoading={isLoading} />
-        )}
+        {tabValue === LoansTabsNames.ACTIVE && <LoansActiveTab />}
         {tabValue === LoansTabsNames.HISTORY && (
           <LoansHistoryTab loans={loans} isLoading={isLoading} />
         )}
