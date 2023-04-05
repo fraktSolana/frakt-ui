@@ -22,9 +22,9 @@ const LoansActiveTab: FC = () => {
   return (
     <>
       <div className={styles.loanActiveTab}>
-        {!loans.length && isLoading && <Loader />}
+        {connected && !loans.length && isLoading && <Loader />}
 
-        {!connected && !isLoading && (
+        {!connected && (
           <ConnectWalletSection
             className={styles.emptyList}
             text="Connect your wallet to see my loans"
