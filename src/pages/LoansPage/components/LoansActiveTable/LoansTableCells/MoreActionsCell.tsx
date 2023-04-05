@@ -12,7 +12,7 @@ import { useLoanCard } from '../../LoanCard/hooks';
 
 import styles from '../LoansTable.module.scss';
 
-const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
+export const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
   const { onCardinalUnstake } = useLoanCard(loan);
 
   const {
@@ -64,5 +64,3 @@ const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
     </div>
   );
 };
-
-export default MoreActionsCell;

@@ -2,6 +2,7 @@ import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SortOrder } from 'antd/lib/table/interface';
 
 import { Search } from '@frakt/components/Table/Search';
+import Checkbox from '@frakt/components/Checkbox';
 import { Loan } from '@frakt/api/loans';
 import {
   CollectionInfoCell,
@@ -10,12 +11,14 @@ import {
   HeaderCell,
 } from '@frakt/components/TableComponents';
 
-import MoreActionsCell from './LoansTableCells/MoreActionsCell';
+import {
+  RepayLoanCell,
+  DurationCell,
+  MoreActionsCell,
+} from './LoansTableCells';
 import { useSelectedLoans } from '../../loansState';
-import { RepayLoanCell, DurationCell } from './LoansTableCells';
 
 import styles from './LoansTable.module.scss';
-import Checkbox from '@frakt/components/Checkbox/Checkbox';
 
 export type SortColumns = {
   column: ColumnType<Loan>;
@@ -40,6 +43,7 @@ export const TableList = ({ onChange, data }) => {
         <div className={styles.rowCenter}>
           <Checkbox
             className={styles.checkbox}
+            classNameInnerContent={styles.checkboxInnerContent}
             onChange={onChangeCheckbox}
             checked={!!selection?.length}
           />

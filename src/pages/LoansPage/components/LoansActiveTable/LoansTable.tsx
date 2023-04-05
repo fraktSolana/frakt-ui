@@ -11,14 +11,14 @@ import Table, {
 import { useSelectedLoans } from '../../loansState';
 import { TableList } from './columns';
 
-export interface LoansTableProps {
-  data: ReadonlyArray<any>;
+export interface LoansActiveTableProps {
+  data: ReadonlyArray<Loan>;
   loading: boolean;
   className?: string;
   breakpoints?: PartialBreakpoints;
 }
 
-export const LoansTable: FC<LoansTableProps> = ({
+export const LoansActiveTable: FC<LoansActiveTableProps> = ({
   data,
   className,
   loading,

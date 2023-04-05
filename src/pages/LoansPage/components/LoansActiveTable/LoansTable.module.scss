@@ -132,3 +132,11 @@
 .checkbox {
   height: 16px;
 }
+.checkboxInnerContent::after {
+  border-width: 0.75px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  height: 0.75px;
+  width: 6.75px;
+}

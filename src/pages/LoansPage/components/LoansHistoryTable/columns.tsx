@@ -9,7 +9,7 @@ import {
   HeaderCell,
 } from '@frakt/components/TableComponents';
 
-import { DurationCell } from '../LoansTable/LoansTableCells';
+import { DurationCell } from '../LoansActiveTable/LoansTableCells';
 
 export type SortColumns = {
   column: ColumnType<Loan>;
