@@ -5,7 +5,6 @@ import { Search } from '@frakt/components/Table/Search';
 import Checkbox from '@frakt/components/Checkbox';
 import { Loan, LoanType } from '@frakt/api/loans';
 import {
-  CollectionInfoCell,
   createHighlitedPercentValueJSX,
   createPercentValueJSX,
   createSolValueJSX,
@@ -18,6 +17,7 @@ import {
   DurationCell,
   MoreActionsCell,
   StakingSupportCell,
+  CollectionInfoCell,
 } from './LoansTableCells';
 
 import styles from './LoansTable.module.scss';

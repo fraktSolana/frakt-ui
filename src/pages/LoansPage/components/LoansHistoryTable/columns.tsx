@@ -3,13 +3,12 @@ import { SortOrder } from 'antd/lib/table/interface';
 
 import { Loan } from '@frakt/api/loans';
 import {
-  CollectionInfoCell,
   createPercentValueJSX,
   createSolValueJSX,
   HeaderCell,
 } from '@frakt/components/TableComponents';
 
-import { DurationCell } from '../LoansActiveTable/LoansTableCells';
+import { CollectionInfoCell, DurationCell } from '../LoansActiveTable';
 
 export type SortColumns = {
   column: ColumnType<Loan>;
