@@ -38,20 +38,23 @@ export const useCollectionCard = ({
     return order?.rawData?.assetReceiver === publicKey?.toBase58();
   };
 
-  const ownerOffers = showOwnOrders
-    ? parsedOffers.filter(isOwnOrder)
-    : parsedOffers;
-  const sortedOffers = sortOffers(ownerOffers, sortDirection);
+  const sortedOffers = sortOffers(parsedOffers, sortDirection);
   const fitleredOffersByDuration = filterOffersByDuration(
     sortedOffers,
     duration,
   );
 
+  const offers = showOwnOrders
+    ? fitleredOffersByDuration.filter(isOwnOrder)
+    : fitleredOffersByDuration;
+
   const goToEditOffer = (orderPubkey: string) =>
     history.push(`${PATHS.OFFER}/${marketPubkey}/${orderPubkey}`);
 
+  const bestOffer = fitleredOffersByDuration?.at(0);
+
   return {
-    offers: fitleredOffersByDuration,
+    offers,
     toggleSortDirection,
     loading: isLoadingPairs,
     isVisibleOfferList,
@@ -59,5 +62,6 @@ export const useCollectionCard = ({
     sortDirection,
     goToEditOffer,
     isOwnOrder,
+    bestOffer,
   };
 };

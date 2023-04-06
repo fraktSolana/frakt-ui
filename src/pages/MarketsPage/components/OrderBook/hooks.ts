@@ -27,6 +27,7 @@ type UseMarketOrders = (props: {
   isLoading: boolean;
   offersExist: boolean;
   hidePair: (pairPubkey: string) => void;
+  bestOffer: MarketOrder;
 };
 
 export const useMarketOrders: UseMarketOrders = ({
@@ -47,7 +48,7 @@ export const useMarketOrders: UseMarketOrders = ({
     marketPubkey: marketPubkey?.toBase58(),
   });
 
-  const offers = useMemo(() => {
+  const [allOffers, ownerOffers] = useMemo(() => {
     if (!pairs) return [];
 
     const editOffer = pairs.find(({ publicKey }) => publicKey === pairPubkey);
@@ -67,14 +68,7 @@ export const useMarketOrders: UseMarketOrders = ({
       },
     };
 
-    const parsedOffers = walletOwned
-      ? pairs
-          .filter(
-            (pair) =>
-              !walletOwned || pair?.assetReceiver === publicKey?.toBase58(),
-          )
-          .map(parseMarketOrder)
-      : pairs.map(parseMarketOrder);
+    const parsedOffers = pairs.map(parseMarketOrder);
 
     const parsedEditabledOffers = [];
 
@@ -101,7 +95,12 @@ export const useMarketOrders: UseMarketOrders = ({
       filterDuration,
     );
 
-    return sortedByDuration;
+    const ownerOffers = sortedByDuration.filter(
+      (pair) =>
+        !walletOwned || pair.rawData?.assetReceiver === publicKey?.toBase58(),
+    );
+
+    return [sortedByDuration, ownerOffers];
   }, [
     pairs,
     sortDirection,
@@ -113,12 +112,17 @@ export const useMarketOrders: UseMarketOrders = ({
     duration,
   ]);
 
-  const offersExist = Boolean(offers.length);
+  const offersExist = Boolean(allOffers.length);
+
+  const bestOffer = useMemo(() => {
+    return allOffers.at(0)?.synthetic ? allOffers.at(1) : allOffers.at(0);
+  }, [allOffers]);
 
   return {
     offersExist,
-    offers,
+    offers: walletOwned ? ownerOffers : allOffers,
     isLoading,
     hidePair,
+    bestOffer,
   };
 };

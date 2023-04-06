@@ -56,6 +56,7 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
     offers: offersRaw,
     isLoading,
     offersExist,
+    bestOffer,
   } = useMarketOrders({
     marketPubkey:
       market?.marketPubkey && new web3.PublicKey(market?.marketPubkey),
@@ -81,10 +82,6 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
       size: accOffer.size + offer.size,
     })),
   );
-
-  const bestOffer = useMemo(() => {
-    return offers.at(0)?.synthetic ? offers.at(1) : offers.at(0);
-  }, [offers]);
 
   const goToEditOffer = (orderPubkey: string) =>
     history.push(`${PATHS.OFFER}/${marketPubkey}/${orderPubkey}`);
