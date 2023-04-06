@@ -2,7 +2,6 @@ import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
 import { fbondFactory } from 'fbonds-core/lib/fbond-protocol/functions';
 import { validateAndSellNftToTokenToNftPair } from 'fbonds-core/lib/fbond-protocol/functions/router';
-import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 
 import { Market, Pair, WhitelistType } from '@frakt/api/bonds';
 import { BondCartOrder, getNftMerkleTreeProof } from '@frakt/api/nft';
@@ -116,7 +115,6 @@ type MakeCreateBondMultiOrdersTransaction = (params: {
   bondOrderParams: BondCartOrder[];
   nftMint: string;
 
-  borrowValue: number; //? lamports
   connection: web3.Connection;
   wallet: WalletContextState;
 }) => Promise<{
@@ -131,14 +129,7 @@ type MakeCreateBondMultiOrdersTransaction = (params: {
 }>;
 
 export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTransaction =
-  async ({
-    market,
-    bondOrderParams,
-    nftMint,
-    borrowValue, //? lamports
-    connection,
-    wallet,
-  }) => {
+  async ({ market, bondOrderParams, nftMint, connection, wallet }) => {
     const amountToReturn =
       Math.trunc(
         bondOrderParams.reduce((sum, order) => sum + order.orderSize, 0),

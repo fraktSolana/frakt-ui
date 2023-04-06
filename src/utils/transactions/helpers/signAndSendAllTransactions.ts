@@ -17,7 +17,7 @@ interface SignAndSendAllTransactionsProps {
   onBeforeApprove?: () => void;
   onAfterSend?: () => void;
   onSuccess?: () => void;
-  onError?: () => void;
+  onError?: (error: any) => void;
 }
 
 type SignAndSendAllTransactions = (
@@ -81,7 +81,7 @@ export const signAndSendAllTransactions: SignAndSendAllTransactions = async ({
 
     return true;
   } catch (error) {
-    onError?.();
+    onError?.(error);
     return false;
   }
 };
