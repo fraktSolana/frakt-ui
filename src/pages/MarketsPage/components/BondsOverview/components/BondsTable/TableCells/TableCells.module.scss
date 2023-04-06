@@ -62,6 +62,8 @@
 
 .btnWrapper {
   display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
   justify-content: flex-end;
   min-width: 72px;
   width: 100%;

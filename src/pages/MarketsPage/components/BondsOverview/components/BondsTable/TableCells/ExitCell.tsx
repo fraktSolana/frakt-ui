@@ -21,13 +21,17 @@ export const ExitCell: FC<ExitCellProps> = ({ bond, bonds, hideBond }) => {
   const { market, pairs } = getMarketAndPairsByBond(bond);
   const { isExitAvailable } = bond?.stats;
 
-  const { bestOrdersAndBorrowValue } = useBondActions({
+  const { bestOrdersAndBorrowValue, redeemAvailable } = useBondActions({
     bond,
     market,
     pairs,
   });
 
-  const { onExit } = useBondsTransactions({ bonds, hideBond, market });
+  const { onExit, onRedeem } = useBondsTransactions({
+    bonds,
+    hideBond,
+    market,
+  });
   const isOwner = !!bond?.ownerPubkey;
 
   return (
@@ -51,6 +55,14 @@ export const ExitCell: FC<ExitCellProps> = ({ bond, bonds, hideBond }) => {
           Exit
         </Button>
       )}
+      <Button
+        className={styles.btn}
+        disabled={!redeemAvailable}
+        type="secondary"
+        onClick={() => onRedeem(bond)}
+      >
+        Claim
+      </Button>
     </div>
   );
 };
