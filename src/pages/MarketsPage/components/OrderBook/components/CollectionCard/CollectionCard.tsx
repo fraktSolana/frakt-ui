@@ -39,6 +39,7 @@ const CollectionCard: FC<CollectionCardProps> = ({
     sortDirection,
     goToEditOffer,
     isOwnOrder,
+    bestOffer,
   } = useCollectionCard({
     showOwnOrders,
     marketPubkey,
@@ -80,7 +81,7 @@ const CollectionCard: FC<CollectionCardProps> = ({
             size={offer.size}
             interest={offer.interest}
             order={offer}
-            bestOffer={offers.at(0)}
+            bestOffer={bestOffer}
             duration={offer.duration}
             editOrder={() => goToEditOffer(offer?.rawData?.publicKey)}
             isOwnOrder={isOwnOrder(offer)}
