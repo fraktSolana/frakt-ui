@@ -55,14 +55,16 @@ export const ExitCell: FC<ExitCellProps> = ({ bond, bonds, hideBond }) => {
           Exit
         </Button>
       )}
-      <Button
-        className={styles.btn}
-        disabled={!redeemAvailable}
-        type="secondary"
-        onClick={() => onRedeem(bond)}
-      >
-        Claim
-      </Button>
+      {redeemAvailable && (
+        <Button
+          className={styles.btn}
+          disabled={!redeemAvailable}
+          type="secondary"
+          onClick={() => onRedeem(bond)}
+        >
+          Claim
+        </Button>
+      )}
     </div>
   );
 };
