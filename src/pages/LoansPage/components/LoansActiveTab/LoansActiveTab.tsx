@@ -38,7 +38,7 @@ const LoansActiveTab: FC = () => {
               className={styles.repayButton}
               disabled={!totalBorrowed}
             >
-              Bulk repay {totalBorrowed?.toFixed(2)} SOL
+              Repay {totalBorrowed?.toFixed(2)} SOL
             </Button>
             <LoansActiveTable className={styles.loansTable} data={loans} />
           </>

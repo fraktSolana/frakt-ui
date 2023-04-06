@@ -7,17 +7,28 @@
   padding: 24px;
   width: 100%;
 
-  @media (max-width: 768px) {
+  @media (max-width: 870px) {
     align-items: flex-start;
     flex-direction: column;
-    padding: 16px;
     gap: 16px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+
+  @media (max-width: 550px) {
+    align-items: center;
   }
 }
 
 .title {
   font: var(--font-text-2);
   font-size: 20px;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
 }
 
 .stats {
@@ -36,6 +47,10 @@
   gap: 4px;
   width: 100%;
   white-space: nowrap;
+
+  @media (max-width: 550px) {
+    flex-direction: column;
+  }
 }
 
 .values span {

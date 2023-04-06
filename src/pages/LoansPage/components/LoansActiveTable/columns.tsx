@@ -6,6 +6,7 @@ import Checkbox from '@frakt/components/Checkbox';
 import { Loan, LoanType } from '@frakt/api/loans';
 import {
   CollectionInfoCell,
+  createHighlitedPercentValueJSX,
   createPercentValueJSX,
   createSolValueJSX,
   HeaderCell,
@@ -137,7 +138,7 @@ export const TableList = ({ onChange, data }) => {
         <HeaderCell column={column} label="Health" value="health" />
       ),
       render: (_, { classicParams }) =>
-        createPercentValueJSX(classicParams?.priceBased?.health),
+        createHighlitedPercentValueJSX(classicParams?.priceBased?.health),
       sorter: (
         { classicParams: classicParamsA },
         { classicParams: classicParamsB },
@@ -154,15 +155,19 @@ export const TableList = ({ onChange, data }) => {
       ),
       render: (_, loan) => <DurationCell loan={loan} />,
       showSorterTooltip: false,
-      sorter: (a, b) => {
-        if (a.loanType === LoanType.PRICE_BASED) return 1;
-        if (b.loanType === LoanType.PRICE_BASED) return -1;
+      sorter: (loanA, loanB) => {
+        if (loanA.loanType === LoanType.PRICE_BASED) return 1;
+        if (loanB.loanType === LoanType.PRICE_BASED) return -1;
 
-        const timeBasedExpiredAtA = a?.classicParams?.timeBased?.expiredAt;
-        const timeBasedExpiredAtB = b?.classicParams?.timeBased?.expiredAt;
+        const timeToRepayA =
+          loanA?.classicParams?.timeBased?.expiredAt ||
+          loanA?.bondParams?.expiredAt;
 
-        if (timeBasedExpiredAtA || timeBasedExpiredAtB)
-          timeBasedExpiredAtA - timeBasedExpiredAtB;
+        const timeToRepayB =
+          loanB?.classicParams?.timeBased?.expiredAt ||
+          loanB?.bondParams?.expiredAt;
+
+        return timeToRepayA - timeToRepayB;
       },
       defaultSortOrder: 'ascend',
       width: 118,

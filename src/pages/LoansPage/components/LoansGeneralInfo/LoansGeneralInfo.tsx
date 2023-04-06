@@ -14,11 +14,15 @@ interface LoansGeneralInfoProps {
 export const LoansGeneralInfo: FC<LoansGeneralInfoProps> = ({ allLoans }) => {
   const totalBorrowed = sum(map(allLoans, ({ loanValue }) => loanValue / 1e9));
   const totalDebt = sum(map(allLoans, ({ repayValue }) => repayValue / 1e9));
+  const totalLoans = allLoans.length || 0;
 
   return (
     <div className={styles.wrapper}>
       <h2 className={styles.title}>My Loans</h2>
       <div className={styles.stats}>
+        <StatsValues className={styles.values} label={'Total loans:'}>
+          {totalLoans}
+        </StatsValues>
         <StatsValues className={styles.values} label={'Total borrowed:'}>
           <SolAmount value={totalBorrowed} />
         </StatsValues>

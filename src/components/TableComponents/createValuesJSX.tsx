@@ -1,6 +1,7 @@
 import { Solana } from '@frakt/icons';
 
 import styles from './TableComponents.module.scss';
+import { colorByPercentOffers, getColorByPercent } from '@frakt/utils/bonds';
 
 export const createSolValueJSX = (value: number) => (
   <span className={styles.value}>
@@ -16,3 +17,16 @@ export const createSolValueJSX = (value: number) => (
 export const createPercentValueJSX = (value: number) => (
   <span className={styles.value}>{value ? `${value.toFixed(0)} %` : '--'}</span>
 );
+
+export const createHighlitedPercentValueJSX = (value: number) => {
+  const colorLTV = getColorByPercent(value, colorByPercentOffers);
+
+  return (
+    <div className={styles.value}>
+      <span style={{ color: `${colorLTV}` }}>
+        {!!value && `${value.toFixed(0)} %`}
+      </span>
+      {!value && <span>--</span>}
+    </div>
+  );
+};
