@@ -88,7 +88,10 @@ export const PartialRepayModal: FC<PartialRepayModalProps> = ({
     <Modal
       visible={!!visible}
       centered
-      onCancel={onCancel}
+      onCancel={(event) => {
+        onCancel();
+        event.stopPropagation();
+      }}
       width={500}
       destroyOnClose
       footer={false}

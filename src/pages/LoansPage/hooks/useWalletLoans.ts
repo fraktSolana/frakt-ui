@@ -1,5 +1,5 @@
-import { web3 } from 'fbonds-core';
 import { useQuery } from '@tanstack/react-query';
+import { web3 } from 'fbonds-core';
 
 import { fetchWalletLoans, Loan } from '@frakt/api/loans';
 

@@ -8,7 +8,8 @@ export type PartialBreakpoints = Partial<Breakpoints>;
 
 export interface ActiveRowParams {
   field: string;
-  value: string;
+  value?: string;
+  className?: string;
 }
 
 interface SearchParams {

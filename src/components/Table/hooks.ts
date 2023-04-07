@@ -75,7 +75,7 @@ export const useSortModalMobile: UseSortModalMobile = ({
   const sortedData = useMemo(() => {
     if (!sort.field) return [...data];
     const sortFunction = columns.find(({ key }) => String(key) === sort.field)
-      .sorter as any;
+      ?.sorter as any;
 
     if (!sortFunction) return [...data];
 
