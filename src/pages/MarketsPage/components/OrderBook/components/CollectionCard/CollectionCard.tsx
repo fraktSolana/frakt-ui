@@ -1,8 +1,9 @@
 import { FC } from 'react';
 import classNames from 'classnames';
 
+import Button, { NavigationButton } from '@frakt/components/Button';
 import { Loader } from '@frakt/components/Loader';
-import Button from '@frakt/components/Button';
+import { PATHS } from '@frakt/constants';
 import { ChevronDown } from '@frakt/icons';
 
 import { useCollectionCard } from './hooks';
@@ -88,7 +89,9 @@ const CollectionCard: FC<CollectionCardProps> = ({
             key={idx}
           />
         ))}
-        {!loading && !offers.length && isVisibleOfferList && <EmptyCard />}
+        {!loading && !offers.length && isVisibleOfferList && (
+          <EmptyCard marketPubkey={marketPubkey} />
+        )}
       </div>
     </>
   );
@@ -96,9 +99,15 @@ const CollectionCard: FC<CollectionCardProps> = ({
 
 export default CollectionCard;
 
-const EmptyCard = () => (
+const EmptyCard = ({ marketPubkey }: { marketPubkey: string }) => (
   <div className={styles.emptyCard}>
     <h4 className={styles.emptyCardTitle}>No active offers at the moment</h4>
     <p className={styles.emptyCardSubtitle}>Good chance to be first!</p>
+    <NavigationButton
+      path={`${PATHS.OFFER}/${marketPubkey}`}
+      className={styles.emptyCardButton}
+    >
+      Place offers
+    </NavigationButton>
   </div>
 );
