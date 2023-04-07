@@ -4,20 +4,22 @@ import { useHistory } from 'react-router-dom';
 import { web3 } from 'fbonds-core';
 
 import { PATHS } from '@frakt/constants';
-import { showSolscanLinkNotification } from '@frakt/utils/transactions';
 import {
-  makeCreateBondMultiOrdersTransaction,
-  makeCreateBondTransaction,
-} from '@frakt/utils/bonds';
+  showSolscanLinkNotification,
+  signAndSendAllTransactions,
+  signAndSendAllTransactionsInSequence,
+} from '@frakt/utils/transactions';
+import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
 import { useConnection } from '@frakt/hooks';
 import { useBorrow } from '@frakt/pages/BorrowPages/cartState';
-import { Market, Pair } from '@frakt/api/bonds';
+import { Market } from '@frakt/api/bonds';
 import { notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { captureSentryError } from '@frakt/utils/sentry';
 import { makeProposeTransaction } from '@frakt/utils/loans';
 import { LoanType } from '@frakt/api/loans';
 import { BondCartOrder, BorrowNft } from '@frakt/api/nft';
+import { useLoadingModalState } from '@frakt/components/LoadingModal';
 
 export const useSidebar = () => {
   const {
@@ -27,7 +29,6 @@ export const useSidebar = () => {
     currentNft,
     onRemoveNft,
     onNextNftSelect,
-    currentPair,
     currentBondOrder,
     market,
     currentLoanType,
@@ -50,6 +51,12 @@ export const useSidebar = () => {
   const connection = useConnection();
   const wallet = useWallet();
 
+  const {
+    visible: loadingModalVisible,
+    setVisible: setLoadingModalVisible,
+    clearState: clearLoadingModalState,
+  } = useLoadingModalState();
+
   const onSubmit = async () => {
     if (isBulk) {
       saveUpcomingOrderToCart();
@@ -57,10 +64,10 @@ export const useSidebar = () => {
     }
 
     try {
+      setLoadingModalVisible(true);
+
       const result = await borrowSingle({
         nft: currentNft,
-        pair: currentPair,
-        // bondOrderParamsAndAssetReceiver: currentBondOrder.bondOrderParams.orderParams.map(orderParam => ({...orderParam, assetReceiver: })),
         bondOrderParams: currentBondOrder
           ? currentBondOrder.bondOrderParams.orderParams
           : [],
@@ -71,13 +78,13 @@ export const useSidebar = () => {
         connection,
       });
       if (!result) {
-        throw new Error('Error');
+        throw new Error('Borrow failed');
       }
       goToToBorrowSuccessPage();
     } catch (error) {
       console.error(error);
-      // eslint-disable-next-line no-console
-      console.warn(error.logs?.join('\n'));
+    } finally {
+      clearLoadingModalState();
     }
   };
 
@@ -91,12 +98,13 @@ export const useSidebar = () => {
     minimizedOnMobile,
     setMinimizedOnMobile,
     onSubmit,
+    loadingModalVisible,
+    setLoadingModalVisible,
   };
 };
 
 type BorrowSingle = (props: {
   nft: BorrowNft;
-  pair?: Pair;
   bondOrderParams?: BondCartOrder[];
   market?: Market;
   loanType: LoanType;
@@ -107,7 +115,6 @@ type BorrowSingle = (props: {
 
 const borrowSingle: BorrowSingle = async ({
   nft,
-  pair,
   bondOrderParams,
   market,
   loanType,
@@ -115,7 +122,6 @@ const borrowSingle: BorrowSingle = async ({
   connection,
   wallet,
 }) => {
-  // console.log("bondOrderParams: ", bondOrderParams)
   if (loanType !== LoanType.BOND) {
     const { transaction, signers } = await makeProposeTransaction({
       nftMint: nft.mint,
@@ -126,265 +132,84 @@ const borrowSingle: BorrowSingle = async ({
       wallet,
     });
     return await signAndSendAllTransactions({
-      txnsAndSigners: [{ transaction, signers }],
+      transactionsAndSigners: [{ transaction, signers }],
       connection,
       wallet,
-      // commitment = 'finalized',
-      onBeforeApprove: () => {},
-      onAfterSend: () => {},
-      onSuccess: () => {},
-      onError: () => {},
+      commitment: 'confirmed',
+      onAfterSend: () => {
+        notify({
+          message: 'Transaction sent!',
+          type: NotifyType.INFO,
+        });
+      },
+      onSuccess: () => {
+        notify({
+          message: 'Borrowed successfully!',
+          type: NotifyType.SUCCESS,
+        });
+      },
+      onError: (error) => {
+        // eslint-disable-next-line no-console
+        console.warn(error.logs?.join('\n'));
+        const isNotConfirmed = showSolscanLinkNotification(error);
+
+        if (!isNotConfirmed) {
+          notify({
+            message: 'The transaction just failed :( Give it another try',
+            type: NotifyType.ERROR,
+          });
+        }
+
+        captureSentryError({
+          error,
+          wallet,
+          transactionName: 'borrowSingleClassic',
+        });
+      },
     });
   }
-
-  console.log('nft.valuation: ', nft.valuation);
 
   const { createBondTxnAndSigners, sellingBondsTxnsAndSigners } =
     await makeCreateBondMultiOrdersTransaction({
       nftMint: nft.mint,
       market,
       bondOrderParams: bondOrderParams,
-      borrowValue: loanValue,
       connection,
       wallet,
     });
-
-  console.log('signAndSendAllTransactionsInSequence');
 
   return await signAndSendAllTransactionsInSequence({
     txnsAndSigners: [[createBondTxnAndSigners], sellingBondsTxnsAndSigners],
     connection,
     wallet,
-    // commitment = 'finalized',
-    onBeforeApprove: () => {},
-    onAfterSend: () => {},
+    commitment: 'confirmed',
+    onAfterSend: () => {
+      notify({
+        message: 'Transactions sent!',
+        type: NotifyType.INFO,
+      });
+    },
     onSuccess: () => {
       notify({
         message: 'Borrowed successfully!',
         type: NotifyType.SUCCESS,
       });
     },
-    onError: () => {},
-  });
-};
-
-export interface TxnsAndSigners {
-  transaction: web3.Transaction;
-  signers?: web3.Signer[];
-}
-
-interface SignAndSendAllTransactionsProps {
-  txnsAndSigners: TxnsAndSigners[];
-  connection: web3.Connection;
-  wallet: WalletContextState;
-  commitment?: web3.Commitment;
-  onBeforeApprove?: () => void;
-  onAfterSend?: () => void;
-  onSuccess?: () => void;
-  onError?: () => void;
-}
-
-type SignAndSendAllTransactions = (
-  props: SignAndSendAllTransactionsProps,
-) => Promise<boolean>;
-
-export const signAndSendAllTransactions: SignAndSendAllTransactions = async ({
-  txnsAndSigners,
-  connection,
-  wallet,
-  commitment = 'finalized',
-  onBeforeApprove,
-  onAfterSend,
-  onSuccess,
-  onError,
-}) => {
-  try {
-    onBeforeApprove?.();
-
-    const { blockhash, lastValidBlockHeight } =
-      await connection.getLatestBlockhash();
-
-    const transactions = txnsAndSigners.map(({ transaction, signers = [] }) => {
-      transaction.recentBlockhash = blockhash;
-      transaction.feePayer = wallet.publicKey;
-
-      if (signers.length) {
-        transaction.sign(...signers);
-      }
-
-      return transaction;
-    });
-
-    const signedTransactions = await wallet.signAllTransactions(transactions);
-
-    const txnSignatures = await Promise.all(
-      signedTransactions.map((txn) =>
-        connection.sendRawTransaction(txn.serialize(), {
-          skipPreflight: false,
-        }),
-      ),
-    );
-
-    console.log('Transactions sent!');
-    notify({
-      message: 'transaction sent!',
-      type: NotifyType.INFO,
-    });
-
-    onAfterSend?.();
-
-    // await Promise.allSettled(
-    //   txnSignatures.map((signature) =>
-    //     connection.confirmTransaction(
-    //       {
-    //         signature,
-    //         blockhash,
-    //         lastValidBlockHeight,
-    //       },
-    //       commitment,
-    //     ),
-    //   ),
-    // );
-
-    await new Promise((r) => setTimeout(r, 5000));
-
-    onSuccess?.();
-    notify({
-      message: 'Borrowed successfully!',
-      type: NotifyType.SUCCESS,
-    });
-
-    return true;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.warn(error.logs?.join('\n'));
-    const isNotConfirmed = showSolscanLinkNotification(error);
-
-    if (!isNotConfirmed) {
-      notify({
-        message: 'The transaction just failed :( Give it another try',
-        type: NotifyType.ERROR,
-      });
-    }
-
-    captureSentryError({
-      error,
-      wallet,
-      transactionName: 'proposeSingleLoanWithBonds',
-    });
-
-    return false;
-  }
-};
-
-interface SignAndSendAllTransactionsInSequenceProps {
-  txnsAndSigners: TxnsAndSigners[][];
-  connection: web3.Connection;
-  wallet: WalletContextState;
-  commitment?: web3.Commitment;
-  onBeforeApprove?: () => void;
-  onAfterSend?: () => void;
-  onSuccess?: () => void;
-  onError?: () => void;
-}
-
-type SignAndSendAllTransactionsInSequence = (
-  props: SignAndSendAllTransactionsInSequenceProps,
-) => Promise<boolean>;
-
-export const signAndSendAllTransactionsInSequence: SignAndSendAllTransactionsInSequence =
-  async ({
-    txnsAndSigners,
-    connection,
-    wallet,
-    commitment = 'finalized',
-    onBeforeApprove,
-    onAfterSend,
-    onSuccess,
-    onError,
-  }) => {
-    try {
-      onBeforeApprove?.();
-
-      const { blockhash, lastValidBlockHeight } =
-        await connection.getLatestBlockhash();
-
-      const transactions = txnsAndSigners
-        .flat()
-        .map(({ transaction, signers = [] }) => {
-          transaction.recentBlockhash = blockhash;
-          transaction.feePayer = wallet.publicKey;
-
-          if (signers.length) {
-            transaction.sign(...signers);
-          }
-
-          return transaction;
-        });
-
-      console.log('txnsAndSigners: ', txnsAndSigners);
-      console.log('transactions: ', transactions);
-
-      const signedTransactions = await wallet.signAllTransactions(transactions);
-
-      let currentTxIndex = 0;
-      for (let i = 0; i < txnsAndSigners.length; i++) {
-        for (let r = 0; r < txnsAndSigners[i].length; r++) {
-          console.log('currentTxIndex: ', currentTxIndex);
-          const txn = signedTransactions[currentTxIndex];
-          await connection.sendRawTransaction(txn.serialize(), {
-            skipPreflight: false,
-            preflightCommitment: 'processed',
-          });
-          currentTxIndex += 1;
-        }
-        await new Promise((r) => setTimeout(r, 7000));
-      }
-
-      console.log('Transactions sent!');
-      notify({
-        message: 'transaction sent!',
-        type: NotifyType.INFO,
-      });
-
-      onAfterSend?.();
-
-      // await Promise.allSettled(
-      //   txnSignatures.map((signature) =>
-      //     connection.confirmTransaction(
-      //       {
-      //         signature,
-      //         blockhash,
-      //         lastValidBlockHeight,
-      //       },
-      //       commitment,
-      //     ),
-      //   ),
-      // );
-
-      await new Promise((r) => setTimeout(r, 5000));
-
-      onSuccess?.();
-
-      return true;
-    } catch (error) {
+    onError: (error) => {
       // eslint-disable-next-line no-console
       console.warn(error.logs?.join('\n'));
       const isNotConfirmed = showSolscanLinkNotification(error);
-
       if (!isNotConfirmed) {
         notify({
           message: 'The transaction just failed :( Give it another try',
           type: NotifyType.ERROR,
         });
       }
-
       captureSentryError({
         error,
         wallet,
-        transactionName: 'proposeSingleLoanWithBonds',
+        transactionName: 'borrowSingleBond',
       });
-
-      return false;
-    }
-  };
+    },
+  });
+};
