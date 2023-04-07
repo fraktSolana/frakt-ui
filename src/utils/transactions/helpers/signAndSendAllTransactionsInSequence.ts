@@ -61,6 +61,7 @@ export const signAndSendAllTransactionsInSequence: SignAndSendAllTransactionsInS
 
       const allTxnSignatures: Array<string> = [];
 
+      let txnToSendIdxInFlatArr = 0;
       for (let chunk = 0; chunk < txnsAndSignersFiltered.length; chunk++) {
         const iterationSignatures: Array<string> = [];
 
@@ -69,7 +70,8 @@ export const signAndSendAllTransactionsInSequence: SignAndSendAllTransactionsInS
           txnIdxInChunk < txnsAndSignersFiltered[chunk].length;
           txnIdxInChunk++
         ) {
-          const txn = signedTransactions[chunk + txnIdxInChunk];
+          const txn = signedTransactions[txnToSendIdxInFlatArr];
+          txnToSendIdxInFlatArr++;
           const signature = await connection.sendRawTransaction(
             txn.serialize(),
             {
