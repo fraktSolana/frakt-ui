@@ -1,16 +1,17 @@
+import { commonActions } from './../../../../state/common/actions';
 import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { BN } from '@frakt-protocol/frakt-sdk';
 import { useDispatch } from 'react-redux';
 
+import { usePartialRepayModal } from '@frakt/components/PartialRepayModal';
+import { stakeCardinal, unstakeCardinal } from '@frakt/utils/stake';
+import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { Loan, RewardState, LoanType } from '@frakt/api/loans';
+import { paybackLoan } from '@frakt/utils/loans';
+import { throwLogsError } from '@frakt/utils';
+import { useConnection } from '@frakt/hooks';
 
-import { usePartialRepayModal } from '../../../../components/PartialRepayModal';
-import { paybackLoan } from '../../../../utils/loans';
-import { commonActions } from '../../../../state/common/actions';
-import { useLoadingModal } from '../../../../components/LoadingModal';
-import { stakeCardinal, unstakeCardinal } from '../../../../utils/stake';
-import { useConnection } from '../../../../hooks';
 import { useHiddenLoansPubkeys } from '../../loansState';
 
 export const useLoanCard = (loan: Loan) => {
@@ -77,9 +78,7 @@ export const useLoanCard = (loan: Loan) => {
         removeTokenOptimistic(loan.pubkey);
       }
     } catch (error) {
-      console.error(error);
-      // eslint-disable-next-line no-console
-      console.warn(error?.logs?.join('\n'));
+      throwLogsError(error);
     } finally {
       setTransactionsLeft(null);
       closeLoadingModal();
@@ -137,9 +136,7 @@ export const useLoanCard = (loan: Loan) => {
       showConfetti();
       removeTokenOptimistic(loan.pubkey);
     } catch (error) {
-      console.error(error);
-      // eslint-disable-next-line no-console
-      console.warn(error?.logs?.join('\n'));
+      throwLogsError(error);
     } finally {
       setTransactionsLeft(null);
       closeLoadingModal();
@@ -163,9 +160,7 @@ export const useLoanCard = (loan: Loan) => {
         throw new Error('Staking failed');
       }
     } catch (error) {
-      console.error(error);
-      // eslint-disable-next-line no-console
-      console.warn(error?.logs?.join('\n'));
+      throwLogsError(error);
     } finally {
       closeLoadingModal();
     }

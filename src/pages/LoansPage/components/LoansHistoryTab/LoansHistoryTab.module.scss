@@ -1,0 +1,21 @@
+.rootTable :global {
+  .ant-table-thead > tr > th:first-child,
+  .ant-table-tbody > tr > td:first-child {
+    padding-left: 24px;
+  }
+  .ant-table-thead > tr > th:last-child,
+  .ant-table-tbody > tr > td:last-child {
+    padding-right: 24px;
+  }
+  ::-webkit-scrollbar {
+    height: 0px;
+  }
+}
+
+.rootTable {
+  padding-top: 16px;
+}
+
+.emptyList {
+  padding: 120px 0 160px;
+}

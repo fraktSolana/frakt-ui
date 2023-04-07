@@ -1,0 +1,178 @@
+.searchInput {
+  input {
+    font: var(--font-text-4) !important;
+    font-size: 14px !important;
+  }
+  height: 23px !important;
+  width: 143px;
+}
+
+.rowCenter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.collectionInfo {
+  @extend .rowCenter;
+}
+.collectionName {
+  color: var(--primary-text);
+  font: var(--font-text-6);
+  width: 141px;
+  @media (max-width: 768px) {
+    width: 104px;
+  }
+}
+.collectionImageWrapper {
+  position: relative;
+}
+.collectionImage,
+.selectedCollectionOverlay {
+  width: 26px;
+  height: 26px;
+}
+.selectedCollectionOverlay {
+  background-color: var(--light-green-color);
+  border: 1px solid var(--button-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  &:after {
+    content: '';
+    display: block;
+    background: var(--button-text);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 1.2px;
+    width: 11px;
+  }
+}
+
+.repayButton {
+  height: 26px;
+  width: 60px;
+}
+
+.moreActionsButton {
+  padding: 0;
+  height: 32px;
+  width: 32px;
+}
+
+.filters {
+  position: relative;
+}
+.filtersDropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 218px;
+
+  @media screen and (max-width: 767px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: unset;
+    width: 100% !important;
+  }
+}
+
+.liquidateButtonWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.stakingButtonWrapper button,
+.liquidateButton {
+  font: var(--font-btn-middle) !important;
+  padding: 0;
+  height: 26px;
+  width: 100%;
+}
+.stakingContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  @media screen and (max-width: 767px) {
+    width: 100%;
+  }
+}
+.stakingTitle {
+  color: var(--secondary-text);
+  font: var(--font-text-6);
+  text-align: left;
+  text-transform: uppercase;
+  line-height: 20px;
+
+  @media screen and (max-width: 767px) {
+    text-align: center;
+  }
+}
+.stakingButtonWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.stakingButtonWrapper button {
+  width: 100%;
+}
+
+.value {
+  color: var(--primary-text);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font: var(--font-text-4);
+  font-size: 14px;
+  gap: 4px;
+  position: relative;
+}
+
+.horizontalDots {
+  path {
+    fill: var(--primary-text);
+  }
+}
+
+.checkbox {
+  height: 16px;
+}
+.checkboxInnerContent::after {
+  border-width: 0.75px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  height: 0.75px;
+  width: 6.75px;
+}
+
+.badge {
+  background-color: var(--secondary-background);
+  color: var(--secondary-border);
+  font: var(--font-text-7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  width: 103px;
+}
+
+.badgeOnGrace {
+  color: var(--orange-color);
+  font: var(--font-text-9);
+  font-weight: 400;
+  position: absolute;
+  top: -13px;
+}
