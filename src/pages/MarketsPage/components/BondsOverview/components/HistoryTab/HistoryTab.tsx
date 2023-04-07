@@ -29,8 +29,8 @@ const HistoryTab: FC = () => {
     data: bondsHistory,
     fetchNextPage,
     isFetchingNextPage,
-    isListEnded,
     isLoading,
+    hasNextPage,
   } = useFetchBondsHistory({
     queryData,
     showOwnerBonds,
@@ -39,10 +39,10 @@ const HistoryTab: FC = () => {
   });
 
   useEffect(() => {
-    if (inView && !isFetchingNextPage && !isListEnded) {
+    if (inView && hasNextPage) {
       fetchNextPage();
     }
-  }, [inView, fetchNextPage, isFetchingNextPage, isListEnded]);
+  }, [inView, fetchNextPage, hasNextPage]);
 
   const onChangeFilterOption = (nextOption: RBOption<string>) => {
     setFilterOption(nextOption.value);
@@ -84,7 +84,7 @@ const HistoryTab: FC = () => {
               data={bondsHistory}
               breakpoints={{ scrollX: 744 }}
             />
-            {!!isFetchingNextPage && <Loader />}
+            {isFetchingNextPage && <Loader />}
             <div ref={ref} />
           </>
         )}
