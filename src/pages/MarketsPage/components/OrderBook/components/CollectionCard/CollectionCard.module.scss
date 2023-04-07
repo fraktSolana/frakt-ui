@@ -12,6 +12,8 @@
   @extend .flexCenter;
   cursor: pointer;
   justify-content: space-between;
+  min-height: 32.5px;
+  max-height: 32.5px;
 }
 
 .collectionImage {
