@@ -3,36 +3,24 @@ import { useHistory } from 'react-router-dom';
 import { web3 } from 'fbonds-core';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
 
-import {
-  signAndConfirmTransaction,
-  signAndSendAllTransactions,
-} from '@frakt/utils/transactions/helpers';
 import { useConfirmModal } from '@frakt/components/ConfirmModal';
-import {
-  TxsLoadingModalState,
-  useLoadingModalState,
-} from '@frakt/components/LoadingModal';
+import { useLoadingModalState } from '@frakt/components/LoadingModal';
 import { PATHS } from '@frakt/constants';
-import { showSolscanLinkNotification } from '@frakt/utils/transactions';
-import {
-  makeCreateBondTransaction,
-  makeCreateBondMultiOrdersTransaction,
-} from '@frakt/utils/bonds';
+import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
 import { BondOrder } from '@frakt/pages/BorrowPages/cartState';
-import { Pair } from '@frakt/api/bonds';
 import { notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
-import { captureSentryError } from '@frakt/utils/sentry';
 import { makeProposeTransaction } from '@frakt/utils/loans';
 import { LoanType } from '@frakt/api/loans';
 import { useConnection } from '@frakt/hooks';
-
-import { useBorrow } from '../cartState';
-import { BondCartOrder } from '@frakt/api/nft';
 import {
+  showSolscanLinkNotification,
   signAndSendAllTransactionsInSequence,
   TxnsAndSigners,
-} from '../BorrowManualPage/components/Sidebar/hooks';
+} from '@frakt/utils/transactions';
+import { captureSentryError } from '@frakt/utils/sentry';
+
+import { useBorrow } from '../cartState';
 
 export const useBorrowBulkOverviewPage = () => {
   const history = useHistory();
@@ -54,7 +42,6 @@ export const useBorrowBulkOverviewPage = () => {
     setVisible: setLoadingModalVisible,
     textStatus: loadingModalTextStatus,
     clearState: clearLoadingModalState,
-    setState,
   } = useLoadingModalState();
 
   //? Go to borrow root page if bulk selection doesn't exist
@@ -77,28 +64,18 @@ export const useBorrowBulkOverviewPage = () => {
 
       const result = await borrowBulk({
         orders: cartOrders,
-        pairs: cartPairs,
         wallet,
         connection,
-        isSupportSignAllTxns,
-        setState,
       });
 
       if (!result) {
         throw new Error('Loan proposing failed');
       }
 
-      notify({
-        message: 'Borrowed successfully!',
-        type: NotifyType.SUCCESS,
-      });
-
       history.push(PATHS.BORROW_SUCCESS);
       clearCurrentNftState();
       clearCart();
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn(error?.logs);
       console.error(error);
     } finally {
       clearLoadingModalState();
@@ -135,21 +112,15 @@ export const useBorrowBulkOverviewPage = () => {
 
 type BorrowBulk = (props: {
   orders: BondOrder[];
-  pairs: Pair[];
   connection: web3.Connection;
   wallet: WalletContextState;
   isSupportSignAllTxns?: boolean;
-  setState?: (nextState: TxsLoadingModalState) => void;
-  setIsConfirmedTxns?: (value: boolean) => void;
 }) => Promise<boolean>;
 
 const borrowBulk: BorrowBulk = async ({
   orders,
-  pairs,
   connection,
   wallet,
-  isSupportSignAllTxns,
-  setState,
 }): Promise<boolean> => {
   const notBondOrders = orders.filter(
     (order) => order.loanType !== LoanType.BOND,
@@ -174,7 +145,6 @@ const borrowBulk: BorrowBulk = async ({
         nftMint: order.borrowNft.mint,
         market: order.bondOrderParams.market,
         bondOrderParams: order.bondOrderParams.orderParams,
-        borrowValue: order.loanValue,
         connection,
         wallet,
       });
@@ -187,46 +157,47 @@ const borrowBulk: BorrowBulk = async ({
       .map((chunk) => chunk.createBondTxnAndSigners)
       .flat(),
   ];
-  // await signAndSendAllTransactions({
-  //   txnsAndSigners: firstChunk,
-  //   connection,
-  //   wallet,
-  //   // commitment = 'finalized',
-  //   onBeforeApprove: () => {},
-  //   onAfterSend: () => {},
-  //   onSuccess: () => {},
-  //   onError: () => {},
-  // });
 
   const secondChunk: TxnsAndSigners[] = [
     ...bondTransactionsAndSignersChunks
       .map((chunk) => chunk.sellingBondsTxnsAndSigners)
       .flat(),
   ];
-  // await signAndSendAllTransactions({
-  // txnsAndSigners: secondChunk,
-  // connection,
-  // wallet,
-  // // commitment = 'finalized',
-  // onBeforeApprove: () => {},
-  // onAfterSend: () => {},
-  // onSuccess: () => {},
-  // onError: () => {},
-  // });
 
   return await signAndSendAllTransactionsInSequence({
     txnsAndSigners: [firstChunk, secondChunk],
     connection,
     wallet,
-    // commitment = 'finalized',
-    onBeforeApprove: () => {},
-    onAfterSend: () => {},
+    commitment: 'confirmed',
+    onAfterSend: () => {
+      notify({
+        message: 'Transactions sent!',
+        type: NotifyType.INFO,
+      });
+    },
     onSuccess: () => {
       notify({
         message: 'Borrowed successfully!',
         type: NotifyType.SUCCESS,
       });
     },
-    onError: () => {},
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.warn(error.logs?.join('\n'));
+
+      const isNotConfirmed = showSolscanLinkNotification(error);
+      if (!isNotConfirmed) {
+        notify({
+          message: 'The transaction just failed :( Give it another try',
+          type: NotifyType.ERROR,
+        });
+      }
+
+      captureSentryError({
+        error,
+        wallet,
+        transactionName: 'borrowBulk',
+      });
+    },
   });
 };

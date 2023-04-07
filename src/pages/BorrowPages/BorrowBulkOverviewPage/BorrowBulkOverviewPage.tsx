@@ -66,11 +66,11 @@ export const BorrowBulkOverviewPage: FC = () => {
         ))}
       </div>
       <LoadingModal
-        title="Please approve transaction"
+        title="Please approve transactions"
         subtitle={
           loadingModalTextStatus
             ? loadingModalTextStatus
-            : 'In order to transfer the NFT/s approval is needed'
+            : 'In order to transfer the NFT/s approval is needed.\nPlease do not leave the page while you see this message'
         }
         visible={loadingModalVisible}
         onCancel={() => setLoadingModalVisible(false)}

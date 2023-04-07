@@ -1,22 +1,17 @@
 import { web3 } from '@frakt-protocol/frakt-sdk';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 
-import { Bond, Market, Pair } from '@frakt/api/bonds';
+import { Bond, Market } from '@frakt/api/bonds';
 import { notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
-import { showSolscanLinkNotification } from '@frakt/utils/transactions';
-import { captureSentryError } from '@frakt/utils/sentry';
-
 import {
-  makeExitBondMultiOrdersTransaction,
-  makeExitBondTransaction,
-} from './makeExitBondTransaction';
-import { Order } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
-import { BondCartOrder } from '@frakt/api/nft';
-import {
-  signAndSendAllTransactions,
+  showSolscanLinkNotification,
   signAndSendAllTransactionsInSequence,
-} from '@frakt/pages/BorrowPages/BorrowManualPage/components/Sidebar/hooks';
+} from '@frakt/utils/transactions';
+import { captureSentryError } from '@frakt/utils/sentry';
+import { BondCartOrder } from '@frakt/api/nft';
+
+import { makeExitBondMultiOrdersTransaction } from './makeExitBondTransaction';
 
 type ExitBond = (props: {
   bond: Bond;
@@ -46,16 +41,37 @@ export const exitBond: ExitBond = async ({
     txnsAndSigners: [unsetBondTxnAndSigners, sellingBondsTxnsAndSigners],
     connection,
     wallet,
-    // commitment = 'finalized',
-    onBeforeApprove: () => {},
-    onAfterSend: () => {},
+    commitment: 'confirmed',
+    onAfterSend: () => {
+      notify({
+        message: 'Transactions sent!',
+        type: NotifyType.INFO,
+      });
+    },
     onSuccess: () => {
       notify({
-        message: 'Exit successfully!',
+        message: 'Exit successfull!',
         type: NotifyType.SUCCESS,
       });
     },
-    onError: () => {},
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.warn(error.logs?.join('\n'));
+
+      const isNotConfirmed = showSolscanLinkNotification(error);
+      if (!isNotConfirmed) {
+        notify({
+          message: 'The transaction just failed :( Give it another try',
+          type: NotifyType.ERROR,
+        });
+      }
+
+      captureSentryError({
+        error,
+        wallet,
+        transactionName: 'exit',
+      });
+    },
   });
 
   return true;
