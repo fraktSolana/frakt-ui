@@ -19,7 +19,8 @@ export const createPercentValueJSX = (value: number) => (
 );
 
 export const createHighlitedPercentValueJSX = (value: number) => {
-  const colorLTV = getColorByPercent(value, colorByPercentHealth);
+  const colorLTV =
+    getColorByPercent(value, colorByPercentHealth) || colorByPercentHealth[100];
 
   return (
     <div className={styles.value}>
