@@ -1,9 +1,6 @@
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
 
-import { NotifyType } from '@frakt/utils/solanaUtils';
-import { notify } from '@frakt/utils';
-
 interface TxnsAndSigners {
   transaction: web3.Transaction;
   signers?: web3.Signer[];
@@ -59,11 +56,6 @@ export const signAndSendAllTransactions: SignAndSendAllTransactions = async ({
         connection.sendRawTransaction(signedTransaction.serialize()),
       ),
     );
-
-    notify({
-      message: 'Transactions sent',
-      type: NotifyType.INFO,
-    });
 
     onAfterSend?.();
 
