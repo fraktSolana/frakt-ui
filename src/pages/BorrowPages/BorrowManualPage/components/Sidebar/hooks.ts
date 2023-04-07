@@ -185,7 +185,7 @@ const borrowSingle: BorrowSingle = async ({
     commitment: 'confirmed',
     onAfterSend: () => {
       notify({
-        message: 'transactions sent!',
+        message: 'Transactions sent!',
         type: NotifyType.INFO,
       });
     },

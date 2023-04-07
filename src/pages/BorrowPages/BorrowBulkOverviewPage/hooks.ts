@@ -171,7 +171,7 @@ const borrowBulk: BorrowBulk = async ({
     commitment: 'confirmed',
     onAfterSend: () => {
       notify({
-        message: 'transactions sent!',
+        message: 'Transactions sent!',
         type: NotifyType.INFO,
       });
     },
