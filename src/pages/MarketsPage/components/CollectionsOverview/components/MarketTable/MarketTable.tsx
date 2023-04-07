@@ -50,7 +50,6 @@ export const MarketTable: FC<MarketTableProps> = ({
   const COLUMNS = TableList({
     onChange,
     onRowClick,
-    mobileWidth: breakpoints?.mobile,
   });
 
   const { table } = useTable({

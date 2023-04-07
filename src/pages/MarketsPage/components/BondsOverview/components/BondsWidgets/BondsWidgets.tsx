@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { Solana } from '@frakt/icons';
 
 import styles from './BondsWidgets.module.scss';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 interface BondsWidgetsProps {
   classNames?: string;
@@ -10,14 +11,19 @@ interface BondsWidgetsProps {
 }
 
 const BondsWidgets: FC<BondsWidgetsProps> = ({ activeLoans, locked }) => {
+  const connected = useWallet();
+
   return (
     <div className={styles.wrapper}>
       <WidgetValue
         label="Active loans"
-        value={(activeLoans || 0).toFixed(0)}
+        value={connected ? (activeLoans || 0).toFixed(0) : '--'}
         isSolValue={false}
       />
-      <WidgetValue label="Locked" value={(locked || 0).toFixed(2)} />
+      <WidgetValue
+        label="Locked"
+        value={connected ? (locked || 0).toFixed(2) : '--'}
+      />
     </div>
   );
 };

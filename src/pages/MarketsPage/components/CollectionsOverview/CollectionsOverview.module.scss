@@ -5,7 +5,7 @@
   gap: 24px;
   padding: 24px;
   margin-bottom: 16px;
-  min-height: 324px;
+  min-height: 382px;
 
   @media (max-width: 1300px) {
     flex-direction: column;
@@ -53,11 +53,11 @@
 }
 
 .marketTable :global {
-  height: 234px;
+  height: 287px;
   display: block !important;
 
   .ant-table-content {
-    max-height: 234px !important;
+    max-height: 287px !important;
     overflow: auto !important;
   }
 
@@ -118,8 +118,9 @@
   justify-content: space-between;
 }
 
-.showMore {
+.expandButton {
   cursor: pointer;
   font-size: 14px;
-  text-decoration: underline;
+  height: 26px;
+  width: 100px;
 }

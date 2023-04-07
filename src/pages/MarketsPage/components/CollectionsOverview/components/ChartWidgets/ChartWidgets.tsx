@@ -6,6 +6,7 @@ import Tooltip from '@frakt/components/Tooltip';
 import { Solana } from '@frakt/icons';
 
 import styles from './ChartWidgets.module.scss';
+import { colorByPercentOffers, getColorByPercent } from '@frakt/utils/bonds';
 
 interface ChartWidgetsProps {
   marketPreview: MarketPreview;
@@ -19,6 +20,28 @@ const ChartWidgets: FC<ChartWidgetsProps> = ({ marketPreview }) => {
         name={marketPreview?.collectionName}
       />
       <div className={styles.stats}>
+        <StatsValues
+          label="Best offer"
+          value={
+            <div className={styles.column}>
+              <span className={styles.value}>
+                {(marketPreview?.bestOffer / 1e9)?.toFixed(2)} <Solana />
+              </span>
+              <span
+                style={{
+                  color: getColorByPercent(
+                    marketPreview?.bestLTV,
+                    colorByPercentOffers,
+                  ),
+                }}
+                className={styles.value}
+              >
+                {marketPreview?.bestLTV} %
+              </span>
+            </div>
+          }
+          tooltipText="Total liquidity currently available in active offers"
+        />
         <StatsValues
           label="Offer TVL"
           value={
