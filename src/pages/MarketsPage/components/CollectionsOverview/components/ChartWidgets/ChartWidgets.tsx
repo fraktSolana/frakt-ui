@@ -36,7 +36,7 @@ const ChartWidgets: FC<ChartWidgetsProps> = ({ marketPreview }) => {
                 }}
                 className={styles.value}
               >
-                {marketPreview?.bestLTV} %
+                LTV {marketPreview?.bestLTV} %
               </span>
             </div>
           }

@@ -40,11 +40,11 @@
   }
 
   @media (max-width: 1300px) {
-    max-width: 420px;
-    height: 102.5px;
+    max-width: unset;
+    height: 200px;
 
     & > canvas {
-      height: 102.5px !important;
+      height: 200px !important;
     }
   }
 }

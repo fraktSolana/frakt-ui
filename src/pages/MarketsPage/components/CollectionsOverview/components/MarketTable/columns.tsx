@@ -10,8 +10,8 @@ import {
   createOfferTvlJSX,
   createDurationJSX,
   createAprJSX,
-  createHighestLtvJSX,
   createActiveLoansJSX,
+  createBestOfferJSX,
 } from './TableCells';
 import {
   formateDuration,
@@ -59,6 +59,38 @@ export const TableList = ({ onChange, onRowClick }) => {
       width: 120,
     },
     {
+      key: 'bestLTV',
+      dataIndex: 'bestLTV',
+      title: (column) => (
+        <HeaderTitleCell
+          sortColumns={column?.sortColumns}
+          label="Best offer"
+          value="bestLTV"
+          tooltipText="Total liquidity currently available in active offers"
+        />
+      ),
+      sorter: (a, b) => sortingFavoriteList(a, b, 'offerTVL', formateToNumbers),
+      render: (value) => createBestOfferJSX(value),
+      showSorterTooltip: false,
+      width: 125,
+    },
+    {
+      key: 'apy',
+      dataIndex: 'apy',
+      title: (column) => (
+        <HeaderTitleCell
+          sortColumns={column?.sortColumns}
+          label="APR"
+          value="apy"
+          tooltipText="Interest (in %) for the duration of this loan"
+        />
+      ),
+      render: (value) => createAprJSX(value),
+      sorter: (a, b) => sortingFavoriteList(a, b, 'apy'),
+      showSorterTooltip: false,
+      width: 110,
+    },
+    {
       key: 'offerTVL',
       dataIndex: 'offerTVL',
       title: (column) => (
@@ -87,39 +119,7 @@ export const TableList = ({ onChange, onRowClick }) => {
       sorter: (a, b) => sortingFavoriteList(a, b, 'duration', formateDuration),
       render: (value) => createDurationJSX(value),
       showSorterTooltip: false,
-      width: 100,
-    },
-    {
-      key: 'bestLTV',
-      dataIndex: 'bestLTV',
-      title: (column) => (
-        <HeaderTitleCell
-          sortColumns={column?.sortColumns}
-          label="Highest LTV"
-          value="bestLTV"
-          tooltipText="Highest loan amount offered for that collection"
-        />
-      ),
-      render: (value) => createHighestLtvJSX(value),
-      sorter: (a, b) => sortingFavoriteList(a, b, 'bestLTV'),
-      showSorterTooltip: false,
-      width: 125,
-    },
-    {
-      key: 'apy',
-      dataIndex: 'apy',
-      title: (column) => (
-        <HeaderTitleCell
-          sortColumns={column?.sortColumns}
-          label="APR"
-          value="apy"
-          tooltipText="Interest (in %) for the duration of this loan"
-        />
-      ),
-      render: (value) => createAprJSX(value),
-      sorter: (a, b) => sortingFavoriteList(a, b, 'apy'),
-      showSorterTooltip: false,
-      width: 110,
+      width: 72,
     },
   ];
 

@@ -53,6 +53,16 @@
 }
 
 .marketTable :global {
+  .ant-table-tbody > tr > td {
+    vertical-align: baseline !important;
+    height: 54px;
+  }
+  .ant-table-tbody > tr > td:first-child {
+    vertical-align: middle !important;
+  }
+}
+
+.marketTable :global {
   height: 287px;
   display: block !important;
 
@@ -80,24 +90,25 @@
   }
 }
 
-.collapsedMarketTable {
-  :global {
+.collapsedMarketTable :global {
+  .ant-table-thead > tr > th:nth-child(n + 3),
+  .ant-table-tbody > tr > td:nth-child(n + 3) {
+    display: none !important;
+  }
+  .ant-table-tbody > tr > td {
+    vertical-align: middle !important;
+  }
+
+  @media (min-width: 1300px) {
+    .ant-table table {
+      table-layout: auto !important;
+    }
+  }
+
+  @media (max-width: 1300px) {
     .ant-table-thead > tr > th:nth-child(n + 3),
     .ant-table-tbody > tr > td:nth-child(n + 3) {
-      display: none !important;
-    }
-
-    @media (min-width: 1300px) {
-      .ant-table table {
-        table-layout: auto !important;
-      }
-    }
-
-    @media (max-width: 1300px) {
-      .ant-table-thead > tr > th:nth-child(n + 3),
-      .ant-table-tbody > tr > td:nth-child(n + 3) {
-        display: table-cell !important;
-      }
+      display: table-cell !important;
     }
   }
 }
