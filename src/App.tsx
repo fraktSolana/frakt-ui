@@ -1,4 +1,4 @@
-//? Comment to trigger vercel env build 5
+//? Comment to trigger vercel env build 6
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import {
   LedgerWalletAdapter,
@@ -29,6 +29,7 @@ import { initSentry } from '@frakt/utils/sentry';
 import { initAmplitude } from '@frakt/utils/amplitude';
 import Confetti from '@frakt/components/Confetti';
 import { ErrorBoundary } from '@frakt/components/ErrorBoundary';
+import { NotificationModal } from '@frakt/components/NotificationModal';
 
 initSentry();
 initAmplitude();
@@ -59,6 +60,7 @@ const App: FC = () => {
             <QueryClientProvider client={queryClient}>
               <Router />
               <Confetti />
+              <NotificationModal />
             </QueryClientProvider>
           </WalletProvider>
         </ConnectionProvider>

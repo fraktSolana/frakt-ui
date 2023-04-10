@@ -90,12 +90,12 @@ export const NAVIGATION_LINKS = [
     iconDark: LendingDark,
   },
   {
-    pathname: PATHS.STRATEGIES,
-    to: PATHS.STRATEGIES,
-    label: 'Strategies',
-    event: 'navigation-strategies',
-    icon: Strategies,
-    iconDark: StrategiesDark,
+    pathname: PATHS.BONDS,
+    to: PATHS.BONDS,
+    label: 'Bonds',
+    event: 'navigation-bonds',
+    icon: Bonds,
+    iconDark: BondsDark,
   },
   {
     pathname: PATHS.LIQUIDATIONS,
@@ -113,14 +113,6 @@ export const NAVIGATION_LINKS = [
     event: 'navigation-loans',
     icon: MyLoans,
     iconDark: MyLoansDark,
-  },
-  {
-    pathname: PATHS.BONDS,
-    to: PATHS.BONDS,
-    label: 'Bonds',
-    event: 'navigation-bonds',
-    icon: Bonds,
-    iconDark: BondsDark,
   },
   {
     href: PATHS.STAKING,

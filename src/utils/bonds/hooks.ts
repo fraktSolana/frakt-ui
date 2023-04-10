@@ -1,11 +1,9 @@
 import {
   Bond,
   fetchAllMarkets,
-  fetchAllUserBonds,
   fetchCertainMarket,
   fetchMarketPair,
   fetchMarketPairs,
-  fetchWalletBonds,
   Market,
   Pair,
 } from '@frakt/api/bonds';
@@ -109,75 +107,5 @@ export const useMarketPair: UseMarketPair = ({ pairPubkey }) => {
   return {
     pair: data || null,
     isLoading,
-  };
-};
-
-interface HiddenBondsPubkeysState {
-  hiddenBondsPubkeys: string[];
-  hideBond: (bondPubkey: string) => void;
-}
-const useHiddenBondsPubkeys = create<HiddenBondsPubkeysState>((set) => ({
-  hiddenBondsPubkeys: [],
-  hideBond: (bondPubkey) =>
-    set(
-      produce((state: HiddenBondsPubkeysState) => {
-        state.hiddenBondsPubkeys = [...state.hiddenBondsPubkeys, bondPubkey];
-      }),
-    ),
-}));
-type UseWalletBonds = (props: {
-  walletPubkey: web3.PublicKey;
-  marketPubkey: web3.PublicKey;
-}) => {
-  bonds: Bond[];
-  isLoading: boolean;
-  hideBond: (bondPubkey: string) => void;
-};
-export const useWalletBonds: UseWalletBonds = ({
-  walletPubkey,
-  marketPubkey,
-}) => {
-  const { hiddenBondsPubkeys, hideBond } = useHiddenBondsPubkeys();
-
-  const { data, isLoading } = useQuery(
-    ['walletBonds', walletPubkey?.toBase58(), marketPubkey?.toBase58()],
-    () => fetchWalletBonds({ walletPubkey, marketPubkey }),
-    {
-      enabled: !!walletPubkey && !!marketPubkey,
-      staleTime: 60 * 1000, //? 1 min
-      refetchOnWindowFocus: false,
-    },
-  );
-
-  return {
-    bonds:
-      data?.filter(
-        ({ fbond }) => !hiddenBondsPubkeys.includes(fbond?.publicKey),
-      ) || [],
-    isLoading,
-    hideBond,
-  };
-};
-
-export const useFetchAllUserBonds = ({ walletPubkey }) => {
-  const { hiddenBondsPubkeys, hideBond } = useHiddenBondsPubkeys();
-
-  const { data, isLoading } = useQuery(
-    ['useFetchAllUserBonds', walletPubkey?.toBase58()],
-    () => fetchAllUserBonds({ walletPubkey }),
-    {
-      enabled: !!walletPubkey,
-      staleTime: 60 * 1000, //? 1 min
-      refetchOnWindowFocus: false,
-    },
-  );
-
-  return {
-    bonds:
-      data?.filter(
-        ({ fbond }) => !hiddenBondsPubkeys.includes(fbond?.publicKey),
-      ) || [],
-    isLoading,
-    hideBond,
   };
 };

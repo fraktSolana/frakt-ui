@@ -12,7 +12,7 @@ import styles from './BorrowBulkOverviewPage.module.scss';
 import { getLoanFields } from './helpers';
 import { CARD_VALUES_TYPES, LoanCardValue } from './types';
 import { useBorrowBulkOverviewPage } from './hooks';
-import { Order } from '../cartState';
+import { BondOrder } from '../cartState';
 import { Pair } from '@frakt/api/bonds';
 
 export const BorrowBulkOverviewPage: FC = () => {
@@ -23,9 +23,12 @@ export const BorrowBulkOverviewPage: FC = () => {
     confirmModalVisible,
     openConfirmModal,
     closeConfirmModal,
-    loadingModalVisible,
-    closeLoadingModal,
     onBulkEdit,
+    isSupportSignAllTxns,
+    setIsSupportSignAllTxns,
+    loadingModalVisible,
+    setLoadingModalVisible,
+    loadingModalTextStatus,
   } = useBorrowBulkOverviewPage();
 
   return (
@@ -35,6 +38,8 @@ export const BorrowBulkOverviewPage: FC = () => {
         pairs={cartPairs}
         onChangeAssets={() => onBulkEdit()}
         onBorrow={openConfirmModal}
+        isSupportSignAllTxns={isSupportSignAllTxns}
+        setIsSupportSignAllTxns={setIsSupportSignAllTxns}
       />
 
       <div
@@ -61,10 +66,14 @@ export const BorrowBulkOverviewPage: FC = () => {
         ))}
       </div>
       <LoadingModal
-        title="Please approve transaction"
-        subtitle="In order to transfer the NFT/s approval is needed"
+        title="Please approve transactions"
+        subtitle={
+          loadingModalTextStatus
+            ? loadingModalTextStatus
+            : 'In order to transfer the NFT/s approval is needed.\nPlease do not leave the page while you see this message'
+        }
         visible={loadingModalVisible}
-        onCancel={closeLoadingModal}
+        onCancel={() => setLoadingModalVisible(false)}
       />
       <ConfirmModal
         visible={confirmModalVisible}
@@ -81,7 +90,7 @@ export const BorrowBulkOverviewPage: FC = () => {
 };
 
 interface LoanCardprops {
-  order: Order;
+  order: BondOrder;
   pair?: Pair;
   onEditClick: () => void;
 }

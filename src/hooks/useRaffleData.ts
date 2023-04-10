@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { stringify } from '@frakt/utils/state';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { stringify } from '@frakt/utils/state';
+import create from 'zustand';
+import produce from 'immer';
 import {
   FetchNextPageOptions,
   InfiniteQueryObserverResult,
@@ -8,7 +10,9 @@ import {
   useQuery,
 } from '@tanstack/react-query';
 import {
+  AuctionListItem,
   fetchAllRaffleList,
+  fetchAuctionsList,
   FetchItemsParams,
   GraceListItem,
 } from '@frakt/api/raffle';
@@ -62,22 +66,18 @@ export const useRaffleInfo = (params: {
     };
   };
 
-  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
-    [id, publicKey, queryData],
-    ({ pageParam = 0 }) => fetchData({ pageParam, queryString }),
-    {
-      enabled: !!queryData,
-      getPreviousPageParam: (firstPage) => {
-        return firstPage.pageParam - 1 ?? undefined;
-      },
-      refetchInterval: 5000,
-      getNextPageParam: (lastPage) => {
-        return lastPage.data?.length ? lastPage.pageParam + 1 : undefined;
-      },
-      cacheTime: 100_000,
-      networkMode: 'offlineFirst',
+  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
+    queryKey: [publicKey, queryData, id],
+    enabled: !!queryData,
+    queryFn: ({ pageParam = 0 }) => fetchData({ pageParam, queryString }),
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = allPages.length + 1;
+      return lastPage.data.length !== 0 ? nextPage : undefined;
     },
-  );
+    refetchInterval: 5000,
+    cacheTime: 100_000,
+    networkMode: 'offlineFirst',
+  });
 
   const rafflesData = data?.pages?.map((page) => page.data).flat();
 
@@ -105,3 +105,46 @@ export const useFetchAllRaffleList = () => {
 
   return { data, loading: isLoading || isFetching };
 };
+
+export const useFetchAuctionsList = () => {
+  const { hiddenAuctionsPubkeys, hideAuction } = useHiddenAuctionPubkeys();
+
+  const {
+    data,
+    isLoading,
+    isFetching,
+  }: {
+    data: AuctionListItem[];
+    isLoading: boolean;
+    isFetching: boolean;
+  } = useQuery(['fetchAuctionsList'], () => fetchAuctionsList(), {
+    staleTime: 5000,
+    refetchOnWindowFocus: false,
+  });
+
+  return {
+    data:
+      data?.filter(
+        ({ auctionPubkey }) => !hiddenAuctionsPubkeys.includes(auctionPubkey),
+      ) || [],
+    loading: isLoading || isFetching,
+    hideAuction,
+  };
+};
+
+interface HiddenAuctionsPubkeysState {
+  hiddenAuctionsPubkeys: string[];
+  hideAuction: (bondPubkey: string) => void;
+}
+const useHiddenAuctionPubkeys = create<HiddenAuctionsPubkeysState>((set) => ({
+  hiddenAuctionsPubkeys: [],
+  hideAuction: (bondPubkey) =>
+    set(
+      produce((state: HiddenAuctionsPubkeysState) => {
+        state.hiddenAuctionsPubkeys = [
+          ...state.hiddenAuctionsPubkeys,
+          bondPubkey,
+        ];
+      }),
+    ),
+}));

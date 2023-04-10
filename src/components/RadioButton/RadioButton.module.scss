@@ -1,9 +1,8 @@
 .radioButton {
-  width: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  justify-content: center;
 
   input:checked + label {
     background: var(--light-green-color);
@@ -11,32 +10,15 @@
   }
 
   input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
     appearance: none;
   }
 }
 
-.label {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-
-  font-family: 'Syne';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 12px;
-  line-height: 14px;
-
-  text-transform: uppercase;
-
-  color: #aeaeb2;
-}
-
-.wrapper {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.disabledButton {
+  pointer-events: none;
+  opacity: 0.7;
 }
 
 .btn {
@@ -70,6 +52,10 @@
 
     &:hover {
       border: 1px solid var(--black-color);
+    }
+
+    @media screen and (max-width: 768px) {
+      font-size: 14px;
     }
   }
 }

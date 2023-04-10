@@ -1,49 +1,49 @@
-import { ChangeEvent, FC } from 'react';
-import Tooltip from '../Tooltip';
-
+import classNames from 'classnames';
 import styles from './RadioButton.module.scss';
 
-interface RadioButtonProps {
-  labelName?: string;
-  tooltipText?: string;
-  current: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  buttons: { value: string; name: string }[];
+export interface RBOption<T> {
+  label: string;
+  value: T;
 }
 
-const RadioButton: FC<RadioButtonProps> = ({
-  labelName,
-  tooltipText,
-  current,
-  onChange,
-  buttons,
-}) => {
-  return (
-    <div className={styles.radioButton}>
-      {labelName && (
-        <div className={styles.label}>
-          {labelName}
-          <Tooltip placement="bottom" overlay={tooltipText} />
-        </div>
-      )}
+interface RadioButtonProps<T> {
+  currentOption: RBOption<T>;
+  onOptionChange: (nextOption: RBOption<T>) => void;
+  options: RBOption<T>[];
+  className?: string;
+  disabled?: boolean;
+}
 
-      <div className={styles.wrapper}>
-        {buttons.map(({ value, name }) => (
-          <div className={styles.btn} key={value}>
+export const RadioButton = <T extends unknown>({
+  currentOption,
+  options,
+  onOptionChange,
+  className,
+  disabled,
+}: RadioButtonProps<T>) => {
+  return (
+    <div className={classNames(styles.radioButton, className)}>
+      {options.map((option) => {
+        const stringValue = option.value.toString();
+        return (
+          <div
+            className={classNames(styles.btn, {
+              [styles.disabledButton]: disabled,
+            })}
+            key={option.label}
+          >
             <input
               type="radio"
-              id={value}
-              name="maxDuration"
-              value={value}
-              checked={current === value}
-              onChange={onChange}
+              id={stringValue}
+              name={stringValue}
+              value={stringValue}
+              checked={option.value === currentOption.value}
+              onChange={() => onOptionChange(option)}
             />
-            <label htmlFor={value}>{name}</label>
+            <label htmlFor={stringValue}>{option.label}</label>
           </div>
-        ))}
-      </div>
+        );
+      })}
     </div>
   );
 };
-
-export default RadioButton;

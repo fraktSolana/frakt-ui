@@ -1,4 +1,5 @@
 import { web3 } from '@frakt-protocol/frakt-sdk';
+import { IS_PRIVATE_MARKETS } from '@frakt/config';
 import axios from 'axios';
 
 import { BorrowNft, BulkSuggestion } from './types';
@@ -25,7 +26,7 @@ export const fetchWalletBorrowNfts: FetchWalletBorrowNfts = async ({
   const searchQuery = search ? `search=${search}&` : '';
 
   const { data } = await axios.get<BorrowNft[]>(
-    `https://${BACKEND_DOMAIN}/nft/meta2/${publicKey?.toBase58()}?${searchQuery}limit=${limit}&skip=${offset}&sortBy=${sortBy}&sort=${sortOrder}`,
+    `https://${BACKEND_DOMAIN}/nft/meta2/${publicKey?.toBase58()}?${searchQuery}limit=${limit}&skip=${offset}&sortBy=${sortBy}&sort=${sortOrder}&isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data;
@@ -41,7 +42,7 @@ export const fetchBulkSuggestion: FetchBulkSuggestion = async ({
   totalValue,
 }) => {
   const { data } = await axios.get<BulkSuggestion>(
-    `https://${BACKEND_DOMAIN}/nft/suggest2/${publicKey?.toBase58()}?solAmount=${totalValue}`,
+    `https://${BACKEND_DOMAIN}/nft/suggest/${publicKey?.toBase58()}?solAmount=${totalValue}&isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data ?? null;
@@ -55,7 +56,7 @@ export const fetchMaxBorrowValue: FetchMaxBorrowValue = async ({
   publicKey,
 }) => {
   const { data } = await axios.get<{ maxBorrow: number }>(
-    `https://${BACKEND_DOMAIN}/nft/max-borrow/${publicKey?.toBase58()}`,
+    `https://${BACKEND_DOMAIN}/nft/max-borrow/${publicKey?.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data?.maxBorrow ?? 0;

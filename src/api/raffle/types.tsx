@@ -1,3 +1,5 @@
+import { DeltaType } from '@frakters/raffle-sdk/lib/raffle-core/types';
+
 export interface FetchItemsParams {
   sortBy?: string;
   sort?: string;
@@ -50,6 +52,25 @@ export interface WonRaffleListItem {
   startedAt: string;
   totalTickets: number;
   winnerTickets: number;
+}
+
+export interface AuctionListItem {
+  bondPubKey?: string;
+  nftName: string;
+  nftImageUrl: string;
+  nftCollectionName: string;
+  auctionPubkey: string;
+  nftMint: string;
+  timeToNextRound: number;
+  floorPrice: number;
+  startPrice: number;
+  nextPrice: number;
+  buyPrice: number;
+
+  denominator: number;
+  startedAt: number;
+  delta: number;
+  deltaType: DeltaType;
 }
 
 export interface CollectionsListItem {

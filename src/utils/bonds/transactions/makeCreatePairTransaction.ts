@@ -11,16 +11,20 @@ import {
 } from 'fbonds-core/lib/fbond-protocol/types';
 
 import {
+  BASE_POINTS,
   BONDS_PROGRAM_PUBKEY,
   BOND_DECIMAL_DELTA,
   BOND_MAX_RETURN_AMOUNT_FILTER,
+  BOND_MAX_RETURN_AMOUNT_PROTECTION_BASE_POINTS,
 } from '../constants';
+import { isBondFeaturesAutomated } from '../utils';
 
 type MakeCreatePairTransaction = (params: {
   maxLTV: number; //? % 0-100
   maxDuration: number; //? days 7or14
   solDeposit: number; //? Amount of deposit in SOL. Normal values (F.e. 1, 20, 100)
   interest: number; //? % 0-Infinity
+  marketFloor: number; //? % 0-Infinity
   marketPubkey: web3.PublicKey;
   bondFeature?: BondFeatures;
   connection: web3.Connection;
@@ -39,19 +43,32 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
   maxDuration,
   solDeposit,
   interest,
+  marketFloor,
   marketPubkey,
-  bondFeature = BondFeatures.None,
+  bondFeature = BondFeatures.AutoreceiveSol,
   connection,
   wallet,
 }) => {
+  console.log('bondFeature: ', bondFeature);
   const maxLTVRaw = maxLTV * 100; //? Max LTV (2000 --> 20%)
   const maxDurationSec = maxDuration * 24 * 60 * 60; //? Max duration (seconds)
   const solDepositLamports = solDeposit * 1e9;
 
   const spotPrice = BOND_DECIMAL_DELTA - interest * 100;
 
-  const bidCap = Math.floor(solDepositLamports / spotPrice);
+  const bidCapMultiplier = isBondFeaturesAutomated(bondFeature) ? 10 : 1; // multiplying by 10, so autocompound
+  const amountOfTokensInOrder = Math.floor(solDepositLamports / spotPrice);
 
+  const bidCap = amountOfTokensInOrder * bidCapMultiplier;
+
+  const maxReturnAmountFilter = Math.ceil(
+    (marketFloor *
+      ((maxLTVRaw *
+        (BASE_POINTS + BOND_MAX_RETURN_AMOUNT_PROTECTION_BASE_POINTS)) /
+        BASE_POINTS)) /
+      BASE_POINTS,
+  );
+  console.log({ maxReturnAmountFilter, marketFloor, maxLTVRaw });
   const {
     instructions: instructions1,
     signers: signers1,
@@ -101,7 +118,7 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
     args: {
       loanToValueFilter: maxLTVRaw,
       maxDurationFilter: maxDurationSec,
-      maxReturnAmountFilter: BOND_MAX_RETURN_AMOUNT_FILTER,
+      maxReturnAmountFilter: maxReturnAmountFilter,
       bondFeatures: bondFeature,
     },
     connection,
@@ -117,7 +134,7 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
         userPubkey: wallet.publicKey,
       },
       args: {
-        amountOfTokensToBuy: bidCap, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
+        amountOfTokensToBuy: amountOfTokensInOrder, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
       },
       programId: BONDS_PROGRAM_PUBKEY,
       connection,

@@ -1,18 +1,22 @@
 import { web3 } from '@frakt-protocol/frakt-sdk';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 
-import { Bond, Market, Pair } from '@frakt/api/bonds';
+import { Bond, Market } from '@frakt/api/bonds';
 import { notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
-import { showSolscanLinkNotification } from '@frakt/utils/transactions';
+import {
+  showSolscanLinkNotification,
+  signAndSendAllTransactionsInSequence,
+} from '@frakt/utils/transactions';
 import { captureSentryError } from '@frakt/utils/sentry';
+import { BondCartOrder } from '@frakt/api/nft';
 
-import { makeExitBondTransaction } from './makeExitBondTransaction';
+import { makeExitBondMultiOrdersTransaction } from './makeExitBondTransaction';
 
 type ExitBond = (props: {
   bond: Bond;
   market: Market;
-  pair: Pair;
+  bondOrderParams: BondCartOrder[];
   connection: web3.Connection;
   wallet: WalletContextState;
 }) => Promise<boolean>;
@@ -20,67 +24,55 @@ type ExitBond = (props: {
 export const exitBond: ExitBond = async ({
   bond,
   market,
-  pair,
+  bondOrderParams,
   connection,
   wallet,
 }): Promise<boolean> => {
-  try {
-    const { transaction, signers } = await makeExitBondTransaction({
+  const { unsetBondTxnAndSigners, sellingBondsTxnsAndSigners } =
+    await makeExitBondMultiOrdersTransaction({
       bond,
       market,
-      pair,
+      bondOrderParams: bondOrderParams,
       connection,
       wallet,
     });
 
-    const { blockhash, lastValidBlockHeight } =
-      await connection.getLatestBlockhash();
-
-    transaction.recentBlockhash = blockhash;
-    transaction.feePayer = wallet?.publicKey;
-
-    if (signers.length) {
-      transaction.sign(...signers);
-    }
-
-    const signedTransaction = await wallet?.signTransaction(transaction);
-
-    const txid = await connection.sendRawTransaction(
-      signedTransaction.serialize(),
-    );
-
-    notify({
-      message: 'Transactions sent',
-      type: NotifyType.INFO,
-    });
-
-    await connection.confirmTransaction(
-      { signature: txid, blockhash, lastValidBlockHeight },
-      'confirmed',
-    );
-
-    notify({
-      message: 'Exit successfull!',
-      type: NotifyType.SUCCESS,
-    });
-
-    return true;
-  } catch (error) {
-    const isNotConfirmed = showSolscanLinkNotification(error);
-
-    if (!isNotConfirmed) {
+  await signAndSendAllTransactionsInSequence({
+    txnsAndSigners: [unsetBondTxnAndSigners, sellingBondsTxnsAndSigners],
+    connection,
+    wallet,
+    commitment: 'confirmed',
+    onAfterSend: () => {
       notify({
-        message: 'The transaction just failed :( Give it another try',
-        type: NotifyType.ERROR,
+        message: 'Transactions sent!',
+        type: NotifyType.INFO,
       });
-    }
+    },
+    onSuccess: () => {
+      notify({
+        message: 'Exit successfull!',
+        type: NotifyType.SUCCESS,
+      });
+    },
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.warn(error.logs?.join('\n'));
 
-    captureSentryError({
-      error,
-      wallet,
-      transactionName: 'exitBond',
-    });
+      const isNotConfirmed = showSolscanLinkNotification(error);
+      if (!isNotConfirmed) {
+        notify({
+          message: 'The transaction just failed :( Give it another try',
+          type: NotifyType.ERROR,
+        });
+      }
 
-    return false;
-  }
+      captureSentryError({
+        error,
+        wallet,
+        transactionName: 'exit',
+      });
+    },
+  });
+
+  return true;
 };

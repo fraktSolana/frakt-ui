@@ -4,17 +4,22 @@ import { useHistory } from 'react-router-dom';
 import { web3 } from 'fbonds-core';
 
 import { PATHS } from '@frakt/constants';
-import { showSolscanLinkNotification } from '@frakt/utils/transactions';
-import { makeCreateBondTransaction } from '@frakt/utils/bonds';
+import {
+  showSolscanLinkNotification,
+  signAndSendAllTransactions,
+  signAndSendAllTransactionsInSequence,
+} from '@frakt/utils/transactions';
+import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
 import { useConnection } from '@frakt/hooks';
 import { useBorrow } from '@frakt/pages/BorrowPages/cartState';
-import { Market, Pair } from '@frakt/api/bonds';
+import { Market } from '@frakt/api/bonds';
 import { notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { captureSentryError } from '@frakt/utils/sentry';
 import { makeProposeTransaction } from '@frakt/utils/loans';
 import { LoanType } from '@frakt/api/loans';
-import { BorrowNft } from '@frakt/api/nft';
+import { BondCartOrder, BorrowNft } from '@frakt/api/nft';
+import { useLoadingModalState } from '@frakt/components/LoadingModal';
 
 export const useSidebar = () => {
   const {
@@ -24,7 +29,7 @@ export const useSidebar = () => {
     currentNft,
     onRemoveNft,
     onNextNftSelect,
-    currentPair,
+    currentBondOrder,
     market,
     currentLoanType,
     currentLoanValue,
@@ -46,6 +51,12 @@ export const useSidebar = () => {
   const connection = useConnection();
   const wallet = useWallet();
 
+  const {
+    visible: loadingModalVisible,
+    setVisible: setLoadingModalVisible,
+    clearState: clearLoadingModalState,
+  } = useLoadingModalState();
+
   const onSubmit = async () => {
     if (isBulk) {
       saveUpcomingOrderToCart();
@@ -53,9 +64,13 @@ export const useSidebar = () => {
     }
 
     try {
+      setLoadingModalVisible(true);
+
       const result = await borrowSingle({
         nft: currentNft,
-        pair: currentPair,
+        bondOrderParams: currentBondOrder
+          ? currentBondOrder.bondOrderParams.orderParams
+          : [],
         loanType: currentLoanType,
         loanValue: currentLoanValue,
         market,
@@ -63,13 +78,13 @@ export const useSidebar = () => {
         connection,
       });
       if (!result) {
-        throw new Error('Error');
+        throw new Error('Borrow failed');
       }
       goToToBorrowSuccessPage();
     } catch (error) {
       console.error(error);
-      // eslint-disable-next-line no-console
-      console.warn(error.logs?.join('\n'));
+    } finally {
+      clearLoadingModalState();
     }
   };
 
@@ -83,12 +98,14 @@ export const useSidebar = () => {
     minimizedOnMobile,
     setMinimizedOnMobile,
     onSubmit,
+    loadingModalVisible,
+    setLoadingModalVisible,
   };
 };
 
 type BorrowSingle = (props: {
   nft: BorrowNft;
-  pair?: Pair;
+  bondOrderParams?: BondCartOrder[];
   market?: Market;
   loanType: LoanType;
   loanValue: number;
@@ -98,84 +115,101 @@ type BorrowSingle = (props: {
 
 const borrowSingle: BorrowSingle = async ({
   nft,
-  pair,
+  bondOrderParams,
   market,
   loanType,
   loanValue,
   connection,
   wallet,
-}): Promise<boolean> => {
-  try {
-    const { transaction, signers } = await (() => {
-      if (loanType === LoanType.BOND) {
-        return makeCreateBondTransaction({
-          nftMint: nft.mint,
-          market,
-          pair,
-          borrowValue: loanValue,
-          connection,
-          wallet,
+}) => {
+  if (loanType !== LoanType.BOND) {
+    const { transaction, signers } = await makeProposeTransaction({
+      nftMint: nft.mint,
+      valuation: nft.valuation,
+      loanValue: loanValue,
+      loanType: loanType,
+      connection,
+      wallet,
+    });
+    return await signAndSendAllTransactions({
+      transactionsAndSigners: [{ transaction, signers }],
+      connection,
+      wallet,
+      commitment: 'confirmed',
+      onAfterSend: () => {
+        notify({
+          message: 'Transaction sent!',
+          type: NotifyType.INFO,
         });
-      }
+      },
+      onSuccess: () => {
+        notify({
+          message: 'Borrowed successfully!',
+          type: NotifyType.SUCCESS,
+        });
+      },
+      onError: (error) => {
+        // eslint-disable-next-line no-console
+        console.warn(error.logs?.join('\n'));
+        const isNotConfirmed = showSolscanLinkNotification(error);
 
-      return makeProposeTransaction({
-        nftMint: nft.mint,
-        valuation: nft.valuation,
-        loanValue: loanValue,
-        loanType: loanType,
-        connection,
-        wallet,
-      });
-    })();
+        if (!isNotConfirmed) {
+          notify({
+            message: 'The transaction just failed :( Give it another try',
+            type: NotifyType.ERROR,
+          });
+        }
 
-    const { blockhash, lastValidBlockHeight } =
-      await connection.getLatestBlockhash();
+        captureSentryError({
+          error,
+          wallet,
+          transactionName: 'borrowSingleClassic',
+        });
+      },
+    });
+  }
 
-    transaction.recentBlockhash = blockhash;
-    transaction.feePayer = wallet?.publicKey;
-    if (signers.length) {
-      transaction.sign(...signers);
-    }
-
-    const signedTransaction = await wallet?.signTransaction(transaction);
-
-    const txid = await connection.sendRawTransaction(
-      signedTransaction.serialize(),
-    );
-
-    notify({
-      message: 'Transactions sent',
-      type: NotifyType.INFO,
+  const { createBondTxnAndSigners, sellingBondsTxnsAndSigners } =
+    await makeCreateBondMultiOrdersTransaction({
+      nftMint: nft.mint,
+      market,
+      bondOrderParams: bondOrderParams,
+      connection,
+      wallet,
     });
 
-    await connection.confirmTransaction(
-      { signature: txid, blockhash, lastValidBlockHeight },
-      'confirmed',
-    ),
+  return await signAndSendAllTransactionsInSequence({
+    txnsAndSigners: [[createBondTxnAndSigners], sellingBondsTxnsAndSigners],
+    connection,
+    wallet,
+    commitment: 'confirmed',
+    onAfterSend: () => {
+      notify({
+        message: 'Transactions sent!',
+        type: NotifyType.INFO,
+      });
+    },
+    onSuccess: () => {
       notify({
         message: 'Borrowed successfully!',
         type: NotifyType.SUCCESS,
       });
-
-    return true;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.warn(error.logs?.join('\n'));
-    const isNotConfirmed = showSolscanLinkNotification(error);
-
-    if (!isNotConfirmed) {
-      notify({
-        message: 'The transaction just failed :( Give it another try',
-        type: NotifyType.ERROR,
+    },
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.warn(error.logs?.join('\n'));
+      const isNotConfirmed = showSolscanLinkNotification(error);
+      if (!isNotConfirmed) {
+        notify({
+          message: 'The transaction just failed :( Give it another try',
+          type: NotifyType.ERROR,
+        });
+      }
+      captureSentryError({
+        error,
+        wallet,
+        transactionName: 'borrowSingleBond',
       });
-    }
-
-    captureSentryError({
-      error,
-      wallet,
-      transactionName: 'proposeSingleLoanWithBonds',
-    });
-
-    return false;
-  }
+    },
+  });
 };

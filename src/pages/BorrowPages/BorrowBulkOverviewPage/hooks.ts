@@ -1,21 +1,24 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { web3 } from 'fbonds-core';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
 
 import { useConfirmModal } from '@frakt/components/ConfirmModal';
-import { useLoadingModal } from '@frakt/components/LoadingModal';
+import { useLoadingModalState } from '@frakt/components/LoadingModal';
 import { PATHS } from '@frakt/constants';
-import { showSolscanLinkNotification } from '@frakt/utils/transactions';
-import { makeCreateBondTransaction } from '@frakt/utils/bonds';
-import { Order } from '@frakt/pages/BorrowPages/cartState';
-import { Pair } from '@frakt/api/bonds';
+import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
+import { BondOrder } from '@frakt/pages/BorrowPages/cartState';
 import { notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
-import { captureSentryError } from '@frakt/utils/sentry';
 import { makeProposeTransaction } from '@frakt/utils/loans';
 import { LoanType } from '@frakt/api/loans';
 import { useConnection } from '@frakt/hooks';
+import {
+  showSolscanLinkNotification,
+  signAndSendAllTransactionsInSequence,
+  TxnsAndSigners,
+} from '@frakt/utils/transactions';
+import { captureSentryError } from '@frakt/utils/sentry';
 
 import { useBorrow } from '../cartState';
 
@@ -31,18 +34,22 @@ export const useBorrowBulkOverviewPage = () => {
     clearCurrentNftState,
   } = useBorrow();
 
+  const [isSupportSignAllTxns, setIsSupportSignAllTxns] =
+    useState<boolean>(true);
+
+  const {
+    visible: loadingModalVisible,
+    setVisible: setLoadingModalVisible,
+    textStatus: loadingModalTextStatus,
+    clearState: clearLoadingModalState,
+  } = useLoadingModalState();
+
   //? Go to borrow root page if bulk selection doesn't exist
   useEffect(() => {
     if (history && !cartOrders.length) {
       history.replace(PATHS.BORROW_ROOT);
     }
   }, [history, cartOrders]);
-
-  const {
-    visible: loadingModalVisible,
-    close: closeLoadingModal,
-    open: openLoadingModal,
-  } = useLoadingModal();
 
   const {
     visible: confirmModalVisible,
@@ -53,11 +60,10 @@ export const useBorrowBulkOverviewPage = () => {
   const onBorrow = async () => {
     try {
       closeConfirmModal();
-      openLoadingModal();
+      setLoadingModalVisible(true);
 
       const result = await borrowBulk({
         orders: cartOrders,
-        pairs: cartPairs,
         wallet,
         connection,
       });
@@ -70,11 +76,9 @@ export const useBorrowBulkOverviewPage = () => {
       clearCurrentNftState();
       clearCart();
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn(error?.logs);
       console.error(error);
     } finally {
-      closeLoadingModal();
+      clearLoadingModalState();
     }
   };
 
@@ -98,116 +102,102 @@ export const useBorrowBulkOverviewPage = () => {
     openConfirmModal,
     closeConfirmModal,
     loadingModalVisible,
-    closeLoadingModal,
     onBulkEdit,
+    isSupportSignAllTxns,
+    setIsSupportSignAllTxns,
+    setLoadingModalVisible,
+    loadingModalTextStatus,
   };
 };
 
 type BorrowBulk = (props: {
-  orders: Order[];
-  pairs: Pair[];
+  orders: BondOrder[];
   connection: web3.Connection;
   wallet: WalletContextState;
+  isSupportSignAllTxns?: boolean;
 }) => Promise<boolean>;
 
 const borrowBulk: BorrowBulk = async ({
   orders,
-  pairs,
   connection,
   wallet,
 }): Promise<boolean> => {
-  try {
-    const transactionsAndSigners = await Promise.all(
-      orders.map((order) => {
-        if (order.loanType === LoanType.BOND) {
-          return makeCreateBondTransaction({
-            nftMint: order.borrowNft.mint,
-            market: order.bondOrderParams?.market,
-            pair: pairs.find(
-              (pair) =>
-                pair.publicKey ===
-                order?.bondOrderParams?.orderParams?.[0]?.pairPubkey,
-            ),
-            borrowValue: order.loanValue,
-            connection,
-            wallet,
-          });
-        }
-
-        return makeProposeTransaction({
-          nftMint: order.borrowNft.mint,
-          valuation: order.borrowNft.valuation,
-          loanValue: order.loanValue,
-          loanType: order.loanType,
-          connection,
-          wallet,
-        });
-      }),
-    );
-
-    const { blockhash, lastValidBlockHeight } =
-      await connection.getLatestBlockhash();
-
-    const transactions = transactionsAndSigners.map(
-      ({ transaction, signers }) => {
-        transaction.recentBlockhash = blockhash;
-        transaction.feePayer = wallet?.publicKey;
-        if (signers.length) {
-          transaction.sign(...signers);
-        }
-
-        return transaction;
-      },
-    );
-
-    const signedTransactions = await wallet?.signAllTransactions(transactions);
-
-    const txids = await Promise.all(
-      signedTransactions.map((signedTransaction) =>
-        connection.sendRawTransaction(signedTransaction.serialize()),
-      ),
-    );
-
-    notify({
-      message: 'Transactions sent',
-      type: NotifyType.INFO,
-    });
-
-    await Promise.all(
-      txids.map((txid) =>
-        connection.confirmTransaction(
-          { signature: txid, blockhash, lastValidBlockHeight },
-          'confirmed',
-        ),
-      ),
-    );
-
-    notify({
-      message: 'Borrowed successfully!',
-      type: NotifyType.SUCCESS,
-    });
-
-    return true;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.warn(error?.logs);
-    console.error(error);
-
-    const isNotConfirmed = showSolscanLinkNotification(error);
-
-    if (!isNotConfirmed) {
-      notify({
-        message: 'The transaction just failed :( Give it another try',
-        type: NotifyType.ERROR,
+  const notBondOrders = orders.filter(
+    (order) => order.loanType !== LoanType.BOND,
+  );
+  const notBondTransactionsAndSigners = await Promise.all(
+    notBondOrders.map((order) => {
+      return makeProposeTransaction({
+        nftMint: order.borrowNft.mint,
+        valuation: order.borrowNft.valuation,
+        loanValue: order.loanValue,
+        loanType: order.loanType,
+        connection,
+        wallet,
       });
-    }
+    }),
+  );
+  const bondOrders = orders.filter((order) => order.loanType === LoanType.BOND);
 
-    captureSentryError({
-      error,
-      wallet,
-      transactionName: 'proposeBulkLoanWithBonds',
-    });
+  const bondTransactionsAndSignersChunks = await Promise.all(
+    bondOrders.map((order) => {
+      return makeCreateBondMultiOrdersTransaction({
+        nftMint: order.borrowNft.mint,
+        market: order.bondOrderParams.market,
+        bondOrderParams: order.bondOrderParams.orderParams,
+        connection,
+        wallet,
+      });
+    }),
+  );
 
-    return false;
-  }
+  const firstChunk: TxnsAndSigners[] = [
+    ...notBondTransactionsAndSigners,
+    ...bondTransactionsAndSignersChunks
+      .map((chunk) => chunk.createBondTxnAndSigners)
+      .flat(),
+  ];
+
+  const secondChunk: TxnsAndSigners[] = [
+    ...bondTransactionsAndSignersChunks
+      .map((chunk) => chunk.sellingBondsTxnsAndSigners)
+      .flat(),
+  ];
+
+  return await signAndSendAllTransactionsInSequence({
+    txnsAndSigners: [firstChunk, secondChunk],
+    connection,
+    wallet,
+    commitment: 'confirmed',
+    onAfterSend: () => {
+      notify({
+        message: 'Transactions sent!',
+        type: NotifyType.INFO,
+      });
+    },
+    onSuccess: () => {
+      notify({
+        message: 'Borrowed successfully!',
+        type: NotifyType.SUCCESS,
+      });
+    },
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.warn(error.logs?.join('\n'));
+
+      const isNotConfirmed = showSolscanLinkNotification(error);
+      if (!isNotConfirmed) {
+        notify({
+          message: 'The transaction just failed :( Give it another try',
+          type: NotifyType.ERROR,
+        });
+      }
+
+      captureSentryError({
+        error,
+        wallet,
+        transactionName: 'borrowBulk',
+      });
+    },
+  });
 };

@@ -27,7 +27,6 @@ export const LoanCard: FC<LoanCardProps> = ({ loan, onSelect, selected }) => {
     onPartialPayback,
     onPayback,
     onCardinalStake,
-    onCardinalClaim,
     onCardinalUnstake,
     transactionsLeft,
   } = useLoanCard(loan);
@@ -73,32 +72,18 @@ export const LoanCard: FC<LoanCardProps> = ({ loan, onSelect, selected }) => {
           >
             Repay
           </Button>
-          {!!stakingRewardsAmount &&
-            classicParams?.rewards?.stakeState === RewardState.STAKED && (
-              <div className={styles.btnWrapperRow}>
-                <Button
-                  type="primary"
-                  className={styles.btn}
-                  onClick={(e) => {
-                    onCardinalClaim();
-                    e.stopPropagation();
-                  }}
-                  disabled={!stakingRewardsAmount}
-                >
-                  Claim {classicParams?.rewards?.token}
-                </Button>
-                <Button
-                  type="primary"
-                  className={styles.btn}
-                  onClick={(e) => {
-                    onCardinalUnstake();
-                    e.stopPropagation();
-                  }}
-                >
-                  Unstake
-                </Button>
-              </div>
-            )}
+          {classicParams?.rewards?.stakeState === RewardState.STAKED && (
+            <Button
+              type="primary"
+              className={styles.btn}
+              onClick={(e) => {
+                onCardinalUnstake();
+                e.stopPropagation();
+              }}
+            >
+              Unstake
+            </Button>
+          )}
           {classicParams?.rewards?.stakeState === RewardState.UNSTAKED && (
             <Button
               type="primary"

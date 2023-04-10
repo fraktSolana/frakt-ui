@@ -32,6 +32,7 @@ export interface Loan {
   };
 
   classicParams?: {
+    nftUserTokenAccount: string;
     liquidityPool: string;
     collectionInfo: string;
     royaltyAddress: string;
@@ -60,4 +61,13 @@ export interface Loan {
     collateralTokenAccount: string;
     expiredAt: number; //? unix timestamp
   };
+}
+
+export interface LoansHistory {
+  nftName: string;
+  nftImage: string;
+  loanValue: number;
+  repayValue: number;
+  status: string;
+  when: number;
 }

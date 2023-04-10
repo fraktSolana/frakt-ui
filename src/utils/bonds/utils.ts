@@ -1,7 +1,12 @@
 import { maxBy } from 'lodash';
-import { FraktBondState } from 'fbonds-core/lib/fbond-protocol/types';
+import {
+  BondFeatures,
+  FraktBondState,
+} from 'fbonds-core/lib/fbond-protocol/types';
 
 import { Bond, Pair } from '@frakt/api/bonds';
+import { BondCartOrder } from '@frakt/api/nft';
+import { groupBy } from 'ramda';
 
 export const calcRisk = (value: number) => {
   if (value < 40) {
@@ -31,6 +36,18 @@ export const colorByPercentOffers: ColorBreakpoints = {
   100: '#CC1939',
 };
 
+export const colorByPercentHealth: ColorBreakpoints = {
+  0: '#CC1939',
+  22: '#CC5A19',
+  33: '#CC8419',
+  44: '#CCA519',
+  55: '#CCBA19',
+  66: '#C9CC19',
+  77: '#B3CC19',
+  89: '#9ECC19',
+  100: '#7DCC19',
+};
+
 export const colorByPercentSlider: ColorBreakpoints = {
   11: '#9CFF1F',
   22: '#C5FF1F',
@@ -54,9 +71,10 @@ export const getColorByPercent = (
 };
 
 export const calcBondRedeemLamports = (bond: Bond) => {
-  const { fbond, amountOfUserBonds } = bond;
+  const { fbond, stats } = bond;
   return (
-    amountOfUserBonds * (fbond.actualReturnedAmount / fbond.fbondTokenSupply)
+    stats.amountOfUserBonds *
+    (fbond.actualReturnedAmount / fbond.fbondTokenSupply)
   );
 };
 
@@ -77,7 +95,7 @@ export const pairLoanDurationFilter: PairLoanDurationFilter = ({
   pair,
   duration = 7, //? Days
   // }) => duration * (24 * 60 * 60) <= pair?.validation?.durationFilter; //TODO: Allow to take loans with shorter duration
-}) => duration * (24 * 60 * 60) === pair?.validation?.durationFilter;
+}) => duration * (24 * 60 * 60) <= pair?.validation?.durationFilter;
 
 type PairLtvFilter = (props: { pair: Pair; ltvBasePoints: number }) => boolean;
 export const pairLtvFilter: PairLtvFilter = ({
@@ -85,31 +103,45 @@ export const pairLtvFilter: PairLtvFilter = ({
   ltvBasePoints = 1000, //? 1000 === 10%
 }) => ltvBasePoints <= pair?.validation?.loanToValueFilter;
 
-type GetBestPairForExit = (params: {
-  fbondTokenAmount: number;
-  ltvBasePoints: number;
-  duration: number;
-  pairs: Pair[];
-}) => Pair | null;
-export const getBestPairForExit: GetBestPairForExit = ({
-  fbondTokenAmount,
-  ltvBasePoints,
-  duration,
-  pairs,
+type MergeBondOrderParamsByPair = (props: {
+  bondOrderParams: BondCartOrder[];
+}) => BondCartOrder[];
+export const mergeBondOrderParamsByPair: MergeBondOrderParamsByPair = ({
+  bondOrderParams,
 }) => {
-  const suitablePairsByDuration = pairs.filter((p) =>
-    pairLoanDurationFilter({ pair: p, duration }),
+  const groupedPairOrderParams = Object.values(
+    groupBy((orderParam) => orderParam.pairPubkey, bondOrderParams),
   );
 
-  const suitablePairsByLtv = suitablePairsByDuration.filter((p) =>
-    pairLtvFilter({ pair: p, ltvBasePoints }),
+  const mergedPairsOrderParams = groupedPairOrderParams.map((orderParams) =>
+    orderParams.reduce((acc, orderParam) => ({
+      ...acc,
+      orderSize: acc.orderSize + orderParam.orderSize,
+      spotPrice:
+        (acc.orderSize * acc.spotPrice +
+          orderParam.orderSize * orderParam.spotPrice) /
+        (acc.orderSize + orderParam.orderSize),
+    })),
   );
 
-  const suitablePairsBySettlement = suitablePairsByLtv.filter((pair) => {
-    return fbondTokenAmount <= pair.edgeSettlement;
-  });
-
-  return (
-    maxBy(suitablePairsBySettlement, (pair) => pair.currentSpotPrice) ?? null
-  );
+  return mergedPairsOrderParams;
 };
+
+export const isBondFeaturesAutomated = (bondFeature: BondFeatures) =>
+  bondFeature === BondFeatures.Autocompound ||
+  bondFeature === BondFeatures.AutoreceiveSol ||
+  bondFeature === BondFeatures.AutoCompoundAndReceiveNft ||
+  bondFeature === BondFeatures.AutoReceiveAndReceiveNft
+    ? true
+    : false;
+
+export const isAutocompoundBondFeature = (bondFeature: BondFeatures) =>
+  bondFeature === BondFeatures.Autocompound ||
+  bondFeature === BondFeatures.AutoCompoundAndReceiveNft
+    ? true
+    : false;
+
+export const isLiquidatedBondFeature = (bondFeature: BondFeatures) =>
+  bondFeature === BondFeatures.None ||
+  bondFeature === BondFeatures.Autocompound ||
+  bondFeature === BondFeatures.AutoreceiveSol;

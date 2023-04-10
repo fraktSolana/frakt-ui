@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { web3 } from 'fbonds-core';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useHistory, useParams } from 'react-router-dom';
@@ -8,10 +8,13 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import {
   getPairAccount,
+  isAutocompoundBondFeature,
+  isLiquidatedBondFeature,
   makeCreatePairTransaction,
   makeRemoveOrderTransaction,
   useMarket,
   useMarketPair,
+  useMarketPairs,
 } from '@frakt/utils/bonds';
 import { signAndConfirmTransaction } from '@frakt/utils/transactions';
 import { notify } from '@frakt/utils';
@@ -21,7 +24,9 @@ import { useNativeAccount } from '@frakt/utils/accounts';
 import { PATHS } from '@frakt/constants';
 import { Pair } from '@frakt/api/bonds';
 
-import { RBOption } from './components/RadioButton';
+import { RBOption } from '../../components/RadioButton';
+import { makeModifyPairTransactions } from '@frakt/utils/bonds/transactions/makeModifyPairTransactions';
+import { parseMarketOrder } from '../MarketsPage/components/OrderBook/helpers';
 
 export const useOfferPage = () => {
   const history = useHistory();
@@ -39,7 +44,15 @@ export const useOfferPage = () => {
     pairPubkey,
   });
 
+  const isEdit = !!pairPubkey;
+  const initialPairValues = parseMarketOrder(pair);
+  const { hidePair } = useMarketPairs({ marketPubkey: marketPubkey });
+
   const queryClient = useQueryClient();
+
+  const isLoading = pairPubkey
+    ? !initialPairValues?.duration || pairLoading || marketLoading
+    : marketLoading;
 
   const wallet = useWallet();
   const connection = useConnection();
@@ -48,8 +61,34 @@ export const useOfferPage = () => {
   const [duration, setDuration] = useState<number>(7);
   const [interest, setInterest] = useState<string>('0');
   const [offerSize, setOfferSize] = useState<string>('0');
-  const [autocompound, setAutocompound] = useState(false);
-  const [receiveLiquidatedNfts, setReceiveLiquidatedNfts] = useState(false);
+  const [receiveNftFeature, setReceiveNftFeature] = useState<BondFeatures>(
+    BondFeatures.ReceiveNftOnLiquidation,
+  );
+  const [autocompoundFeature, setAutocompoundFeature] = useState<BondFeatures>(
+    BondFeatures.AutoreceiveSol,
+  );
+
+  const editRepaymentBondFeature =
+    isEdit && isAutocompoundBondFeature(autocompoundFeature)
+      ? BondFeatures.Autocompound
+      : BondFeatures.AutoreceiveSol;
+
+  const editReceiveBondFeature =
+    isEdit && isLiquidatedBondFeature(receiveNftFeature)
+      ? BondFeatures.None
+      : BondFeatures.ReceiveNftOnLiquidation;
+
+  useEffect(() => {
+    if (isEdit && !isLoading) {
+      const { duration, interest, size, ltv, rawData } = initialPairValues;
+      setDuration(duration || 0);
+      setInterest((interest * 100)?.toFixed(2));
+      setOfferSize((size || 0).toFixed(2));
+      setLtv(ltv || 0);
+      setAutocompoundFeature(rawData?.bondFeature);
+      setReceiveNftFeature(rawData?.bondFeature);
+    }
+  }, [isEdit, isLoading, pair]);
 
   const onLtvChange = useCallback((value: number) => setLtv(value), []);
   const onDurationChange = (nextOption: RBOption<number>) => {
@@ -60,11 +99,30 @@ export const useOfferPage = () => {
   const onOfferSizeChange = (value: string) => {
     setOfferSize(value);
   };
-  const toggleAutocompound = () => {
-    setAutocompound((prev) => !prev);
+
+  const onChangeReceiveNftFeature = (nextOption: RBOption<BondFeatures>) => {
+    setReceiveNftFeature(nextOption.value);
   };
-  const toggleReceiveLiquidatedNfts = () => {
-    setReceiveLiquidatedNfts((prev) => !prev);
+
+  const onChangeAutocompoundFeature = (nextOption: RBOption<BondFeatures>) => {
+    setAutocompoundFeature(nextOption.value);
+  };
+
+  const findNeededBondFeature = () => {
+    const isReceitveNftFeature = receiveNftFeature !== BondFeatures.None;
+    const isAutocompoundFeature =
+      autocompoundFeature === BondFeatures.Autocompound;
+
+    if (isReceitveNftFeature && isAutocompoundFeature)
+      return BondFeatures.AutoCompoundAndReceiveNft;
+
+    if (isReceitveNftFeature && !isAutocompoundFeature)
+      return BondFeatures.AutoReceiveAndReceiveNft;
+
+    if (isAutocompoundFeature && !isReceitveNftFeature)
+      return BondFeatures.Autocompound;
+
+    return BondFeatures.AutoreceiveSol;
   };
 
   const {
@@ -92,9 +150,8 @@ export const useOfferPage = () => {
             maxLTV: ltv,
             solDeposit: parseFloat(offerSize),
             interest: parseFloat(interest),
-            bondFeature: receiveLiquidatedNfts
-              ? BondFeatures.ReceiveNftOnLiquidation
-              : BondFeatures.None,
+            marketFloor: market.oracleFloor.floor,
+            bondFeature: findNeededBondFeature(),
             connection,
             wallet,
           });
@@ -124,7 +181,7 @@ export const useOfferPage = () => {
           type: NotifyType.SUCCESS,
         });
 
-        history.push(`${PATHS.BOND}/${marketPubkey}`);
+        history.push(`${PATHS.BONDS}/${marketPubkey}`);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.warn(error?.logs);
@@ -145,29 +202,51 @@ export const useOfferPage = () => {
       try {
         openLoadingModal();
 
-        await new Promise((res) => res);
+        const { transaction, signers, accountsPublicKeys } =
+          await makeModifyPairTransactions({
+            solDeposit: parseFloat(offerSize),
+            interest: parseFloat(interest),
+            marketFloor: market.oracleFloor.floor,
+            pair,
+            connection,
+            maxDuration: duration,
+            maxLTV: ltv,
+            wallet,
+          });
 
-        // const { transaction, signers } = await makeCreatePairTransaction({
-        //   marketPubkey: new web3.PublicKey(marketPubkey),
-        //   maxDuration: duration,
-        //   maxLTV: ltv,
-        //   solDeposit: parseFloat(offerSize),
-        //   apr: parseFloat(interest),
-        //   connection,
-        //   wallet,
-        // });
+        await signAndConfirmTransaction({
+          transaction,
+          signers,
+          wallet,
+          connection,
+        });
 
-        // await signAndConfirmTransaction({
-        //   transaction,
-        //   signers,
-        //   wallet,
-        //   connection,
-        // });
+        const newPair = await getPairAccount({
+          accountsPublicKeys,
+          connection,
+        });
+
+        newPair &&
+          queryClient.setQueryData(
+            ['marketPairs', marketPubkey],
+            (pairs: Pair[]) => {
+              return pairs.map((pair) => {
+                if (
+                  pair.publicKey === accountsPublicKeys.pairPubkey?.toBase58()
+                ) {
+                  return newPair;
+                }
+                return pair;
+              });
+            },
+          );
 
         notify({
           message: 'Transaction successful!',
           type: NotifyType.SUCCESS,
         });
+
+        history.push(`${PATHS.BONDS}/${marketPubkey}`);
       } catch (error) {
         console.error(error);
 
@@ -187,9 +266,8 @@ export const useOfferPage = () => {
         openLoadingModal();
 
         const { transaction, signers } = await makeRemoveOrderTransaction({
-          pairPubkey: new web3.PublicKey(pair.publicKey),
+          pairPubkey: new web3.PublicKey(pairPubkey),
           authorityAdapter: new web3.PublicKey(pair.authorityAdapterPublicKey),
-          edgeSettlement: pair.edgeSettlement,
           wallet,
           connection,
         });
@@ -199,6 +277,7 @@ export const useOfferPage = () => {
           transaction,
           signers,
           wallet,
+          onAfterSend: () => hidePair?.(pairPubkey),
         });
 
         notify({
@@ -206,7 +285,7 @@ export const useOfferPage = () => {
           type: NotifyType.SUCCESS,
         });
 
-        history.push(`${PATHS.BOND}/${marketPubkey}`);
+        history.push(`${PATHS.BONDS}/${marketPubkey}`);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.warn(error?.logs?.join('\n'));
@@ -221,8 +300,6 @@ export const useOfferPage = () => {
       }
     }
   };
-
-  const isLoading = pairPubkey ? pairLoading || marketLoading : marketLoading;
 
   return {
     loadingModalVisible,
@@ -239,14 +316,16 @@ export const useOfferPage = () => {
     onEditOffer,
     onRemoveOffer,
     isValid,
-    isEdit: !!pairPubkey,
+    isEdit,
     goBack,
     walletSolBalance: account?.lamports ?? 0,
     market,
     isLoading,
-    autocompound,
-    toggleAutocompound,
-    receiveLiquidatedNfts,
-    toggleReceiveLiquidatedNfts,
+    autocompoundFeature: isEdit
+      ? editRepaymentBondFeature
+      : autocompoundFeature,
+    onChangeAutocompoundFeature,
+    receiveNftFeature: isEdit ? editReceiveBondFeature : receiveNftFeature,
+    onChangeReceiveNftFeature,
   };
 };

@@ -6,12 +6,15 @@ import { useMarket, useMarketPairs } from '@frakt/utils/bonds';
 
 import { useCurrentNft } from './useCurrentNft';
 import { calcBondsAmount, useCartState } from './useCartState';
+import { LoanType } from '@frakt/api/loans';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 export const useBorrow = () => {
   const {
     orders: cartOrders,
     pairs: cartPairs,
     addOrder,
+    addBondOrder,
     removeOrder,
     findOrder: findOrderInCart,
     findPair: findPairInCart,
@@ -24,6 +27,8 @@ export const useBorrow = () => {
     setNft: setCurrentNft,
     pair: currentPair,
     setPair: setCurrentPair,
+    bondOrder: currentBondOrder,
+    setBondOrder: setCurrentBondOrder,
     loanType: currentLoanType,
     setLoanType: setCurrentLoanType,
     loanValue: currentLoanValue,
@@ -38,14 +43,39 @@ export const useBorrow = () => {
 
   const saveUpcomingOrderToCart = (unshift = false) => {
     if (currentNft && currentLoanType && currentLoanValue) {
-      addOrder({
-        loanType: currentLoanType,
-        nft: currentNft,
-        loanValue: currentLoanValue,
-        pair: currentPair ?? null,
-        market: market ?? null,
-        unshift,
-      });
+      // for (let orderParam of currentBondOrder.bondOrderParams.orderParams) {
+      //   addOrder({
+      //     loanType: currentLoanType,
+      //     nft: currentNft,
+      //     loanValue: currentLoanValue,
+      //     pair: currentPair ?? null,
+      //     market: market ?? null,
+      //     unshift,
+      //   });
+      // }
+      if (currentLoanType === LoanType.BOND) {
+        console.log(
+          'saveUpcomingOrderToCart currentBondOrder: ',
+          currentBondOrder,
+        );
+        addBondOrder({
+          bondOrder: currentBondOrder,
+          pairs: pairs.filter((pair) =>
+            currentBondOrder.bondOrderParams.orderParams.find(
+              (orderParam) => orderParam.pairPubkey === pair.publicKey,
+            ),
+          ),
+        });
+      } else {
+        addOrder({
+          loanType: currentLoanType,
+          nft: currentNft,
+          loanValue: currentLoanValue,
+          pair: null,
+          market: null,
+          unshift,
+        });
+      }
       clearCurrentNftState();
     }
   };
@@ -71,28 +101,20 @@ export const useBorrow = () => {
       if (cartOrders.length > 0) {
         const cartOrder = cartOrders.at(0);
 
+        removeOrder({ nftMint: cartOrder?.borrowNft?.mint });
+
         const cartPair = findPairInCart({
           pairPubkey: cartOrder?.bondOrderParams?.orderParams?.[0]?.pairPubkey,
         });
-
-        removeOrder({ nftMint: cartOrder?.borrowNft?.mint });
+        console.log('cartPair Remove: ', cartPair);
 
         setCurrentNftState({
           nft: cartOrder.borrowNft,
           loanType: cartOrder.loanType,
           loanValue: cartOrder.loanValue,
-          pair: cartPair
-            ? {
-                ...cartPair,
-                edgeSettlement:
-                  cartPair.edgeSettlement +
-                  calcBondsAmount({
-                    loanValue: cartOrder.loanValue,
-                    spotPrice:
-                      cartOrder?.bondOrderParams?.orderParams?.[0]?.spotPrice,
-                  }),
-              }
-            : null,
+
+          pair: cartPair || null,
+          bondOrder: cartOrder,
         });
       }
     }
@@ -102,12 +124,12 @@ export const useBorrow = () => {
     saveUpcomingOrderToCart(reverse);
 
     const cartOrder = reverse ? cartOrders.at(-1) : cartOrders.at(0);
-
     const cartPair = findPairInCart({
       pairPubkey: cartOrder?.bondOrderParams?.orderParams?.[0]?.pairPubkey,
     });
-
     removeOrder({ nftMint: cartOrder?.borrowNft?.mint });
+
+    console.log('cartPair Next: ', cartPair);
 
     setCurrentNftState({
       nft: cartOrder.borrowNft,
@@ -116,15 +138,9 @@ export const useBorrow = () => {
       pair: cartPair
         ? {
             ...cartPair,
-            edgeSettlement:
-              cartPair.edgeSettlement +
-              calcBondsAmount({
-                loanValue: cartOrder.loanValue,
-                spotPrice:
-                  cartOrder?.bondOrderParams?.orderParams?.[0]?.spotPrice,
-              }),
           }
         : null,
+      bondOrder: cartOrder,
     });
   };
 
@@ -135,6 +151,7 @@ export const useBorrow = () => {
     const cartPair = findPairInCart({
       pairPubkey: cartOrder?.bondOrderParams?.orderParams?.[0]?.pairPubkey,
     });
+    console.log('setCurrentNftFromOrder cartPair: ', cartPair);
 
     removeOrder({ nftMint: cartOrder?.borrowNft?.mint });
 
@@ -145,15 +162,9 @@ export const useBorrow = () => {
       pair: cartPair
         ? {
             ...cartPair,
-            edgeSettlement:
-              cartPair.edgeSettlement +
-              calcBondsAmount({
-                loanValue: cartOrder.loanValue,
-                spotPrice:
-                  cartOrder?.bondOrderParams?.orderParams?.[0]?.spotPrice,
-              }),
           }
         : null,
+      bondOrder: cartOrder,
     });
   };
 
@@ -181,9 +192,11 @@ export const useBorrow = () => {
     setCurrentLoanValue,
     setCurrentLoanType,
     setCurrentPair,
+    setCurrentBondOrder,
     findOrderInCart,
     currentLoanType,
     currentPair,
+    currentBondOrder,
     saveUpcomingOrderToCart,
     setCurrentNftFromOrder,
     clearCart,
@@ -202,17 +215,22 @@ const useMarketAndPairs = (marketPubkey: string | null) => {
   const { market, isLoading: isLoadingMarket } = useMarket({
     marketPubkey: marketPubkey,
   });
+  const { publicKey } = useWallet();
 
   const pairs = useMemo(
     () =>
       isLoadingPairs
         ? []
-        : rawPairs.map((rawPair) => {
-            const samePairSelected = cartPairs.find(
-              (cartPair) => cartPair.publicKey === rawPair.publicKey,
-            );
-            return samePairSelected ?? rawPair;
-          }),
+        : rawPairs
+            .map((rawPair) => {
+              const samePairSelected = cartPairs.find(
+                (cartPair) => cartPair.publicKey === rawPair.publicKey,
+              );
+              return samePairSelected ?? rawPair;
+            })
+            .filter(
+              ({ assetReceiver }) => assetReceiver !== publicKey?.toBase58(),
+            ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [cartPairs, isLoadingPairs],
   );

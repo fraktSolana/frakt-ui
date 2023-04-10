@@ -1,0 +1,88 @@
+.rowCenter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+
+  @media (max-width: 1390px) {
+    align-items: center;
+  }
+}
+
+.wrapper {
+  @extend .rowCenter;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+
+  @media (max-width: 1390px) {
+    gap: 8px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  @media (max-width: 1300px) {
+    justify-content: center;
+    max-width: 420px;
+  }
+}
+
+.stats {
+  @extend .rowCenter;
+  gap: 12px;
+
+  @media (max-width: 1390px) {
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+
+.collectionGeneralInfo {
+  @extend .rowCenter;
+
+  @media (max-width: 1300px) {
+    display: none;
+  }
+}
+.collectionImage {
+  height: 28px;
+  width: 28px;
+}
+.collectionName {
+  font: var(--font-text-5);
+  width: 100px;
+
+  @media (max-width: 1390px) {
+    width: 100%;
+  }
+}
+
+.label {
+  color: var(--secondary-text);
+  font: var(--font-text-7);
+  line-height: 18px;
+  text-transform: uppercase;
+}
+
+.value {
+  font: var(--font-text-8);
+  font-size: 14px;
+}
+
+.highlightPositiveText {
+  color: #6db315;
+}
+
+.questionIcon {
+  svg {
+    fill: var(--blue-color);
+    width: 18px;
+    height: 18px;
+  }
+}

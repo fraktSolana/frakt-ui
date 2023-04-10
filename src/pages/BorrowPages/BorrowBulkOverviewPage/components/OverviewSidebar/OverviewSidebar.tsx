@@ -1,18 +1,23 @@
 import { FC } from 'react';
+import classNames from 'classnames';
 
 import { Alert, Solana } from '@frakt/icons';
 import Button from '@frakt/components/Button';
-import { Order, useBorrow } from '@frakt/pages/BorrowPages/cartState';
+import { BondOrder, useBorrow } from '@frakt/pages/BorrowPages/cartState';
+
+import Checkbox from '@frakt/components/Checkbox';
 
 import styles from './OverviewSidebar.module.scss';
 import { Pair } from '@frakt/api/bonds';
 import { calcCartFees, isBulkHasDifferentDurations } from './helpers';
 
 interface OverviewSidebarProps {
-  orders: Order[];
+  orders: BondOrder[];
   pairs: Pair[];
   onChangeAssets: () => void;
   onBorrow: () => void;
+  isSupportSignAllTxns: boolean;
+  setIsSupportSignAllTxns?: (value: boolean) => void;
 }
 
 export const OverviewSidebar: FC<OverviewSidebarProps> = ({
@@ -20,6 +25,8 @@ export const OverviewSidebar: FC<OverviewSidebarProps> = ({
   pairs,
   onChangeAssets,
   onBorrow,
+  isSupportSignAllTxns,
+  setIsSupportSignAllTxns,
 }) => {
   const { totalBorrowValue } = useBorrow();
 
@@ -49,12 +56,25 @@ export const OverviewSidebar: FC<OverviewSidebarProps> = ({
           ) : null,
         )}
       </div>
+
       {isDifferentDurations && (
         <div className={styles.differentDurationsMsg}>
           <Alert />
           Please note that you have loans with different durations
         </div>
       )}
+
+      <div
+        className={classNames(styles.checkboxWrapper, {
+          [styles.checkboxMarginTop]: isDifferentDurations || !!fees.length,
+        })}
+      >
+        <Checkbox
+          onChange={() => setIsSupportSignAllTxns(!isSupportSignAllTxns)}
+          label="I use ledger"
+          checked={!isSupportSignAllTxns}
+        />
+      </div>
 
       <div className={styles.sidebarBtnWrapper}>
         <Button type="secondary" onClick={onBorrow} className={styles.btn}>

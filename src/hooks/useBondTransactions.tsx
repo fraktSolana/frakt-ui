@@ -10,6 +10,8 @@ import {
 } from '@frakt/utils/bonds';
 
 import { useConnection } from './useConnection';
+import { Order } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+import { BondCartOrder } from '@frakt/api/nft';
 
 type UseBondsTransactions = ({
   bonds,
@@ -22,7 +24,13 @@ type UseBondsTransactions = ({
 }) => {
   onClaimAll: () => Promise<void>;
   onRedeem: (bond: Bond) => Promise<void>;
-  onExit: ({ bond, pair }: { bond: Bond; pair: Pair }) => Promise<void>;
+  onExit: ({
+    bond,
+    bondOrderParams,
+  }: {
+    bond: Bond;
+    bondOrderParams: BondCartOrder[];
+  }) => Promise<void>;
 };
 
 export const useBondsTransactions: UseBondsTransactions = ({
@@ -73,11 +81,17 @@ export const useBondsTransactions: UseBondsTransactions = ({
     }
   };
 
-  const onExit = async ({ bond, pair }: { bond: Bond; pair: Pair }) => {
+  const onExit = async ({
+    bond,
+    bondOrderParams,
+  }: {
+    bond: Bond;
+    bondOrderParams: BondCartOrder[];
+  }) => {
     try {
       const result = await exitBond({
         bond,
-        pair,
+        bondOrderParams,
         market,
         wallet,
         connection,

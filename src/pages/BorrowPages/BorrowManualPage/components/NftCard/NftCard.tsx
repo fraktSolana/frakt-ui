@@ -21,9 +21,7 @@ export const NftCard: FC<NftCardProps> = ({
   onClick = () => {},
   disabled,
 }) => {
-  const { name, imageUrl, classicParams, freezable, stakingAvailable } = nft;
-
-  const maxLoanValue = classicParams?.maxLoanValue; //TODO Calc dynamic max loan value here
+  const { name, imageUrl, freezable, stakingAvailable, maxLoanValue } = nft;
 
   return (
     <div

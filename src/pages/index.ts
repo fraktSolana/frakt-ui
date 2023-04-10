@@ -8,8 +8,6 @@ export { default as LiquidationsPage } from './LiquidationsPage';
 export { default as LoansPage } from './LoansPage';
 export { default as MarketsPage } from './MarketsPage';
 
-export { MarketPage } from './MarketPage';
-
 export {
   BorrowRootPage,
   BorrowManualPage,

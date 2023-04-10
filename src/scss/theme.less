@@ -4,86 +4,127 @@
 @primary-border: var(--primary-border);
 @tabel-row-hover: var(--gray-table-hover);
 
+@light-green-color: var(--light-green-color);
+@border-light-green: var(--border-light-green-1);
+@light-green-color-3: var(--light-green-color-3);
+
 // Table styles
 .ant-table {
-  overflow: hidden;
   background: @primary-background;
-  border: 1px solid @primary-border;
-  border-bottom: 0;
+  border: 0;
   border-radius: 0;
+  overflow: auto;
+}
+
+.ant-table table {
+  table-layout: auto !important;
+}
+
+.ant-table-thead {
+  position: sticky;
+  top: -1px;
+  z-index: 3;
+}
+
+.ant-table-tbody > tr > td,
+.ant-table-thead > tr > th {
+  padding: 8px;
+  transition: unset;
 }
 
 .ant-table-tbody > tr > td {
-  border-bottom: 1px solid @primary-border;
-  padding: 0;
+  border: 0;
   vertical-align: middle;
-  transition: unset;
-}
-
-.ant-table-tbody > tr > td:first-child {
-  border-bottom: 1px solid @primary-border;
-  vertical-align: middle;
-  padding: 0 16px;
-}
-
-.ant-table-tbody > tr > td:last-child {
-  padding: 16px !important;
 }
 
 .ant-table-thead > tr > th {
-  padding: 16px 0;
   background: @primary-background;
   border-bottom: 1px solid @primary-border;
   white-space: nowrap;
-  transition: unset;
 }
 
-.ant-table-thead > tr > th:first-child {
-  padding-left: 16px;
+.activeRowClassName {
+  display: table-row !important;
+
+  & > td {
+    background: @light-green-color-3 !important;
+    border-top: @border-light-green !important;
+    border-bottom: @border-light-green !important;
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+  }
+  & > td:first-child {
+    border-left: @border-light-green !important;
+    padding-left: 7px !important;
+  }
+  & > td:nth-child(2) {
+    border-right: @border-light-green !important;
+    padding-right: 7px !important;
+  }
+
+  @media (max-width: 1300px) {
+    & > td:nth-child(2) {
+      border-right: 0 !important;
+    }
+    & > td:last-child {
+      border-right: @border-light-green !important;
+    }
+  }
 }
 
-.ant-table-thead > tr > th:last-child {
-  padding-right: 16px !important;
+.graceRowClassName {
+  display: table-row !important;
+
+  & > td {
+    background: rgba(255, 112, 31, 0.1) !important;
+  }
 }
 
-// remove sort icon
+//? Remove default sort icon
 .ant-table-column-sorter {
   display: none;
 }
 
-.ant-table-tbody > tr.ant-table-row:hover > td {
-  background: @tabel-row-hover !important;
-}
-
-.ant-table-thead th.ant-table-column-sort {
-  padding: 0;
-  background: @primary-background;
-}
-
-td.ant-table-column-sort {
-  background: @primary-background;
-}
-
-.ant-table-thead th.ant-table-column-has-sorters:hover {
-  background: @primary-background;
-}
-
-.ant-table-thead th.ant-table-column-has-sorters {
-  padding: 16px 0;
-}
-
-.ant-table-empty .ant-table-tbody > tr.ant-table-placeholder {
+//? Remove shadow cantainer
+.ant-table-container::before,
+.ant-table-container::after,
+.ant-table-cell-fix-left-last::after {
   display: none;
 }
 
+//? Unster default transition
+.ant-table-thead th.ant-table-column-has-sorters {
+  transition: unset;
+}
+
+//? Remove separete line between cells
 .ant-table-cell::before {
   display: none;
 }
 
-.ant-table-thead th.ant-table-column-sort {
+//? Set color for active column
+td.ant-table-column-sort {
   background: @primary-background;
 }
 
-.ant-table-thead th.ant-table-column-has-sorters {
-  transition: unset;
+//? Remove default "No data" view
+.ant-table-empty .ant-table-tbody > tr.ant-table-placeholder {
+  display: none;
+}
+
+.ant-table-row:hover > td {
+  background: @tabel-row-hover !important;
+}
+
+.ant-table-thead th.ant-table-column-sort,
+.ant-table-thead th.ant-table-column-has-sorters:hover {
+  background: @primary-background;
+}
+
+.ant-table-container table > thead > tr:first-child th:first-child {
+  border-top-left-radius: 1px;
+}
+
+.ant-table-cell-row-hover {
+  background: @primary-background !important;
 }
