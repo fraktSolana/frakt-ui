@@ -1,7 +1,7 @@
 .rowCenter {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
 }
 
 .column {
@@ -22,14 +22,21 @@
 }
 
 .stats {
-  display: flex;
+  @extend .column;
   align-items: flex-start;
+  width: 100%;
+}
+
+.values {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
   width: 100%;
 }
 
 .collectionGeneralInfo {
   @extend .rowCenter;
+  gap: 8px;
   height: 34px;
 
   @media (max-width: 1300px) {
@@ -48,11 +55,12 @@
 .label {
   color: var(--secondary-text);
   font: var(--font-text-7);
-  line-height: 23px;
+  line-height: 16px;
   text-transform: uppercase;
 }
 
 .value {
+  @extend .rowCenter;
   font: var(--font-text-8);
   font-size: 14px;
 }
@@ -61,10 +69,13 @@
   color: #6db315;
 }
 
-.questionIcon {
-  svg {
-    fill: var(--blue-color);
-    width: 18px;
-    height: 18px;
-  }
+.questionIcon svg {
+  fill: var(--blue-color);
+  width: 16px;
+  height: 16px;
+}
+
+.solanaIcon {
+  width: 12px;
+  height: 12px;
 }
