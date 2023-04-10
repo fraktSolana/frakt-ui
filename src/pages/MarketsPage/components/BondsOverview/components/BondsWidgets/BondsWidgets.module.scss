@@ -10,11 +10,6 @@
   align-items: center;
   gap: 24px;
 
-  @media (max-width: 1140px) {
-    flex-direction: column;
-    gap: 16px;
-  }
-
   @media (max-width: 960px) {
     flex-direction: row;
   }

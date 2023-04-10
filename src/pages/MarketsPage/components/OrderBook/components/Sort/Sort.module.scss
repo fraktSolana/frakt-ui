@@ -1,12 +1,12 @@
 .columnWrapper {
-  padding: 8px 0;
+  color: var(--gray-color-2);
+  font: var(--font-text-6);
 
-  width: 100%;
+  padding: 8px 0;
   display: flex;
   justify-content: space-between;
 
-  font: var(--font-text-6);
-  color: var(--gray-color-2);
+  width: 100%;
 
   @media screen and (max-width: 960px) {
     display: none;

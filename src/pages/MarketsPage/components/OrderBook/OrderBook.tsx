@@ -145,8 +145,7 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
             <Loader
               size="default"
               className={classNames(styles.loader, {
-                [styles.active]: openOffersMobile,
-                [styles.create]: syntheticParams?.ltv,
+                [styles.active]: openOffersMobile || syntheticParams?.ltv,
               })}
             />
           )}
