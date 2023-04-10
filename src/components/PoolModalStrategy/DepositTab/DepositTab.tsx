@@ -97,7 +97,7 @@ const DepositTab: FC<DepositTabProps> = ({
 
       <div className={styles.estimated}>
         <div className={styles.earnings}>
-          {((depositYield / 12) * +depositValue).toFixed(2)} SOL/month
+          {(((depositYield / 12) * +depositValue) / 100).toFixed(2)} SOL/month
         </div>
         <div className={styles.estimatedTitle}>estimated earnings</div>
       </div>
