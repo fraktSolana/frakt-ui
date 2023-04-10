@@ -28,6 +28,10 @@
   color: var(--primary-text);
   font: var(--font-text-6);
   width: 124px;
+  
+  @media (max-width: 768px) {
+    width: 100px;
+  }
 }
 
 .nftImage {
@@ -90,7 +94,7 @@
   }
 
   height: 23px !important;
-  width: 192px;
+  width: 180px;
 
   @media (max-width: 768px) {
     width: 150px;

@@ -41,7 +41,7 @@ export const TableList = ({ onChange, onRowClick, isMobile }) => {
       render: (_, market: MarketPreview) => (
         <TitleCell market={market} onRowClick={onRowClick} />
       ),
-      width: isMobile ? 150 : 192,
+      width: isMobile ? 150 : 180,
     },
     {
       key: 'activeBondsAmount',

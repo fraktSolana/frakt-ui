@@ -9,8 +9,8 @@
   min-height: 382px;
 
   @media (max-width: 1300px) {
+    gap: 0;
     flex-direction: column;
-    gap: 8px;
   }
 
   @media (max-width: 768px) {
@@ -20,7 +20,7 @@
 
 .scrollContainer {
   overflow: hidden;
-  min-width: 308px;
+  min-width: 315px;
   width: 100%;
 }
 
@@ -54,7 +54,7 @@
 }
 
 .marketTable :global {
-  height: 315px;
+  height: 320px;
   display: block !important;
 
   .ant-table-content {
