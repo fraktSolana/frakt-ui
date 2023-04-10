@@ -102,7 +102,7 @@ export const NAVIGATION_LINKS = [
     to: PATHS.STRATEGIES,
     label: 'Strategies',
     event: 'navigation-strategies',
-    icon: Bonds,
+    icon: Strategies,
     iconDark: StrategiesDark,
   },
   {
