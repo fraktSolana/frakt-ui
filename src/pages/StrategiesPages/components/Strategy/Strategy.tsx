@@ -11,14 +11,14 @@ import { PoolModalStrategy } from '@frakt/components/PoolModalStrategy';
 
 import { useSettingsPool } from '../../hooks/hooks';
 import { commonActions } from '@frakt/state/common/actions';
-import { TradePool } from '@frakt/api/strategies';
+import { TradePoolUser } from '@frakt/api/strategies';
 import { PATHS } from '@frakt/constants';
 import { TabsNames } from '@frakt/components/PoolModalStrategy/types';
 import { Solana } from '@frakt/icons';
 import styles from './Strategy.module.scss';
 
 interface StrategyProps {
-  tradePool: TradePool;
+  tradePool: TradePoolUser;
   admin?: boolean;
 }
 
@@ -39,17 +39,18 @@ const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
 
   const { setTradePool } = useSettingsPool();
 
-  const openAdminPanel = (tradePool: TradePool) => () => {
+  const openAdminPanel = (tradePool: any) => () => {
     history.push(PATHS.STRATEGY_CREATION);
     setTradePool(tradePool);
   };
 
+  const utilizationRate = (1e4 - tradePool?.reserveFundsRatio) / 100;
   return (
     <>
       <div className={styles.strategy}>
         <div className={styles.header}>
-          <img src={tradePool?.poolImage} className={styles.image} />
-          <div className={styles.title}>{tradePool?.poolName}</div>
+          <img src={tradePool?.image} className={styles.image} />
+          <div className={styles.title}>{tradePool?.name}</div>
         </div>
 
         <div className={styles.wrapper}>
@@ -103,7 +104,7 @@ const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
               Deposit
             </Button>
           )}
-
+          {/* 
           {tradePool?.isCanEdit && admin && (
             <Button
               className={styles.btn}
@@ -112,7 +113,7 @@ const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
             >
               Manage
             </Button>
-          )}
+          )} */}
 
           {!admin && !!tradePool?.wallet?.userLiquidity && (
             <Button
@@ -129,12 +130,12 @@ const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
       </div>
 
       <PoolModalStrategy
-        tradePool={tradePool?.poolPubkey}
+        tradePool={tradePool?.publicKey}
         poolModalTab={poolModalVisible}
         visible={poolModalVisible}
         onCancel={() => setPoolModalVisible(null)}
         depositAmount={tradePool?.wallet?.userLiquidity / 1e9 || 0}
-        utilizationRate={tradePool?.utilizationRate}
+        utilizationRate={utilizationRate}
         depositYield={tradePool?.depositYield}
       />
     </>

@@ -5,9 +5,9 @@ import { PublicKey } from '@solana/web3.js';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { signAndConfirmTransaction } from '@frakt/utils/transactions';
 import {
+  TradePoolAdmin,
   createTradePools,
   setImageTradePools,
-  TradePool,
   updateTradePools,
 } from '@frakt/api/strategies';
 import { PATHS } from '@frakt/constants';
@@ -22,17 +22,17 @@ import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { FormValues } from '../types';
 
-export const useStrategyCreation = (tradePool?: TradePool) => {
+export const useStrategyCreation = (tradePool?: TradePoolAdmin) => {
   const history = useHistory();
   const wallet = useWallet();
   const connection = useConnection();
   const { clearTradePool } = useSettingsPool();
 
   const [formValues, setFormValues] = useState<FormValues>({
-    strategyName: tradePool?.poolName || '',
+    strategyName: tradePool?.name || '',
     image: {
       file: null,
-      imageUrl: tradePool?.poolImage || '',
+      imageUrl: tradePool?.image || '',
     },
     hadoMarkets: {
       marketName: tradePool?.collections?.[0]?.name || '',
@@ -163,7 +163,7 @@ export const useStrategyCreation = (tradePool?: TradePool) => {
           connection,
           wallet,
           formValues,
-          tradePool: tradePool?.poolPubkey,
+          tradePool: tradePool?.publicKey,
         });
 
         await signAndConfirmTransaction({
@@ -175,12 +175,9 @@ export const useStrategyCreation = (tradePool?: TradePool) => {
 
         if (formValues.image.file) {
           const imagePool = await setImageTradePools(formValues.image.file);
-          await setUpdateTradePools(tradePool?.poolPubkey, imagePool.url);
+          await setUpdateTradePools(tradePool?.publicKey, imagePool.url);
         } else {
-          await setUpdateTradePools(
-            tradePool?.poolPubkey,
-            tradePool?.poolImage,
-          );
+          await setUpdateTradePools(tradePool?.publicKey, tradePool?.image);
         }
 
         clearTradePool();

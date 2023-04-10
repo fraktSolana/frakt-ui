@@ -1,8 +1,8 @@
-import { fetchAdminTradePools, TradePool } from '@frakt/api/strategies';
+import { fetchAdminTradePools } from '@frakt/api/strategies';
 import { useQuery } from '@tanstack/react-query';
 
 type UseAdminTradePools = (props: { walletPublicKey: string }) => {
-  tradePoolsAdmin: TradePool[] | null;
+  tradePoolsAdmin: any[] | null;
   isLoading: boolean;
 };
 export const useAdminTradePools: UseAdminTradePools = ({ walletPublicKey }) => {

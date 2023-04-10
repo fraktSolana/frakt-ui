@@ -90,7 +90,7 @@ const DepositTab: FC<DepositTabProps> = ({
         <div className={styles.info}>
           <span className={styles.infoTitle}>Utilization rate</span>
           <span className={styles.infoValue}>
-            {(utilizationRate * 100).toFixed(2)} %
+            {utilizationRate.toFixed(2)} %
           </span>
         </div>
       </div>

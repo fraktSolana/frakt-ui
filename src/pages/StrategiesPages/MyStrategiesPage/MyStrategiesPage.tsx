@@ -22,8 +22,10 @@ const MyStrategiesPage: FC = () => {
   const wallet = useWallet();
 
   const { tradePoolsAdmin, isLoading } = useAdminTradePools({
-    walletPublicKey: wallet?.publicKey?.toBase58(),
+    walletPublicKey: '7JxVxxLTDkra9E3y7SZxuunmgeGzL7vzUQj55PFxfguT',
   });
+
+  console.log('tradePoolsAdmin', tradePoolsAdmin);
 
   const {
     visible: filtersModalVisible,
@@ -34,21 +36,21 @@ const MyStrategiesPage: FC = () => {
   const ref = useRef(null);
   useOnClickOutside(ref, closeFiltersModal);
 
-  const { filteredData, onChange } = useSearch({
-    data: tradePoolsAdmin,
-    searchField: 'poolName',
-  });
+  // const { filteredData, onChange } = useSearch({
+  //   data: tradePoolsAdmin,
+  //   searchField: 'poolName',
+  // });
 
-  const { control, filteredTradePools, sort, setValue } = useStrategyFiltering({
-    strategies: filteredData,
-  });
+  // const { control, filteredTradePools, sort, setValue } = useStrategyFiltering({
+  //   strategies: filteredData,
+  // });
 
   return (
     <AppLayout>
       <Titles title="My Strategies" />
       {!isLoading && <AdminButton />}
 
-      <div className={styles.sortWrapper}>
+      {/* <div className={styles.sortWrapper}>
         <SearchInput
           onChange={onChange}
           className={styles.searchInput}
@@ -73,9 +75,9 @@ const MyStrategiesPage: FC = () => {
             </FiltersDropdown>
           )}
         </div>
-      </div>
+      </div> */}
       {isLoading && <Loader size="large" />}
-      {!isLoading && <Strategies tradePools={filteredTradePools} admin />}
+      {/* {!isLoading && <Strategies tradePools={tradePoolsAdmin} admin />} */}
     </AppLayout>
   );
 };

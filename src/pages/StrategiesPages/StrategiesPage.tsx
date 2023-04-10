@@ -34,7 +34,7 @@ const StrategiesPage: FC = () => {
 
   const { filteredData, onChange } = useSearch({
     data: tradePools,
-    searchField: 'poolName',
+    searchField: 'name',
   });
 
   const { control, filteredTradePools, sort, setValue } = useStrategyFiltering({

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Control, useForm } from 'react-hook-form';
 import { compareNumbers } from '@frakt/utils';
-import { TradePool } from '@frakt/api/strategies';
+import { TradePoolUser } from '@frakt/api/strategies';
 
 type TradePoolSortValue = {
   label: JSX.Element;
@@ -29,9 +29,13 @@ export enum SORT_ORDER {
   DESC = 'desc',
 }
 
-type UseStrategyFiltering = ({ strategies }: { strategies: TradePool[] }) => {
+type UseStrategyFiltering = ({
+  strategies,
+}: {
+  strategies: TradePoolUser[];
+}) => {
   control: Control<FilterFormFieldsValues>;
-  filteredTradePools: TradePool[];
+  filteredTradePools: TradePoolUser[];
   sort: TradePoolSortValue;
   setValue: any;
 };
@@ -55,8 +59,8 @@ export const useStrategyFiltering: UseStrategyFiltering = ({ strategies }) => {
       return [...strategies].sort((poolA, poolB) => {
         if (sortField === SortField.NAME) {
           if (sortOrder === SORT_ORDER.ASC)
-            return poolA.poolName.localeCompare(poolB.poolName);
-          return poolB.poolName.localeCompare(poolA.poolName);
+            return poolA.name.localeCompare(poolB.name);
+          return poolB.name.localeCompare(poolA.name);
         }
 
         if (sortField === SortField.YIELD) {

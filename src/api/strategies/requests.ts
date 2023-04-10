@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { Settings, TradePool } from './types';
+import { Settings, TradePoolUser } from './types';
 
 const tetsApi = 'fraktion-monorep-test.herokuapp.com';
 
 export const fetchTradePools = async ({
   walletPublicKey,
-}): Promise<TradePool[]> => {
+}): Promise<TradePoolUser[]> => {
   const response = await fetch(
     `https://${tetsApi}/trade-pools?wallet=${walletPublicKey}`,
   );
@@ -49,7 +49,7 @@ export const updateTradePools = async (settings: Settings) => {
 
 export const fetchAdminTradePools = async ({
   walletPublicKey,
-}): Promise<TradePool[]> => {
+}): Promise<any[]> => {
   const response = await fetch(
     `https://${tetsApi}/trade-pools/admin?wallet=${walletPublicKey}`,
   );

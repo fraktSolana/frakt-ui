@@ -1,8 +1,8 @@
-import { fetchTradePools, TradePool } from '@frakt/api/strategies';
+import { fetchTradePools, TradePoolUser } from '@frakt/api/strategies';
 import { useQuery } from '@tanstack/react-query';
 
 type UseTradePools = (props: { walletPublicKey: string }) => {
-  tradePools: TradePool[] | null;
+  tradePools: TradePoolUser[] | null;
   isLoading: boolean;
 };
 
@@ -19,6 +19,8 @@ export const useTradePools: UseTradePools = ({ walletPublicKey }) => {
       refetchOnWindowFocus: false,
     },
   );
+
+  console.log('data', data);
 
   return {
     tradePools: data || null,

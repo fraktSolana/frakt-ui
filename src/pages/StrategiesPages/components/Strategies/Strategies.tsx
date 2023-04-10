@@ -1,11 +1,11 @@
 import { FC, Fragment } from 'react';
-import { TradePool } from '@frakt/api/strategies';
+import { TradePoolUser } from '@frakt/api/strategies';
 import Strategy from '../Strategy';
 
 import styles from './Strategies.module.scss';
 
 interface StrategiesProps {
-  tradePools: TradePool[];
+  tradePools: TradePoolUser[];
   admin?: boolean;
 }
 
@@ -13,7 +13,7 @@ const Strategies: FC<StrategiesProps> = ({ tradePools, admin }) => {
   return (
     <div className={styles.strategies}>
       {tradePools?.map((tradePool) => (
-        <Fragment key={tradePool.poolPubkey}>
+        <Fragment key={tradePool.publicKey}>
           <Strategy tradePool={tradePool} admin={admin} />
         </Fragment>
       ))}
