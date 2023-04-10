@@ -13,7 +13,7 @@
     flex-direction: column;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 960px) {
     padding: 16px;
   }
 }
@@ -76,7 +76,7 @@
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 960px) {
     .ant-table-thead > tr > th {
       padding-left: 0;
     }

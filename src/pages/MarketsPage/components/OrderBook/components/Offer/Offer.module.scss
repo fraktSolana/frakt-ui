@@ -41,7 +41,7 @@
     rgba(255, 31, 71, 0.1) 100%
   );
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 960px) {
     padding: 14px 44px 14px 8px;
   }
 }
@@ -78,7 +78,7 @@
     }
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 960px) {
     &::before {
       left: -42px;
 
@@ -128,7 +128,7 @@
     }
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 960px) {
     &::before {
       left: -42px;
 
@@ -233,7 +233,7 @@
   transform: translateY(-50%);
 
   cursor: pointer;
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 960px) {
     width: 28px;
     height: 28px;
     svg {

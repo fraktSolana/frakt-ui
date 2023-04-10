@@ -29,7 +29,7 @@
   font: var(--font-text-6);
   width: 124px;
   
-  @media (max-width: 768px) {
+  @media (max-width: 960px) {
     width: 100px;
   }
 }
@@ -96,7 +96,7 @@
   height: 23px !important;
   width: 180px;
 
-  @media (max-width: 768px) {
+  @media (max-width: 960px) {
     width: 150px;
     padding-right: 0;
   }

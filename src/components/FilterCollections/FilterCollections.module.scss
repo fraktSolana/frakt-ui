@@ -18,7 +18,7 @@
     cursor: pointer;
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 960px) {
     white-space: nowrap;
   }
 }
@@ -80,7 +80,7 @@ label:hover {
   width: 100%;
   margin-bottom: 14px;
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     align-items: center;
     margin-top: 14px;
   }
@@ -97,7 +97,7 @@ label:hover {
     height: 0px;
   }
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     gap: 16px;
   }
 }
@@ -121,7 +121,7 @@ label:hover {
   border-bottom: 1px solid var(--blue-color);
   font: var(--font-btn-middle);
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     position: absolute;
     left: 175px;
   }

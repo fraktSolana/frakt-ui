@@ -10,7 +10,7 @@
   justify-content: center;
   gap: 16px;
 
-  @media (max-width: 767px) {
+  @media (max-width: 960px) {
     gap: 8px;
   }
 }
@@ -24,7 +24,7 @@
   flex-direction: column;
   gap: 16px;
 
-  @media (max-width: 767px) {
+  @media (max-width: 960px) {
     gap: 8px;
   }
 }
@@ -42,7 +42,7 @@
     width: 108px;
     height: 108px;
   }
-  @media (max-width: 767px) {
+  @media (max-width: 960px) {
     width: 67px;
     height: 67px;
   }
@@ -52,7 +52,7 @@
   display: flex;
   gap: 16px;
 
-  @media (max-width: 767px) {
+  @media (max-width: 960px) {
     gap: 8px;
   }
 }
@@ -77,7 +77,7 @@
   gap: 13px;
   margin-top: 12px;
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     gap: 8px;
   }
 }
@@ -105,7 +105,7 @@
     width: 234px;
   }
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     height: 142px;
     width: 142px;
   }
@@ -132,7 +132,7 @@
   font: var(--font-subtitle-2);
   font-size: 28px;
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     font-size: 20px;
   }
 }
@@ -140,7 +140,7 @@
 .otherImageTitle {
   font: var(--font-text-6);
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     font-size: 10px;
   }
 }

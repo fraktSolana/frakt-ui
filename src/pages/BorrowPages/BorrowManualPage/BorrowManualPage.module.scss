@@ -6,7 +6,7 @@
 .contentSidebarVisible {
   padding-right: 343px;
 
-  @media (max-width: 767px) {
+  @media (max-width: 960px) {
     padding-right: 0;
   }
 }
@@ -17,7 +17,7 @@
   gap: 24px;
   align-items: stretch;
 
-  @media (max-width: 767px) {
+  @media (max-width: 960px) {
     gap: 16px;
     padding-right: 0;
     grid-template-columns: repeat(auto-fill, minmax(163px, 2fr));

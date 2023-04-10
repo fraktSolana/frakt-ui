@@ -19,7 +19,7 @@
     width: 48px;
   }
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     height: 38px;
     width: 38px;
   }
@@ -29,7 +29,7 @@
   font: var(--font-text-2);
   font-size: 20px;
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     font-size: 16px;
   }
 }

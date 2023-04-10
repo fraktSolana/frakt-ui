@@ -8,9 +8,12 @@
   @include flex(row, nowrap, center, center);
   margin-bottom: 48px;
 
-  @media screen and (max-width: 1023px) {
-    margin-top: 30px;
+  @media screen and (max-width: 1024px) {
     flex-direction: column;
+  }
+
+  @media screen and (max-width: 960px) {
+    margin-bottom: 32px;
   }
 }
 
@@ -47,7 +50,7 @@
     border-color: var(--secondary-border);
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 960px) {
     height: 32px;
     width: 32px;
     svg {
