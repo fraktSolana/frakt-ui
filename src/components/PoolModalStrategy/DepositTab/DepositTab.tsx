@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import classNames from 'classnames/bind';
 
 import Button from '../../Button';
 import { Slider } from '../../Slider';
@@ -9,6 +8,7 @@ import { useDeposit } from '@frakt/utils/strategies';
 import { marks, usePoolModal } from '../hooks';
 import { SOL_TOKEN } from '../../../utils';
 import styles from './DepositTab.module.scss';
+import classNames from 'classnames';
 
 interface DepositTabProps {
   utilizationRate: number;
