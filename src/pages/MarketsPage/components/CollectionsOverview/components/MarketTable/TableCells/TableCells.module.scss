@@ -90,18 +90,10 @@
   }
 
   height: 23px !important;
-  width: 162px;
-
-  @media (max-width: 1300px) {
-    width: 220px;
-  }
+  width: 192px;
 
   @media (max-width: 768px) {
-    width: 182px;
-  }
-
-  @media (max-width: 500px) {
-    width: 170px;
+    width: 150px;
     padding-right: 0;
   }
 }

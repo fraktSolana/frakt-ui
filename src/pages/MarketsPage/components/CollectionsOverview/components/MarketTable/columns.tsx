@@ -23,9 +23,10 @@ import styles from './TableCells/TableCells.module.scss';
 export type SortColumns = {
   column: ColumnType<MarketPreview>;
   order: SortOrder;
+  isMobile?: boolean;
 }[];
 
-export const TableList = ({ onChange, onRowClick }) => {
+export const TableList = ({ onChange, onRowClick, isMobile }) => {
   const COLUMNS: ColumnsType<MarketPreview> = [
     {
       key: 'collectionName',
@@ -40,7 +41,7 @@ export const TableList = ({ onChange, onRowClick }) => {
       render: (_, market: MarketPreview) => (
         <TitleCell market={market} onRowClick={onRowClick} />
       ),
-      width: 192,
+      width: isMobile ? 150 : 192,
     },
     {
       key: 'activeBondsAmount',

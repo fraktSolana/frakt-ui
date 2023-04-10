@@ -76,8 +76,10 @@
     }
   }
 
-  @media (max-width: 500px) {
-    .ant-table-thead > tr > th:first-child,
+  @media (max-width: 768px) {
+    .ant-table-thead > tr > th {
+      padding-left: 0;
+    }
     .ant-table-tbody > tr > td:first-child {
       padding-right: 0;
     }

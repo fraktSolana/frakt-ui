@@ -2,6 +2,7 @@ import { FC, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { MarketPreview } from '@frakt/api/bonds';
+import { useWindowSize } from '@frakt/hooks';
 import { PATHS } from '@frakt/constants';
 import Table, {
   PartialBreakpoints,
@@ -29,6 +30,8 @@ export const MarketTable: FC<MarketTableProps> = ({
 }) => {
   const history = useHistory();
   const { setVisibility } = useChartVisible();
+  const { width } = useWindowSize();
+  const isMobile = width <= 768;
 
   const onRowClick = useCallback(
     (dataItem: MarketPreview) => {
@@ -50,6 +53,7 @@ export const MarketTable: FC<MarketTableProps> = ({
   const COLUMNS = TableList({
     onChange,
     onRowClick,
+    isMobile,
   });
 
   const { table } = useTable({
