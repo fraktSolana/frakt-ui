@@ -28,8 +28,8 @@
   color: var(--primary-text);
   font: var(--font-text-6);
   width: 124px;
-  
-  @media (max-width: 960px) {
+
+  @media (max-width: 1300px) {
     width: 100px;
   }
 }
@@ -93,13 +93,9 @@
     font-size: 14px !important;
   }
 
+  padding-right: 0;
   height: 23px !important;
-  width: 180px;
-
-  @media (max-width: 960px) {
-    width: 150px;
-    padding-right: 0;
-  }
+  width: 150px;
 }
 
 .iconWrapper {

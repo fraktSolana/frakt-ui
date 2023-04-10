@@ -23,10 +23,9 @@ import styles from './TableCells/TableCells.module.scss';
 export type SortColumns = {
   column: ColumnType<MarketPreview>;
   order: SortOrder;
-  isMobile?: boolean;
 }[];
 
-export const TableList = ({ onChange, isMobile }) => {
+export const TableList = ({ onChange }) => {
   const COLUMNS: ColumnsType<MarketPreview> = [
     {
       key: 'collectionName',
@@ -39,7 +38,7 @@ export const TableList = ({ onChange, isMobile }) => {
         />
       ),
       render: (_, market: MarketPreview) => <TitleCell market={market} />,
-      width: isMobile ? 150 : 180,
+      width: 150,
     },
     {
       key: 'activeBondsAmount',
@@ -55,7 +54,7 @@ export const TableList = ({ onChange, isMobile }) => {
       sorter: (a, b) => sortingFavoriteList(a, b, 'activeBondsAmount'),
       showSorterTooltip: false,
       defaultSortOrder: 'descend',
-      width: 120,
+      width: 95,
     },
     {
       key: 'bestLTV',
@@ -71,7 +70,7 @@ export const TableList = ({ onChange, isMobile }) => {
       sorter: (a, b) => sortingFavoriteList(a, b, 'offerTVL', formateToNumbers),
       render: (value) => createBestOfferJSX(value),
       showSorterTooltip: false,
-      width: 125,
+      width: 95,
     },
     {
       key: 'apy',
@@ -87,7 +86,7 @@ export const TableList = ({ onChange, isMobile }) => {
       render: (value) => createAprJSX(value),
       sorter: (a, b) => sortingFavoriteList(a, b, 'apy'),
       showSorterTooltip: false,
-      width: 110,
+      width: 95,
     },
     {
       key: 'offerTVL',
@@ -103,7 +102,7 @@ export const TableList = ({ onChange, isMobile }) => {
       sorter: (a, b) => sortingFavoriteList(a, b, 'offerTVL', formateToNumbers),
       render: (value) => createOfferTvlJSX(value),
       showSorterTooltip: false,
-      width: 120,
+      width: 95,
     },
     {
       key: 'duration',
@@ -118,7 +117,7 @@ export const TableList = ({ onChange, isMobile }) => {
       sorter: (a, b) => sortingFavoriteList(a, b, 'duration', formateDuration),
       render: (value) => createDurationJSX(value),
       showSorterTooltip: false,
-      width: 72,
+      width: 70,
     },
   ];
 
