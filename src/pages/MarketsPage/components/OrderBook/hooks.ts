@@ -25,7 +25,6 @@ type UseMarketOrders = (props: {
 }) => {
   offers: MarketOrder[];
   isLoading: boolean;
-  offersExist: boolean;
   hidePair: (pairPubkey: string) => void;
   bestOffer: MarketOrder;
 };
@@ -112,14 +111,11 @@ export const useMarketOrders: UseMarketOrders = ({
     duration,
   ]);
 
-  const offersExist = Boolean(allOffers.length);
-
   const bestOffer = useMemo(() => {
     return allOffers.at(0)?.synthetic ? allOffers.at(1) : allOffers.at(0);
   }, [allOffers]);
 
   return {
-    offersExist,
     offers: walletOwned ? ownerOffers : allOffers,
     isLoading,
     hidePair,

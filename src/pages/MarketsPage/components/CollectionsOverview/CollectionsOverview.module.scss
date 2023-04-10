@@ -4,6 +4,7 @@
   display: flex;
   gap: 24px;
   padding: 24px;
+  padding-bottom: 0;
   margin-bottom: 16px;
   min-height: 382px;
 
@@ -53,21 +54,11 @@
 }
 
 .marketTable :global {
-  .ant-table-tbody > tr > td {
-    vertical-align: baseline !important;
-    height: 54px;
-  }
-  .ant-table-tbody > tr > td:first-child {
-    vertical-align: middle !important;
-  }
-}
-
-.marketTable :global {
-  height: 287px;
+  height: 317px;
   display: block !important;
 
   .ant-table-content {
-    max-height: 287px !important;
+    max-height: 317px !important;
     overflow: auto !important;
   }
 

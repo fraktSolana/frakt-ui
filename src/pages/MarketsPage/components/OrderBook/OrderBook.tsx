@@ -55,7 +55,6 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
   const {
     offers: offersRaw,
     isLoading,
-    offersExist,
     bestOffer,
   } = useMarketOrders({
     marketPubkey:
@@ -68,6 +67,8 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
     interest: syntheticParams?.interest,
     duration: syntheticParams?.durationDays,
   });
+
+  const offersExist = Boolean(offersRaw.length);
 
   const offers = groupWith(
     (offerA, offerB) =>
@@ -131,10 +132,10 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
               onChange={(nextValue) => setShowOwnOrders(nextValue)}
             />
           </div>
-          {marketPubkey && offersExist && (
-            <Sort onChangeSort={toggleSort} sort={sort} />
-          )}
         </div>
+        {marketPubkey && offersExist && (
+          <Sort onChangeSort={toggleSort} sort={sort} />
+        )}
 
         <div
           className={classNames(styles.content, {
