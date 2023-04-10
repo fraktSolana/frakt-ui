@@ -98,6 +98,14 @@ export const NAVIGATION_LINKS = [
     iconDark: BondsDark,
   },
   {
+    pathname: PATHS.STRATEGIES,
+    to: PATHS.STRATEGIES,
+    label: 'Strategies',
+    event: 'navigation-strategies',
+    icon: Bonds,
+    iconDark: StrategiesDark,
+  },
+  {
     pathname: PATHS.LIQUIDATIONS,
     to: PATHS.LIQUIDATIONS,
     label: 'Raffles',
