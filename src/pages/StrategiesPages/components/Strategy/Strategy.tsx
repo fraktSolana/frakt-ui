@@ -2,7 +2,6 @@ import { FC, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
-import classNames from 'classnames/bind';
 
 import Button from '@frakt/components/Button';
 import Tooltip from '@frakt/components/Tooltip';
@@ -16,6 +15,7 @@ import { PATHS } from '@frakt/constants';
 import { TabsNames } from '@frakt/components/PoolModalStrategy/types';
 import { Solana } from '@frakt/icons';
 import styles from './Strategy.module.scss';
+import classNames from 'classnames';
 
 interface StrategyProps {
   tradePool: TradePoolUser;

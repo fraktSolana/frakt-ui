@@ -1,5 +1,4 @@
 import { FC, useMemo, useRef, useState } from 'react';
-import classNames from 'classnames/bind';
 import { Loader } from '@frakt/components/Loader';
 import { SearchInput } from '@frakt/components/SearchInput';
 import { Selected } from '@frakt/icons';
@@ -7,6 +6,7 @@ import { Market } from '@frakt/api/bonds';
 import { useDebounce, useOnClickOutside } from '@frakt/hooks';
 import { FormValues } from '@frakt/utils/strategies/types';
 import styles from './SearchCollection.module.scss';
+import classNames from 'classnames';
 
 interface SearchCollectionProps {
   markets: Market[];

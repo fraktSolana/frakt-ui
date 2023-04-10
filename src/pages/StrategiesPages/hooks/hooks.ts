@@ -1,9 +1,9 @@
-import { TradePool } from '@frakt/api/strategies';
+import { TradePoolAdmin } from '@frakt/api/strategies';
 import { create } from 'zustand';
 
 interface SettingsPoolState {
-  tradePool: TradePool | null;
-  setTradePool: (settings: TradePool) => void;
+  tradePool: TradePoolAdmin | null;
+  setTradePool: (settings: TradePoolAdmin) => void;
   clearTradePool: () => void;
 }
 

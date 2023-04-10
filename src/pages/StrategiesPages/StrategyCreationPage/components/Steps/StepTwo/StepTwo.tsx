@@ -1,6 +1,5 @@
 import { ChangeEvent, FC } from 'react';
 
-import RadioButton from '@frakt/components/RadioButton';
 import SliderGradient from '@frakt/components/SliderGradient';
 import SearchCollection from '../../SearchCollection';
 import { useMarkets } from '@frakt/utils/bonds';
@@ -47,7 +46,7 @@ const StepTwo: FC<StepTwoProps> = ({
         value={formValues.loanToValueFilter}
         onChange={handleLTV}
       />
-      <RadioButton
+      {/* <RadioButton
         labelName="duration"
         tooltipText="duration duration duration"
         current={formValues.durationFilter}
@@ -56,7 +55,7 @@ const StepTwo: FC<StepTwoProps> = ({
           { value: '7', name: '7 days' },
           { value: '14', name: '14 days' },
         ]}
-      />
+      /> */}
     </div>
   );
 };

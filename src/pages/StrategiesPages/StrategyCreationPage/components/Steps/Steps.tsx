@@ -8,7 +8,7 @@ import StepThree from './StepThree';
 import StepFour from './StepFour';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import { useSettingsPool } from '@frakt/pages/StrategiesPages/hooks/hooks';
-import { useStrategyCreation } from '@frakt/utils/strategies/transactions/useStrategyCreation';
+// import { useStrategyCreation } from '@frakt/utils/strategies/transactions/useStrategyCreation';
 import styles from './Steps.module.scss';
 
 const { Step } = AntSteps;
@@ -19,21 +19,21 @@ const Steps: FC = () => {
   const handleNextStep = () => setStep((prev) => prev + 1);
   const handleBackStep = () => setStep((prev) => prev - 1);
 
-  const tradePool = useSettingsPool((state) => state.tradePool);
+  // const tradePool = useSettingsPool((state) => state.tradePool);
 
-  const {
-    formValues,
-    setFormValues,
-    checkDisabled,
-    onCreateStrategy,
-    onUpdateStrategy,
-    loadingModalVisible,
-    closeLoadingModal,
-  } = useStrategyCreation(tradePool);
+  // const {
+  //   formValues,
+  //   setFormValues,
+  //   checkDisabled,
+  //   onCreateStrategy,
+  //   onUpdateStrategy,
+  //   loadingModalVisible,
+  //   closeLoadingModal,
+  // } = useStrategyCreation(tradePool);
 
   return (
     <>
-      <AntSteps className={styles.stepsAnt} current={step}>
+      {/* <AntSteps className={styles.stepsAnt} current={step}>
         <Step title="View parameters" />
         <Step title="Bonds parameters" />
         <Step title="Pricing parameters" />
@@ -118,7 +118,7 @@ const Steps: FC = () => {
         title="Please approve transaction"
         visible={loadingModalVisible}
         onCancel={closeLoadingModal}
-      />
+      /> */}
     </>
   );
 };

@@ -1,5 +1,4 @@
 import { ChangeEvent, FC } from 'react';
-import RadioButton from '@frakt/components/RadioButton';
 import TokenField from '@frakt/components/TokenField';
 import InputField from '@frakt/components/InputField';
 import Chart from '@frakt/components/Chart';
@@ -8,6 +7,7 @@ import { SOL_TOKEN } from '@frakt/utils';
 import { BondingCurveType } from 'fbonds-core/lib/fbond-protocol/types';
 import usePriceGraph from '@frakt/components/Chart/hooks/usePriceGraph';
 import { FormValues } from '@frakt/utils/strategies/types';
+import { RadioButton } from '@frakt/components/RadioButton';
 
 interface StepThreeProps {
   className: string;
@@ -73,7 +73,7 @@ const StepThree: FC<StepThreeProps> = ({
         toolTipText="Interest (in %) for the duration of this loan"
       />
 
-      <RadioButton
+      {/* <RadioButton
         labelName="bonding curve"
         tooltipText="bonding curve"
         current={formValues.bondingType}
@@ -82,7 +82,7 @@ const StepThree: FC<StepThreeProps> = ({
           { value: BondingCurveType.Linear, name: 'Linear' },
           { value: BondingCurveType.Exponential, name: 'Exponential' },
         ]}
-      />
+      /> */}
 
       <TokenField
         value={formValues.delta}
