@@ -34,10 +34,8 @@ const CollectionCard: FC<CollectionCardProps> = ({
   const {
     offers,
     loading,
-    toggleSortDirection,
     isVisibleOfferList,
     setIsVisibleOfferList,
-    sortDirection,
     goToEditOffer,
     isOwnOrder,
     bestOffer,
@@ -70,10 +68,8 @@ const CollectionCard: FC<CollectionCardProps> = ({
         {loading && isVisibleOfferList && <Loader />}
         {!!offers.length && (
           <Sort
-            onChangeSort={toggleSortDirection}
             existSyntheticParams={existSyntheticParams}
             openOffersMobile={openOffersMobile}
-            sort={sortDirection}
           />
         )}
         {offers.map((offer, idx) => (

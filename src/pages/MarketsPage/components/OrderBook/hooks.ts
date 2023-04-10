@@ -15,7 +15,6 @@ import {
 
 type UseMarketOrders = (props: {
   marketPubkey: web3.PublicKey;
-  sortDirection?: 'desc' | 'asc'; //? Sort by interest only
   filterDuration?: number;
   walletOwned?: boolean;
   ltv: number;
@@ -31,7 +30,6 @@ type UseMarketOrders = (props: {
 
 export const useMarketOrders: UseMarketOrders = ({
   marketPubkey,
-  sortDirection = 'desc',
   walletOwned,
   ltv,
   size,
@@ -87,8 +85,8 @@ export const useMarketOrders: UseMarketOrders = ({
 
     const offers = editOfferPubkey ? parsedEditabledOffers : parsedOffers;
 
-    const sortedOffersByInterest = sortOffersByInterest(offers, sortDirection);
-    const sortedByLtv = sortOffersByLtv(sortedOffersByInterest, sortDirection);
+    const sortedOffersByInterest = sortOffersByInterest(offers, 'desc');
+    const sortedByLtv = sortOffersByLtv(sortedOffersByInterest, 'desc');
     const sortedByDuration = filterOffersByDuration(
       sortedByLtv,
       filterDuration,
@@ -100,16 +98,7 @@ export const useMarketOrders: UseMarketOrders = ({
     );
 
     return [sortedByDuration, ownerOffers];
-  }, [
-    pairs,
-    sortDirection,
-    walletOwned,
-    publicKey,
-    ltv,
-    size,
-    interest,
-    duration,
-  ]);
+  }, [pairs, walletOwned, publicKey, ltv, size, interest, duration]);
 
   const bestOffer = useMemo(() => {
     return allOffers.at(0)?.synthetic ? allOffers.at(1) : allOffers.at(0);

@@ -54,11 +54,11 @@
 }
 
 .marketTable :global {
-  height: 317px;
+  height: 315px;
   display: block !important;
 
   .ant-table-content {
-    max-height: 317px !important;
+    max-height: 315px !important;
     overflow: auto !important;
   }
 
@@ -70,6 +70,9 @@
     .ant-table-tbody > tr > td:first-child {
       max-width: 560px !important;
       width: 100% !important;
+    }
+    .ant-table-tbody > tr > td {
+      height: 54px;
     }
   }
 

@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from 'react';
+import { FC, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useHistory, useParams } from 'react-router-dom';
 import classNames from 'classnames';
@@ -12,9 +12,9 @@ import Toggle from '@frakt/components/Toggle';
 import { Market } from '@frakt/api/bonds';
 import { PATHS } from '@frakt/constants';
 
+import { MarketOrder, SyntheticParams } from './types';
 import CollectionsList from './components/CollectionsList';
 import NoActiveOffers from './components/NoActiveOffers';
-import { MarketOrder, SortOrder, SyntheticParams } from './types';
 import Filters from './components/Filters';
 import { useMarketOrders } from './hooks';
 import Offer from './components/Offer';
@@ -35,17 +35,12 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
 
   const [openOffersMobile, setOpenOffersMobile] = useState<boolean>(false);
   const [showOwnOrders, setShowOwnOrders] = useState<boolean>(false);
-  const [sort, setSort] = useState<SortOrder>(SortOrder.DESC);
   const [duration, setDuration] = useState<number>(30);
 
   const toggleOffers = () => setOpenOffersMobile((prev) => !prev);
 
   const onDurationChange = (nextValue: number) => {
     setDuration(nextValue);
-  };
-
-  const toggleSort = () => {
-    sort === SortOrder.DESC ? setSort(SortOrder.ASC) : setSort(SortOrder.DESC);
   };
 
   const isOwnOrder = (order: MarketOrder): boolean => {
@@ -59,7 +54,6 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
   } = useMarketOrders({
     marketPubkey:
       market?.marketPubkey && new web3.PublicKey(market?.marketPubkey),
-    sortDirection: sort,
     filterDuration: duration,
     walletOwned: showOwnOrders,
     ltv: syntheticParams?.ltv,
@@ -134,7 +128,10 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
           </div>
         </div>
         {marketPubkey && offersExist && (
-          <Sort onChangeSort={toggleSort} sort={sort} />
+          <Sort
+            openOffersMobile={openOffersMobile}
+            existSyntheticParams={!!syntheticParams?.ltv}
+          />
         )}
 
         <div
