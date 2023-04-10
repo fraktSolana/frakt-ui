@@ -52,7 +52,6 @@ export const MarketTable: FC<MarketTableProps> = ({
 
   const COLUMNS = TableList({
     onChange,
-    onRowClick,
     isMobile,
   });
 
