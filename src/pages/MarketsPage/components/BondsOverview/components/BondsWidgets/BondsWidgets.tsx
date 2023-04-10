@@ -11,7 +11,7 @@ interface BondsWidgetsProps {
 }
 
 const BondsWidgets: FC<BondsWidgetsProps> = ({ activeLoans, locked }) => {
-  const connected = useWallet();
+  const { connected } = useWallet();
 
   return (
     <div className={styles.wrapper}>

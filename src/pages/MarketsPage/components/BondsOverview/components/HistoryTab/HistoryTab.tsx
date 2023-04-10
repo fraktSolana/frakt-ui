@@ -93,7 +93,7 @@ const HistoryTab: FC = () => {
       {!showOwnerBonds && !bondsHistory.length && !isLoading && (
         <EmptyList className={styles.emptyList} text="No bonds at the moment" />
       )}
-      {showOwnerBonds && !bondsHistory.length && !isLoading && (
+      {connected && showOwnerBonds && !bondsHistory.length && !isLoading && (
         <EmptyList className={styles.emptyList} text="No bonds at the moment" />
       )}
     </>
