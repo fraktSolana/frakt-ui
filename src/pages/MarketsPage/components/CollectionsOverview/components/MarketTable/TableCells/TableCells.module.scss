@@ -27,18 +27,10 @@
 .nftName {
   color: var(--primary-text);
   font: var(--font-text-6);
-  width: 105px;
-
-  @media (max-width: 1300px) {
-    width: 124px;
-  }
-
+  width: 124px;
+  
   @media (max-width: 768px) {
     width: 100px;
-  }
-
-  @media (max-width: 500px) {
-    width: 95px;
   }
 }
 
@@ -55,7 +47,8 @@
   }
 }
 
-.value {
+.value,
+.smallValue {
   color: var(--primary-text);
   display: flex;
   align-items: center;
@@ -65,49 +58,14 @@
   font-size: 14px;
   white-space: nowrap;
 }
+.smallValue {
+  font-size: 12px;
+}
 
 .column {
   display: flex;
   flex-direction: column;
   gap: 4px;
-}
-
-.btnWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.btn {
-  height: 26px;
-  width: 72px;
-}
-
-.btnExit {
-  border-color: var(--red-color);
-  background: var(--light-red-color);
-  color: var(--red-color-2);
-
-  &:hover {
-    background: var(--light-red-color-hover);
-  }
-}
-
-.tooltip {
-  width: 100%;
-}
-
-.timer {
-  width: 12px;
-  height: 12px;
-
-  path {
-    fill: var(--gray-color-2);
-  }
-}
-
-.countdown {
-  display: block;
 }
 
 .infoValueSpan {
@@ -119,36 +77,6 @@
   &.negative {
     color: var(--red-error-color);
   }
-}
-
-.imageWrapper {
-  position: relative;
-}
-
-.receiveIcon {
-  background: var(--primary-background);
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  inset: -10px 0 0 -10px;
-
-  border: 7px solid var(--primary-background);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  svg {
-    fill: var(--black-color);
-    width: 10px;
-    height: 10px;
-  }
-}
-.receiveIconTooltip {
-  min-width: 200px;
-}
-
-.sortIcon {
-  display: flex;
 }
 
 .highestLtvColor {
@@ -166,18 +94,10 @@
   }
 
   height: 23px !important;
-  width: 162px;
-
-  @media (max-width: 1300px) {
-    width: 220px;
-  }
+  width: 180px;
 
   @media (max-width: 768px) {
-    width: 182px;
-  }
-
-  @media (max-width: 500px) {
-    width: 170px;
+    width: 150px;
     padding-right: 0;
   }
 }
@@ -185,7 +105,9 @@
 .iconWrapper {
   display: flex;
 }
-
+.sortIcon {
+  display: flex;
+}
 .starIcon {
   min-width: 16px;
   min-height: 16px;
@@ -195,15 +117,5 @@
       fill: #ffce1f;
       transition: var(--transition-1);
     }
-  }
-}
-
-.chartIcon {
-  display: none;
-
-  @media (max-width: 1300px) {
-    display: block;
-    height: 28px;
-    width: 28px;
   }
 }

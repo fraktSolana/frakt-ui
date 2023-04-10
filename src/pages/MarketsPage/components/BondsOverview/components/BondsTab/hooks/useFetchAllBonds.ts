@@ -41,7 +41,7 @@ export const useFetchAllBonds = ({
     };
   };
 
-  const { data, fetchNextPage, isFetchingNextPage, isLoading } =
+  const { data, fetchNextPage, isFetchingNextPage, isLoading, hasNextPage } =
     useInfiniteQuery({
       queryKey: [publicKey, queryData, marketPubkey],
       queryFn: ({ pageParam = 0 }) => fetchData({ pageParam }),
@@ -68,6 +68,7 @@ export const useFetchAllBonds = ({
     fetchNextPage,
     isFetchingNextPage,
     isListEnded,
+    hasNextPage,
     hideBond,
     loading: isLoading,
   };
