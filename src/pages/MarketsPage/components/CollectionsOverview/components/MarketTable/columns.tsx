@@ -26,7 +26,7 @@ export type SortColumns = {
   isMobile?: boolean;
 }[];
 
-export const TableList = ({ onChange, onRowClick, isMobile }) => {
+export const TableList = ({ onChange, isMobile }) => {
   const COLUMNS: ColumnsType<MarketPreview> = [
     {
       key: 'collectionName',
@@ -38,9 +38,7 @@ export const TableList = ({ onChange, onRowClick, isMobile }) => {
           onChange={onChange}
         />
       ),
-      render: (_, market: MarketPreview) => (
-        <TitleCell market={market} onRowClick={onRowClick} />
-      ),
+      render: (_, market: MarketPreview) => <TitleCell market={market} />,
       width: isMobile ? 150 : 180,
     },
     {

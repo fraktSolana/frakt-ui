@@ -10,10 +10,7 @@ import styles from './TableCells.module.scss';
 
 type Event = MouseEvent | TouchEvent;
 
-export const TitleCell: FC<{
-  market: MarketPreview;
-  onRowClick: (market: MarketPreview) => void;
-}> = ({ market }) => {
+export const TitleCell: FC<{ market: MarketPreview }> = ({ market }) => {
   const storageMarketPubkeys = getStorageItemsByKey('favourites');
   const isFavourited = storageMarketPubkeys.includes(market.marketPubkey);
 
@@ -25,7 +22,6 @@ export const TitleCell: FC<{
 
     const storageMarketPubkeys = getStorageItemsByKey('favourites');
     const newMarketPubkeys = [...storageMarketPubkeys, market.marketPubkey];
-
     setItemsToStorageByKey('favourites', newMarketPubkeys);
     event.stopPropagation();
   };

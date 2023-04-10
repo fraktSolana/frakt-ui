@@ -95,7 +95,7 @@
 
   @media screen and (max-width: 960px) {
     &.active {
-      height: calc(100vh - var(--header-height) - 210px);
+      height: calc(100vh - var(--header-height) - 204px);
     }
 
     &.visible.active {
@@ -150,7 +150,7 @@
 
     &.active {
       display: flex;
-      height: calc(100% - var(--header-height) - 22px);
+      height: calc(100% - var(--header-height) - 64px);
       overflow-y: scroll;
     }
 
