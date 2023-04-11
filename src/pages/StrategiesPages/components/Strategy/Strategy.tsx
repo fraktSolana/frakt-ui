@@ -8,21 +8,24 @@ import Button from '@frakt/components/Button';
 import Tooltip from '@frakt/components/Tooltip';
 import { PoolModal } from '@frakt/components/PoolModal';
 import CollectionsPreviews from '../CollectionsPreviews';
-
+import {
+  getUtilizationRate,
+  getWithdrawValue,
+} from '@frakt/utils/strategies/helpers';
 import { TabsNames } from '@frakt/components/PoolModal/types';
 import { useSettingsPool } from '../../hooks/hooks';
 import { commonActions } from '@frakt/state/common/actions';
-import { TradePoolUser } from '@frakt/api/strategies';
+import { TradePoolAdmin, TradePoolUser } from '@frakt/api/strategies';
 import { PATHS } from '@frakt/constants';
 import { Solana } from '@frakt/icons';
 import styles from './Strategy.module.scss';
 
 interface StrategyProps {
   tradePool: TradePoolUser;
-  admin?: boolean;
+  isAdmin?: boolean;
 }
 
-const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
+const Strategy: FC<StrategyProps> = ({ tradePool, isAdmin }) => {
   const history = useHistory();
   const wallet = useWallet();
 
@@ -39,7 +42,7 @@ const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
 
   const { setTradePool } = useSettingsPool();
 
-  const openAdminPanel = (tradePool: any) => () => {
+  const openAdminPanel = (tradePool: TradePoolAdmin) => () => {
     history.push(PATHS.STRATEGY_CREATION);
     setTradePool(tradePool);
   };
@@ -48,10 +51,10 @@ const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
     (tradePool?.reserveFundsRatio * tradePool?.balance) / 1e4,
     tradePool?.wallet?.userLiquidity,
   );
-  const withdrawValue =
-    (availableToWithdraw < 1e7 ? 0 : availableToWithdraw) / 1e9 || 0;
 
-  const utilizationRate = (1e4 - tradePool?.reserveFundsRatio) / 100;
+  const withdrawValue = getWithdrawValue(availableToWithdraw);
+
+  const utilizationRate = getUtilizationRate(tradePool?.reserveFundsRatio);
 
   return (
     <>
@@ -106,7 +109,7 @@ const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
           </div>
         </div>
         <div className={styles.btnWrapper}>
-          {!admin && (
+          {!isAdmin && (
             <Button
               className={styles.btn}
               type="secondary"
@@ -116,7 +119,7 @@ const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
             </Button>
           )}
           {/* 
-          {tradePool?.isCanEdit && admin && (
+          {tradePool?.isCanEdit && isAdmin && (
             <Button
               className={styles.btn}
               type="secondary"
@@ -126,7 +129,7 @@ const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
             </Button>
           )} */}
 
-          {!admin && !!withdrawValue && (
+          {!isAdmin && !!withdrawValue && (
             <Button
               className={styles.btn}
               type="primary"

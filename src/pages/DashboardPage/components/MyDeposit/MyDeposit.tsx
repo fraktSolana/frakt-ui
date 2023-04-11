@@ -3,6 +3,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useSelector } from 'react-redux';
 import { sum, map, filter } from 'ramda';
 
+import { useFetchTradePoolStats } from '@frakt/utils/strategies';
 import { selectLiquidityPools } from '@frakt/state/loans/selectors';
 import { calcWeightedAverage } from '@frakt/utils';
 import { BondsUserStats } from '@frakt/api/user';
@@ -12,7 +13,6 @@ import { BadgeJSX, NavigationButtonJSX, NoConnectedJSX } from './components';
 import { DashboardStatsValues } from '../DashboardStatsValues';
 import Block from '../Block';
 import styles from './MyDeposit.module.scss';
-import { useFetchTradePoolStats } from '@frakt/utils/strategies/hooks/useFetchTradePoolStats';
 
 interface MyDepositProps {
   data: BondsUserStats;

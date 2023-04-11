@@ -1,4 +1,3 @@
-import { fetchTradePoolStats, TradePoolStats } from '@frakt/api/strategies';
 import { fetchAllUserStats, UserStats } from '@frakt/api/user';
 import { useQuery } from '@tanstack/react-query';
 

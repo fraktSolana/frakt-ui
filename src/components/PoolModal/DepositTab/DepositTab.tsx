@@ -19,6 +19,8 @@ interface DepositTabProps {
   depositYield: number;
 }
 
+const MOUTH_IN_YEAR = 12;
+
 const DepositTab: FC<DepositTabProps> = ({
   tradePool,
   utilizationRate,
@@ -67,7 +69,8 @@ const DepositTab: FC<DepositTabProps> = ({
     }
   };
 
-  const monthInYear = 12;
+  const estimatedEarings =
+    ((depositYield / MOUTH_IN_YEAR) * parseFloat(depositValue || '0')) / 100;
 
   return (
     <div className={styles.wrapper}>
@@ -117,12 +120,7 @@ const DepositTab: FC<DepositTabProps> = ({
         {tradePool && (
           <div className={styles.estimated}>
             <div className={styles.earnings}>
-              {(
-                ((depositYield / monthInYear) *
-                  parseFloat(depositValue || '0')) /
-                100
-              ).toFixed(2)}{' '}
-              SOL/month
+              {estimatedEarings.toFixed(2)} SOL/month
             </div>
             <div className={styles.estimatedTitle}>estimated earnings</div>
           </div>

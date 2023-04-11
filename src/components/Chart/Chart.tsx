@@ -1,12 +1,11 @@
-import { useLayoutEffect, useRef, useState, FC, useEffect } from 'react';
+import { FC } from 'react';
 import classNames from 'classnames';
-import { throttle } from 'lodash';
 
 import useD3 from './hooks/useD3';
+import { useContainerWidth } from './hooks/useChartWidth';
 import { renderChart } from './d3/renderChart';
 import { Point } from './types';
 import styles from './Chart.module.scss';
-import { useChartWidth } from './hooks/useChartWidth';
 
 interface ChartProps {
   className?: string;
@@ -14,7 +13,7 @@ interface ChartProps {
 }
 
 const Chart: FC<ChartProps> = ({ className, data }) => {
-  const { containerWidth, containerRef } = useChartWidth();
+  const { containerWidth, containerRef } = useContainerWidth();
 
   const svgRef = useD3(
     renderChart(data, {

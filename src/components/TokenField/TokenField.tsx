@@ -23,7 +23,7 @@ export interface TokenFieldProps {
   amountMaxLength?: number;
   disabled?: boolean;
   labelRight?: boolean;
-  lpBalance?: number | string;
+  lpBalance?: string;
   toolTipText?: string;
   labelRightNode?: ReactNode;
 }
@@ -77,7 +77,7 @@ const TokenField: FC<TokenFieldProps> = ({
             )}
             {!!lpBalance && (
               <span className={styles.balance}>
-                {Number(lpBalance).toFixed(2)} {currentToken?.symbol}
+                {parseFloat(lpBalance).toFixed(2)} {currentToken?.symbol}
               </span>
             )}
           </div>

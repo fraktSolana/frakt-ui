@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { throttle } from 'lodash';
 
-export const useChartWidth = () => {
+export const useContainerWidth = () => {
   const containerRef = useRef(null);
   const [containerWidth, setContainerWidth] = useState(0);
 
