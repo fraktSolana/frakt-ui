@@ -17,7 +17,6 @@ enum SortField {
   YIELD = 'depositYield',
   TOTAL_LIQUIDITY = 'totalLiquidity',
   USER_LIQUIDITY = 'userLiquidity',
-  COLLECTION = 'collection',
 }
 
 enum FilterFormInputsNames {
@@ -87,16 +86,6 @@ export const useStrategyFiltering: UseStrategyFiltering = ({ strategies }) => {
           );
         }
 
-        if (sortField === SortField.COLLECTION) {
-          if (sortOrder === SORT_ORDER.ASC)
-            return poolA?.collections[0]?.name.localeCompare(
-              poolB?.collections[0]?.name,
-            );
-          return poolB?.collections[0]?.name.localeCompare(
-            poolA?.collections[0]?.name,
-          );
-        }
-
         return 0;
       });
     }
@@ -127,9 +116,5 @@ export const SORT_VALUES: TradePoolSortValue[] = [
   {
     label: <span>Your liquidity</span>,
     value: 'userLiquidity_',
-  },
-  {
-    label: <span>Collection</span>,
-    value: 'collection_',
   },
 ];

@@ -1,13 +1,18 @@
 import axios from 'axios';
-import { Settings, TradePoolUser } from './types';
+import { Settings, TradePoolAdmin, TradePoolUser } from './types';
 
-const tetsApi = 'fraktion-monorep-test.herokuapp.com';
+const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN;
+const BACKEND_DOMAIN_TEST = process.env.BACKEND_DOMAIN_TEST;
 
 export const fetchTradePools = async ({
   walletPublicKey,
+}: {
+  walletPublicKey: string;
 }): Promise<TradePoolUser[]> => {
+  const walletQuery = walletPublicKey ? `?wallet=${walletPublicKey}` : '';
+
   const response = await fetch(
-    `https://${tetsApi}/trade-pools?wallet=${walletPublicKey}`,
+    `https://${BACKEND_DOMAIN_TEST}/trade-pools${walletQuery}`,
   );
 
   if (!response.ok) {
@@ -17,14 +22,21 @@ export const fetchTradePools = async ({
 };
 
 export const createTradePools = async (settings: Settings) => {
-  await axios.post(`https://${tetsApi}/trade-pools`, settings);
+  const response = await axios.post(
+    `https://${BACKEND_DOMAIN_TEST}/trade-pools`,
+    settings,
+  );
+
+  if (!response.data) {
+    throw new Error('Network response was not ok');
+  }
 };
 
 export const setImageTradePools = async (file: File) => {
   const formData = new FormData();
   formData.append('image', file);
 
-  const response = await fetch('https://api.frakt.xyz/image/upload', {
+  const response = await fetch(`https://${BACKEND_DOMAIN}/image/upload`, {
     method: 'POST',
     body: formData,
   });
@@ -37,7 +49,7 @@ export const setImageTradePools = async (file: File) => {
 
 export const updateTradePools = async (settings: Settings) => {
   const response = await axios.patch(
-    `https://${tetsApi}/trade-pools`,
+    `https://${BACKEND_DOMAIN_TEST}/trade-pools`,
     settings,
   );
 
@@ -49,9 +61,11 @@ export const updateTradePools = async (settings: Settings) => {
 
 export const fetchAdminTradePools = async ({
   walletPublicKey,
-}): Promise<any[]> => {
+}: {
+  walletPublicKey: string;
+}): Promise<TradePoolAdmin[]> => {
   const response = await fetch(
-    `https://${tetsApi}/trade-pools/admin?wallet=${walletPublicKey}`,
+    `https://${BACKEND_DOMAIN_TEST}/trade-pools/admin?wallet=${walletPublicKey}`,
   );
 
   if (!response.ok) {

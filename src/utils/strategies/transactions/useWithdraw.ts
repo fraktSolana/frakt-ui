@@ -1,11 +1,9 @@
-import { useLoadingModal } from '@frakt/components/LoadingModal';
+import { useHistory } from 'react-router-dom';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { useConnection } from '@frakt/hooks';
 import { notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { signAndConfirmTransaction } from '@frakt/utils/transactions';
-import { useWallet } from '@solana/wallet-adapter-react';
-
-import { useHistory } from 'react-router-dom';
 
 import { makeWithdraw } from './makeWithdraw';
 
@@ -16,8 +14,8 @@ type UseWithdraw = (props: {
   onClearDepositValue: () => void;
 }) => {
   onWithdraw: () => void;
-  loadingModalVisible: boolean;
-  closeLoadingModal: () => void;
+  // loadingModalVisible: boolean;
+  // closeLoadingModal: () => void;
 };
 
 export const useWithdraw: UseWithdraw = ({
@@ -30,16 +28,16 @@ export const useWithdraw: UseWithdraw = ({
   const wallet = useWallet();
   const connection = useConnection();
 
-  const {
-    visible: loadingModalVisible,
-    close: closeLoadingModal,
-    open: openLoadingModal,
-  } = useLoadingModal();
+  // const {
+  //   visible: loadingModalVisible,
+  //   close: closeLoadingModal,
+  //   open: openLoadingModal,
+  // } = useLoadingModal();
 
   const onWithdraw = async () => {
     if (wallet.publicKey) {
       try {
-        openLoadingModal();
+        // openLoadingModal();
 
         const { transaction, signers } = await makeWithdraw({
           connection,
@@ -76,7 +74,7 @@ export const useWithdraw: UseWithdraw = ({
         });
         onCancel();
       } finally {
-        closeLoadingModal();
+        // closeLoadingModal();
         onCancel();
       }
     }
@@ -84,7 +82,7 @@ export const useWithdraw: UseWithdraw = ({
 
   return {
     onWithdraw,
-    loadingModalVisible,
-    closeLoadingModal,
+    // loadingModalVisible,
+    // closeLoadingModal,
   };
 };

@@ -1,21 +1,21 @@
 import { FC, useState } from 'react';
+import classNames from 'classnames';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import Button from '@frakt/components/Button';
 import Tooltip from '@frakt/components/Tooltip';
+import { PoolModal } from '@frakt/components/PoolModal';
 import CollectionsPreviews from '../CollectionsPreviews';
-import { PoolModalStrategy } from '@frakt/components/PoolModalStrategy';
 
+import { TabsNames } from '@frakt/components/PoolModal/types';
 import { useSettingsPool } from '../../hooks/hooks';
 import { commonActions } from '@frakt/state/common/actions';
 import { TradePoolUser } from '@frakt/api/strategies';
 import { PATHS } from '@frakt/constants';
-import { TabsNames } from '@frakt/components/PoolModalStrategy/types';
 import { Solana } from '@frakt/icons';
 import styles from './Strategy.module.scss';
-import classNames from 'classnames';
 
 interface StrategyProps {
   tradePool: TradePoolUser;
@@ -44,6 +44,11 @@ const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
     setTradePool(tradePool);
   };
 
+  const availiableToWithdraw = Math.min(
+    (tradePool?.reserveFundsRatio * tradePool?.balance) / 1e4,
+    tradePool?.wallet?.userLiquidity,
+  );
+
   const utilizationRate = (1e4 - tradePool?.reserveFundsRatio) / 100;
   return (
     <>
@@ -63,7 +68,10 @@ const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
           <div className={styles.info}>
             <div className={styles.infoTitle}>
               <span>deposit yield</span>
-              <Tooltip placement="bottom" overlay="deposit yield" />
+              <Tooltip
+                placement="bottom"
+                overlay="Yearly rewards based on the current utilization rate and borrow interest"
+              />
             </div>
             <div
               className={classNames(styles.infoValue, {
@@ -123,18 +131,18 @@ const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
                 openPoolModal(TabsNames.WITHDRAW);
               }}
             >
-              Withdraw all
+              Withdraw
             </Button>
           )}
         </div>
       </div>
 
-      <PoolModalStrategy
-        tradePool={tradePool?.publicKey}
-        poolModalTab={poolModalVisible}
+      <PoolModal
+        tradePool
+        poolPubkey={tradePool?.publicKey}
         visible={poolModalVisible}
         onCancel={() => setPoolModalVisible(null)}
-        depositAmount={tradePool?.wallet?.userLiquidity / 1e9 || 0}
+        depositAmount={availiableToWithdraw / 1e9 || 0}
         utilizationRate={utilizationRate}
         depositYield={tradePool?.depositYield}
       />

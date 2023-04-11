@@ -32,16 +32,10 @@
 
 .primary {
   flex: 1;
-  border: 0;
-  border-right: 1px solid var(--secondary-border);
-  border-bottom: 1px solid var(--secondary-border);
+  border: 1px solid var(--secondary-border);
   background: var(--secondary-background);
   color: var(--secondary-border);
   font: var(--font-text-8);
-
-  &:last-child {
-    border-right: 0;
-  }
 
   &:hover {
     background: var(--primary-background);
@@ -50,7 +44,7 @@
 
 .tabActive {
   border-bottom: 0 !important;
-  background: transparent;
+  background: var(--primary-background);
 
   &,
   &:hover {

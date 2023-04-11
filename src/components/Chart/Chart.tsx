@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState, FC, useEffect } from 'react';
+import classNames from 'classnames';
 import { throttle } from 'lodash';
 
 import useD3 from './hooks/useD3';
@@ -41,7 +42,7 @@ const Chart: FC<ChartProps> = ({ className, data }) => {
       <div
         id={'chart'}
         ref={containerRef}
-        className={`${styles.root} ${className || ''}`}
+        className={classNames(styles.root, className)}
       >
         <p className={styles.title}>Price graph</p>
 

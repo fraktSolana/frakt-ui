@@ -6,16 +6,19 @@ import styles from './WithdrawTab.module.scss';
 import { SOL_TOKEN } from '../../../utils';
 import { Slider } from '../../Slider';
 import Button from '../../Button';
+import { useWithdraw } from '@frakt/utils/strategies';
 
 interface WithdrawTabProps {
+  tradePool?: boolean;
   depositAmount: number;
-  liquidityPoolPubkey: string;
+  poolPubkey: string;
   onCancel: () => void;
 }
 
 const WithdrawTab: FC<WithdrawTabProps> = ({
+  tradePool,
   depositAmount,
-  liquidityPoolPubkey,
+  poolPubkey,
   onCancel,
 }) => {
   const {
@@ -28,15 +31,30 @@ const WithdrawTab: FC<WithdrawTabProps> = ({
 
   const { unstakeLiquidity } = useDepositTxn({
     onClearDepositValue,
-    liquidityPoolPubkey,
+    poolPubkey,
     withdrawValue,
     onCancel,
+  });
+
+  const { onWithdraw } = useWithdraw({
+    tradePool: poolPubkey,
+    amountToUnstake: withdrawValue,
+    onCancel,
+    onClearDepositValue,
   });
 
   const notEnoughDepositError = depositAmount < Number(withdrawValue);
 
   const isDisabledWithdrawBtn =
     Number(withdrawValue) === 0 || notEnoughDepositError;
+
+  const withdrawBtnHandler = () => {
+    if (tradePool) {
+      onWithdraw();
+    } else {
+      unstakeLiquidity();
+    }
+  };
 
   return (
     <>
@@ -63,12 +81,12 @@ const WithdrawTab: FC<WithdrawTabProps> = ({
         step={1}
       />
       <Button
-        onClick={unstakeLiquidity}
+        onClick={withdrawBtnHandler}
         className={styles.btn}
         type="secondary"
         disabled={isDisabledWithdrawBtn}
       >
-        Confirm
+        Withdraw
       </Button>
     </>
   );

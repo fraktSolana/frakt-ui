@@ -18,9 +18,9 @@ import { useOnClickOutside } from '@frakt/hooks';
 import styles from './StrategiesPage.module.scss';
 
 const StrategiesPage: FC = () => {
-  const wallet = useWallet();
+  const { publicKey } = useWallet();
   const { tradePools, isLoading } = useTradePools({
-    walletPublicKey: wallet?.publicKey?.toBase58(),
+    walletPublicKey: publicKey?.toBase58(),
   });
 
   const {
@@ -74,8 +74,7 @@ const StrategiesPage: FC = () => {
         </div>
       </div>
 
-      {isLoading && <Loader size="large" />}
-      {!isLoading && <Strategies tradePools={filteredTradePools} />}
+      <Strategies tradePools={filteredTradePools} isLoading={isLoading} />
     </AppLayout>
   );
 };

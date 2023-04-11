@@ -14,13 +14,10 @@ export const useTradePools: UseTradePools = ({ walletPublicKey }) => {
         walletPublicKey: walletPublicKey,
       }),
     {
-      enabled: !!walletPublicKey,
       staleTime: 5 * 60 * 1000,
       refetchOnWindowFocus: false,
     },
   );
-
-  console.log('data', data);
 
   return {
     tradePools: data || null,

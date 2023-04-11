@@ -1,27 +1,31 @@
 import { FC } from 'react';
+import classNames from 'classnames';
 
-import { marks, usePoolModal, useDepositTxn } from '../hooks';
-import { sendAmplitudeData } from '../../../utils/amplitude';
 import { TokenFieldWithBalance } from '../../TokenField';
-import styles from './DepositTab.module.scss';
-import { SOL_TOKEN } from '../../../utils';
 import { Slider } from '../../Slider';
 import Button from '../../Button';
+import { SOL_TOKEN } from '../../../utils';
+import { marks, usePoolModal, useDepositTxn } from '../hooks';
+import { sendAmplitudeData } from '../../../utils/amplitude';
+import { useDeposit } from '@frakt/utils/strategies';
+import styles from './DepositTab.module.scss';
 
 interface DepositTabProps {
+  tradePool?: boolean;
   utilizationRate: number;
   onCancel: () => void;
-  apr: number;
   depositAmount: number;
-  liquidityPoolPubkey: string;
+  poolPubkey: string;
+  depositYield: number;
 }
 
 const DepositTab: FC<DepositTabProps> = ({
+  tradePool,
   utilizationRate,
-  apr,
   depositAmount,
-  liquidityPoolPubkey,
+  poolPubkey,
   onCancel,
+  depositYield,
 }) => {
   const {
     depositValue,
@@ -33,8 +37,15 @@ const DepositTab: FC<DepositTabProps> = ({
   } = usePoolModal({ depositAmount });
 
   const { depositLiquidity } = useDepositTxn({
-    liquidityPoolPubkey,
+    poolPubkey,
     depositValue,
+    onCancel,
+    onClearDepositValue,
+  });
+
+  const { onCreateInvestment } = useDeposit({
+    tradePool: poolPubkey,
+    amountToDeposit: depositValue,
     onCancel,
     onClearDepositValue,
   });
@@ -46,6 +57,15 @@ const DepositTab: FC<DepositTabProps> = ({
 
   const isDisabledDepositBtn =
     depositValueNumber === 0 || notEnoughBalanceError;
+
+  const depositBtnHandler = () => {
+    if (tradePool) {
+      onCreateInvestment();
+    } else {
+      depositLiquidity();
+      sendAmplitudeData('loans-confirm-deposit');
+    }
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -76,7 +96,14 @@ const DepositTab: FC<DepositTabProps> = ({
       <div>
         <div className={styles.info}>
           <span className={styles.infoTitle}>Deposit yield</span>
-          <span className={styles.infoValue}>{apr.toFixed(2)} %</span>
+          <span
+            className={classNames(styles.infoValue, {
+              [styles.negative]: Math.sign(depositYield) === -1,
+              [styles.positive]: Math.sign(depositYield) === 1,
+            })}
+          >
+            {(depositYield || 0).toFixed(2)} %
+          </span>
         </div>
         <div className={styles.info}>
           <span className={styles.infoTitle}>Utilization rate</span>
@@ -84,11 +111,19 @@ const DepositTab: FC<DepositTabProps> = ({
             {(utilizationRate || 0).toFixed(2)} %
           </span>
         </div>
+
+        {tradePool && (
+          <div className={styles.estimated}>
+            <div className={styles.earnings}>
+              {(((depositYield / 12) * +depositValue) / 100).toFixed(2)}{' '}
+              SOL/month
+            </div>
+            <div className={styles.estimatedTitle}>estimated earnings</div>
+          </div>
+        )}
+
         <Button
-          onClick={() => {
-            depositLiquidity();
-            sendAmplitudeData('loans-confirm-deposit');
-          }}
+          onClick={depositBtnHandler}
           className={styles.btn}
           type="secondary"
           disabled={isDisabledDepositBtn}

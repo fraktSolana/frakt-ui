@@ -1,11 +1,10 @@
-import { useLoadingModal } from '@frakt/components/LoadingModal';
+import { useHistory } from 'react-router-dom';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { useConnection } from '@frakt/hooks';
 import { notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { signAndConfirmTransaction } from '@frakt/utils/transactions';
-import { useWallet } from '@solana/wallet-adapter-react';
 
-import { useHistory } from 'react-router-dom';
 import { makeDeposit } from './makeDeposit';
 
 type UseDeposit = (props: {
@@ -15,8 +14,6 @@ type UseDeposit = (props: {
   onClearDepositValue: () => void;
 }) => {
   onCreateInvestment: () => void;
-  loadingModalVisible: boolean;
-  closeLoadingModal: () => void;
 };
 
 export const useDeposit: UseDeposit = ({
@@ -29,17 +26,9 @@ export const useDeposit: UseDeposit = ({
   const wallet = useWallet();
   const connection = useConnection();
 
-  const {
-    visible: loadingModalVisible,
-    close: closeLoadingModal,
-    open: openLoadingModal,
-  } = useLoadingModal();
-
   const onCreateInvestment = async () => {
     if (wallet.publicKey) {
       try {
-        openLoadingModal();
-
         const { transaction, signers } = await makeDeposit({
           connection,
           amountToDeposit,
@@ -76,7 +65,6 @@ export const useDeposit: UseDeposit = ({
 
         onCancel();
       } finally {
-        closeLoadingModal();
         onCancel();
       }
     }
@@ -84,7 +72,5 @@ export const useDeposit: UseDeposit = ({
 
   return {
     onCreateInvestment,
-    loadingModalVisible,
-    closeLoadingModal,
   };
 };

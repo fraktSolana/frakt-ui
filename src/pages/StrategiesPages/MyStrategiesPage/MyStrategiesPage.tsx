@@ -1,3 +1,5 @@
+// will be used later, do not delete!!!!!!
+
 import { FC, useRef } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
@@ -24,8 +26,6 @@ const MyStrategiesPage: FC = () => {
   const { tradePoolsAdmin, isLoading } = useAdminTradePools({
     walletPublicKey: '7JxVxxLTDkra9E3y7SZxuunmgeGzL7vzUQj55PFxfguT',
   });
-
-  console.log('tradePoolsAdmin', tradePoolsAdmin);
 
   const {
     visible: filtersModalVisible,

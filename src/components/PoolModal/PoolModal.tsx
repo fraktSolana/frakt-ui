@@ -10,21 +10,23 @@ import { Modal } from '../Modal';
 import { TabsNames } from './types';
 
 interface PoolModalProps {
+  tradePool?: boolean;
   visible: string;
   onCancel: () => void;
-  apr: number;
   depositAmount: number;
   utilizationRate: number;
-  liquidityPoolPubkey: string;
+  poolPubkey: string;
+  depositYield: number;
 }
 
 export const PoolModal: FC<PoolModalProps> = ({
+  tradePool,
   visible,
   onCancel,
-  apr,
   depositAmount = 0,
   utilizationRate,
-  liquidityPoolPubkey,
+  poolPubkey,
+  depositYield,
 }) => {
   const { poolTabs, tabValue, setTabValue } = usePoolModal({
     visible,
@@ -33,7 +35,7 @@ export const PoolModal: FC<PoolModalProps> = ({
 
   return (
     <Modal
-      visible={!!visible}
+      open={!!visible}
       centered
       onCancel={onCancel}
       width={500}
@@ -56,16 +58,18 @@ export const PoolModal: FC<PoolModalProps> = ({
       <div className={styles.content}>
         {tabValue === TabsNames.DEPOSIT && (
           <DepositTab
-            liquidityPoolPubkey={liquidityPoolPubkey}
+            tradePool={tradePool}
+            poolPubkey={poolPubkey}
             utilizationRate={utilizationRate}
             depositAmount={depositAmount}
             onCancel={onCancel}
-            apr={apr}
+            depositYield={depositYield}
           />
         )}
         {tabValue === TabsNames.WITHDRAW && (
           <WithdrawTab
-            liquidityPoolPubkey={liquidityPoolPubkey}
+            tradePool={tradePool}
+            poolPubkey={poolPubkey}
             onCancel={onCancel}
             depositAmount={depositAmount}
           />
