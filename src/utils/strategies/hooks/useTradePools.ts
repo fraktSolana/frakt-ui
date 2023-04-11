@@ -14,7 +14,6 @@ export const useTradePools: UseTradePools = ({ walletPublicKey }) => {
         walletPublicKey: walletPublicKey,
       }),
     {
-      staleTime: 5 * 60 * 1000,
       refetchOnWindowFocus: false,
     },
   );

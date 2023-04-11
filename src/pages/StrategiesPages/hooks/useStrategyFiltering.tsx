@@ -31,7 +31,7 @@ export enum SORT_ORDER {
 type UseStrategyFiltering = ({
   strategies,
 }: {
-  strategies: TradePoolUser[];
+  strategies: TradePoolUser[] | ReadonlyArray<TradePoolUser>;
 }) => {
   control: Control<FilterFormFieldsValues>;
   filteredTradePools: TradePoolUser[];

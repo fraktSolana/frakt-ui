@@ -1,10 +1,10 @@
 import { FC } from 'react';
+import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
 import { ArrowRightTop } from '../../icons';
 import { sendAmplitudeData } from '../../utils/amplitude';
 
 import styles from './LinkWithArrow.module.scss';
-import classNames from 'classnames';
 
 interface LinkWithArrowProps {
   externalLink?: boolean;

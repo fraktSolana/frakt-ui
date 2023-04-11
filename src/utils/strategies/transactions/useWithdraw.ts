@@ -1,4 +1,3 @@
-import { useHistory } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useConnection } from '@frakt/hooks';
 import { notify } from '@frakt/utils';
@@ -14,8 +13,6 @@ type UseWithdraw = (props: {
   onClearDepositValue: () => void;
 }) => {
   onWithdraw: () => void;
-  // loadingModalVisible: boolean;
-  // closeLoadingModal: () => void;
 };
 
 export const useWithdraw: UseWithdraw = ({
@@ -24,21 +21,12 @@ export const useWithdraw: UseWithdraw = ({
   onCancel,
   onClearDepositValue,
 }) => {
-  const history = useHistory();
   const wallet = useWallet();
   const connection = useConnection();
-
-  // const {
-  //   visible: loadingModalVisible,
-  //   close: closeLoadingModal,
-  //   open: openLoadingModal,
-  // } = useLoadingModal();
 
   const onWithdraw = async () => {
     if (wallet.publicKey) {
       try {
-        // openLoadingModal();
-
         const { transaction, signers } = await makeWithdraw({
           connection,
           amountToUnstake,
@@ -61,8 +49,6 @@ export const useWithdraw: UseWithdraw = ({
         });
 
         onCancel();
-
-        history.go(0);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.warn(error?.logs);
@@ -74,7 +60,6 @@ export const useWithdraw: UseWithdraw = ({
         });
         onCancel();
       } finally {
-        // closeLoadingModal();
         onCancel();
       }
     }

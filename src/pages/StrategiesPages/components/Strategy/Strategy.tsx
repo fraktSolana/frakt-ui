@@ -44,12 +44,14 @@ const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
     setTradePool(tradePool);
   };
 
-  const availiableToWithdraw = Math.min(
+  const availableToWithdraw = Math.min(
     (tradePool?.reserveFundsRatio * tradePool?.balance) / 1e4,
     tradePool?.wallet?.userLiquidity,
   );
+  const withdrawValue = availableToWithdraw < 1e7 ? 0 : availableToWithdraw;
 
   const utilizationRate = (1e4 - tradePool?.reserveFundsRatio) / 100;
+
   return (
     <>
       <div className={styles.strategy}>
@@ -123,7 +125,7 @@ const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
             </Button>
           )} */}
 
-          {!admin && !!tradePool?.wallet?.userLiquidity && (
+          {!admin && !!withdrawValue && (
             <Button
               className={styles.btn}
               type="primary"
@@ -142,7 +144,7 @@ const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
         poolPubkey={tradePool?.publicKey}
         visible={poolModalVisible}
         onCancel={() => setPoolModalVisible(null)}
-        depositAmount={availiableToWithdraw / 1e9 || 0}
+        depositAmount={withdrawValue / 1e9 || 0}
         utilizationRate={utilizationRate}
         depositYield={tradePool?.depositYield}
       />

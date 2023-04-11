@@ -4,7 +4,6 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
 import Titles from '@frakt/components/Titles';
 import Strategies from './components/Strategies';
-import { Loader } from '@frakt/components/Loader';
 import Button from '@frakt/components/Button';
 import { SearchInput } from '@frakt/components/SearchInput';
 import FiltersDropdown, {
@@ -12,10 +11,11 @@ import FiltersDropdown, {
 } from '@frakt/components/FiltersDropdown';
 import SortControl from '@frakt/components/SortControl';
 import { useTradePools } from '@frakt/utils/strategies';
-import { SORT_VALUES, useSearch, useStrategyFiltering } from './hooks';
+import { SORT_VALUES, useStrategyFiltering } from './hooks';
 import { useOnClickOutside } from '@frakt/hooks';
 
 import styles from './StrategiesPage.module.scss';
+import { useSearch } from '@frakt/components/Table';
 
 const StrategiesPage: FC = () => {
   const { publicKey } = useWallet();

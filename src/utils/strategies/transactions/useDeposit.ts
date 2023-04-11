@@ -1,4 +1,3 @@
-import { useHistory } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useConnection } from '@frakt/hooks';
 import { notify } from '@frakt/utils';
@@ -22,7 +21,6 @@ export const useDeposit: UseDeposit = ({
   onCancel,
   onClearDepositValue,
 }) => {
-  const history = useHistory();
   const wallet = useWallet();
   const connection = useConnection();
 
@@ -51,8 +49,6 @@ export const useDeposit: UseDeposit = ({
         });
 
         onCancel();
-
-        history.go(0);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.warn(error?.logs);
