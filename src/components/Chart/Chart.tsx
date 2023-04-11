@@ -6,6 +6,7 @@ import useD3 from './hooks/useD3';
 import { renderChart } from './d3/renderChart';
 import { Point } from './types';
 import styles from './Chart.module.scss';
+import { useChartWidth } from './hooks/useChartWidth';
 
 interface ChartProps {
   className?: string;
@@ -13,22 +14,7 @@ interface ChartProps {
 }
 
 const Chart: FC<ChartProps> = ({ className, data }) => {
-  const containerRef = useRef(null);
-  const [containerWidth, setContainerWidth] = useState(0);
-
-  useLayoutEffect(() => {
-    setContainerWidth(containerRef.current?.clientWidth);
-  }, []);
-
-  useEffect(() => {
-    const handleResize = throttle(() => {
-      setContainerWidth(containerRef.current?.clientWidth);
-    }, 200);
-
-    window.addEventListener('resize', handleResize);
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const { containerWidth, containerRef } = useChartWidth();
 
   const svgRef = useD3(
     renderChart(data, {
