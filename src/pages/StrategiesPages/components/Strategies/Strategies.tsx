@@ -1,9 +1,9 @@
 import { FC, Fragment } from 'react';
-import { TradePoolUser } from '@frakt/api/strategies';
-import Strategy from '../Strategy';
 
-import styles from './Strategies.module.scss';
+import Strategy from '../Strategy';
 import { Loader } from '@frakt/components/Loader';
+import { TradePoolUser } from '@frakt/api/strategies';
+import styles from './Strategies.module.scss';
 
 interface StrategiesProps {
   tradePools: TradePoolUser[];
