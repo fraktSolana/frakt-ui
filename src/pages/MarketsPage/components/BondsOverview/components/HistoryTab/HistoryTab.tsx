@@ -48,6 +48,10 @@ const HistoryTab: FC = () => {
     setFilterOption(nextOption.value);
   };
 
+  const showLoader = connected
+    ? !bondsHistory.length && isLoading
+    : !bondsHistory.length && isLoading && !showOwnerBonds;
+
   return (
     <>
       <div className={styles.wrapper}>
@@ -70,7 +74,7 @@ const HistoryTab: FC = () => {
           />
         </div>
 
-        {!bondsHistory.length && isLoading && <Loader />}
+        {showLoader && <Loader />}
 
         {!connected && showOwnerBonds ? (
           <ConnectWalletSection
