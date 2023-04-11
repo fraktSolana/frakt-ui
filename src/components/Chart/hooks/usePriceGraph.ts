@@ -14,7 +14,7 @@ type UsePriceGraph = (props: {
   mathCounter?: number;
 }) => Point[] | null;
 
-const usePriceGraph: UsePriceGraph = ({
+export const usePriceGraph: UsePriceGraph = ({
   spotPrice = 0,
   delta = 0,
   bondingCurve,
@@ -44,5 +44,3 @@ const usePriceGraph: UsePriceGraph = ({
 
   return points;
 };
-
-export default usePriceGraph;

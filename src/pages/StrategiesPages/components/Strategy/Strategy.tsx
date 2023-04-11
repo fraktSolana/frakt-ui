@@ -40,12 +40,12 @@ const Strategy: FC<StrategyProps> = ({ tradePool, isAdmin }) => {
     }
   };
 
-  const { setTradePool } = useSettingsPool();
+  // const { setTradePool } = useSettingsPool();
 
-  const openAdminPanel = (tradePool: TradePoolAdmin) => () => {
-    history.push(PATHS.STRATEGY_CREATION);
-    setTradePool(tradePool);
-  };
+  // const openAdminPanel = (tradePool: TradePoolAdmin) => () => {
+  //   history.push(PATHS.STRATEGY_CREATION);
+  //   setTradePool(tradePool);
+  // };
 
   const availableToWithdraw = Math.min(
     (tradePool?.reserveFundsRatio * tradePool?.balance) / 1e4,

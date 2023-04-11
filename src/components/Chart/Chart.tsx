@@ -1,10 +1,12 @@
 import { FC } from 'react';
 import classNames from 'classnames';
 
-import useD3 from './hooks/useD3';
-import { useContainerWidth } from './hooks/useContainerWidth';
-import { renderChart } from './d3/renderChart';
+import { useContainerWidth } from '@frakt/hooks';
+
+import { renderChart } from './d3';
+import { useD3 } from './hooks';
 import { Point } from './types';
+
 import styles from './Chart.module.scss';
 
 interface ChartProps {
