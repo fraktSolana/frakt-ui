@@ -19,6 +19,7 @@ interface HeaderCellProps<T> {
   value: string;
   tooltipText?: string;
   fixedLeft?: boolean;
+  isCardView?: boolean;
 }
 
 export const HeaderCell = <T extends unknown>({
@@ -27,6 +28,7 @@ export const HeaderCell = <T extends unknown>({
   value,
   tooltipText,
   fixedLeft,
+  isCardView,
 }: HeaderCellProps<T>) => {
   const sortedColumn = column?.sortColumns?.find(
     ({ column }) => column.key === value,
@@ -38,6 +40,7 @@ export const HeaderCell = <T extends unknown>({
     <div
       className={classNames(styles.row, styles.rowFixedRight, {
         [styles.fixedLeftRow]: fixedLeft,
+        [styles.cardView]: isCardView,
       })}
     >
       <span className={styles.headerCellTitle}>{label}</span>

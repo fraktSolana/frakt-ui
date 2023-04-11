@@ -16,6 +16,7 @@ export interface LoansActiveTableProps {
   loading?: boolean;
   className?: string;
   breakpoints?: PartialBreakpoints;
+  isCardView: boolean;
 }
 
 export const LoansActiveTable: FC<LoansActiveTableProps> = ({
@@ -23,6 +24,7 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
   className,
   loading,
   breakpoints,
+  isCardView,
 }) => {
   const { toggleLoanInSelection } = useSelectedLoans();
 
@@ -40,7 +42,7 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
     searchField: ['nft.name'],
   });
 
-  const COLUMNS = TableList({ onChange, data });
+  const COLUMNS = TableList({ onChange, data, isCardView });
 
   const { table } = useTable({
     data: filteredData,
@@ -55,6 +57,7 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
       breakpoints={breakpoints}
       search={{ onChange }}
       className={className}
+      isCardView={isCardView}
       activeRowParams={{
         field: 'gracePeriod',
         className: 'graceRowClassName',

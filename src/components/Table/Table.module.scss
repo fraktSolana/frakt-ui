@@ -13,11 +13,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 32px;
+  padding: 0 24px;
 
   @media screen and (max-width: 768px) {
     align-items: unset;
-    padding-bottom: 24px;
   }
 }
 
@@ -32,9 +31,10 @@
 }
 
 .mobileTableView {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 2fr));
   gap: 16px;
+  padding: 24px;
 }
 
 .mobileCollection {

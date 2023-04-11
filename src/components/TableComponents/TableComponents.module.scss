@@ -4,6 +4,10 @@
   gap: 4px;
 }
 
+.row.cardView svg {
+  display: none;
+}
+
 .rowFixedRight {
   justify-content: flex-end;
 }
