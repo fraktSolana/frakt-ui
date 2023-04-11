@@ -14,7 +14,7 @@ import FiltersDropdown, {
   useFiltersModal,
 } from '@frakt/components/FiltersDropdown';
 import SortControl from '@frakt/components/SortControl';
-import { SORT_VALUES, useSearch, useStrategyFiltering } from '../hooks';
+import { SORT_VALUES, useStrategyFiltering } from '../hooks';
 import { useAdminTradePools } from '@frakt/utils/strategies';
 import { useOnClickOutside } from '@frakt/hooks';
 

@@ -67,7 +67,5 @@ export const useWithdraw: UseWithdraw = ({
 
   return {
     onWithdraw,
-    // loadingModalVisible,
-    // closeLoadingModal,
   };
 };

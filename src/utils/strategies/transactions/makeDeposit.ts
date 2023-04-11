@@ -26,7 +26,7 @@ export const makeDeposit: MakeDeposit = async ({
     programId: FRAKT_TRADE_PROGRAM_ID,
     connection: connection,
     args: {
-      amountToDeposit: Number(amountToDeposit) * 1e9,
+      amountToDeposit: parseFloat(amountToDeposit) * 1e9,
     },
     accounts: {
       userPubkey: wallet?.publicKey,
