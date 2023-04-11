@@ -5,6 +5,7 @@ import classNames from 'classnames';
 
 import { ActiveRowParams, PartialBreakpoints } from './types';
 import { SortModalMobileProps } from './SortModalMobile';
+import { getRowClassName } from './helpers';
 import { Loader } from '../Loader';
 import { Search } from './Search';
 
@@ -48,14 +49,7 @@ const Table = <T extends unknown>({
       className={classNames(className, {
         [styles.noDataTableMessage]: !data.length && !loading,
       })}
-      rowClassName={(record) => {
-        if (!activeRowParams?.field) return 'rowClassName';
-        const field = record[activeRowParams?.field];
-        const value = activeRowParams.value;
-
-        if (!!field && !value) return activeRowParams?.className;
-        return value && field === value && 'activeRowClassName';
-      }}
+      rowClassName={(record) => getRowClassName(record, activeRowParams)}
       columns={columns as ColumnsType}
       dataSource={data as any}
       pagination={false}
