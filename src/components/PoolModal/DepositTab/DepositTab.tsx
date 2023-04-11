@@ -11,7 +11,7 @@ import { useDeposit } from '@frakt/utils/strategies';
 import styles from './DepositTab.module.scss';
 
 interface DepositTabProps {
-  tradePool?: boolean;
+  isTradePool?: boolean;
   utilizationRate: number;
   onCancel: () => void;
   depositAmount: number;
@@ -22,7 +22,7 @@ interface DepositTabProps {
 const MOUTH_IN_YEAR = 12;
 
 const DepositTab: FC<DepositTabProps> = ({
-  tradePool,
+  isTradePool,
   utilizationRate,
   depositAmount,
   poolPubkey,
@@ -61,7 +61,7 @@ const DepositTab: FC<DepositTabProps> = ({
     depositValueNumber === 0 || notEnoughBalanceError;
 
   const depositBtnHandler = () => {
-    if (tradePool) {
+    if (isTradePool) {
       onCreateInvestment();
     } else {
       depositLiquidity();
@@ -117,7 +117,7 @@ const DepositTab: FC<DepositTabProps> = ({
           </span>
         </div>
 
-        {tradePool && (
+        {isTradePool && (
           <div className={styles.estimated}>
             <div className={styles.earnings}>
               {estimatedEarings.toFixed(2)} SOL/month

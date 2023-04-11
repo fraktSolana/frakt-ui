@@ -144,7 +144,7 @@ const Strategy: FC<StrategyProps> = ({ tradePool, isAdmin }) => {
       </div>
 
       <PoolModal
-        tradePool
+        isTradePool
         poolPubkey={tradePool?.publicKey}
         visible={poolModalVisible}
         onCancel={() => setPoolModalVisible(null)}

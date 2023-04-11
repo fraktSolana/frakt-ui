@@ -9,14 +9,14 @@ import Button from '../../Button';
 import { useWithdraw } from '@frakt/utils/strategies';
 
 interface WithdrawTabProps {
-  tradePool?: boolean;
+  isTradePool?: boolean;
   depositAmount: number;
   poolPubkey: string;
   onCancel: () => void;
 }
 
 const WithdrawTab: FC<WithdrawTabProps> = ({
-  tradePool,
+  isTradePool,
   depositAmount,
   poolPubkey,
   onCancel,
@@ -49,7 +49,7 @@ const WithdrawTab: FC<WithdrawTabProps> = ({
     Number(withdrawValue) === 0 || notEnoughDepositError;
 
   const withdrawBtnHandler = () => {
-    if (tradePool) {
+    if (isTradePool) {
       onWithdraw();
     } else {
       unstakeLiquidity();
@@ -62,7 +62,7 @@ const WithdrawTab: FC<WithdrawTabProps> = ({
         value={withdrawValue}
         onValueChange={onWithdrawValueChange}
         currentToken={SOL_TOKEN}
-        label={tradePool ? `available:` : `Your deposit:`}
+        label={isTradePool ? `available:` : `Your deposit:`}
         lpBalance={depositAmount}
         error={notEnoughDepositError}
         className={styles.input}
