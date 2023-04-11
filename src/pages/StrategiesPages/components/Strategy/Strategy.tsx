@@ -1,23 +1,20 @@
 import { FC, useState } from 'react';
-import classNames from 'classnames';
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import classNames from 'classnames';
 
-import Button from '@frakt/components/Button';
-import Tooltip from '@frakt/components/Tooltip';
-import { PoolModal } from '@frakt/components/PoolModal';
-import CollectionsPreviews from '../CollectionsPreviews';
-import {
-  getUtilizationRate,
-  getWithdrawValue,
-} from '@frakt/utils/strategies/helpers';
 import { TabsNames } from '@frakt/components/PoolModal/types';
-import { useSettingsPool } from '../../hooks/hooks';
 import { commonActions } from '@frakt/state/common/actions';
-import { TradePoolAdmin, TradePoolUser } from '@frakt/api/strategies';
-import { PATHS } from '@frakt/constants';
+import { PoolModal } from '@frakt/components/PoolModal';
+import { TradePoolUser } from '@frakt/api/strategies';
+import Tooltip from '@frakt/components/Tooltip';
+import Button from '@frakt/components/Button';
 import { Solana } from '@frakt/icons';
+
+import CollectionsPreviews from '../CollectionsPreviews';
+import { caclWidthrawValue } from './helpers';
+
 import styles from './Strategy.module.scss';
 
 interface StrategyProps {
@@ -47,14 +44,8 @@ const Strategy: FC<StrategyProps> = ({ tradePool, isAdmin }) => {
   //   setTradePool(tradePool);
   // };
 
-  const availableToWithdraw = Math.min(
-    (tradePool?.reserveFundsRatio * tradePool?.balance) / 1e4,
-    tradePool?.wallet?.userLiquidity,
-  );
-
-  const withdrawValue = getWithdrawValue(availableToWithdraw);
-
-  const utilizationRate = getUtilizationRate(tradePool?.reserveFundsRatio);
+  const withdrawValue = caclWidthrawValue(tradePool);
+  const utilizationRate = (1e4 - tradePool?.reserveFundsRatio) / 100;
 
   return (
     <>
