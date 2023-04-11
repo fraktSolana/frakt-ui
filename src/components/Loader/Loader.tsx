@@ -1,6 +1,6 @@
-import classNames from 'classnames/bind';
 import { FC } from 'react';
 import styles from './styles.module.scss';
+import classNames from 'classnames';
 
 interface LoaderProps {
   size?: 'large' | 'default' | 'small';

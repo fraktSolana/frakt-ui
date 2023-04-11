@@ -29,7 +29,7 @@ const ConnectButton: FC<ConnectButtonProps> = () => {
       {connected && (
         <>
           <UserAvatar className={styles.avatar} imageUrl={data?.avatarUrl} />
-          {shortenAddress(walletPubKey.toString())}
+          {shortenAddress(walletPubKey?.toString())}
           <ArrowDownBtn className={styles.arrowDownIcon} />
         </>
       )}

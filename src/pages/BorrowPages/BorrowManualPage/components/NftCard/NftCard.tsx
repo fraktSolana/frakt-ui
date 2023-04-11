@@ -1,10 +1,10 @@
 import { FC } from 'react';
-import classNames from 'classnames/bind';
 
 import { Solana } from '@frakt/icons';
 import { BorrowNft } from '@frakt/api/nft';
 
 import styles from './NftCard.module.scss';
+import classNames from 'classnames';
 
 interface NftCardProps {
   nft: BorrowNft;

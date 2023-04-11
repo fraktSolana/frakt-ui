@@ -1,0 +1,129 @@
+.chartFrame {
+  width: 100%;
+  margin-top: 16px;
+  padding: 25px 15px 25px 0;
+}
+
+.title {
+  font: var(--font-text-2);
+  color: var(--black-color);
+}
+
+.root {
+  width: 100%;
+  position: relative;
+
+  :global {
+    .xAxis {
+      .tick {
+        text {
+          fill: var(--gray-color-2);
+          font-size: 14px;
+        }
+      }
+    }
+    .yAxis {
+      .tick {
+        line {
+          stroke: var(--primary-border);
+        }
+        text {
+          fill: var(--gray-color-2);
+          font-size: 14px;
+        }
+      }
+    }
+    .chart-path {
+      stroke: #257cff;
+      stroke-width: 2;
+      stroke-linejoin: round;
+      fill: none;
+    }
+    .linear-gradient {
+      stop:first-child {
+        stop-color: rgba(37, 124, 255, 0.4);
+        offset: 0%;
+      }
+      stop:last-child {
+        stop-color: rgba(37, 124, 255, 0);
+        offset: 100%;
+      }
+    }
+
+    .point {
+      fill: #257cff;
+      stroke: #257cff;
+    }
+
+    & text {
+      color: #fff;
+    }
+    .tooltipPoint {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      z-index: 9;
+      padding: 12px 24px 12px 12px;
+
+      display: flex;
+      flex-direction: column;
+
+      background: #aeaeb2;
+      border-radius: 4px;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -7px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 8px 8px 0 8px;
+        border-color: #aeaeb2 transparent transparent transparent;
+      }
+
+      svg {
+        width: 12px;
+        height: 12px;
+      }
+    }
+
+    .orderNumber {
+      font: var(--font-text-6);
+      color: var(--white-color);
+      white-space: nowrap;
+    }
+
+    .price {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .priceTitle {
+      font-family: var(--font-family-chakra);
+      font-size: 14px;
+      color: var(--white-color);
+      white-space: nowrap;
+    }
+    .priceValue {
+      position: relative;
+      font-family: var(--font-family-chakra);
+      font-size: 14px;
+      color: var(--white-color);
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: -16px;
+        width: 16px;
+        height: 16px;
+        background: #257cff;
+        // background: url('../../assets/solana.png') no-repeat center;
+        background-size: cover;
+      }
+    }
+  }
+}

@@ -5,6 +5,7 @@ import cx from 'classnames';
 
 import 'rc-tooltip/assets/bootstrap_white.css';
 import styles from './Tooltip.module.scss';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 const Tooltip: FC<RcTooltipProps> = ({
   children,
@@ -17,7 +18,11 @@ const Tooltip: FC<RcTooltipProps> = ({
     overlayClassName={cx(overlayClassName, styles['rcTooltipInner'])}
     getTooltipContainer={(triggerNode) => (triggerNode as any).parentNode}
   >
-    {children}
+    {children ? (
+      children
+    ) : (
+      <QuestionCircleOutlined className={styles.questionIcon} />
+    )}
   </RcTooltip>
 );
 
