@@ -22,7 +22,7 @@ const HistoryTab: FC = () => {
   const { ref, inView } = useIntersection();
   const { queryData } = useHistoryBondsSort();
 
-  const [showOwnerBonds, setShowOwnerBonds] = useState<boolean>(false);
+  const [showOwnerBonds, setShowOwnerBonds] = useState<boolean>(true);
   const [filterOption, setFilterOption] = useState<string>(options[0].value);
 
   const {
