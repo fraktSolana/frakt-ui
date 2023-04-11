@@ -7,11 +7,15 @@ import styles from './Strategies.module.scss';
 
 interface StrategiesProps {
   tradePools: TradePoolUser[];
-  admin?: boolean;
+  isAdmin?: boolean;
   isLoading: boolean;
 }
 
-const Strategies: FC<StrategiesProps> = ({ tradePools, admin, isLoading }) => {
+const Strategies: FC<StrategiesProps> = ({
+  tradePools,
+  isAdmin,
+  isLoading,
+}) => {
   return (
     <div className={styles.strategies}>
       {!tradePools.length && isLoading && <Loader size="large" />}
@@ -20,7 +24,7 @@ const Strategies: FC<StrategiesProps> = ({ tradePools, admin, isLoading }) => {
         <>
           {tradePools.map((tradePool) => (
             <Fragment key={tradePool.publicKey}>
-              <Strategy tradePool={tradePool} admin={admin} />
+              <Strategy tradePool={tradePool} isAdmin={isAdmin} />
             </Fragment>
           ))}
         </>
