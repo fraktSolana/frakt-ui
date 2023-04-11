@@ -27,6 +27,8 @@
   background-color: var(--primary-background);
   border-right: 1px solid var(--primary-border);
   @include flex(column, nowrap, flex-start, flex-start);
+  overflow-y: scroll;
+  padding-bottom: 32px;
 
   @media (max-width: 768px) {
     display: none;

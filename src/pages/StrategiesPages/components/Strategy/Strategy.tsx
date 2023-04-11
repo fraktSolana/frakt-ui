@@ -48,7 +48,8 @@ const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
     (tradePool?.reserveFundsRatio * tradePool?.balance) / 1e4,
     tradePool?.wallet?.userLiquidity,
   );
-  const withdrawValue = availableToWithdraw < 1e7 ? 0 : availableToWithdraw;
+  const withdrawValue =
+    (availableToWithdraw < 1e7 ? 0 : availableToWithdraw) / 1e9 || 0;
 
   const utilizationRate = (1e4 - tradePool?.reserveFundsRatio) / 100;
 
@@ -144,7 +145,7 @@ const Strategy: FC<StrategyProps> = ({ tradePool, admin }) => {
         poolPubkey={tradePool?.publicKey}
         visible={poolModalVisible}
         onCancel={() => setPoolModalVisible(null)}
-        depositAmount={withdrawValue / 1e9 || 0}
+        depositAmount={withdrawValue}
         utilizationRate={utilizationRate}
         depositYield={tradePool?.depositYield}
       />
