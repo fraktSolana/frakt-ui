@@ -12,6 +12,7 @@ import { BadgeJSX, NavigationButtonJSX, NoConnectedJSX } from './components';
 import { DashboardStatsValues } from '../DashboardStatsValues';
 import Block from '../Block';
 import styles from './MyDeposit.module.scss';
+import { useFetchTradePoolStats } from '@frakt/utils/strategies/hooks/useFetchTradePoolStats';
 
 interface MyDepositProps {
   data: BondsUserStats;
@@ -106,7 +107,11 @@ const PoolsInfoJSX = ({ weightedAvarageApy, totalLiquidity }) => {
 };
 
 const StrategiesInfoJSX = () => {
-  const { connected } = useWallet();
+  const { connected, publicKey } = useWallet();
+
+  const { tradePoolStats } = useFetchTradePoolStats({
+    walletPublicKey: publicKey,
+  });
 
   return (
     <Block className={styles.wrapper}>
@@ -120,12 +125,12 @@ const StrategiesInfoJSX = () => {
           <div className={styles.content}>
             <DashboardStatsValues
               label="Weighted APY"
-              value={0}
+              value={tradePoolStats?.userWeightedAPY}
               type="percent"
             />
             <DashboardStatsValues
               label="Total liquidity"
-              value={0}
+              value={tradePoolStats?.userTotalLiquidity}
               type="solana"
             />
           </div>
@@ -146,8 +151,7 @@ const StrategiesInfoJSX = () => {
         />
       )}
       <NavigationButtonJSX
-        disabled={true}
-        path={PATHS.LEND}
+        path={PATHS.STRATEGIES}
         label={connected ? 'Manage' : 'Jump to strategies'}
       />
     </Block>

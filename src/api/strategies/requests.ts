@@ -1,8 +1,28 @@
 import axios from 'axios';
-import { Settings, TradePoolAdmin, TradePoolUser } from './types';
+import {
+  Settings,
+  TradePoolAdmin,
+  TradePoolStats,
+  TradePoolUser,
+} from './types';
 
 const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN;
 const BACKEND_DOMAIN_TEST = process.env.BACKEND_DOMAIN_TEST;
+
+export const fetchTradePoolStats = async ({
+  walletPublicKey,
+}: {
+  walletPublicKey: string;
+}): Promise<TradePoolStats[]> => {
+  const response = await fetch(
+    `https://${BACKEND_DOMAIN_TEST}/trade-pools/stats/${walletPublicKey}`,
+  );
+
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return await response.json();
+};
 
 export const fetchTradePools = async ({
   walletPublicKey,

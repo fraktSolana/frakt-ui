@@ -82,3 +82,8 @@ export interface TradePoolAdmin {
     tradeDuration: number;
   };
 }
+
+export interface TradePoolStats {
+  userTotalLiquidity: number;
+  userWeightedAPY: number;
+}
