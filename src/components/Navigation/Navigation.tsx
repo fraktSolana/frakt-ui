@@ -46,6 +46,7 @@ export const MenuItem: FC<MenuItem> = ({
         className={cx(styles.link, className, {
           [styles.active]: isActive,
           [styles.bonds]: label === 'Bonds',
+          [styles.strategies]: label === 'Strategies',
         })}
       >
         {icon && (
@@ -65,6 +66,7 @@ export const MenuItem: FC<MenuItem> = ({
           className={cx(styles.link, className, {
             [styles.active]: isActive,
             [styles.bonds]: label === 'Bonds',
+            [styles.strategies]: label === 'Strategies',
           })}
         >
           {icon && (

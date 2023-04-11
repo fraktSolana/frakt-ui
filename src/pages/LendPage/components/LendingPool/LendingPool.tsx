@@ -135,8 +135,8 @@ const LendingPool: FC<LendingPoolProps> = ({ liquidityPool }) => {
       <PoolModal
         visible={poolModalVisible}
         onCancel={() => setPoolModalVisible(null)}
-        liquidityPoolPubkey={liquidityPoolPubkey}
-        apr={depositApr}
+        poolPubkey={liquidityPoolPubkey}
+        depositYield={depositApr}
         depositAmount={userDeposit?.depositAmount}
         utilizationRate={utilizationRate}
       />

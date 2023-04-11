@@ -28,7 +28,7 @@ export const TokenFieldWithBalance: FC<TokenFieldWithBalanceProps> = ({
   const { connected } = useWallet();
 
   const onUseMaxButtonClick = () => {
-    lpBalance && onValueChange(String(lpBalance));
+    lpBalance && onValueChange(lpBalance?.toFixed(2));
   };
 
   return (
