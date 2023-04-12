@@ -17,7 +17,7 @@
 }
 
 .chartWrapper {
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     flex-direction: column;
     gap: 8px;
   }
@@ -56,7 +56,7 @@
   margin-bottom: 24px;
   position: relative;
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     height: 139px;
     width: 139px;
   }

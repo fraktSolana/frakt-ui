@@ -18,3 +18,4 @@ export { useUserNotifications } from './useUserNotifications';
 export { useOnClickOutside } from './useOnClickOutside';
 export { useWindowSize } from './useWindowSize';
 export { useLocalStorage } from './useLocalStorage';
+export { useContainerWidth } from './useContainerWidth';

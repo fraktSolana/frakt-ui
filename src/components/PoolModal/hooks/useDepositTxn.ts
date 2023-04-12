@@ -7,7 +7,7 @@ import {
 
 type UseDepositTxn = ({
   onCancel,
-  liquidityPoolPubkey,
+  poolPubkey,
   depositValue,
   withdrawValue,
   onClearDepositValue,
@@ -15,7 +15,7 @@ type UseDepositTxn = ({
   depositValue?: string;
   withdrawValue?: string;
   onCancel: () => void;
-  liquidityPoolPubkey: string;
+  poolPubkey: string;
   onClearDepositValue?: () => void;
 }) => {
   depositLiquidity: () => void;
@@ -26,7 +26,7 @@ export const useDepositTxn: UseDepositTxn = ({
   depositValue,
   withdrawValue,
   onCancel,
-  liquidityPoolPubkey,
+  poolPubkey,
   onClearDepositValue,
 }) => {
   const wallet = useWallet();
@@ -39,7 +39,7 @@ export const useDepositTxn: UseDepositTxn = ({
       onAfterSend: onClearDepositValue,
       connection,
       wallet,
-      liquidityPool: liquidityPoolPubkey,
+      liquidityPool: poolPubkey,
       amount,
     });
 
@@ -53,7 +53,7 @@ export const useDepositTxn: UseDepositTxn = ({
       onAfterSend: onClearDepositValue,
       connection,
       wallet,
-      liquidityPool: liquidityPoolPubkey,
+      liquidityPool: poolPubkey,
       amount,
     });
 

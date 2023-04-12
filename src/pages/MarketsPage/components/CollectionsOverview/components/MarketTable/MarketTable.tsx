@@ -9,9 +9,8 @@ import Table, {
   useTable,
 } from '@frakt/components/Table';
 
-import { TableList } from './columns';
 import { useChartVisible } from '../Chart';
-import { useWindowSize } from '@frakt/hooks';
+import { TableList } from './columns';
 
 export interface MarketTableProps {
   data: ReadonlyArray<any>;
@@ -31,15 +30,12 @@ export const MarketTable: FC<MarketTableProps> = ({
   const history = useHistory();
   const { setVisibility } = useChartVisible();
 
-  const { width } = useWindowSize();
-  const isMobile = width <= 480;
-
   const onRowClick = useCallback(
     (dataItem: MarketPreview) => {
       if (marketPubkey === dataItem?.marketPubkey) {
         history.push(PATHS.BONDS);
       } else {
-        setVisibility(false);
+        setVisibility(true);
         history.push(`${PATHS.BONDS}/${dataItem?.marketPubkey}`);
       }
     },
@@ -51,11 +47,7 @@ export const MarketTable: FC<MarketTableProps> = ({
     searchField: 'collectionName',
   });
 
-  const COLUMNS = TableList({
-    onChange,
-    onRowClick,
-    mobileWidth: breakpoints?.mobile,
-  });
+  const COLUMNS = TableList({ onChange });
 
   const { table } = useTable({
     data: filteredData,

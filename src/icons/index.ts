@@ -54,6 +54,9 @@ export { Ticket } from './Ticket';
 export { Timer } from './Timer';
 export { Trash } from './Trash';
 export { Twitter, TwitterDark } from './Twitter';
+export { Strategies, StrategiesDark } from './Strategies';
+export { UploadImg } from './UploadImg';
+export { Selected } from './Selected';
 
 //? Raster icons
 export { default as LightBg } from './lightBg.png';

@@ -10,8 +10,8 @@ import {
   createOfferTvlJSX,
   createDurationJSX,
   createAprJSX,
-  createHighestLtvJSX,
   createActiveLoansJSX,
+  createBestOfferJSX,
 } from './TableCells';
 import {
   formateDuration,
@@ -25,7 +25,7 @@ export type SortColumns = {
   order: SortOrder;
 }[];
 
-export const TableList = ({ onChange, onRowClick, mobileWidth }) => {
+export const TableList = ({ onChange }) => {
   const COLUMNS: ColumnsType<MarketPreview> = [
     {
       key: 'collectionName',
@@ -37,10 +37,8 @@ export const TableList = ({ onChange, onRowClick, mobileWidth }) => {
           onChange={onChange}
         />
       ),
-      render: (_, market: MarketPreview) => (
-        <TitleCell market={market} onRowClick={onRowClick} />
-      ),
-      width: mobileWidth,
+      render: (_, market: MarketPreview) => <TitleCell market={market} />,
+      width: 150,
     },
     {
       key: 'activeBondsAmount',
@@ -56,38 +54,7 @@ export const TableList = ({ onChange, onRowClick, mobileWidth }) => {
       sorter: (a, b) => sortingFavoriteList(a, b, 'activeBondsAmount'),
       showSorterTooltip: false,
       defaultSortOrder: 'descend',
-      width: 120,
-    },
-    {
-      key: 'offerTVL',
-      dataIndex: 'offerTVL',
-      title: (column) => (
-        <HeaderTitleCell
-          sortColumns={column?.sortColumns}
-          label="Offer TVL"
-          value="offerTVL"
-          tooltipText="Total liquidity currently available in active offers"
-        />
-      ),
-      sorter: (a, b) => sortingFavoriteList(a, b, 'offerTVL', formateToNumbers),
-      render: (value) => createOfferTvlJSX(value),
-      showSorterTooltip: false,
-      width: 120,
-    },
-    {
-      key: 'duration',
-      dataIndex: 'duration',
-      title: (column) => (
-        <HeaderTitleCell
-          sortColumns={column?.sortColumns}
-          label="Duration"
-          value="duration"
-        />
-      ),
-      sorter: (a, b) => sortingFavoriteList(a, b, 'duration', formateDuration),
-      render: (value) => createDurationJSX(value),
-      showSorterTooltip: false,
-      width: 100,
+      width: 95,
     },
     {
       key: 'bestLTV',
@@ -95,15 +62,15 @@ export const TableList = ({ onChange, onRowClick, mobileWidth }) => {
       title: (column) => (
         <HeaderTitleCell
           sortColumns={column?.sortColumns}
-          label="Highest LTV"
+          label="Best offer"
           value="bestLTV"
-          tooltipText="Highest loan amount offered for that collection"
+          tooltipText="Total liquidity currently available in active offers"
         />
       ),
-      render: (value) => createHighestLtvJSX(value),
-      sorter: (a, b) => sortingFavoriteList(a, b, 'bestLTV'),
+      sorter: (a, b) => sortingFavoriteList(a, b, 'offerTVL', formateToNumbers),
+      render: (value) => createBestOfferJSX(value),
       showSorterTooltip: false,
-      width: 125,
+      width: 95,
     },
     {
       key: 'apy',
@@ -119,7 +86,38 @@ export const TableList = ({ onChange, onRowClick, mobileWidth }) => {
       render: (value) => createAprJSX(value),
       sorter: (a, b) => sortingFavoriteList(a, b, 'apy'),
       showSorterTooltip: false,
-      width: 110,
+      width: 95,
+    },
+    {
+      key: 'offerTVL',
+      dataIndex: 'offerTVL',
+      title: (column) => (
+        <HeaderTitleCell
+          sortColumns={column?.sortColumns}
+          label="Offer TVL"
+          value="offerTVL"
+          tooltipText="Total liquidity currently available in active offers"
+        />
+      ),
+      sorter: (a, b) => sortingFavoriteList(a, b, 'offerTVL', formateToNumbers),
+      render: (value) => createOfferTvlJSX(value),
+      showSorterTooltip: false,
+      width: 95,
+    },
+    {
+      key: 'duration',
+      dataIndex: 'duration',
+      title: (column) => (
+        <HeaderTitleCell
+          sortColumns={column?.sortColumns}
+          label="Duration"
+          value="duration"
+        />
+      ),
+      sorter: (a, b) => sortingFavoriteList(a, b, 'duration', formateDuration),
+      render: (value) => createDurationJSX(value),
+      showSorterTooltip: false,
+      width: 70,
     },
   ];
 

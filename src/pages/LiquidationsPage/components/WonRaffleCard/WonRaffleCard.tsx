@@ -1,14 +1,17 @@
 import { FC } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { equals } from 'ramda';
 import moment from 'moment';
 import cx from 'classnames';
 
-import { GeneralCardInfo, StatsRaffleValues } from '../StatsRaffleValues';
 import { shortenAddress } from '@frakt/utils/solanaUtils';
-import styles from './WonRaffleCard.module.scss';
-import { useWallet } from '@solana/wallet-adapter-react';
 import { WonRaffleListItem } from '@frakt/api/raffle';
+import { Solana } from '@frakt/icons';
+
+import { GeneralCardInfo, StatsRaffleValues } from '../StatsRaffleValues';
 import SolscanNftLink from '../SolscanNftLink';
+
+import styles from './WonRaffleCard.module.scss';
 
 interface WonRaffleCardProps {
   raffle: WonRaffleListItem;
@@ -54,11 +57,20 @@ const WonRaffleCard: FC<WonRaffleCardProps> = ({ raffle }) => {
             )}
           </StatsRaffleValues>
           <StatsRaffleValues label="Winner spent">
-            <span>{raffle?.winnerTickets} TICKETS</span>
+            {!raffle?.isAuction ? (
+              <span>{raffle?.winnerTickets} TICKETS</span>
+            ) : (
+              <span className={styles.value}>
+                <Solana />
+                {raffle?.winnerTickets}
+              </span>
+            )}
           </StatsRaffleValues>
-          <StatsRaffleValues label="Total spent">
-            <span>{raffle?.totalTickets} TICKETS</span>
-          </StatsRaffleValues>
+          {!raffle?.isAuction && (
+            <StatsRaffleValues label="Total spent">
+              <span>{raffle?.totalTickets} TICKETS</span>
+            </StatsRaffleValues>
+          )}
           <StatsRaffleValues label="Ended">
             <span>{moment(raffle?.expiredAt).fromNow(false)}</span>
           </StatsRaffleValues>
