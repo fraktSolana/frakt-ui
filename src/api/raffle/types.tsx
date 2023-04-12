@@ -52,6 +52,7 @@ export interface WonRaffleListItem {
   startedAt: string;
   totalTickets: number;
   winnerTickets: number;
+  isAuction?: boolean;
 }
 
 export interface AuctionListItem {
