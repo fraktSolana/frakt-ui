@@ -42,7 +42,7 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
     searchField: ['nft.name'],
   });
 
-  const COLUMNS = TableList({ onChange, data, isCardView });
+  const COLUMNS = TableList({ isCardView });
 
   const { table } = useTable({
     data: filteredData,

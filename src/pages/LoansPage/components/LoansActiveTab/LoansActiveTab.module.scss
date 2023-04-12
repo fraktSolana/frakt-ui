@@ -1,3 +1,4 @@
+// Reset default styles
 .loansTable :global {
   display: block !important;
   .ant-table-thead > tr > th:first-child,
@@ -12,21 +13,6 @@
     height: 0px;
   }
 }
-
-.loansTable :global {
-  .ant-table-tbody > tr > td:nth-last-child(-n + 2) {
-    text-align: end;
-  }
-  .ant-table-thead > tr > th {
-    vertical-align: middle;
-  }
-
-  padding: 0 23px;
-  @media (max-width: 960px) {
-    padding: 0 16px;
-  }
-}
-
 // Empty data styles
 .loansTable :global {
   .ant-table-empty .ant-table-tbody > tr.ant-table-placeholder {
@@ -35,6 +21,14 @@
   }
   .ant-empty-normal {
     display: none;
+  }
+}
+
+.loansTable :global {
+  padding: 0 23px;
+
+  @media (max-width: 960px) {
+    padding: 0 16px;
   }
 }
 

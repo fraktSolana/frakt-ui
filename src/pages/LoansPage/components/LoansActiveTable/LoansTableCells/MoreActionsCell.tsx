@@ -1,68 +1,77 @@
-import { FC, useRef } from 'react';
+import { FC } from 'react';
+import classNames from 'classnames';
 
-import { useOnClickOutside } from '@frakt/hooks';
 import { Loan } from '@frakt/api/loans/types';
-import { HorizontalDots } from '@frakt/icons';
 import Button from '@frakt/components/Button';
-import FiltersDropdown, {
-  useFiltersModal,
-} from '@frakt/components/FiltersDropdown';
+
+import { PartialRepayModal } from '@frakt/components/PartialRepayModal';
+import { LoadingModal } from '@frakt/components/LoadingModal';
 
 import { useLoanCard } from '../../LoanCard/hooks';
-
 import styles from '../LoansTable.module.scss';
 
-export const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
-  const { onCardinalUnstake } = useLoanCard(loan);
-
+export const MoreActionsCell: FC<{ loan: Loan; isCardView: boolean }> = ({
+  loan,
+  isCardView,
+}) => {
   const {
-    visible: modalVisible,
-    close: closeModal,
-    toggle: toggleModal,
-  } = useFiltersModal();
-
-  const ref = useRef();
-  useOnClickOutside(ref, closeModal);
-
-  const isStakingSupport = !!loan?.classicParams?.rewards?.stakeState;
+    closeLoadingModal,
+    loadingModalVisible,
+    partialRepayModalVisible,
+    closePartialRepayModal,
+    onPartialPayback,
+    onPayback,
+    transactionsLeft,
+  } = useLoanCard(loan);
 
   return (
-    <div className={styles.filters} ref={ref}>
-      {isStakingSupport && (
-        <>
-          <Button
-            onClick={(event) => {
-              toggleModal();
-              event.stopPropagation();
-            }}
-            className={styles.moreActionsButton}
-            type="tertiary"
-          >
-            <HorizontalDots className={styles.horizontalDots} />
-          </Button>
-          {modalVisible && (
-            <FiltersDropdown className={styles.filtersDropdown}>
-              {/* <div className={styles.liquidateButtonWrapper}>
-            <Button className={styles.liquidateButton} type="secondary">
-              Liquidate for +10.32 SOL
-            </Button>
-            <Button className={styles.liquidateButton} type="secondary">
-              Refinance for -10.32 SOL
-            </Button>
-          </div> */}
-              <div className={styles.stakingContent}>
-                <h4 className={styles.stakingTitle}>Staking</h4>
-                <div className={styles.stakingButtonWrapper}>
-                  {/* <Button type="secondary" disabled>
-                  Claim
-                </Button> */}
-                  <Button onClick={onCardinalUnstake}>Unstake</Button>
-                </div>
-              </div>
-            </FiltersDropdown>
-          )}
-        </>
-      )}
-    </div>
+    <>
+      <div className={styles.rowFixedRight}>
+        <Button
+          type="secondary"
+          onClick={(event: Event) => {
+            onPayback();
+            event.stopPropagation();
+          }}
+          className={classNames(styles.repayButton, {
+            [styles.cardView]: isCardView,
+          })}
+        >
+          Repay
+        </Button>
+        <Button
+          disabled
+          className={classNames(styles.repayButton, {
+            [styles.cardView]: isCardView,
+          })}
+        >
+          Extend
+        </Button>
+        <Button
+          disabled
+          className={classNames(styles.repayButton, {
+            [styles.cardView]: isCardView,
+          })}
+        >
+          Sell
+        </Button>
+      </div>
+      <PartialRepayModal
+        visible={partialRepayModalVisible}
+        onCancel={closePartialRepayModal}
+        onPartialPayback={onPartialPayback}
+        loan={loan}
+      />
+      <LoadingModal
+        title="Please approve transaction"
+        visible={loadingModalVisible}
+        onCancel={closeLoadingModal}
+        subtitle={
+          transactionsLeft
+            ? `Time gap between transactions can be up to 1 minute.\nTransactions left: ${transactionsLeft}`
+            : 'In order to transfer the NFT/s approval is needed'
+        }
+      />
+    </>
   );
 };
