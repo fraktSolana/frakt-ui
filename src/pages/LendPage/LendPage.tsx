@@ -93,8 +93,8 @@ const LendPage: FC = () => {
         </div>
       </div>
 
-      {pools ? (
-        <div className={styles.sortWrapper}>
+      {pools?.length ? (
+        <div className={styles.pools}>
           {pools?.map((liquidityPool) => (
             <LendingPool
               key={liquidityPool.pubkey}
@@ -103,9 +103,7 @@ const LendPage: FC = () => {
           ))}
         </div>
       ) : (
-        <div className={styles.loader}>
-          <Loader size={'large'} />
-        </div>
+        <Loader size="large" />
       )}
     </AppLayout>
   );

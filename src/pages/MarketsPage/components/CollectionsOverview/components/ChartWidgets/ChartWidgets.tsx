@@ -1,9 +1,12 @@
 import { FC, ReactNode } from 'react';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
+import { colorByPercentOffers, getColorByPercent } from '@frakt/utils/bonds';
 import { MarketPreview } from '@frakt/api/bonds';
 import Tooltip from '@frakt/components/Tooltip';
 import { Solana } from '@frakt/icons';
+
+import { formateMarketPreviewValues } from './helpers';
 
 import styles from './ChartWidgets.module.scss';
 
@@ -12,6 +15,9 @@ interface ChartWidgetsProps {
 }
 
 const ChartWidgets: FC<ChartWidgetsProps> = ({ marketPreview }) => {
+  const { bestOffer, duration, apr, bestLTV, offerTVL } =
+    formateMarketPreviewValues(marketPreview);
+
   return (
     <div className={styles.wrapper}>
       <CollectionGeneralInfo
@@ -20,31 +26,42 @@ const ChartWidgets: FC<ChartWidgetsProps> = ({ marketPreview }) => {
       />
       <div className={styles.stats}>
         <StatsValues
-          label="Offer TVL"
+          label="Best offer"
           value={
-            <>
-              {marketPreview?.offerTVL} <Solana />
-            </>
+            <div className={styles.rowCenter}>
+              <span className={styles.value}>
+                {bestOffer} <Solana className={styles.solanaIcon} />
+              </span>
+              <span
+                style={{
+                  color: getColorByPercent(
+                    marketPreview?.bestLTV,
+                    colorByPercentOffers,
+                  ),
+                }}
+                className={styles.value}
+              >
+                LTV {bestLTV} %
+              </span>
+            </div>
           }
           tooltipText="Total liquidity currently available in active offers"
         />
         <StatsValues
           label="APR"
-          value={
-            <p className={styles.highlightPositiveText}>
-              up to {marketPreview?.apy.toFixed(2)} %
-            </p>
-          }
+          value={<p className={styles.highlightPositiveText}>up to {apr} %</p>}
           tooltipText="Interest (in %) for the duration of this loan"
         />
         <StatsValues
-          label="Duration"
+          label="Offer TVL"
           value={
-            marketPreview?.duration?.length
-              ? `${marketPreview?.duration?.join(' / ')} days`
-              : '--'
+            <>
+              {offerTVL} <Solana className={styles.solanaIcon} />
+            </>
           }
+          tooltipText="Total liquidity currently available in active offers"
         />
+        <StatsValues label="Duration" value={duration} />
       </div>
     </div>
   );
@@ -74,7 +91,7 @@ const StatsValues = ({
   value: ReactNode;
   tooltipText?: string;
 }) => (
-  <div className={styles.column}>
+  <div className={styles.values}>
     <div className={styles.rowCenter}>
       <span className={styles.label}>{label}</span>
       {tooltipText && (

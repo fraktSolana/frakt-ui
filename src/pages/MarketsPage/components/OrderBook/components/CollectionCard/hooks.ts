@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { useMarketPairs } from '@frakt/utils/bonds';
 import { PATHS } from '@frakt/constants';
 
-import { MarketOrder, SortOrder } from '../../types';
+import { MarketOrder } from '../../types';
 import {
   filterOffersByDuration,
   parseMarketOrder,
@@ -24,21 +24,14 @@ export const useCollectionCard = ({
   const { pairs, isLoading: isLoadingPairs } = useMarketPairs({
     marketPubkey: isVisibleOfferList ? marketPubkey : '',
   });
-  const [sortDirection, setSortDirection] = useState<SortOrder>(SortOrder.DESC);
 
-  const parsedOffers = pairs.map(parseMarketOrder, sortDirection);
-
-  const toggleSortDirection = () => {
-    sortDirection === SortOrder.DESC
-      ? setSortDirection(SortOrder.ASC)
-      : setSortDirection(SortOrder.DESC);
-  };
+  const parsedOffers = pairs.map(parseMarketOrder);
 
   const isOwnOrder = (order: MarketOrder): boolean => {
     return order?.rawData?.assetReceiver === publicKey?.toBase58();
   };
 
-  const sortedOffers = sortOffers(parsedOffers, sortDirection);
+  const sortedOffers = sortOffers(parsedOffers, 'desc');
   const fitleredOffersByDuration = filterOffersByDuration(
     sortedOffers,
     duration,
@@ -55,11 +48,9 @@ export const useCollectionCard = ({
 
   return {
     offers,
-    toggleSortDirection,
     loading: isLoadingPairs,
     isVisibleOfferList,
     setIsVisibleOfferList,
-    sortDirection,
     goToEditOffer,
     isOwnOrder,
     bestOffer,

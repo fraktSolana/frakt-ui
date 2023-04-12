@@ -1,22 +1,14 @@
 import { FC } from 'react';
 import classNames from 'classnames';
 
-import { ArrowDownTableSort, ArrowUpTableSort } from '@frakt/icons';
 import styles from './Sort.module.scss';
 
 interface SortProps {
   openOffersMobile?: boolean;
   existSyntheticParams?: boolean;
-  onChangeSort: () => void;
-  sort: string;
 }
 
-const Sort: FC<SortProps> = ({
-  openOffersMobile,
-  existSyntheticParams,
-  onChangeSort,
-  sort,
-}) => {
+const Sort: FC<SortProps> = ({ openOffersMobile, existSyntheticParams }) => {
   return (
     <div
       className={classNames(styles.columnWrapper, {
@@ -25,13 +17,10 @@ const Sort: FC<SortProps> = ({
       })}
     >
       <div className={styles.col}>
-        <span className={styles.colName}>size</span>
-        <span>(SOL)</span>
+        <span className={styles.colName}>size (SOL)</span>
       </div>
-      <div onClick={onChangeSort} className={styles.col}>
-        <span className={styles.colName}>Interest</span>
-        <span>(%)</span>
-        {sort === 'desc' ? <ArrowDownTableSort /> : <ArrowUpTableSort />}
+      <div className={styles.col}>
+        <span className={styles.colName}>Interest (%)</span>
       </div>
     </div>
   );

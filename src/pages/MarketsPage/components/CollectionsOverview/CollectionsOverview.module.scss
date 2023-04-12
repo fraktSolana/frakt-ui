@@ -4,22 +4,23 @@
   display: flex;
   gap: 24px;
   padding: 24px;
+  padding-bottom: 0;
   margin-bottom: 16px;
-  min-height: 324px;
+  min-height: 382px;
 
   @media (max-width: 1300px) {
+    gap: 0;
     flex-direction: column;
-    gap: 8px;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 960px) {
     padding: 16px;
   }
 }
 
 .scrollContainer {
   overflow: hidden;
-  min-width: 308px;
+  min-width: 315px;
   width: 100%;
 }
 
@@ -53,11 +54,11 @@
 }
 
 .marketTable :global {
-  height: 234px;
+  height: 320px;
   display: block !important;
 
   .ant-table-content {
-    max-height: 234px !important;
+    max-height: 315px !important;
     overflow: auto !important;
   }
 
@@ -70,34 +71,40 @@
       max-width: 560px !important;
       width: 100% !important;
     }
+    .ant-table-tbody > tr > td {
+      height: 54px;
+    }
   }
 
-  @media (max-width: 500px) {
-    .ant-table-thead > tr > th:first-child,
+  @media (max-width: 960px) {
+    .ant-table-thead > tr > th {
+      padding-left: 0;
+    }
     .ant-table-tbody > tr > td:first-child {
       padding-right: 0;
     }
   }
 }
 
-.collapsedMarketTable {
-  :global {
+.collapsedMarketTable :global {
+  .ant-table-thead > tr > th:nth-child(n + 3),
+  .ant-table-tbody > tr > td:nth-child(n + 3) {
+    display: none !important;
+  }
+  .ant-table-tbody > tr > td {
+    vertical-align: middle !important;
+  }
+
+  @media (min-width: 1300px) {
+    .ant-table table {
+      table-layout: auto !important;
+    }
+  }
+
+  @media (max-width: 1300px) {
     .ant-table-thead > tr > th:nth-child(n + 3),
     .ant-table-tbody > tr > td:nth-child(n + 3) {
-      display: none !important;
-    }
-
-    @media (min-width: 1300px) {
-      .ant-table table {
-        table-layout: auto !important;
-      }
-    }
-
-    @media (max-width: 1300px) {
-      .ant-table-thead > tr > th:nth-child(n + 3),
-      .ant-table-tbody > tr > td:nth-child(n + 3) {
-        display: table-cell !important;
-      }
+      display: table-cell !important;
     }
   }
 }
@@ -118,8 +125,9 @@
   justify-content: space-between;
 }
 
-.showMore {
+.expandButton {
   cursor: pointer;
   font-size: 14px;
-  text-decoration: underline;
+  height: 26px;
+  width: 100px;
 }

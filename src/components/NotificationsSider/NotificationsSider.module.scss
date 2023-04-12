@@ -13,7 +13,7 @@
   @include flex(column, nowrap, flex-start, flex-start);
   overflow-y: auto;
 
-  @media screen and (max-width: 1023px) {
+  @media screen and (max-width: 1024px) {
     width: 100vw;
   }
 }
@@ -229,7 +229,7 @@
   row-gap: 8px;
   column-gap: 24px;
 
-  @media screen and (max-width: 1023px) and (min-width: 575px) {
+  @media screen and (max-width: 1024px) and (min-width: 575px) {
     grid-template-columns: repeat(2, 1fr);
   }
 }

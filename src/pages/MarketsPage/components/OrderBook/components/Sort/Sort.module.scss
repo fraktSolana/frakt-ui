@@ -1,14 +1,14 @@
 .columnWrapper {
-  padding: 3px 8px;
+  color: var(--gray-color-2);
+  font: var(--font-text-6);
 
-  width: 100%;
+  padding: 8px 0;
   display: flex;
   justify-content: space-between;
 
-  font: var(--font-text-6);
-  color: var(--gray-color-2);
+  width: 100%;
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 960px) {
     display: none;
 
     &.create {
@@ -26,8 +26,6 @@
 
   display: flex;
   align-items: center;
-  padding-right: 16px;
-  gap: 2px;
 }
 
 .colName {

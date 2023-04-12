@@ -7,7 +7,6 @@ import { useIntersection } from '@frakt/hooks/useIntersection';
 import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
 import EmptyList from '@frakt/components/EmptyList';
 import { Loader } from '@frakt/components/Loader';
-import Toggle from '@frakt/components/Toggle';
 
 import { useBondsSort, useFetchAllBonds, useFetchBondsStats } from './hooks';
 import { BondsTable } from '../BondsTable';
@@ -26,16 +25,16 @@ const BondsTab: FC = () => {
     data: bonds,
     fetchNextPage,
     isFetchingNextPage,
-    isListEnded,
+    hasNextPage,
     hideBond,
     loading,
   } = useFetchAllBonds({ queryData, marketPubkey });
 
   useEffect(() => {
-    if (inView && !isFetchingNextPage && !isListEnded) {
+    if (inView && hasNextPage) {
       fetchNextPage();
     }
-  }, [inView, fetchNextPage, isFetchingNextPage, isListEnded]);
+  }, [inView, fetchNextPage, hasNextPage]);
 
   const { bondsStats } = useFetchBondsStats({
     marketPubkey,
@@ -67,7 +66,7 @@ const BondsTab: FC = () => {
               breakpoints={{ scrollX: 744 }}
               hideBond={hideBond}
             />
-            {!!isFetchingNextPage && <Loader />}
+            {isFetchingNextPage && <Loader />}
             <div ref={ref} />
           </>
         )}
