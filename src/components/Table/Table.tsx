@@ -1,20 +1,12 @@
-import { Table as AntdTable } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { DebouncedFunc } from 'lodash';
-import classNames from 'classnames';
 
-import { ActiveRowParams, PartialBreakpoints } from './types';
-import { SortModalMobile, SortModalMobileProps } from './SortModalMobile';
-import { getRowClassName } from './helpers';
+import { ActiveRowParams, ViewParams, PartialBreakpoints } from './types';
+import { SortModalMobileProps } from './SortModalMobile';
 import { Loader } from '../Loader';
 import { Search } from './Search';
 
-import styles from './Table.module.scss';
-import { useFiltersModal } from '../FiltersDropdown';
-import { useOnClickOutside } from '@frakt/hooks';
-import { useRef } from 'react';
-import Button from '../Button';
-import { MobileTable } from './MobileTable';
+import { TableView, CardView, SortView } from './views';
 
 export interface TableProps<T> {
   data: ReadonlyArray<T>;
@@ -25,13 +17,13 @@ export interface TableProps<T> {
   noDataMessage?: string;
   className?: string;
   defaultField?: string;
-  isCardView?: boolean;
   search?: {
     placeHolderText?: string;
     onChange: DebouncedFunc<(event: any) => void>;
   };
   breakpoints?: PartialBreakpoints;
   activeRowParams?: ActiveRowParams;
+  viewParams?: ViewParams;
 }
 
 export interface TablePropsWithSortModalMobileProps<T>
@@ -50,71 +42,40 @@ const Table = <T extends unknown>({
   sort,
   setSort,
   search,
-  isCardView,
+  viewParams,
 }: TablePropsWithSortModalMobileProps<T>): JSX.Element => {
-  const {
-    visible: sortModalMobileVisible,
-    close: closeModalMobile,
-    toggle: toggleModalMobile,
-  } = useFiltersModal();
-
-  const ref = useRef(null);
-  useOnClickOutside(ref, closeModalMobile);
-
   if (loading) return <Loader />;
 
-  if (isCardView) {
-    return (
-      <>
-        <div className={isCardView && styles.sortWrapper}>
-          <Search
-            onChange={search?.onChange}
-            className={styles.searchInput}
-            placeHolderText={search?.placeHolderText}
-          />
-          <div ref={ref}>
-            <Button type="tertiary" onClick={toggleModalMobile}>
-              Sorting
-            </Button>
-            <SortModalMobile
-              columns={columns}
-              setSort={setSort}
-              sort={sort}
-              sortModalMobileVisible={sortModalMobileVisible}
-            />
-          </div>
-        </div>
-        <MobileTable
+  return (
+    <>
+      {viewParams?.showSorting && (
+        <SortView
+          search={search}
+          sort={sort}
+          setSort={setSort}
+          columns={columns}
+        />
+      )}
+      {viewParams?.showCard ? (
+        <CardView
           data={data}
           columns={columns}
           onRowClick={onRowClick}
           rowKeyField={rowKeyField}
         />
-      </>
-    );
-  }
-
-  return (
-    <AntdTable
-      className={classNames(className, {
-        [styles.noDataTableMessage]: !data.length && !loading,
-      })}
-      rowClassName={(record) => getRowClassName(record, activeRowParams)}
-      columns={columns as ColumnsType}
-      dataSource={data as any}
-      pagination={false}
-      sortDirections={['descend', 'ascend']}
-      style={onRowClick && { cursor: 'pointer' }}
-      rowKey={(data) => data[rowKeyField]}
-      scroll={{ x: breakpoints?.scrollX, y: breakpoints?.scrollY }}
-      onRow={
-        onRowClick
-          ? (data) => ({
-              onClick: () => onRowClick(data as T),
-            })
-          : null
-      }
-    />
+      ) : (
+        <TableView
+          data={data}
+          className={className}
+          breakpoints={breakpoints}
+          activeRowParams={activeRowParams}
+          loading={loading}
+          columns={columns}
+          rowKeyField={rowKeyField}
+          onRowClick={onRowClick}
+        />
+      )}
+    </>
   );
 };
 

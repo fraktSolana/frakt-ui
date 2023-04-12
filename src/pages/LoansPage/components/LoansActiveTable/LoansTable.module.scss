@@ -57,7 +57,15 @@
   }
 }
 
+.buttonWrapper {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  width: 100%;
+}
 .repayButton {
+  display: flex;
+  flex-grow: 1;
   height: 26px;
   width: 60px;
 }

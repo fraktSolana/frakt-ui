@@ -54,7 +54,10 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
       breakpoints={breakpoints}
       search={{ onChange }}
       className={className}
-      isCardView={isCardView}
+      viewParams={{
+        showCard: isCardView,
+        showSorting: true,
+      }}
       activeRowParams={{
         field: 'gracePeriod',
         className: 'graceRowClassName',

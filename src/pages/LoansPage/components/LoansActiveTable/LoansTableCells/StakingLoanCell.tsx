@@ -26,7 +26,7 @@ export const StakingLoanCell: FC<{ loan: Loan }> = ({ loan }) => {
 
   return (
     <div className={styles.filters} ref={ref}>
-      {!isStakingSupport && (
+      {isStakingSupport && (
         <>
           <Button
             onClick={(event) => {

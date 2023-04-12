@@ -26,7 +26,7 @@ export const MoreActionsCell: FC<{ loan: Loan; isCardView: boolean }> = ({
 
   return (
     <>
-      <div className={styles.rowFixedRight}>
+      <div className={styles.buttonWrapper}>
         <Button
           type="secondary"
           onClick={(event: Event) => {
@@ -40,18 +40,18 @@ export const MoreActionsCell: FC<{ loan: Loan; isCardView: boolean }> = ({
           Repay
         </Button>
         <Button
-          disabled
           className={classNames(styles.repayButton, {
             [styles.cardView]: isCardView,
           })}
+          disabled
         >
           Extend
         </Button>
         <Button
-          disabled
           className={classNames(styles.repayButton, {
             [styles.cardView]: isCardView,
           })}
+          disabled
         >
           Sell
         </Button>

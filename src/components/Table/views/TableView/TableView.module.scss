@@ -1,0 +1,15 @@
+.noDataMessage {
+  text-align: center;
+  font-size: 24px;
+  color: #e3e2e5;
+
+  @media screen and (max-width: 1024px) {
+    font-size: 18px;
+  }
+}
+
+.noDataTableMessage {
+  :global {
+    display: none;
+  }
+}

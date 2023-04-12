@@ -1,0 +1,34 @@
+.mobileTableView {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(272px, 2fr));
+  gap: 16px;
+  padding: 24px;
+}
+
+.mobileCollection {
+  background: var(--primary-background);
+  border: 1px solid var(--primary-border);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobileRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &:first-child {
+    .mobileRowTitle {
+      display: none;
+    }
+  }
+  &:first-child {
+    justify-content: flex-start;
+  }
+}
+
+.mobileRowTitle {
+  display: flex;
+}

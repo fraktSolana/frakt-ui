@@ -3,8 +3,14 @@ interface Breakpoints {
   scrollX: number;
   scrollY: number;
 }
-
 export type PartialBreakpoints = Partial<Breakpoints>;
+
+interface SearchParams {
+  searchField: string | string[];
+  debounceWait: number;
+  placeHolderText: string;
+}
+export type PartialSearchParams = Partial<SearchParams>;
 
 export interface ActiveRowParams {
   field: string;
@@ -12,10 +18,7 @@ export interface ActiveRowParams {
   className?: string;
 }
 
-interface SearchParams {
-  searchField: string | string[];
-  debounceWait: number;
-  placeHolderText: string;
+export interface ViewParams {
+  showCard: boolean;
+  showSorting: boolean;
 }
-
-export type PartialSearchParams = Partial<SearchParams>;
