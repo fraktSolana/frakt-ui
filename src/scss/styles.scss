@@ -77,6 +77,100 @@ h5 {
     }
   }
 
+  //Steps
+
+  .ant-steps-item-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .ant-steps-item-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .ant-steps-item-title {
+    font: var(--font-text-5);
+    font-size: 16px;
+    line-height: 28px;
+  }
+
+  .ant-steps-icon {
+    font: var(--font-text-5);
+    color: var(--black-color);
+  }
+
+  .ant-steps-item-finish
+    > .ant-steps-item-container
+    > .ant-steps-item-content
+    > .ant-steps-item-title {
+    color: var(--black-color);
+  }
+
+  .ant-steps-item-finish
+    > .ant-steps-item-container
+    > .ant-steps-item-content
+    > .ant-steps-item-title::after {
+    color: var(--black-color);
+  }
+
+  .ant-steps-item-process
+    > .ant-steps-item-container
+    > .ant-steps-item-content
+    > .ant-steps-item-title {
+    color: var(--black-color);
+  }
+
+  .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon {
+    background: #9cff1f;
+    border: 1px solid #000;
+  }
+
+  .ant-steps-item-wait .ant-steps-item-icon {
+    color: var(--gray-color-2);
+    border-color: var(--gray-color-2);
+  }
+
+  .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon {
+    color: var(--gray-color-2);
+  }
+
+  .ant-steps-item-process
+    > .ant-steps-item-container
+    > .ant-steps-item-icon
+    .ant-steps-icon {
+    color: #000;
+  }
+
+  .ant-steps-item-finish .ant-steps-item-icon {
+    background: #9cff1f;
+    border: 1px solid #9cff1f;
+    > .ant-steps-icon {
+      svg {
+        fill: black;
+      }
+    }
+  }
+
+  .ant-steps-item-finish
+    > .ant-steps-item-container
+    > .ant-steps-item-content
+    > .ant-steps-item-title::after {
+    background: var(--black-color);
+  }
+
+  .ant-steps-item-wait
+    > .ant-steps-item-container
+    > .ant-steps-item-content
+    > .ant-steps-item-title {
+    color: var(--gray-color-2);
+    &::after {
+      background-color: var(--gray-color-2);
+    }
+  }
+
   .ant-notification-notice {
     background: var(--primary-background);
     width: 400px;

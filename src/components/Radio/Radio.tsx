@@ -1,7 +1,7 @@
 import { Radio as RadioAntd } from 'antd';
-import classNames from 'classnames/bind';
 
 import styles from './styles.module.scss';
+import classNames from 'classnames';
 
 interface RadioProps {
   className?: string;

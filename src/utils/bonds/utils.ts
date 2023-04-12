@@ -37,7 +37,7 @@ export const colorByPercentOffers: ColorBreakpoints = {
 };
 
 export const colorByPercentHealth: ColorBreakpoints = {
-  11: '#CC1939',
+  0: '#CC1939',
   22: '#CC5A19',
   33: '#CC8419',
   44: '#CCA519',

@@ -56,6 +56,6 @@ export const useActiveLoans = () => {
     onBulkRepay,
     loadingModalVisible,
     closeLoadingModal,
-    totalBorrowed: sum(map(selection, ({ loanValue }) => loanValue / 1e9)),
+    totalBorrowed: sum(map(selection, ({ repayValue }) => repayValue / 1e9)),
   };
 };

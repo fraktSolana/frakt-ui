@@ -1,5 +1,5 @@
-import classNames from 'classnames/bind';
 import { FC } from 'react';
+import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
 import { ArrowRightTop } from '../../icons';
 import { sendAmplitudeData } from '../../utils/amplitude';
