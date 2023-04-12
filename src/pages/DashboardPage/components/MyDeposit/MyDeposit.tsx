@@ -3,7 +3,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useSelector } from 'react-redux';
 import { sum, map, filter } from 'ramda';
 
-import { useFetchTradePoolStats } from '@frakt/utils/strategies';
+import { useTradePoolStats } from '@frakt/utils/strategies';
 import { selectLiquidityPools } from '@frakt/state/loans/selectors';
 import { calcWeightedAverage } from '@frakt/utils';
 import { BondsUserStats } from '@frakt/api/user';
@@ -109,8 +109,8 @@ const PoolsInfoJSX = ({ weightedAvarageApy, totalLiquidity }) => {
 const StrategiesInfoJSX = () => {
   const { connected, publicKey } = useWallet();
 
-  const { tradePoolStats } = useFetchTradePoolStats({
-    walletPublicKey: publicKey,
+  const { tradePoolStats } = useTradePoolStats({
+    walletPublicKey: publicKey?.toBase58(),
   });
 
   return (
