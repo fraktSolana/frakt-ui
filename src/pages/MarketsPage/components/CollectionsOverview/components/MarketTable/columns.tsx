@@ -57,18 +57,18 @@ export const TableList = ({ onChange }) => {
       width: 95,
     },
     {
-      key: 'bestLTV',
-      dataIndex: 'bestLTV',
+      key: 'bestOffer',
+      dataIndex: 'bestOffer',
       title: (column) => (
         <HeaderTitleCell
           sortColumns={column?.sortColumns}
           label="Best offer"
-          value="bestLTV"
+          value="bestOffer"
           tooltipText="Total liquidity currently available in active offers"
         />
       ),
       sorter: (a, b) => sortingFavoriteList(a, b, 'offerTVL', formateToNumbers),
-      render: (value) => createBestOfferJSX(value),
+      render: (_, market) => createBestOfferJSX(market),
       showSorterTooltip: false,
       width: 95,
     },
