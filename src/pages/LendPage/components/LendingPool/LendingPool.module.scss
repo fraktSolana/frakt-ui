@@ -11,7 +11,7 @@
     padding: 8px 24px;
   }
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     padding: 8px 16px;
   }
 }
@@ -32,6 +32,10 @@
   @media screen and (max-width: 1380px) {
     flex-wrap: wrap;
     position: relative;
+  }
+
+  @media screen and (max-width: 960px) {
+    padding: 24px;
   }
 }
 
@@ -70,7 +74,7 @@
   width: 40px;
   height: 40px;
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     height: 38px;
     width: 38px;
   }
@@ -84,7 +88,7 @@
   height: 24px;
   transform: rotate(-90deg);
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     position: absolute;
     top: 30px;
     right: 20px;
@@ -183,7 +187,7 @@
     width: 100%;
   }
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     height: 40px;
   }
 }

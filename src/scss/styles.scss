@@ -11,7 +11,7 @@ body {
   color: var(--secondary-border);
   font: var(--font-text-3);
 
-  @media (max-width: 767px) {
+  @media (max-width: 960px) {
     background-image: url(../icons/tabletBg.png);
   }
 }
@@ -34,7 +34,7 @@ h5 {
     left: 177px;
     width: calc(100vw - 187px);
 
-    @media (max-width: 768px) {
+    @media (max-width: 960px) {
       left: 0;
       width: 100vw;
     }
@@ -49,7 +49,7 @@ h5 {
     border: 1px solid var(--gray-color-3);
     border-radius: 0 !important;
 
-    @media (max-width: 767px) {
+    @media (max-width: 960px) {
       border: 0;
     }
   }
@@ -57,14 +57,14 @@ h5 {
   .fraktion__notification_error {
     border: 1px solid var(--red-color);
 
-    @media (max-width: 767px) {
+    @media (max-width: 960px) {
       border-top: 1px solid var(--red-color) !important;
     }
   }
   .fraktion__notification_success {
     border: 1px solid var(--light-green-color);
 
-    @media (max-width: 767px) {
+    @media (max-width: 960px) {
       border-top: 1px solid var(--light-green-color) !important;
     }
   }
@@ -72,7 +72,7 @@ h5 {
   .fraktion__notification_info {
     border: 1px solid var(--blue-color);
 
-    @media (max-width: 767px) {
+    @media (max-width: 960px) {
       border-top: 1px solid var(--blue-color) !important;
     }
   }
@@ -176,7 +176,7 @@ h5 {
     width: 400px;
     box-shadow: unset !important;
 
-    @media (max-width: 767px) {
+    @media (max-width: 960px) {
       width: 100%;
       position: fixed;
       bottom: 0;

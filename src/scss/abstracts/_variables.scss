@@ -1,7 +1,7 @@
 :root {
   --header-height: 64px;
 
-  @media screen and (max-width: 1023px) {
+  @media screen and (max-width: 1024px) {
     --header-height: 56px;
   }
 }
@@ -95,7 +95,7 @@
     --font-h6: 700 22px var(--font-family-syne);
   }
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     --font-title-2: 800 24px var(--font-family-syne);
 
     --font-text-1: 400 16px var(--font-family-chakra);
@@ -194,7 +194,7 @@
     --font-h6: 700 22px var(--font-family-syne);
   }
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     --font-title-2: 800 24px var(--font-family-syne);
 
     --font-text-1: 400 16px var(--font-family-chakra);

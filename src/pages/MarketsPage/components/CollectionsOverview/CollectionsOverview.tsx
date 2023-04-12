@@ -5,12 +5,12 @@ import classNames from 'classnames';
 import { useWindowSize } from '@frakt/hooks';
 
 import Chart, { useChartVisible } from './components/Chart';
-import { calcFirstColumnWidth } from './components/MarketTable/helpers';
 import { MarketTable } from './components/MarketTable';
 import { useMarketsPreview } from '../../hooks';
 
 import styles from './CollectionsOverview.module.scss';
 import { PATHS } from '@frakt/constants';
+import { Button } from '@frakt/components/Button';
 
 const SMALL_DESKTOP_SIZE = 1300;
 
@@ -22,7 +22,7 @@ const CollectionsOverview: FC = () => {
 
   const { isVisible } = useChartVisible();
 
-  const unselectActiveCollection = () => history.push(PATHS.BONDS);
+  const expandActiveCollection = () => history.push(PATHS.BONDS);
 
   return (
     <div className={styles.wrapper}>
@@ -30,9 +30,12 @@ const CollectionsOverview: FC = () => {
         <div className={styles.headerWrapper}>
           <h3 className={styles.title}>Collections</h3>
           {marketPubkey && !isLoading && (
-            <a onClick={unselectActiveCollection} className={styles.showMore}>
-              See all
-            </a>
+            <Button
+              onClick={expandActiveCollection}
+              className={styles.expandButton}
+            >
+              Expand
+            </Button>
           )}
         </div>
 
@@ -43,10 +46,7 @@ const CollectionsOverview: FC = () => {
           })}
           loading={isLoading}
           data={marketsPreview}
-          breakpoints={{
-            scrollX: width < SMALL_DESKTOP_SIZE && 744,
-            mobile: calcFirstColumnWidth(width, !!marketPubkey),
-          }}
+          breakpoints={{ scrollX: width < SMALL_DESKTOP_SIZE && 744 }}
           marketPubkey={marketPubkey}
         />
       </div>

@@ -37,15 +37,3 @@ export const sortingFavoriteList = (
     ? formateFunction(a[sortBy]) - formateFunction(b[sortBy])
     : a[sortBy] - b[sortBy];
 };
-
-export const calcFirstColumnWidth = (width: number, collapsed: boolean) => {
-  const SMALL_DESKTOP_SIZE = 1300;
-  const MOBILE_SIZE = 500;
-  const DEFAULT_COLUMN_SIZE = 192;
-
-  if (width < MOBILE_SIZE) return DEFAULT_COLUMN_SIZE;
-  if (collapsed || (width > MOBILE_SIZE && width < SMALL_DESKTOP_SIZE))
-    return 230;
-
-  return DEFAULT_COLUMN_SIZE;
-};

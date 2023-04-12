@@ -33,7 +33,7 @@
     .ant-modal-content {
       border: 1px solid var(--blue-color) !important;
 
-      @media (max-width: 767px) {
+      @media (max-width: 960px) {
         border: 0 !important;
         border-top: 1px solid var(--blue-color) !important;
       }
@@ -47,7 +47,7 @@
       padding: 16px;
     }
 
-    @media (max-width: 767px) {
+    @media (max-width: 960px) {
       position: absolute;
       top: unset;
       left: 0;

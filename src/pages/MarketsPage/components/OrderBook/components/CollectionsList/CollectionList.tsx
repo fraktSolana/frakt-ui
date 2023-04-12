@@ -36,18 +36,31 @@ const CollectionList: FC<CollectionListProps> = ({
         [styles.active]: openOffersMobile,
       })}
     >
-      {marketsPreview.map((market) => (
-        <CollectionCard
-          {...market}
-          key={market.marketPubkey}
-          openOffersMobile={openOffersMobile}
-          existSyntheticParams={existSyntheticParams}
-          showOwnOrders={showOwnOrders}
-          duration={duration}
-        />
-      ))}
+      {marketsPreview.length ? (
+        marketsPreview.map((market) => (
+          <CollectionCard
+            {...market}
+            key={market.marketPubkey}
+            openOffersMobile={openOffersMobile}
+            existSyntheticParams={existSyntheticParams}
+            showOwnOrders={showOwnOrders}
+            duration={duration}
+          />
+        ))
+      ) : (
+        <EmptyList />
+      )}
     </ul>
   );
 };
 
 export default CollectionList;
+
+const EmptyList = () => (
+  <div className={styles.emptyList}>
+    <h4 className={styles.emptyListTitle}>No active offers at the moment</h4>
+    <p className={styles.empryListText}>
+      Please select collection to place your offers
+    </p>
+  </div>
+);

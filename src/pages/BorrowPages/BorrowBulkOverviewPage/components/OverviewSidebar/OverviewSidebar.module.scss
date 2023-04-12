@@ -22,7 +22,7 @@
     width: calc(100vw - 187px);
     z-index: 2;
   }
-  @media (max-width: 767px) {
+  @media (max-width: 960px) {
     left: unset;
     border-top: 1px solid var(--secondary-border);
     width: 100%;

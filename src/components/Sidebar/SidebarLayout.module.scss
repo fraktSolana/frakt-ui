@@ -14,19 +14,19 @@
     z-index: 3;
     transform: translateY(0);
 
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: 960px) {
       max-height: 470px;
       margin: -1px;
     }
 
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: 960px) {
       &.collapsedSidebar {
         transform: translateY(calc(100% - 86px)) !important;
       }
     }
   }
 
-  @media screen and (max-width: 1023px) {
+  @media screen and (max-width: 1024px) {
     transform: translateY(calc(100%));
     right: 0;
 
@@ -36,7 +36,7 @@
     }
   }
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     position: fixed;
     top: initial;
     right: 0;
@@ -51,18 +51,15 @@
 .btn {
   min-width: 35px;
   min-height: 35px;
-
-  svg {
-    path {
-      fill: var(--secondary-border);
-    }
-  }
+}
+.btn svg path {
+  fill: var(--secondary-border);
 }
 
 .dropdown {
   display: none;
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     cursor: pointer;
     display: block;
     position: fixed;

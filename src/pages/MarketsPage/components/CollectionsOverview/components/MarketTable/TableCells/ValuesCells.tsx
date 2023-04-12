@@ -1,6 +1,8 @@
 import classNames from 'classnames';
 
+import { colorByPercentOffers, getColorByPercent } from '@frakt/utils/bonds';
 import { Solana } from '@frakt/icons';
+
 import styles from './TableCells.module.scss';
 
 export const createSolValueJSX = (value?: string) => (
@@ -19,11 +21,21 @@ export const createOfferTvlJSX = (value?: string) => (
   </span>
 );
 
-export const createBestOfferJSX = (value = 0) => (
-  <span className={styles.value}>
-    {(value / 1e9)?.toFixed(2)} <Solana />
-  </span>
-);
+export const createBestOfferJSX = (value = 0) => {
+  const colorLTV =
+    getColorByPercent(value, colorByPercentOffers) || colorByPercentOffers[100];
+
+  return (
+    <div className={styles.column}>
+      <span className={styles.value}>
+        {value?.toFixed(1)} <Solana />
+      </span>
+      <span style={{ color: colorLTV }} className={styles.smallValue}>
+        LTV {value?.toFixed(0)} %
+      </span>
+    </div>
+  );
+};
 
 export const createDurationJSX = (value: number[]) => {
   const durations = value.sort((a, b) => b - a);

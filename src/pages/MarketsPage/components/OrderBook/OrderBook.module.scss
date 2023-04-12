@@ -10,12 +10,11 @@
 
   display: flex;
   flex-direction: column;
-  gap: 8px;
 
   border-left: 1px solid var(--primary-border);
   background-color: var(--primary-background);
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 960px) {
     top: calc(100% - 100px);
     left: 0;
     right: 0;
@@ -52,7 +51,7 @@
   align-items: center;
   gap: 24px;
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 960px) {
     &.create {
       gap: 8px;
     }
@@ -69,7 +68,7 @@
   justify-content: center;
   font: var(--font-text-8);
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 960px) {
     display: none;
 
     &.active {
@@ -84,7 +83,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  height: calc(100% - var(--header-height) - 60px);
+  height: calc(100% - var(--header-height) - 32px);
 
   &.visible {
     height: 100%;
@@ -94,9 +93,9 @@
     height: calc(100% - var(--header-height) - 66px);
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 960px) {
     &.active {
-      height: calc(100vh - var(--header-height) - 210px);
+      height: calc(100vh - var(--header-height) - 204px);
     }
 
     &.visible.active {
@@ -114,11 +113,8 @@
 }
 
 .loader {
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 960px) {
     display: none;
-    &.create {
-      display: block;
-    }
     &.active {
       display: block;
     }
@@ -140,7 +136,7 @@
     height: auto;
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 960px) {
     display: none;
 
     margin: 0 -42px;
@@ -154,7 +150,7 @@
 
     &.active {
       display: flex;
-      height: calc(100% - var(--header-height) - 22px);
+      height: calc(100% - var(--header-height) - 64px);
       overflow-y: scroll;
     }
 
@@ -201,7 +197,7 @@
     transform: rotate(0deg);
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 960px) {
     display: flex;
     position: absolute;
     top: -16px;
@@ -219,7 +215,7 @@
   transform: translateY(-50%);
 
   cursor: pointer;
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 960px) {
     width: 28px;
     height: 28px;
     svg {
@@ -235,7 +231,7 @@
   justify-content: space-between;
   width: 100%;
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 960px) {
     display: none;
 
     &.create {
