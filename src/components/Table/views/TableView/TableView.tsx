@@ -1,9 +1,9 @@
 import { Table as AntdTable } from 'antd';
 import classNames from 'classnames';
-
-import { getRowClassName } from '../../helpers';
-import { ActiveRowParams, PartialBreakpoints } from '../../types';
 import { ColumnsType } from 'antd/es/table';
+
+import { ActiveRowParams, PartialBreakpoints } from '../../types';
+import { getRowClassName } from '../../helpers';
 
 import styles from './TableView.module.scss';
 

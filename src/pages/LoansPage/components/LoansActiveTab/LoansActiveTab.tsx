@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
@@ -18,8 +18,6 @@ const LoansActiveTab: FC = () => {
 
   const { onBulkRepay, totalBorrowed, loadingModalVisible, closeLoadingModal } =
     useActiveLoans();
-
-  const [isCardView, setIsCardView] = useState<boolean>(true);
 
   return (
     <>
@@ -42,14 +40,7 @@ const LoansActiveTab: FC = () => {
             >
               Repay {totalBorrowed?.toFixed(2)} SOL
             </Button>
-            <Button onClick={() => setIsCardView(!isCardView)}>
-              {isCardView}
-            </Button>
-            <LoansActiveTable
-              isCardView={isCardView}
-              className={styles.loansTable}
-              data={loans}
-            />
+            <LoansActiveTable className={styles.loansTable} data={loans} />
           </>
         )}
       </div>

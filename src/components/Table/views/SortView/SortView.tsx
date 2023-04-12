@@ -1,14 +1,16 @@
 import { useRef } from 'react';
+import classNames from 'classnames';
 import { ColumnsType } from 'antd/es/table';
 
 import { useFiltersModal } from '@frakt/components/FiltersDropdown';
 import { useOnClickOutside } from '@frakt/hooks';
+import { HorizontalDots } from '@frakt/icons';
 import Button from '@frakt/components/Button';
 
 import { Sort, SortModalMobile } from '../../SortModalMobile';
-import { Search } from '../../Search';
-
 import styles from './SortView.module.scss';
+import { useTableView } from './hooks';
+import { Search } from '../../Search';
 
 interface SortViewProps<T> {
   columns: ColumnsType<T>;
@@ -23,6 +25,8 @@ const SortView = <T extends unknown>({
   setSort,
   sort,
 }: SortViewProps<T>) => {
+  const { viewState, setViewState } = useTableView();
+
   const {
     visible: sortModalMobileVisible,
     close: closeModalMobile,
@@ -39,6 +43,26 @@ const SortView = <T extends unknown>({
         className={styles.searchInput}
         placeHolderText={search?.placeHolderText}
       />
+      <div className={styles.switchView}>
+        <Button
+          className={classNames(styles.switchViewButton, {
+            [styles.active]: viewState === 'table',
+          })}
+          onClick={() => setViewState('table')}
+          type="tertiary"
+        >
+          <HorizontalDots />
+        </Button>
+        <Button
+          className={classNames(styles.switchViewButton, {
+            [styles.active]: viewState === 'card',
+          })}
+          onClick={() => setViewState('card')}
+          type="tertiary"
+        >
+          <HorizontalDots />
+        </Button>
+      </div>
       <div ref={ref}>
         <Button type="tertiary" onClick={toggleModalMobile}>
           Sorting

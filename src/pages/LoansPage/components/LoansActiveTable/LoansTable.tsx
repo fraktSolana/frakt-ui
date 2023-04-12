@@ -1,19 +1,19 @@
 import { FC, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Loan } from '@frakt/api/loans';
+import { useTable, useSearch } from '@frakt/components/Table/hooks';
+import { useTableView } from '@frakt/components/Table/views/SortView';
 import Table, { PartialBreakpoints } from '@frakt/components/Table';
+import { Loan } from '@frakt/api/loans';
 
 import { useSelectedLoans } from '../../loansState';
 import { TableList } from './columns';
-import { useTable, useSearch } from '@frakt/components/Table/hooks';
 
 export interface LoansActiveTableProps {
   data: ReadonlyArray<Loan>;
   loading?: boolean;
   className?: string;
   breakpoints?: PartialBreakpoints;
-  isCardView: boolean;
 }
 
 export const LoansActiveTable: FC<LoansActiveTableProps> = ({
@@ -21,9 +21,9 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
   className,
   loading,
   breakpoints,
-  isCardView,
 }) => {
   const { toggleLoanInSelection } = useSelectedLoans();
+  const { viewState } = useTableView();
 
   const history = useHistory();
 
@@ -39,7 +39,7 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
     searchField: ['nft.name'],
   });
 
-  const COLUMNS = TableList({ isCardView });
+  const COLUMNS = TableList({ isCardView: viewState === 'card' });
 
   const { table } = useTable({
     data: filteredData,
@@ -55,7 +55,7 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
       search={{ onChange }}
       className={className}
       viewParams={{
-        showCard: isCardView,
+        showCard: viewState === 'card',
         showSorting: true,
       }}
       activeRowParams={{

@@ -10,6 +10,19 @@
   }
 }
 
+.switchView {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.switchViewButton {
+  height: 32px;
+  width: 32px;
+}
+.switchViewButton.active {
+  border-color: var(--secondary-border);
+}
+
 .searchInput {
   max-width: 173px;
   margin-right: 20px;
