@@ -2,14 +2,11 @@ import { FC, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Loan } from '@frakt/api/loans';
-import Table, {
-  PartialBreakpoints,
-  useSearch,
-  useTable,
-} from '@frakt/components/Table';
+import Table, { PartialBreakpoints } from '@frakt/components/Table';
 
 import { useSelectedLoans } from '../../loansState';
 import { TableList } from './columns';
+import { useTable, useSearch } from '@frakt/components/Table/hooks';
 
 export interface LoansActiveTableProps {
   data: ReadonlyArray<Loan>;
