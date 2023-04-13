@@ -39,7 +39,7 @@ export const MoreActionsCell: FC<{ loan: Loan; isCardView: boolean }> = ({
         >
           Repay
         </Button>
-        <Button
+        {/* <Button
           className={classNames(styles.repayButton, {
             [styles.cardView]: isCardView,
           })}
@@ -54,7 +54,7 @@ export const MoreActionsCell: FC<{ loan: Loan; isCardView: boolean }> = ({
           disabled
         >
           Sell
-        </Button>
+        </Button> */}
       </div>
       <PartialRepayModal
         visible={partialRepayModalVisible}

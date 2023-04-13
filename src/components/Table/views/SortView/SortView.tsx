@@ -44,27 +44,27 @@ const SortView = <T extends unknown>({
         className={styles.searchInput}
         placeHolderText={search?.placeHolderText}
       />
-      <div className={styles.switchView}>
-        <Button
-          className={classNames(styles.switchViewButton, {
-            [styles.active]: viewState === 'card',
-          })}
-          onClick={() => setViewState('card')}
-          type="tertiary"
-        >
-          <CardView />
-        </Button>
-        <Button
-          className={classNames(styles.switchViewButton, {
-            [styles.active]: viewState === 'table',
-          })}
-          onClick={() => setViewState('table')}
-          type="tertiary"
-        >
-          <TableView />
-        </Button>
-      </div>
-      <div className={styles.sortingButtonWrapper} ref={ref}>
+      <div className={styles.content}>
+        <div className={styles.switchButtons}>
+          <Button
+            className={classNames(styles.switchViewButton, {
+              [styles.active]: viewState === 'card',
+            })}
+            onClick={() => setViewState('card')}
+            type="tertiary"
+          >
+            <CardView />
+          </Button>
+          <Button
+            className={classNames(styles.switchViewButton, {
+              [styles.active]: viewState === 'table',
+            })}
+            onClick={() => setViewState('table')}
+            type="tertiary"
+          >
+            <TableView />
+          </Button>
+        </div>
         <Button
           className={styles.sortingButton}
           type="tertiary"

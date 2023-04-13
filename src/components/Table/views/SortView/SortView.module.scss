@@ -5,15 +5,35 @@
   align-items: center;
   padding: 8px 24px;
 
+  position: relative;
+
   @media screen and (max-width: 960px) {
     align-items: unset;
   }
 }
 
-.switchView {
+.content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.switchButtons {
   display: flex;
   align-items: center;
   gap: 4px;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  @media screen and (max-width: 960px) {
+    position: static;
+    top: unset;
+    left: unset;
+    transform: unset;
+  }
 }
 .switchViewButton {
   padding: 0;
@@ -28,19 +48,12 @@
   width: 80px;
   height: 32px;
 }
-.sortingButtonWrapper {
-  display: flex;
-  justify-content: flex-end;
-  max-width: 195px;
-  width: 100%;
-}
 
 .searchInput {
   max-width: 173px;
-  margin-right: 20px;
   width: unset;
 
-  @media screen and (max-width: 468px) {
-    margin-bottom: 20px;
+  @media screen and (max-width: 550px) {
+    max-width: 150px;
   }
 }
