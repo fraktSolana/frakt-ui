@@ -1,7 +1,7 @@
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SortOrder } from 'antd/lib/table/interface';
 
-import { Loan } from '@frakt/api/loans';
+import { Loan, LoanType } from '@frakt/api/loans';
 import {
   createHighlitedPercentValueJSX,
   createPercentValueJSX,
@@ -50,6 +50,9 @@ export const TableList = ({ isCardView }) => {
         <HeaderCell column={column} label="Borrowed" value="loanValue" />
       ),
       render: (_, { loanValue }) => createSolValueJSX(loanValue),
+      sorter: ({ loanValue: loanValueA }, { loanValue: loanValueB }) =>
+        loanValueA - loanValueB,
+      showSorterTooltip: false,
     },
     {
       key: 'repayValue',
@@ -58,6 +61,9 @@ export const TableList = ({ isCardView }) => {
         <HeaderCell column={column} label="Debt" value="repayValue" />
       ),
       render: (_, { repayValue }) => createSolValueJSX(repayValue),
+      sorter: ({ repayValue: repayValueA }, { repayValue: repayValueB }) =>
+        repayValueA - repayValueB,
+      showSorterTooltip: false,
     },
     {
       key: 'liquidationPrice',
@@ -71,6 +77,13 @@ export const TableList = ({ isCardView }) => {
       ),
       render: (_, { classicParams }) =>
         createSolValueJSX(classicParams?.priceBased?.liquidationPrice),
+      sorter: (
+        { classicParams: classicParamsA },
+        { classicParams: classicParamsB },
+      ) =>
+        classicParamsA?.priceBased?.liquidationPrice -
+        classicParamsB?.priceBased?.liquidationPrice,
+      showSorterTooltip: false,
     },
     {
       key: 'interest',
@@ -80,6 +93,13 @@ export const TableList = ({ isCardView }) => {
       ),
       render: (_, { classicParams }) =>
         createPercentValueJSX(classicParams?.priceBased?.borrowAPRPercent),
+      sorter: (
+        { classicParams: classicParamsA },
+        { classicParams: classicParamsB },
+      ) =>
+        classicParamsA?.priceBased?.borrowAPRPercent -
+        classicParamsB?.priceBased?.borrowAPRPercent,
+      showSorterTooltip: false,
     },
     {
       key: 'health',
@@ -89,6 +109,12 @@ export const TableList = ({ isCardView }) => {
       ),
       render: (_, { classicParams }) =>
         createHighlitedPercentValueJSX(classicParams?.priceBased?.health),
+      sorter: (
+        { classicParams: classicParamsA },
+        { classicParams: classicParamsB },
+      ) =>
+        classicParamsA?.priceBased?.health - classicParamsB?.priceBased?.health,
+      showSorterTooltip: false,
     },
     {
       key: 'duration',
@@ -99,6 +125,20 @@ export const TableList = ({ isCardView }) => {
       render: (_, loan) => <DurationCell loan={loan} />,
       showSorterTooltip: false,
       defaultSortOrder: 'ascend',
+      sorter: (loanA, loanB) => {
+        if (loanA.loanType === LoanType.PRICE_BASED) return 1;
+        if (loanB.loanType === LoanType.PRICE_BASED) return -1;
+
+        const timeToRepayA =
+          loanA?.classicParams?.timeBased?.expiredAt ||
+          loanA?.bondParams?.expiredAt;
+
+        const timeToRepayB =
+          loanB?.classicParams?.timeBased?.expiredAt ||
+          loanB?.bondParams?.expiredAt;
+
+        return timeToRepayA - timeToRepayB;
+      },
     },
     {
       render: (_, loan) => <StakingLoanCell loan={loan} />,
