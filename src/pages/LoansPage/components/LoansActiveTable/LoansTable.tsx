@@ -24,6 +24,7 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
 }) => {
   const { toggleLoanInSelection } = useSelectedLoans();
   const { viewState } = useTableView();
+  const { setSelection, selection, clearSelection } = useSelectedLoans();
 
   const history = useHistory();
 
@@ -48,6 +49,14 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
     loading,
   });
 
+  const onChangeCheckbox = (): void => {
+    if (selection?.length) {
+      clearSelection();
+    } else {
+      setSelection(filteredData as Loan[]);
+    }
+  };
+
   return (
     <Table
       {...table}
@@ -57,6 +66,10 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
       viewParams={{
         showCard: viewState === 'card',
         showSorting: true,
+      }}
+      selectLoansParams={{
+        onChange: onChangeCheckbox,
+        selected: !!selection?.length,
       }}
       activeRowParams={{
         field: 'gracePeriod',

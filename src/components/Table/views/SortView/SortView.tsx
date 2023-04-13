@@ -3,12 +3,14 @@ import classNames from 'classnames';
 import { ColumnsType } from 'antd/es/table';
 
 import { useFiltersModal } from '@frakt/components/FiltersDropdown';
-import { useOnClickOutside } from '@frakt/hooks';
 import { CardView, TableView } from '@frakt/icons';
+import Checkbox from '@frakt/components/Checkbox';
+import { useOnClickOutside } from '@frakt/hooks';
 import Button from '@frakt/components/Button';
 
 import { Sort, SortDropdown } from '../../components/SortDropdown';
 import { Search } from '../../components/Search';
+import { SelectLoansParams } from '../../types';
 import { useTableView } from './hooks';
 
 import styles from './SortView.module.scss';
@@ -18,6 +20,7 @@ interface SortViewProps<T> {
   setSort: (nextSort: Sort) => void;
   sort: Sort;
   search: any;
+  selectLoansParams?: SelectLoansParams;
 }
 
 const SortView = <T extends unknown>({
@@ -25,6 +28,7 @@ const SortView = <T extends unknown>({
   search,
   setSort,
   sort,
+  selectLoansParams,
 }: SortViewProps<T>) => {
   const { viewState, setViewState } = useTableView();
 
@@ -39,12 +43,22 @@ const SortView = <T extends unknown>({
 
   return (
     <div className={styles.sortWrapper}>
-      <Search
-        onChange={search?.onChange}
-        className={styles.searchInput}
-        placeHolderText={search?.placeHolderText}
-      />
-      <div className={styles.content}>
+      <div className={styles.searchWrapper}>
+        {selectLoansParams?.onChange && (
+          <Checkbox
+            className={styles.checkbox}
+            classNameInnerContent={styles.checkboxInnerContent}
+            onChange={selectLoansParams.onChange}
+            checked={selectLoansParams.selected}
+          />
+        )}
+        <Search
+          onChange={search?.onChange}
+          className={styles.searchInput}
+          placeHolderText={search?.placeHolderText}
+        />
+      </div>
+      <div className={styles.rowGap}>
         <div className={styles.switchButtons}>
           <Button
             className={classNames(styles.switchViewButton, {

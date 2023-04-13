@@ -22,3 +22,8 @@ export interface ViewParams {
   showCard: boolean;
   showSorting: boolean;
 }
+
+export interface SelectLoansParams {
+  onChange: () => void;
+  selected: boolean;
+}

@@ -1,7 +1,12 @@
 import { ColumnsType } from 'antd/es/table';
 import { DebouncedFunc } from 'lodash';
 
-import { ActiveRowParams, ViewParams, PartialBreakpoints } from './types';
+import {
+  ActiveRowParams,
+  ViewParams,
+  PartialBreakpoints,
+  SelectLoansParams,
+} from './types';
 import { Loader } from '../Loader';
 
 import { SortDropdownProps } from './components/SortDropdown';
@@ -24,6 +29,7 @@ export interface TableProps<T> {
   breakpoints?: PartialBreakpoints;
   activeRowParams?: ActiveRowParams;
   viewParams?: ViewParams;
+  selectLoansParams?: SelectLoansParams;
 }
 
 export interface TablePropsWithSortProps<T>
@@ -43,6 +49,7 @@ const Table = <T extends unknown>({
   setSort,
   search,
   viewParams,
+  selectLoansParams,
 }: TablePropsWithSortProps<T>): JSX.Element => {
   if (loading) return <Loader />;
 
@@ -54,6 +61,7 @@ const Table = <T extends unknown>({
           sort={sort}
           setSort={setSort}
           columns={columns}
+          selectLoansParams={selectLoansParams}
         />
       )}
       {viewParams?.showCard ? (
