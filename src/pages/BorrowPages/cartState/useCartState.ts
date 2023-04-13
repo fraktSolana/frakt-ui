@@ -429,7 +429,8 @@ type PatchPairByBondOrders = (props: {
 const patchPairByBondOrders: PatchPairByBondOrders = ({ pair, bondOrders }) => {
   return reduce(
     bondOrders,
-    (pair, bondOrder) => patchPairByBondOrder({ pair, bondOrder }),
+    (pair: Pair, bondOrder: BondCartOrder) =>
+      patchPairByBondOrder({ pair, bondOrder }),
     pair,
   );
 };
