@@ -4,17 +4,17 @@ import { DebouncedFunc } from 'lodash';
 import { ActiveRowParams, ViewParams, PartialBreakpoints } from './types';
 import { Loader } from '../Loader';
 
-import { TableView, CardView, SortView } from './views';
 import { SortDropdownProps } from './components/SortDropdown';
+import { TableView, CardView, SortView } from './views';
 import { Search } from './components/Search';
 
 export interface TableProps<T> {
   data: ReadonlyArray<T>;
   columns: ColumnsType<T>;
+
   onRowClick?: (dataItem: T) => void;
   rowKeyField?: string;
   loading?: boolean;
-  noDataMessage?: string;
   className?: string;
   defaultField?: string;
   search?: {
@@ -26,7 +26,7 @@ export interface TableProps<T> {
   viewParams?: ViewParams;
 }
 
-export interface TablePropsWithSortModalMobileProps<T>
+export interface TablePropsWithSortProps<T>
   extends TableProps<T>,
     SortDropdownProps<T> {}
 
@@ -43,7 +43,7 @@ const Table = <T extends unknown>({
   setSort,
   search,
   viewParams,
-}: TablePropsWithSortModalMobileProps<T>): JSX.Element => {
+}: TablePropsWithSortProps<T>): JSX.Element => {
   if (loading) return <Loader />;
 
   return (

@@ -1,6 +1,6 @@
 import { DebouncedFunc } from 'lodash';
 
-import { TableProps, TablePropsWithSortModalMobileProps } from './../Table';
+import { TableProps, TablePropsWithSortProps } from './../Table';
 import { useSortModalMobile } from '../hooks';
 import { PartialSearchParams } from '../types';
 import { useSearch } from './useSearch';
@@ -12,7 +12,7 @@ interface UseTableProps<T> extends TableProps<T> {
 }
 
 type UseTable = <T>(props: UseTableProps<T>) => {
-  table: TablePropsWithSortModalMobileProps<T>;
+  table: TablePropsWithSortProps<T>;
   search: {
     placeHolderText?: string;
     onChange: DebouncedFunc<(event: Event) => void>;
@@ -25,7 +25,6 @@ export const useTable: UseTable = ({
   onRowClick,
   rowKeyField = 'id',
   loading,
-  noDataMessage,
   defaultField,
   searchParams = {
     debounceWait: 0,
@@ -52,7 +51,6 @@ export const useTable: UseTable = ({
       onRowClick,
       rowKeyField,
       loading,
-      noDataMessage,
       ...sortModalMobile,
     },
     search: {

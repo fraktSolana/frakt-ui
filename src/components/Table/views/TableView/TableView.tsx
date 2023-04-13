@@ -13,9 +13,7 @@ interface TableViewProps<T> {
   onRowClick?: (dataItem: T) => void;
   rowKeyField?: string;
   loading?: boolean;
-  noDataMessage?: string;
   className?: string;
-  defaultField?: string;
   activeRowParams?: ActiveRowParams;
   breakpoints?: PartialBreakpoints;
 }

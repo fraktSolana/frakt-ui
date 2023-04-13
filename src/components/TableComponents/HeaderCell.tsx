@@ -28,6 +28,7 @@ export const HeaderCell = <T extends unknown>({
   value,
   tooltipText,
   fixedLeft,
+  hiddenSort,
 }: HeaderCellProps<T>) => {
   const sortedColumn = column?.sortColumns?.find(
     ({ column }) => column.key === value,
@@ -47,7 +48,7 @@ export const HeaderCell = <T extends unknown>({
           <QuestionCircleOutlined className={styles.questionIcon} />
         </Tooltip>
       )}
-      {sortedColumn && (
+      {!hiddenSort && (
         <>
           {sortedOrder === SortOrders.ASC && <ArrowUpTableSort />}
           {sortedOrder === SortOrders.DESC && <ArrowDownTableSort />}

@@ -30,12 +30,12 @@ const SortView = <T extends unknown>({
 
   const {
     visible: sortDropdownVisible,
-    close: closeModalMobile,
-    toggle: toggleModalMobile,
+    close: closeDropdown,
+    toggle: toggleDropdown,
   } = useFiltersModal();
 
   const ref = useRef(null);
-  useOnClickOutside(ref, closeModalMobile);
+  useOnClickOutside(ref, closeDropdown);
 
   return (
     <div className={styles.sortWrapper}>
@@ -68,7 +68,7 @@ const SortView = <T extends unknown>({
         <Button
           className={styles.sortingButton}
           type="tertiary"
-          onClick={toggleModalMobile}
+          onClick={toggleDropdown}
         >
           Sorting
         </Button>
@@ -76,7 +76,7 @@ const SortView = <T extends unknown>({
           columns={columns}
           setSort={setSort}
           sort={sort}
-          sortDropdownVisible={sortDropdownVisible}
+          visible={sortDropdownVisible}
         />
       </div>
     </div>

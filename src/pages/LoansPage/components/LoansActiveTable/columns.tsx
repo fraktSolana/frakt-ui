@@ -32,7 +32,12 @@ export const TableList = ({ isCardView }) => {
     {
       title: (column) => (
         <div className={styles.rowCenter}>
-          <HeaderCell column={column} label="Collateral" value="collateral" />
+          <HeaderCell
+            column={column}
+            label="Collateral"
+            value="collateral"
+            hiddenSort
+          />
         </div>
       ),
       render: (_, { nft, pubkey }) => (
@@ -47,7 +52,12 @@ export const TableList = ({ isCardView }) => {
       key: 'loanValue',
       dataIndex: 'loanValue',
       title: (column) => (
-        <HeaderCell column={column} label="Borrowed" value="loanValue" />
+        <HeaderCell
+          column={column}
+          label="Borrowed"
+          value="loanValue"
+          hiddenSort
+        />
       ),
       render: (_, { loanValue }) => createSolValueJSX(loanValue),
       sorter: ({ loanValue: loanValueA }, { loanValue: loanValueB }) =>
@@ -58,7 +68,12 @@ export const TableList = ({ isCardView }) => {
       key: 'repayValue',
       dataIndex: 'repayValue',
       title: (column) => (
-        <HeaderCell column={column} label="Debt" value="repayValue" />
+        <HeaderCell
+          column={column}
+          label="Debt"
+          value="repayValue"
+          hiddenSort
+        />
       ),
       render: (_, { repayValue }) => createSolValueJSX(repayValue),
       sorter: ({ repayValue: repayValueA }, { repayValue: repayValueB }) =>
@@ -73,6 +88,7 @@ export const TableList = ({ isCardView }) => {
           column={column}
           label="Liquidation price"
           value="liquidationPrice"
+          hiddenSort
         />
       ),
       render: (_, { classicParams }) =>
@@ -89,7 +105,12 @@ export const TableList = ({ isCardView }) => {
       key: 'interest',
       dataIndex: 'interest',
       title: (column) => (
-        <HeaderCell column={column} label="Borrow interest" value="interest" />
+        <HeaderCell
+          column={column}
+          label="Borrow interest"
+          value="interest"
+          hiddenSort
+        />
       ),
       render: (_, { classicParams }) =>
         createPercentValueJSX(classicParams?.priceBased?.borrowAPRPercent),
@@ -105,7 +126,7 @@ export const TableList = ({ isCardView }) => {
       key: 'health',
       dataIndex: 'health',
       title: (column) => (
-        <HeaderCell column={column} label="Health" value="health" />
+        <HeaderCell column={column} label="Health" value="health" hiddenSort />
       ),
       render: (_, { classicParams }) =>
         createHighlitedPercentValueJSX(classicParams?.priceBased?.health),
@@ -120,7 +141,12 @@ export const TableList = ({ isCardView }) => {
       key: 'duration',
       dataIndex: 'duration',
       title: (column) => (
-        <HeaderCell column={column} label="Duration" value="duration" />
+        <HeaderCell
+          column={column}
+          label="Duration"
+          value="duration"
+          hiddenSort
+        />
       ),
       render: (_, loan) => <DurationCell loan={loan} />,
       showSorterTooltip: false,

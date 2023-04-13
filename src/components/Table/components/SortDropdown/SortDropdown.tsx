@@ -13,22 +13,20 @@ export interface Sort {
 }
 
 export interface SortDropdownProps<T> {
-  sortDropdownVisible: boolean;
-  closeModalMobile?: () => void;
-  toggleModalMobile?: () => void;
+  visible: boolean;
   sort: Sort;
   setSort: (nextSort: Sort) => void;
   columns: ColumnsType<T>;
 }
 
 export const SortDropdown = <T extends unknown>({
-  sortDropdownVisible,
+  visible,
   sort,
   setSort,
   columns,
 }: SortDropdownProps<T>): JSX.Element => {
   return (
-    <DropdownBackdrop visible={sortDropdownVisible}>
+    <DropdownBackdrop visible={visible}>
       {columns
         .filter(({ sorter }) => !!sorter)
         .map((column) => {
