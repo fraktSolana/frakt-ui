@@ -12,7 +12,7 @@ import {
 } from '@frakt/api/nft';
 import { PATHS } from '@frakt/constants';
 
-import { BondOrder, useBorrow } from '../cartState';
+import { CartOrder, useBorrow } from '../cartState';
 import { LoanType } from '@frakt/api/loans';
 
 type UseBulkSuggestion = (props: {
@@ -74,7 +74,7 @@ export const useBorrowBulkSuggestionPage = () => {
   const onBackBtnClick = () => history.push(PATHS.BORROW_ROOT);
 
   const onBulkSuggestionSelect = (suggestion: Suggestion) => {
-    const cartOrders: BondOrder[] = suggestion?.orders.map((order) => ({
+    const cartOrders: CartOrder[] = suggestion?.orders.map((order) => ({
       borrowNft: order.borrowNft,
       loanType: order.loanType,
       loanValue: order.loanValue,
