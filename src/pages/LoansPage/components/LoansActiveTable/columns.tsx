@@ -32,7 +32,7 @@ export const TableList = ({ isCardView }) => {
     {
       title: (column) => (
         <div className={styles.rowCenter}>
-          <HeaderCell column={column} label="Borrowed" value="loanValue" />
+          <HeaderCell column={column} label="Collateral" value="collateral" />
         </div>
       ),
       render: (_, { nft, pubkey }) => (

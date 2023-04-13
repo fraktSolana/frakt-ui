@@ -4,13 +4,14 @@ import { ColumnsType } from 'antd/es/table';
 
 import { useFiltersModal } from '@frakt/components/FiltersDropdown';
 import { useOnClickOutside } from '@frakt/hooks';
-import { CardView, HorizontalDots, TableView } from '@frakt/icons';
+import { CardView, TableView } from '@frakt/icons';
 import Button from '@frakt/components/Button';
 
-import { Sort, SortModalMobile } from '../../SortModalMobile';
-import styles from './SortView.module.scss';
+import { Sort, SortDropdown } from '../../components/SortDropdown';
+import { Search } from '../../components/Search';
 import { useTableView } from './hooks';
-import { Search } from '../../Search';
+
+import styles from './SortView.module.scss';
 
 interface SortViewProps<T> {
   columns: ColumnsType<T>;
@@ -28,7 +29,7 @@ const SortView = <T extends unknown>({
   const { viewState, setViewState } = useTableView();
 
   const {
-    visible: sortModalMobileVisible,
+    visible: sortDropdownVisible,
     close: closeModalMobile,
     toggle: toggleModalMobile,
   } = useFiltersModal();
@@ -71,11 +72,11 @@ const SortView = <T extends unknown>({
         >
           Sorting
         </Button>
-        <SortModalMobile
+        <SortDropdown
           columns={columns}
           setSort={setSort}
           sort={sort}
-          sortModalMobileVisible={sortModalMobileVisible}
+          sortDropdownVisible={sortDropdownVisible}
         />
       </div>
     </div>

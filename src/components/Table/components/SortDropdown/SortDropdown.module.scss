@@ -1,0 +1,36 @@
+.sortWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sortDirectionsButtons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sortButton {
+  height: 36px;
+  padding: 12px;
+  border-color: #3e4854;
+  min-width: 60px;
+  width: 100%;
+  padding: 6px;
+  border-style: solid;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.sortButton.active {
+  color: var(--button-text);
+  background-color: var(--light-green-color);
+}
+
+.arrowDown {
+  transform: rotate(180deg);
+}

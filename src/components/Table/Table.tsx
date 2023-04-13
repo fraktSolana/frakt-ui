@@ -2,11 +2,11 @@ import { ColumnsType } from 'antd/es/table';
 import { DebouncedFunc } from 'lodash';
 
 import { ActiveRowParams, ViewParams, PartialBreakpoints } from './types';
-import { SortModalMobileProps } from './SortModalMobile';
 import { Loader } from '../Loader';
-import { Search } from './Search';
 
 import { TableView, CardView, SortView } from './views';
+import { SortDropdownProps } from './components/SortDropdown';
+import { Search } from './components/Search';
 
 export interface TableProps<T> {
   data: ReadonlyArray<T>;
@@ -28,7 +28,7 @@ export interface TableProps<T> {
 
 export interface TablePropsWithSortModalMobileProps<T>
   extends TableProps<T>,
-    SortModalMobileProps<T> {}
+    SortDropdownProps<T> {}
 
 const Table = <T extends unknown>({
   data,
