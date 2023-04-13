@@ -61,18 +61,44 @@ export const signAndSendAllTransactionsInSequence: SignAndSendAllTransactionsInS
 
       const allTxnSignatures: Array<string> = [];
 
-      let currentTxIndex = 0;
-      for (let i = 0; i < txnsAndSigners.length; i++) {
-        for (let r = 0; r < txnsAndSigners[i].length; r++) {
-          console.log('currentTxIndex: ', currentTxIndex);
-          const txn = signedTransactions[currentTxIndex];
-          await connection.sendRawTransaction(txn.serialize(), {
-            skipPreflight: false,
-            preflightCommitment: 'processed',
-          });
-          currentTxIndex += 1;
+      let txnToSendIdxInFlatArr = 0;
+      for (let chunk = 0; chunk < txnsAndSignersFiltered.length; chunk++) {
+        const iterationSignatures: Array<string> = [];
+
+        for (
+          let txnIdxInChunk = 0;
+          txnIdxInChunk < txnsAndSignersFiltered[chunk].length;
+          txnIdxInChunk++
+        ) {
+          const txn = signedTransactions[txnToSendIdxInFlatArr];
+          txnToSendIdxInFlatArr++;
+          try {
+            const signature = await connection.sendRawTransaction(
+              txn.serialize(),
+              {
+                skipPreflight: false,
+                preflightCommitment: 'processed',
+              },
+            );
+            iterationSignatures.push(signature);
+            allTxnSignatures.push(signature);
+          } catch (error) {
+            onError?.(error);
+          }
         }
-        await new Promise((r) => setTimeout(r, 7000));
+
+        await Promise.allSettled(
+          iterationSignatures.map((signature) =>
+            connection.confirmTransaction(
+              {
+                signature,
+                blockhash,
+                lastValidBlockHeight,
+              },
+              'confirmed',
+            ),
+          ),
+        );
       }
 
       onAfterSend?.();
