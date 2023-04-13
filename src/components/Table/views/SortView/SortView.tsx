@@ -4,7 +4,7 @@ import { ColumnsType } from 'antd/es/table';
 
 import { useFiltersModal } from '@frakt/components/FiltersDropdown';
 import { useOnClickOutside } from '@frakt/hooks';
-import { HorizontalDots } from '@frakt/icons';
+import { CardView, HorizontalDots, TableView } from '@frakt/icons';
 import Button from '@frakt/components/Button';
 
 import { Sort, SortModalMobile } from '../../SortModalMobile';
@@ -46,25 +46,29 @@ const SortView = <T extends unknown>({
       <div className={styles.switchView}>
         <Button
           className={classNames(styles.switchViewButton, {
-            [styles.active]: viewState === 'table',
-          })}
-          onClick={() => setViewState('table')}
-          type="tertiary"
-        >
-          <HorizontalDots />
-        </Button>
-        <Button
-          className={classNames(styles.switchViewButton, {
             [styles.active]: viewState === 'card',
           })}
           onClick={() => setViewState('card')}
           type="tertiary"
         >
-          <HorizontalDots />
+          <CardView />
+        </Button>
+        <Button
+          className={classNames(styles.switchViewButton, {
+            [styles.active]: viewState === 'table',
+          })}
+          onClick={() => setViewState('table')}
+          type="tertiary"
+        >
+          <TableView />
         </Button>
       </div>
-      <div ref={ref}>
-        <Button type="tertiary" onClick={toggleModalMobile}>
+      <div className={styles.sortingButtonWrapper} ref={ref}>
+        <Button
+          className={styles.sortingButton}
+          type="tertiary"
+          onClick={toggleModalMobile}
+        >
           Sorting
         </Button>
         <SortModalMobile
