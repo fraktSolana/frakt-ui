@@ -14,7 +14,8 @@ import styles from './LoansHistoryTab.module.scss';
 const LoansHistoryTab: FC = () => {
   const { ref, inView } = useIntersection();
   const { connected } = useWallet();
-  const [queryData, setQueryData] = useState<Sort>();
+
+  const [queryData, setQueryData] = useState<Sort>(null);
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useFetchLoansHistory({ queryData });

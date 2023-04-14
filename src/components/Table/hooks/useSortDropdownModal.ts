@@ -1,22 +1,22 @@
 import { useMemo, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
-import { SortModalMobileProps } from '../SortModalMobile';
 
-type UseSortModalMobile = <T>(props: {
+import { SortDropdownProps } from '../components/SortDropdown';
+
+type UseSortDropdownModal = <T>(props: {
   data: ReadonlyArray<T>;
   columns: ColumnsType<T>;
   defaultField?: string;
 }) => {
-  modal: SortModalMobileProps<T>;
+  modal: SortDropdownProps<T>;
   sortedData: T[];
 };
 
-export const useSortModalMobile: UseSortModalMobile = ({
+export const useSortDropdownModal: UseSortDropdownModal = ({
   data,
   columns,
   defaultField,
 }) => {
-  const [sortModalMobileVisible, setSortModalMobileVisible] = useState(false);
   const [sort, setSort] = useState<{
     field: string | null;
     direction: 'desc' | 'asc';
@@ -40,8 +40,6 @@ export const useSortModalMobile: UseSortModalMobile = ({
 
   return {
     modal: {
-      sortModalMobileVisible,
-      setSortModalMobileVisible,
       sort,
       setSort,
       columns,

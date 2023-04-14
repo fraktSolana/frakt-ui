@@ -81,20 +81,22 @@ const SortView = <T extends unknown>({
             <TableView />
           </Button>
         </div>
-        <Button
-          className={styles.sortingButton}
-          type="tertiary"
-          onClick={toggleDropdown}
-        >
-          Sorting
-        </Button>
-        <SortDropdown
-          columns={columns}
-          setSort={setSort}
-          sort={sort}
-          visible={sortDropdownVisible}
-          setQueryData={setQueryData}
-        />
+        <div ref={ref}>
+          <Button
+            className={styles.sortingButton}
+            type="tertiary"
+            onClick={toggleDropdown}
+          >
+            Sorting
+          </Button>
+          <SortDropdown
+            columns={columns}
+            setSort={setSort}
+            sort={sort}
+            visible={sortDropdownVisible}
+            setQueryData={setQueryData}
+          />
+        </div>
       </div>
     </div>
   );

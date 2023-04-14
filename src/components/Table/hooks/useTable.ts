@@ -1,7 +1,7 @@
 import { DebouncedFunc } from 'lodash';
 
 import { TableProps, TablePropsWithSortProps } from './../Table';
-import { useSortModalMobile } from '../hooks';
+import { useSortDropdownModal } from '../hooks';
 import { PartialSearchParams } from '../types';
 import { useSearch } from './useSearch';
 
@@ -38,7 +38,7 @@ export const useTable: UseTable = ({
     debounceWait: searchParams.debounceWait ?? 0,
   });
 
-  const { modal: sortModalMobile, sortedData } = useSortModalMobile({
+  const { modal: sortDropdownModal, sortedData } = useSortDropdownModal({
     data: filteredData,
     columns,
     defaultField,
@@ -51,7 +51,7 @@ export const useTable: UseTable = ({
       onRowClick,
       rowKeyField,
       loading,
-      ...sortModalMobile,
+      ...sortDropdownModal,
     },
     search: {
       placeHolderText: searchParams.placeHolderText ?? 'Search by name',
