@@ -56,7 +56,7 @@ export const SortDropdown = <T extends unknown>({
                   })}
                 >
                   {lable}
-                  <ArrowUp />
+                  <ArrowUp className={styles.arrow} />
                 </Button>
                 <Button
                   type="tertiary"

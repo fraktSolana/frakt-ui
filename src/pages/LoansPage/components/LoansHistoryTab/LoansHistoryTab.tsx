@@ -10,6 +10,7 @@ import { LoansHistoryTable } from '../LoansHistoryTable';
 import { useFetchLoansHistory } from './hooks';
 
 import styles from './LoansHistoryTab.module.scss';
+import EmptyList from '@frakt/components/EmptyList';
 
 const LoansHistoryTab: FC = () => {
   const { ref, inView } = useIntersection();
@@ -46,6 +47,12 @@ const LoansHistoryTab: FC = () => {
       )}
 
       {!data.length && isLoading && <Loader />}
+      {connected && !data.length && !isLoading && (
+        <EmptyList
+          className={styles.emptyList}
+          text="You don't have any loans"
+        />
+      )}
     </>
   );
 };
