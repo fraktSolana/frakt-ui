@@ -1,10 +1,13 @@
 import { FC, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { useTable, useSearch } from '@frakt/components/Table/hooks';
-import { useTableView } from '@frakt/components/Table/views/SortView';
 import Table, { PartialBreakpoints } from '@frakt/components/Table';
 import { Loan } from '@frakt/api/loans';
+import {
+  useTable,
+  useSearch,
+  useTableView,
+} from '@frakt/components/Table/hooks';
 
 import { useSelectedLoans } from '../../loansState';
 import { TableList } from './columns';

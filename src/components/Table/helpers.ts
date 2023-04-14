@@ -1,5 +1,6 @@
 import { ActiveRowParams } from './types';
 
+//TODO Rewrite this code!
 export const getRowClassName = (record: any, params: ActiveRowParams) => {
   const DEFAULT_ROW_CLASSNAME = 'rowClassName';
   const ACTIVE_ROW_CLASSNAME = 'activeRowClassName';

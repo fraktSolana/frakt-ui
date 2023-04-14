@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import classNames from 'classnames';
 import { ColumnsType } from 'antd/es/table';
+import { DebouncedFunc } from 'lodash';
 
 import { useFiltersModal } from '@frakt/components/FiltersDropdown';
 import { CardView, TableView } from '@frakt/icons';
@@ -11,7 +12,7 @@ import Button from '@frakt/components/Button';
 import { SortDropdown } from '../../components/SortDropdown';
 import { SelectLoansParams, Sort } from '../../types';
 import { Search } from '../../components/Search';
-import { useTableView } from './hooks';
+import { useTableView } from '../../hooks';
 
 import styles from './SortView.module.scss';
 
@@ -19,7 +20,10 @@ interface SortViewProps<T> {
   columns: ColumnsType<T>;
   setSort: (nextSort: Sort) => void;
   sort: Sort;
-  search: any;
+  search?: {
+    placeHolderText?: string;
+    onChange: DebouncedFunc<(event) => void>;
+  };
   selectLoansParams?: SelectLoansParams;
   setQueryData: (nextSort: Sort) => void;
 }

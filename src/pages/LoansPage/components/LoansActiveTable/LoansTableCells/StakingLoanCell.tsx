@@ -9,6 +9,7 @@ import FiltersDropdown, {
 } from '@frakt/components/FiltersDropdown';
 
 import { useLoanCard } from '../../LoanCard/hooks';
+
 import styles from '../LoansTable.module.scss';
 
 export const StakingLoanCell: FC<{ loan: Loan; isCardView: boolean }> = ({

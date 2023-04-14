@@ -1,4 +1,4 @@
-.sortModalMobile {
+.dropdown {
   display: none;
 
   background: var(--primary-background);
@@ -31,12 +31,12 @@
   }
 }
 
-.sortModalMobileVisible {
+.dropdownVisible {
   display: flex;
   transform: translateY(0);
 }
 
-.sortModalMobileBody {
+.dropdownBody {
   padding: 16px;
   display: flex;
   flex-direction: column;

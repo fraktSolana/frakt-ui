@@ -1,13 +1,13 @@
 import { FC } from 'react';
 
-import { useTableView } from '@frakt/components/Table/views/SortView';
+import { LoansHistory } from '@frakt/api/loans';
 import Table, {
   PartialBreakpoints,
   useSearch,
   useTable,
   Sort,
+  useTableView,
 } from '@frakt/components/Table';
-import { LoansHistory } from '@frakt/api/loans';
 
 import { COLUMNS } from './columns';
 

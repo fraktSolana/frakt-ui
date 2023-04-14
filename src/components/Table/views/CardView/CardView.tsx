@@ -26,19 +26,17 @@ const CardView = <T extends unknown>({
       {data?.map((dataRow) => (
         <div
           className={classNames(styles.card, {
-            [activeRowParams?.cardClassName]: !!dataRow[activeRowParams.field],
+            [activeRowParams?.cardClassName]: !!dataRow[activeRowParams?.field],
           })}
           onClick={onRowClick ? () => onRowClick(dataRow) : null}
           key={dataRow[rowKeyField]}
         >
-          {columns?.map(({ key, title, render }, idx: number) => {
-            return (
-              <div className={styles.cardRow} key={key}>
-                <div className={styles.cardRowTitle}>{title && title()}</div>
-                {render(dataRow[key], dataRow, idx)}
-              </div>
-            );
-          })}
+          {columns?.map(({ key, title, render }, idx: number) => (
+            <div className={styles.cardRow} key={key}>
+              <div className={styles.cardRowTitle}>{title && title()}</div>
+              {render(dataRow[key], dataRow, idx)}
+            </div>
+          ))}
         </div>
       ))}
     </div>

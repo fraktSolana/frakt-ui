@@ -13,8 +13,8 @@ export const useFetchLoansHistory = ({ queryData }: { queryData?: Sort }) => {
     const data = await fetchLoansHistory({
       skip: LIMIT * pageParam,
       limit: LIMIT,
-      sortBy: queryData?.field || 'date',
-      direction: queryData?.direction || 'desc',
+      sortBy: queryData?.field,
+      direction: queryData?.direction,
       walletPubkey: publicKey,
     });
 
@@ -25,12 +25,9 @@ export const useFetchLoansHistory = ({ queryData }: { queryData?: Sort }) => {
     useInfiniteQuery({
       queryKey: [publicKey, queryData],
       queryFn: ({ pageParam = 0 }) => fetchData({ pageParam }),
-      getPreviousPageParam: (firstPage) => {
-        return firstPage.pageParam - 1 ?? undefined;
-      },
-      getNextPageParam: (lastPage) => {
-        return lastPage.data?.length ? lastPage.pageParam + 1 : undefined;
-      },
+      getPreviousPageParam: ({ pageParam }) => pageParam - 1 ?? undefined,
+      getNextPageParam: ({ data, pageParam }) =>
+        data?.length ? pageParam + 1 : undefined,
       staleTime: 60 * 1000,
       cacheTime: 100_000,
       networkMode: 'offlineFirst',
@@ -38,7 +35,7 @@ export const useFetchLoansHistory = ({ queryData }: { queryData?: Sort }) => {
       refetchOnWindowFocus: false,
     });
 
-  const loansHistory = data?.pages?.map((page) => page.data).flat() || [];
+  const loansHistory = data?.pages?.map(({ data }) => data).flat() || [];
 
   return {
     data: loansHistory,

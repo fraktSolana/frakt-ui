@@ -25,13 +25,11 @@
   align-items: center;
 
   &:first-child {
-    .cardRowTitle {
-      display: none;
-    }
-  }
-  &:first-child {
     justify-content: flex-start;
   }
+}
+.cardRow:first-child .cardRowTitle {
+  display: none;
 }
 
 .cardRowTitle {

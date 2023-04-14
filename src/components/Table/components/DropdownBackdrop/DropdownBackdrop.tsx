@@ -4,10 +4,10 @@ import styles from './DropdownBackdrop.module.scss';
 
 export const DropdownBackdrop = ({ visible, children }) => (
   <div
-    className={classNames(styles.sortModalMobile, {
-      [styles.sortModalMobileVisible]: visible,
+    className={classNames(styles.dropdown, {
+      [styles.dropdownVisible]: visible,
     })}
   >
-    <div className={styles.sortModalMobileBody}>{children}</div>
+    <div className={styles.dropdownBody}>{children}</div>
   </div>
 );

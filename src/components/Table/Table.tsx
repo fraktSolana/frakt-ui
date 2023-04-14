@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import { DebouncedFunc } from 'lodash';
 
@@ -17,19 +18,21 @@ export interface TableProps<T> {
   data: ReadonlyArray<T>;
   columns: ColumnsType<T>;
 
-  onRowClick?: (dataItem: T) => void;
-  rowKeyField?: string;
   loading?: boolean;
-  className?: string;
+  rowKeyField?: string;
+  onRowClick?: (dataItem: T) => void;
   defaultField?: string;
   search?: {
     placeHolderText?: string;
-    onChange: DebouncedFunc<(event: any) => void>;
+    onChange: DebouncedFunc<(event: ChangeEvent<HTMLInputElement>) => void>;
   };
+
+  selectLoansParams?: SelectLoansParams;
   breakpoints?: PartialBreakpoints;
   activeRowParams?: ActiveRowParams;
   viewParams?: ViewParams;
-  selectLoansParams?: SelectLoansParams;
+
+  className?: string;
   cardClassName?: string;
 }
 
