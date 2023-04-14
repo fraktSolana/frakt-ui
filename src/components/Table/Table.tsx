@@ -30,6 +30,7 @@ export interface TableProps<T> {
   activeRowParams?: ActiveRowParams;
   viewParams?: ViewParams;
   selectLoansParams?: SelectLoansParams;
+  cardClassName?: string;
 }
 
 export interface TablePropsWithSortProps<T>
@@ -51,6 +52,7 @@ const Table = <T extends unknown>({
   viewParams,
   selectLoansParams,
   setQueryData,
+  cardClassName,
 }: TablePropsWithSortProps<T>): JSX.Element => {
   if (loading) return <Loader />;
 
@@ -72,6 +74,8 @@ const Table = <T extends unknown>({
           columns={columns}
           onRowClick={onRowClick}
           rowKeyField={rowKeyField}
+          className={cardClassName}
+          activeRowParams={activeRowParams}
         />
       ) : (
         <TableView

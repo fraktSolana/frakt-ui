@@ -1,4 +1,4 @@
-.mobileTableView {
+.cardList {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(272px, 2fr));
   gap: 16px;
@@ -9,7 +9,7 @@
   }
 }
 
-.mobileCollection {
+.card {
   background: var(--primary-background);
   border: 1px solid var(--primary-border);
   padding: 16px;
@@ -19,13 +19,13 @@
   position: relative;
 }
 
-.mobileRow {
+.cardRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
 
   &:first-child {
-    .mobileRowTitle {
+    .cardRowTitle {
       display: none;
     }
   }
@@ -34,6 +34,6 @@
   }
 }
 
-.mobileRowTitle {
+.cardRowTitle {
   display: flex;
 }

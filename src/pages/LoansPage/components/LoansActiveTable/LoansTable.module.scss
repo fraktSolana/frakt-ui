@@ -216,3 +216,8 @@
   position: absolute;
   top: -13px;
 }
+
+.graced {
+  border: 1px solid var(--orange-color);
+  box-shadow: inset 0px 0px 18px var(--orange-color);
+}

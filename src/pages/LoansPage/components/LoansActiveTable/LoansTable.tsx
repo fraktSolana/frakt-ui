@@ -8,12 +8,14 @@ import { Loan } from '@frakt/api/loans';
 
 import { useSelectedLoans } from '../../loansState';
 import { TableList } from './columns';
+import styles from './LoansTable.module.scss';
 
 export interface LoansActiveTableProps {
   data: ReadonlyArray<Loan>;
   loading?: boolean;
   className?: string;
   breakpoints?: PartialBreakpoints;
+  cardClassName?: string;
 }
 
 export const LoansActiveTable: FC<LoansActiveTableProps> = ({
@@ -21,6 +23,7 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
   className,
   loading,
   breakpoints,
+  cardClassName,
 }) => {
   const { toggleLoanInSelection } = useSelectedLoans();
   const { viewState } = useTableView();
@@ -63,6 +66,7 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
       breakpoints={breakpoints}
       search={{ onChange }}
       className={className}
+      cardClassName={cardClassName}
       viewParams={{
         showCard: viewState === 'card',
         showSorting: true,
@@ -74,6 +78,7 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
       activeRowParams={{
         field: 'gracePeriod',
         className: 'graceRowClassName',
+        cardClassName: styles.graced,
       }}
     />
   );

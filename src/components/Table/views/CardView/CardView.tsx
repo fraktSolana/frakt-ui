@@ -1,5 +1,7 @@
 import { ColumnsType } from 'antd/es/table';
+import classNames from 'classnames';
 
+import { ActiveRowParams } from '../../types';
 import styles from './CardView.module.scss';
 
 interface CardViewProps<T> {
@@ -7,6 +9,8 @@ interface CardViewProps<T> {
   data: ReadonlyArray<T>;
   onRowClick?: (dataItem: T) => void;
   rowKeyField: string;
+  className?: string;
+  activeRowParams: ActiveRowParams;
 }
 
 const CardView = <T extends unknown>({
@@ -14,19 +18,23 @@ const CardView = <T extends unknown>({
   columns,
   onRowClick,
   rowKeyField,
+  className,
+  activeRowParams,
 }: CardViewProps<T>): JSX.Element => {
   return (
-    <div className={styles.mobileTableView}>
+    <div className={classNames(styles.cardList, className)}>
       {data?.map((dataRow) => (
         <div
-          className={styles.mobileCollection}
+          className={classNames(styles.card, {
+            [activeRowParams?.cardClassName]: !!dataRow[activeRowParams.field],
+          })}
           onClick={onRowClick ? () => onRowClick(dataRow) : null}
           key={dataRow[rowKeyField]}
         >
-          {columns?.map(({ key, title, render }, idx) => {
+          {columns?.map(({ key, title, render }, idx: number) => {
             return (
-              <div className={styles.mobileRow} key={key}>
-                <div className={styles.mobileRowTitle}>{title && title()}</div>
+              <div className={styles.cardRow} key={key}>
+                <div className={styles.cardRowTitle}>{title && title()}</div>
                 {render(dataRow[key], dataRow, idx)}
               </div>
             );

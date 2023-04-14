@@ -16,6 +16,7 @@ export interface ActiveRowParams {
   field: string;
   value?: string;
   className?: string;
+  cardClassName?: string;
 }
 
 export interface ViewParams {

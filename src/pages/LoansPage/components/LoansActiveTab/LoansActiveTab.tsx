@@ -40,7 +40,11 @@ const LoansActiveTab: FC = () => {
             >
               Repay {totalBorrowed?.toFixed(2)} SOL
             </Button>
-            <LoansActiveTable className={styles.loansTable} data={loans} />
+            <LoansActiveTable
+              cardClassName={styles.card}
+              className={styles.loansTable}
+              data={loans}
+            />
           </>
         )}
       </div>
