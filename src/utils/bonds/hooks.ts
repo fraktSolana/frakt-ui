@@ -1,5 +1,4 @@
 import {
-  Bond,
   fetchAllMarkets,
   fetchCertainMarket,
   fetchMarketPair,
@@ -61,15 +60,11 @@ const useHiddenPairsPubkeys = create<HiddenPairsPubkeysState>((set) => ({
       }),
     ),
 }));
-type UseMarketPairs = (props: { marketPubkey: string }) => {
-  pairs: Pair[];
-  isLoading: boolean;
-  hidePair: (pairPubkey: string) => void;
-};
-export const useMarketPairs: UseMarketPairs = ({ marketPubkey }) => {
+
+export const useMarketPairs = ({ marketPubkey }) => {
   const { hiddenPairsPubkeys, hidePair } = useHiddenPairsPubkeys();
 
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, refetch } = useQuery(
     ['marketPairs', marketPubkey],
     () => fetchMarketPairs({ marketPubkey: new web3.PublicKey(marketPubkey) }),
     {
@@ -86,6 +81,7 @@ export const useMarketPairs: UseMarketPairs = ({ marketPubkey }) => {
       ) || [],
     isLoading,
     hidePair,
+    refetch,
   };
 };
 
