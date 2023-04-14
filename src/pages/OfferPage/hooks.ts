@@ -44,6 +44,10 @@ export const useOfferPage = () => {
     pairPubkey,
   });
 
+  const { refetch: refetchMarketPairs } = useMarketPairs({
+    marketPubkey,
+  });
+
   const isEdit = !!pairPubkey;
   const initialPairValues = parseMarketOrder(pair);
   const { hidePair } = useMarketPairs({ marketPubkey: marketPubkey });
@@ -161,20 +165,12 @@ export const useOfferPage = () => {
           signers,
           wallet,
           connection,
+          commitment: 'confirmed',
         });
 
-        const newPair = await getPairAccount({
-          accountsPublicKeys,
-          connection,
-        });
+        await new Promise((r) => setTimeout(r, 10000));
 
-        newPair &&
-          queryClient.setQueryData(
-            ['marketPairs', marketPubkey],
-            (pairs: Pair[]) => {
-              return [...pairs, newPair];
-            },
-          );
+        refetchMarketPairs();
 
         notify({
           message: 'Transaction successful!',
