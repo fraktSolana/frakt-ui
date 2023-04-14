@@ -28,7 +28,7 @@ export const LoansHistoryTable: FC<LoansHistoryTableProps> = ({
 
   const { filteredData, onChange } = useSearch({
     data,
-    searchField: ['nft.name'],
+    searchField: ['nftName'],
   });
 
   const { table } = useTable({ data: filteredData, columns: COLUMNS });

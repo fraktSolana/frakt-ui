@@ -18,6 +18,8 @@ export type SortColumns = {
 
 export const COLUMNS: ColumnsType<LoansHistory> = [
   {
+    key: 'nftName',
+    dataIndex: 'nftName',
     title: (column) => (
       <HeaderCell
         column={column}
@@ -32,13 +34,13 @@ export const COLUMNS: ColumnsType<LoansHistory> = [
     ),
   },
   {
-    key: 'loanValue',
-    dataIndex: 'loanValue',
+    key: 'borrowed',
+    dataIndex: 'borrowed',
     title: (column) => (
       <HeaderCell
         column={column}
         label="Borrowed"
-        value="loanValue"
+        value="borrowed"
         hiddenSort
       />
     ),
@@ -48,10 +50,10 @@ export const COLUMNS: ColumnsType<LoansHistory> = [
     showSorterTooltip: false,
   },
   {
-    key: 'repayValue',
-    dataIndex: 'repayValue',
+    key: 'debt',
+    dataIndex: 'debt',
     title: (column) => (
-      <HeaderCell column={column} label="Debt" value="repayValue" hiddenSort />
+      <HeaderCell column={column} label="Debt" value="debt" hiddenSort />
     ),
     sorter: ({ repayValue: repayValueA }, { repayValue: repayValueB }) =>
       repayValueA - repayValueB,
@@ -77,5 +79,6 @@ export const COLUMNS: ColumnsType<LoansHistory> = [
     render: (_, { when }) => createValueTimeJSX(when),
     showSorterTooltip: false,
     defaultSortOrder: 'descend',
+    width: 136,
   },
 ];

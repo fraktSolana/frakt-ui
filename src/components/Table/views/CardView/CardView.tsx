@@ -22,7 +22,7 @@ const CardView = <T extends unknown>({
   activeRowParams,
 }: CardViewProps<T>): JSX.Element => {
   return (
-    <div className={classNames(styles.cardList, className)}>
+    <div className={classNames({ [styles.cardList]: data?.length }, className)}>
       {data?.map((dataRow) => (
         <div
           className={classNames(styles.card, {
