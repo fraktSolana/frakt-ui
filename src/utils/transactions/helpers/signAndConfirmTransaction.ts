@@ -61,4 +61,6 @@ export const signAndConfirmTransaction: SignAndConfirmTransaction = async ({
   //   },
   //   commitment,
   // );
+
+  await new Promise((r) => setTimeout(r, 4000));
 };

@@ -163,8 +163,6 @@ export const useOfferPage = () => {
           commitment: 'confirmed',
         });
 
-        await new Promise((r) => setTimeout(r, 5000));
-
         refetchMarketPairs();
 
         notify({
@@ -211,8 +209,6 @@ export const useOfferPage = () => {
           connection,
           commitment: 'processed',
         });
-
-        await new Promise((r) => setTimeout(r, 5000));
 
         refetchMarketPairs();
 
