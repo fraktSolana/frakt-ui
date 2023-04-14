@@ -1,4 +1,5 @@
 import { FC, useRef } from 'react';
+import classNames from 'classnames';
 
 import { useOnClickOutside } from '@frakt/hooks';
 import Button from '@frakt/components/Button';
@@ -10,7 +11,10 @@ import FiltersDropdown, {
 import { useLoanCard } from '../../LoanCard/hooks';
 import styles from '../LoansTable.module.scss';
 
-export const StakingLoanCell: FC<{ loan: Loan }> = ({ loan }) => {
+export const StakingLoanCell: FC<{ loan: Loan; isCardView: boolean }> = ({
+  loan,
+  isCardView,
+}) => {
   const { onCardinalUnstake } = useLoanCard(loan);
 
   const {
@@ -25,7 +29,12 @@ export const StakingLoanCell: FC<{ loan: Loan }> = ({ loan }) => {
   const isStakingSupport = !!loan?.classicParams?.rewards?.stakeState;
 
   return (
-    <div className={styles.filters} ref={ref}>
+    <div
+      ref={ref}
+      className={classNames(styles.filters, {
+        [styles.cardView]: isCardView,
+      })}
+    >
       {isStakingSupport && (
         <>
           <Button
@@ -33,13 +42,19 @@ export const StakingLoanCell: FC<{ loan: Loan }> = ({ loan }) => {
               toggleModal();
               event.stopPropagation();
             }}
-            className={styles.moreActionsButton}
+            className={classNames(styles.moreActionsButton, {
+              [styles.cardView]: isCardView,
+            })}
             type="tertiary"
           >
             Staking
           </Button>
           {modalVisible && (
-            <FiltersDropdown className={styles.filtersDropdown}>
+            <FiltersDropdown
+              className={classNames(styles.filtersDropdown, {
+                [styles.cardView]: isCardView,
+              })}
+            >
               <div className={styles.stakingContent}>
                 <h4 className={styles.stakingTitle}>Staking</h4>
                 <div className={styles.stakingButtonWrapper}>

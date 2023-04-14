@@ -167,7 +167,9 @@ export const TableList = ({ isCardView }) => {
       },
     },
     {
-      render: (_, loan) => <StakingLoanCell loan={loan} />,
+      render: (_, loan) => (
+        <StakingLoanCell loan={loan} isCardView={isCardView} />
+      ),
     },
     {
       render: (_, loan) => (
