@@ -1,23 +1,30 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
-import { Loan } from '@frakt/api/loans';
+import { useIntersection } from '@frakt/hooks/useIntersection';
+import { Loader } from '@frakt/components/Loader';
+import { Sort } from '@frakt/components/Table';
 
 import { LoansHistoryTable } from '../LoansHistoryTable';
+import { useFetchLoansHistory } from './hooks';
 
 import styles from './LoansHistoryTab.module.scss';
-// import { useFetchLoansHistory } from './hooks';
 
-interface LoansHistoryTabProps {
-  loans: Loan[];
-  isLoading: boolean;
-}
-
-const LoansHistoryTab: FC<LoansHistoryTabProps> = ({ loans, isLoading }) => {
+const LoansHistoryTab: FC = () => {
+  const { ref, inView } = useIntersection();
   const { connected } = useWallet();
+  const [queryData, setQueryData] = useState<Sort>();
 
-  //   const { data, isLoading } = useFetchLoansHistory();
+  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
+    useFetchLoansHistory({ queryData });
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage, hasNextPage]);
+
   return (
     <>
       {!connected ? (
@@ -26,12 +33,18 @@ const LoansHistoryTab: FC<LoansHistoryTabProps> = ({ loans, isLoading }) => {
           text="Connect your wallet to see my history"
         />
       ) : (
-        <LoansHistoryTable
-          className={styles.rootTable}
-          data={loans}
-          loading={isLoading}
-        />
+        <>
+          <LoansHistoryTable
+            className={styles.rootTable}
+            data={data}
+            setQueryData={setQueryData}
+          />
+          {isFetchingNextPage && <Loader />}
+          <div ref={ref} />
+        </>
       )}
+
+      {!data.length && isLoading && <Loader />}
     </>
   );
 };

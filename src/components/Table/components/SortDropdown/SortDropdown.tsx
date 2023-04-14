@@ -5,18 +5,16 @@ import Button from '@frakt/components/Button';
 import { ArrowUp } from '@frakt/icons';
 
 import { DropdownBackdrop } from '../DropdownBackdrop';
-import styles from './SortDropdown.module.scss';
+import { Sort } from '../../types';
 
-export interface Sort {
-  field: string | null;
-  direction: 'desc' | 'asc';
-}
+import styles from './SortDropdown.module.scss';
 
 export interface SortDropdownProps<T> {
   visible: boolean;
   sort: Sort;
   setSort: (nextSort: Sort) => void;
   columns: ColumnsType<T>;
+  setQueryData: (nextSort: Sort) => void;
 }
 
 export const SortDropdown = <T extends unknown>({
@@ -24,7 +22,16 @@ export const SortDropdown = <T extends unknown>({
   sort,
   setSort,
   columns,
+  setQueryData,
 }: SortDropdownProps<T>): JSX.Element => {
+  const onChangeSort = ({ field, direction }: Sort) => {
+    if (setQueryData) {
+      setQueryData({ field, direction });
+    } else {
+      setSort({ field, direction });
+    }
+  };
+
   return (
     <DropdownBackdrop visible={visible}>
       {columns
@@ -44,7 +51,7 @@ export const SortDropdown = <T extends unknown>({
               <div className={styles.sortDirectionsButtons}>
                 <Button
                   type="tertiary"
-                  onClick={() => setSort({ field, direction: 'asc' })}
+                  onClick={() => onChangeSort({ field, direction: 'asc' })}
                   className={classNames(styles.sortButton, {
                     [styles.active]: activeAscSortButton,
                   })}
@@ -54,7 +61,7 @@ export const SortDropdown = <T extends unknown>({
                 </Button>
                 <Button
                   type="tertiary"
-                  onClick={() => setSort({ field, direction: 'desc' })}
+                  onClick={() => onChangeSort({ field, direction: 'desc' })}
                   className={classNames(styles.sortButton, {
                     [styles.active]: activeDescSortButton,
                   })}

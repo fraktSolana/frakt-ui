@@ -8,9 +8,9 @@ import Checkbox from '@frakt/components/Checkbox';
 import { useOnClickOutside } from '@frakt/hooks';
 import Button from '@frakt/components/Button';
 
-import { Sort, SortDropdown } from '../../components/SortDropdown';
+import { SortDropdown } from '../../components/SortDropdown';
+import { SelectLoansParams, Sort } from '../../types';
 import { Search } from '../../components/Search';
-import { SelectLoansParams } from '../../types';
 import { useTableView } from './hooks';
 
 import styles from './SortView.module.scss';
@@ -21,6 +21,7 @@ interface SortViewProps<T> {
   sort: Sort;
   search: any;
   selectLoansParams?: SelectLoansParams;
+  setQueryData: (nextSort: Sort) => void;
 }
 
 const SortView = <T extends unknown>({
@@ -29,6 +30,7 @@ const SortView = <T extends unknown>({
   setSort,
   sort,
   selectLoansParams,
+  setQueryData,
 }: SortViewProps<T>) => {
   const { viewState, setViewState } = useTableView();
 
@@ -91,6 +93,7 @@ const SortView = <T extends unknown>({
           setSort={setSort}
           sort={sort}
           visible={sortDropdownVisible}
+          setQueryData={setQueryData}
         />
       </div>
     </div>

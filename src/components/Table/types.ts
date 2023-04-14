@@ -27,3 +27,8 @@ export interface SelectLoansParams {
   onChange: () => void;
   selected: boolean;
 }
+
+export interface Sort {
+  field: string | null;
+  direction: 'desc' | 'asc';
+}

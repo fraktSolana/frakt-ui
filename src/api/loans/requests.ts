@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { web3 } from 'fbonds-core';
 
-import { Loan, LoansHistory } from './types';
+import { FetchLoansHistoryParams, Loan, LoansHistory } from './types';
 
 const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN;
 
@@ -17,15 +17,19 @@ export const fetchWalletLoans: FetchWalletLoans = async ({ publicKey }) => {
   return data ?? [];
 };
 
-type FetchLoansHistory = (props: {
-  walletPubkey: web3.PublicKey;
-}) => Promise<LoansHistory[]>;
+type FetchLoansHistory = (
+  props: FetchLoansHistoryParams,
+) => Promise<LoansHistory[]>;
 
 export const fetchLoansHistory: FetchLoansHistory = async ({
   walletPubkey,
+  skip,
+  limit = 10,
+  sortBy = 'date',
+  direction = 'desc',
 }) => {
   const { data } = await axios.get<LoansHistory[]>(
-    `https://${BACKEND_DOMAIN}/loan/history/${walletPubkey?.toBase58()}`,
+    `https://${BACKEND_DOMAIN}/history/loans/${walletPubkey?.toBase58()}?sort=${direction}&skip=${skip}&limit=${limit}&sortBy=${sortBy}`,
   );
 
   return data ?? [];

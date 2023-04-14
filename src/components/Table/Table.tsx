@@ -50,6 +50,7 @@ const Table = <T extends unknown>({
   search,
   viewParams,
   selectLoansParams,
+  setQueryData,
 }: TablePropsWithSortProps<T>): JSX.Element => {
   if (loading) return <Loader />;
 
@@ -62,6 +63,7 @@ const Table = <T extends unknown>({
           setSort={setSort}
           columns={columns}
           selectLoansParams={selectLoansParams}
+          setQueryData={setQueryData}
         />
       )}
       {viewParams?.showCard ? (

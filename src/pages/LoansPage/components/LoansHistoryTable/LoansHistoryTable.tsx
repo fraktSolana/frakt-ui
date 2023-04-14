@@ -1,24 +1,46 @@
 import { FC } from 'react';
 
-import Table, { PartialBreakpoints, useTable } from '@frakt/components/Table';
-import { Loan } from '@frakt/api/loans';
+import { useTableView } from '@frakt/components/Table/views/SortView';
+import Table, {
+  PartialBreakpoints,
+  useSearch,
+  useTable,
+  Sort,
+} from '@frakt/components/Table';
+import { LoansHistory } from '@frakt/api/loans';
 
 import { COLUMNS } from './columns';
 
 export interface LoansHistoryTableProps {
-  data: ReadonlyArray<Loan>;
-  loading: boolean;
+  data: ReadonlyArray<LoansHistory>;
   className?: string;
   breakpoints?: PartialBreakpoints;
+  setQueryData: (nextValue: Sort) => void;
 }
 
 export const LoansHistoryTable: FC<LoansHistoryTableProps> = ({
   data,
   className,
-  loading,
   breakpoints,
+  setQueryData,
 }) => {
-  const { table } = useTable({ data, columns: COLUMNS, loading });
+  const { viewState } = useTableView();
 
-  return <Table {...table} breakpoints={breakpoints} className={className} />;
+  const { filteredData, onChange } = useSearch({
+    data,
+    searchField: ['nft.name'],
+  });
+
+  const { table } = useTable({ data: filteredData, columns: COLUMNS });
+
+  return (
+    <Table
+      {...table}
+      viewParams={{ showCard: viewState === 'card', showSorting: true }}
+      breakpoints={breakpoints}
+      search={{ onChange }}
+      className={className}
+      setQueryData={setQueryData}
+    />
+  );
 };
