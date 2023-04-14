@@ -3,11 +3,9 @@ import { web3 } from 'fbonds-core';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useHistory, useParams } from 'react-router-dom';
 import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import {
-  getPairAccount,
   isAutocompoundBondFeature,
   isLiquidatedBondFeature,
   makeCreatePairTransaction,
@@ -22,7 +20,6 @@ import { NotifyType } from '@frakt/utils/solanaUtils';
 import { useConnection } from '@frakt/hooks';
 import { useNativeAccount } from '@frakt/utils/accounts';
 import { PATHS } from '@frakt/constants';
-import { Pair } from '@frakt/api/bonds';
 
 import { RBOption } from '../../components/RadioButton';
 import { makeModifyPairTransactions } from '@frakt/utils/bonds/transactions/makeModifyPairTransactions';
@@ -44,11 +41,13 @@ export const useOfferPage = () => {
     pairPubkey,
   });
 
+  const { refetch: refetchMarketPairs } = useMarketPairs({
+    marketPubkey,
+  });
+
   const isEdit = !!pairPubkey;
   const initialPairValues = parseMarketOrder(pair);
   const { hidePair } = useMarketPairs({ marketPubkey: marketPubkey });
-
-  const queryClient = useQueryClient();
 
   const isLoading = pairPubkey
     ? !initialPairValues?.duration || pairLoading || marketLoading
@@ -88,6 +87,7 @@ export const useOfferPage = () => {
       setAutocompoundFeature(rawData?.bondFeature);
       setReceiveNftFeature(rawData?.bondFeature);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, isLoading, pair]);
 
   const onLtvChange = useCallback((value: number) => setLtv(value), []);
@@ -143,38 +143,27 @@ export const useOfferPage = () => {
       try {
         openLoadingModal();
 
-        const { transaction, signers, accountsPublicKeys } =
-          await makeCreatePairTransaction({
-            marketPubkey: new web3.PublicKey(marketPubkey),
-            maxDuration: duration,
-            maxLTV: ltv,
-            solDeposit: parseFloat(offerSize),
-            interest: parseFloat(interest),
-            marketFloor: market.oracleFloor.floor,
-            bondFeature: findNeededBondFeature(),
-            connection,
-            wallet,
-          });
+        const { transaction, signers } = await makeCreatePairTransaction({
+          marketPubkey: new web3.PublicKey(marketPubkey),
+          maxDuration: duration,
+          maxLTV: ltv,
+          solDeposit: parseFloat(offerSize),
+          interest: parseFloat(interest),
+          marketFloor: market.oracleFloor.floor,
+          bondFeature: findNeededBondFeature(),
+          connection,
+          wallet,
+        });
 
         await signAndConfirmTransaction({
           transaction,
           signers,
           wallet,
           connection,
+          commitment: 'confirmed',
         });
 
-        const newPair = await getPairAccount({
-          accountsPublicKeys,
-          connection,
-        });
-
-        newPair &&
-          queryClient.setQueryData(
-            ['marketPairs', marketPubkey],
-            (pairs: Pair[]) => {
-              return [...pairs, newPair];
-            },
-          );
+        refetchMarketPairs();
 
         notify({
           message: 'Transaction successful!',
@@ -202,44 +191,26 @@ export const useOfferPage = () => {
       try {
         openLoadingModal();
 
-        const { transaction, signers, accountsPublicKeys } =
-          await makeModifyPairTransactions({
-            solDeposit: parseFloat(offerSize),
-            interest: parseFloat(interest),
-            marketFloor: market.oracleFloor.floor,
-            pair,
-            connection,
-            maxDuration: duration,
-            maxLTV: ltv,
-            wallet,
-          });
+        const { transaction, signers } = await makeModifyPairTransactions({
+          solDeposit: parseFloat(offerSize),
+          interest: parseFloat(interest),
+          marketFloor: market.oracleFloor.floor,
+          pair,
+          connection,
+          maxDuration: duration,
+          maxLTV: ltv,
+          wallet,
+        });
 
         await signAndConfirmTransaction({
           transaction,
           signers,
           wallet,
           connection,
+          commitment: 'processed',
         });
 
-        const newPair = await getPairAccount({
-          accountsPublicKeys,
-          connection,
-        });
-
-        newPair &&
-          queryClient.setQueryData(
-            ['marketPairs', marketPubkey],
-            (pairs: Pair[]) => {
-              return pairs.map((pair) => {
-                if (
-                  pair.publicKey === accountsPublicKeys.pairPubkey?.toBase58()
-                ) {
-                  return newPair;
-                }
-                return pair;
-              });
-            },
-          );
+        refetchMarketPairs();
 
         notify({
           message: 'Transaction successful!',
