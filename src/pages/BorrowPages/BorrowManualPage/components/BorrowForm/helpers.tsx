@@ -77,57 +77,91 @@ export const generateSelectOptions: GenerateSelectOptions = ({
   nft,
   bondsParams,
 }) => {
-  const options: SelectValue[] = [];
+  let options: SelectValue[] = [];
 
   const timeBasedDiscountAvailable =
     !!nft?.classicParams?.timeBased?.feeDiscountPercent;
 
   const bondsAvailable = !!nft?.bondParams?.marketPubkey;
-
   const nftHasLimit = nft?.classicParams?.isLimitExceeded;
 
-  if (!bondsAvailable || timeBasedDiscountAvailable) {
-    options.push({
-      label: `${nft?.classicParams?.timeBased.returnPeriodDays} days (flip) ${
-        nftHasLimit ? '- limit exceeded' : ''
-      }`,
-      value: {
-        type: LoanType.TIME_BASED,
-        duration: nft?.classicParams?.timeBased.returnPeriodDays,
-      },
-      disabled: nftHasLimit,
-    });
-  }
+  const bondOptions = bondsParams?.pairs
+    ? uniq(
+        bondsParams?.pairs.map(
+          (pair) => pair?.validation?.durationFilter / (24 * 60 * 60),
+        ),
+      )
+        .sort((a, b) => a - b)
+        .map((period) => ({
+          label: `${period} days`,
+          value: {
+            type: LoanType.BOND,
+            duration: period,
+          },
+        }))
+    : [];
+  // if (bondsParams?.pairs) {
+  //   const availablePeriods = uniq(
+  //     bondsParams?.pairs.map(
+  //       (pair) => pair?.validation?.durationFilter / (24 * 60 * 60),
+  //     ),
+  //   ).sort((a, b) => a - b);
 
-  if (bondsParams?.pairs) {
-    const availablePeriods = uniq(
-      bondsParams?.pairs.map(
-        (pair) => pair?.validation?.durationFilter / (24 * 60 * 60),
-      ),
-    ).sort((a, b) => a - b);
+  //   availablePeriods.forEach((period) => {
+  //     options.push({
+  //       label: `${period} days`,
+  //       value: {
+  //         type: LoanType.BOND,
+  //         duration: period,
+  //       },
+  //     });
+  //   });
+  // }
+  const timeBasedOptions =
+    !bondsAvailable || timeBasedDiscountAvailable
+      ? [
+          {
+            label: `${
+              nft?.classicParams?.timeBased.returnPeriodDays
+            } days (flip) ${nftHasLimit ? '- limit exceeded' : ''}`,
+            value: {
+              type: LoanType.TIME_BASED,
+              duration: nft?.classicParams?.timeBased.returnPeriodDays,
+            },
+            disabled: nftHasLimit,
+          },
+        ]
+      : [];
+  // if (!bondsAvailable || timeBasedDiscountAvailable) {
+  //   timeBasedOption =
+  //     options.push({
+  //       label: `${nft?.classicParams?.timeBased.returnPeriodDays} days (flip) ${nftHasLimit ? '- limit exceeded' : ''
+  //         }`,
+  //       value: {
+  //         type: LoanType.TIME_BASED,
+  //         duration: nft?.classicParams?.timeBased.returnPeriodDays,
+  //       },
+  //       disabled: nftHasLimit,
+  //     });
+  // }
 
-    availablePeriods.forEach((period) => {
-      options.push({
-        label: `${period} days`,
-        value: {
-          type: LoanType.BOND,
-          duration: period,
-        },
-      });
-    });
-  }
+  if (nft.maxLoanValue > nft.classicParams.maxLoanValue)
+    options = [...options, ...bondOptions, ...timeBasedOptions];
+  else options = [...options, ...timeBasedOptions, ...bondOptions];
 
   if (nft?.classicParams?.priceBased) {
-    options.push({
-      label: `Perpetual ${nftHasLimit ? '- limit exceeded' : ''}`,
-      value: {
-        type: LoanType.PRICE_BASED,
-        duration: null,
+    options = [
+      ...options,
+      {
+        label: `Perpetual ${nftHasLimit ? '- limit exceeded' : ''}`,
+        value: {
+          type: LoanType.PRICE_BASED,
+          duration: null,
+        },
+        disabled: nftHasLimit,
       },
-      disabled: nftHasLimit,
-    });
+    ];
   }
-
   return options;
 };
 
