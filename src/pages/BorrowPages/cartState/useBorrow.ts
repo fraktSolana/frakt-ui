@@ -12,6 +12,7 @@ import { useCurrentNft } from './useCurrentNft';
 import { calcBondsAmount, useCartState } from './useCartState';
 import { LoanType } from '@frakt/api/loans';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { patchPairWithProtocolFee } from './helpers';
 
 export const useBorrow = () => {
   const {
@@ -29,7 +30,6 @@ export const useBorrow = () => {
   const {
     nft: currentNft,
     setNft: setCurrentNft,
-    pair: currentPair,
     setPair: setCurrentPair,
     bondOrder: currentBondOrder,
     setBondOrder: setCurrentBondOrder,
@@ -47,16 +47,6 @@ export const useBorrow = () => {
 
   const saveUpcomingOrderToCart = (unshift = false) => {
     if (currentNft && currentLoanType && currentLoanValue) {
-      // for (let orderParam of currentBondOrder.bondOrderParams.orderParams) {
-      //   addOrder({
-      //     loanType: currentLoanType,
-      //     nft: currentNft,
-      //     loanValue: currentLoanValue,
-      //     pair: currentPair ?? null,
-      //     market: market ?? null,
-      //     unshift,
-      //   });
-      // }
       if (currentLoanType === LoanType.BOND) {
         console.log(
           'saveUpcomingOrderToCart currentBondOrder: ',
@@ -199,7 +189,6 @@ export const useBorrow = () => {
     setCurrentBondOrder,
     findOrderInCart,
     currentLoanType,
-    currentPair,
     currentBondOrder,
     saveUpcomingOrderToCart,
     setCurrentNftFromOrder,
@@ -229,6 +218,7 @@ const useMarketAndPairs = (marketPubkey: string | null) => {
             .filter(
               ({ currentSpotPrice }) => currentSpotPrice <= BOND_DECIMAL_DELTA,
             )
+            .map(patchPairWithProtocolFee)
             .map((rawPair) => {
               const samePairSelected = cartPairs.find(
                 (cartPair) => cartPair.publicKey === rawPair.publicKey,

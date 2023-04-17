@@ -10,6 +10,7 @@ import {
   pairLoanDurationFilter,
 } from '@frakt/utils/bonds';
 import moment from 'moment';
+import { patchPairWithProtocolFee } from '@frakt/pages/BorrowPages/cartState';
 
 export const useBondActions = ({
   bond,
@@ -30,7 +31,7 @@ export const useBondActions = ({
     const bestOrdersAndBorrowValueNew = getBestOrdersForExit({
       loanToValueFilter: ltvBasePoints,
       amountOfBonds: stats.amountOfUserBonds,
-      pairs: pairs.filter((p) =>
+      pairs: pairs.map(patchPairWithProtocolFee).filter((p) =>
         pairLoanDurationFilter({
           pair: p,
           duration:

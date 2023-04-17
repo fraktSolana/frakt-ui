@@ -7,7 +7,7 @@ import { BOND_DECIMAL_DELTA, pairLoanDurationFilter } from '@frakt/utils/bonds';
 import { BorrowNft } from '@frakt/api/nft';
 import { Solana } from '@frakt/icons';
 import {
-  calcBondFee,
+  calcBondMultiOrdersFee,
   calcLtv,
   calcPriceBasedUpfrontFee,
   calcTimeBasedFee,
@@ -17,6 +17,10 @@ import {
 import { LoanDetailsField } from './types';
 import styles from './BorrowForm.module.scss';
 import { getMaxBorrowValueOptimized } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+import {
+  BondOrder,
+  patchPairWithProtocolFee,
+} from '@frakt/pages/BorrowPages/cartState';
 
 export interface SelectValue {
   label: string;
@@ -170,13 +174,13 @@ type GenerateLoanDetails = (props: {
   nft: BorrowNft;
   loanType: LoanType;
   loanValue: number;
-  pair?: Pair;
+  order?: BondOrder;
 }) => Array<LoanDetailsField>;
 export const generateLoanDetails: GenerateLoanDetails = ({
   nft,
   loanType,
   loanValue,
-  pair,
+  order,
 }) => {
   const fields: Array<LoanDetailsField> = [];
 
@@ -312,11 +316,8 @@ export const generateLoanDetails: GenerateLoanDetails = ({
   }
 
   //? Bond fee and repay value
-  if (loanType === LoanType.BOND && pair) {
-    const fee = calcBondFee({
-      loanValue,
-      pair,
-    });
+  if (loanType === LoanType.BOND && order) {
+    const fee = calcBondMultiOrdersFee(order);
 
     fields.push({
       label: 'Fee',

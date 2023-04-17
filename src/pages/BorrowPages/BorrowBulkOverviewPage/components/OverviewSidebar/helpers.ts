@@ -4,7 +4,8 @@ import { Pair } from '@frakt/api/bonds';
 import { LoanType } from '@frakt/api/loans';
 import { BondOrder } from '@frakt/pages/BorrowPages/cartState';
 import {
-  calcBondFee,
+  calcBondMultiOrdersFee,
+  calcDurationByMultiOrdersBond,
   calcTimeBasedFee,
 } from '@frakt/pages/BorrowPages/helpers';
 
@@ -16,10 +17,6 @@ export const calcCartFees: CalcCartFees = ({ orders, pairs }) => {
   const feesByDayArr = orders.map((order) =>
     calcOrderFees({
       order,
-      pair: pairs?.find(
-        ({ publicKey }) =>
-          publicKey === order?.bondOrderParams?.orderParams?.[0]?.pairPubkey,
-      ),
     }),
   );
 
@@ -40,8 +37,8 @@ interface FeesByDay {
   '1y'?: number;
 }
 
-type CalcOrderFees = (props: { order: BondOrder; pair?: Pair }) => FeesByDay;
-const calcOrderFees: CalcOrderFees = ({ order, pair }) => {
+type CalcOrderFees = (props: { order: BondOrder }) => FeesByDay;
+const calcOrderFees: CalcOrderFees = ({ order }) => {
   const { loanType, loanValue } = order;
 
   if (loanType === LoanType.TIME_BASED) {
@@ -75,11 +72,9 @@ const calcOrderFees: CalcOrderFees = ({ order, pair }) => {
   }
 
   if (loanType === LoanType.BOND) {
-    const fee = calcBondFee({
-      loanValue,
-      pair,
-    });
-    const durationDays = pair?.validation?.durationFilter / 86400;
+    const fee = calcBondMultiOrdersFee(order);
+
+    const durationDays = calcDurationByMultiOrdersBond(order) / 86400;
 
     return {
       '1d': fee,
