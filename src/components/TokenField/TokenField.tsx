@@ -26,6 +26,7 @@ export interface TokenFieldProps {
   lpBalance?: number;
   toolTipText?: string;
   labelRightNode?: ReactNode;
+  onBlur?: () => void;
 }
 
 const TokenField: FC<TokenFieldProps> = ({
@@ -46,6 +47,7 @@ const TokenField: FC<TokenFieldProps> = ({
   lpBalance,
   toolTipText,
   labelRightNode,
+  onBlur,
 }) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
@@ -90,6 +92,7 @@ const TokenField: FC<TokenFieldProps> = ({
         onBlur={() => setIsFocused(false)}
       >
         <NumericInput
+          onBlur={onBlur}
           value={value}
           maxLength={amountMaxLength}
           onChange={onValueChange}

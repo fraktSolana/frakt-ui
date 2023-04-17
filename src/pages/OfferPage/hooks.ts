@@ -95,7 +95,21 @@ export const useOfferPage = () => {
     setDuration(nextOption.value);
   };
 
-  const onInterestChange = (value: string) => setInterest(value);
+  const onInterestChange = (value: string) => {
+    setInterest(value);
+  };
+
+  const handleInterestOnBlur = (interest: string) => {
+    const isDecimalNumber = parseFloat(interest) > 10;
+
+    const interestSliced =
+      parseFloat(interest) > 99.99
+        ? '99.99'
+        : interest.slice(0, isDecimalNumber ? 5 : 4);
+
+    return setInterest(interestSliced);
+  };
+
   const onOfferSizeChange = (value: string) => {
     setOfferSize(value);
   };
@@ -283,6 +297,7 @@ export const useOfferPage = () => {
     onDurationChange,
     onOfferSizeChange,
     onInterestChange,
+    handleInterestOnBlur,
     onCreateOffer,
     onEditOffer,
     onRemoveOffer,

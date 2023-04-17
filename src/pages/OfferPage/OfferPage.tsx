@@ -34,6 +34,7 @@ export const OfferPage = () => {
     onDurationChange,
     onOfferSizeChange,
     onInterestChange,
+    handleInterestOnBlur,
     onCreateOffer,
     isValid,
     isEdit,
@@ -115,6 +116,7 @@ export const OfferPage = () => {
             <TokenField
               value={interest}
               onValueChange={onInterestChange}
+              onBlur={() => handleInterestOnBlur(interest)}
               label="Interest"
               labelRightNode={
                 <div className={styles.labelRow}>
