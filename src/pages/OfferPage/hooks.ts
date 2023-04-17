@@ -95,7 +95,9 @@ export const useOfferPage = () => {
     setDuration(nextOption.value);
   };
 
-  const onInterestChange = (value: string) => setInterest(value);
+  const onInterestChange = (value: string) =>
+    setInterest(parseFloat(value) > 99.99 ? String(99.99) : value.slice(0, 5));
+
   const onOfferSizeChange = (value: string) => {
     setOfferSize(value);
   };
