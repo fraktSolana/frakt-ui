@@ -107,7 +107,7 @@ export const useOfferPage = () => {
         ? '99.99'
         : interest.slice(0, isDecimalNumber ? 5 : 4);
 
-    return onInterestChange(interestSliced);
+    return setInterest(interestSliced);
   };
 
   const onOfferSizeChange = (value: string) => {
