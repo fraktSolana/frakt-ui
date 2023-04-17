@@ -1,3 +1,3 @@
 export * from './useAdminTradePools';
 export * from './useTradePools';
-export * from './useFetchTradePoolStats';
+export * from './useTradePoolStats';

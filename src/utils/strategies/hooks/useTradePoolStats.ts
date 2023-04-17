@@ -1,7 +1,7 @@
 import { TradePoolStats, fetchTradePoolStats } from '@frakt/api/strategies';
 import { useQuery } from '@tanstack/react-query';
 
-export const useFetchTradePoolStats = ({ walletPublicKey }) => {
+export const useTradePoolStats = ({ walletPublicKey }) => {
   const {
     data,
     isLoading,
@@ -14,6 +14,8 @@ export const useFetchTradePoolStats = ({ walletPublicKey }) => {
     ['tradePoolStats', walletPublicKey],
     () => fetchTradePoolStats({ walletPublicKey }),
     {
+      enabled: !!walletPublicKey,
+      staleTime: 60_000,
       refetchOnWindowFocus: false,
     },
   );
