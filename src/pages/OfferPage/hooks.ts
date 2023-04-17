@@ -104,7 +104,7 @@ export const useOfferPage = () => {
 
     const interestSliced =
       parseFloat(interest) > 99.99
-        ? String(99.99)
+        ? '99.99'
         : interest.slice(0, isDecimalNumber ? 5 : 4);
 
     return onInterestChange(interestSliced);
