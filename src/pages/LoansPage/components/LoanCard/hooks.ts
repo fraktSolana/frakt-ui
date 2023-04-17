@@ -12,7 +12,7 @@ import { paybackLoan } from '@frakt/utils/loans';
 import { throwLogsError } from '@frakt/utils';
 import { useConnection } from '@frakt/hooks';
 
-import { useHiddenLoansPubkeys } from '../../loansState';
+import { useHiddenLoansPubkeys, useSelectedLoans } from '../../loansState';
 
 export const useLoanCard = (loan: Loan) => {
   const wallet = useWallet();
@@ -20,6 +20,7 @@ export const useLoanCard = (loan: Loan) => {
   const dispatch = useDispatch();
 
   const { addHiddenLoansPubkeys } = useHiddenLoansPubkeys();
+  const { clearSelection } = useSelectedLoans();
 
   const [transactionsLeft, setTransactionsLeft] = useState<number>(null);
 
@@ -72,7 +73,7 @@ export const useLoanCard = (loan: Loan) => {
       if (!result) {
         throw new Error('Payback failed');
       }
-
+      clearSelection();
       showConfetti();
       if (isFullPayback) {
         removeTokenOptimistic(loan.pubkey);
@@ -133,6 +134,7 @@ export const useLoanCard = (loan: Loan) => {
         throw new Error('Payback failed');
       }
 
+      clearSelection();
       showConfetti();
       removeTokenOptimistic(loan.pubkey);
     } catch (error) {
