@@ -6,7 +6,13 @@ import { Sort } from '@frakt/components/Table';
 
 const LIMIT = 10;
 
-export const useFetchLoansHistory = ({ queryData }: { queryData?: Sort }) => {
+export const useFetchLoansHistory = ({
+  queryData,
+  querySearch,
+}: {
+  queryData: Sort;
+  querySearch: string;
+}) => {
   const { publicKey } = useWallet();
 
   const fetchData = async ({ pageParam }: { pageParam: number }) => {
@@ -16,6 +22,7 @@ export const useFetchLoansHistory = ({ queryData }: { queryData?: Sort }) => {
       sortBy: queryData?.field,
       direction: queryData?.direction,
       walletPubkey: publicKey,
+      querySearch,
     });
 
     return { pageParam, data };
@@ -23,7 +30,7 @@ export const useFetchLoansHistory = ({ queryData }: { queryData?: Sort }) => {
 
   const { data, fetchNextPage, isFetchingNextPage, isLoading, hasNextPage } =
     useInfiniteQuery({
-      queryKey: [publicKey, queryData],
+      queryKey: [publicKey, queryData, querySearch],
       queryFn: ({ pageParam = 0 }) => fetchData({ pageParam }),
       getPreviousPageParam: ({ pageParam }) => pageParam - 1 ?? undefined,
       getNextPageParam: ({ data, pageParam }) =>

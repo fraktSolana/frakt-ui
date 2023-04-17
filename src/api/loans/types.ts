@@ -80,4 +80,5 @@ export interface FetchLoansHistoryParams {
   limit: number;
   sortBy: string;
   direction: string;
+  querySearch: string;
 }

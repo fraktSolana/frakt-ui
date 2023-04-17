@@ -17,9 +17,10 @@ const LoansHistoryTab: FC = () => {
   const { connected } = useWallet();
 
   const [queryData, setQueryData] = useState<Sort>(null);
+  const [querySearch, setQuerySearch] = useState<string>('');
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    useFetchLoansHistory({ queryData });
+    useFetchLoansHistory({ queryData, querySearch });
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -40,6 +41,7 @@ const LoansHistoryTab: FC = () => {
             className={styles.rootTable}
             data={data}
             setQueryData={setQueryData}
+            setQuerySearch={setQuerySearch}
           />
           {isFetchingNextPage && <Loader />}
           <div ref={ref} />

@@ -9,6 +9,7 @@ type UseSearch = <T>(props: {
   data: ReadonlyArray<T>;
   searchField?: string | string[];
   debounceWait?: number;
+  setQuerySearch?: (nextValue: string) => void;
 }) => {
   filteredData: ReadonlyArray<T>;
   onChange: DebouncedFunc<(event: Event) => void>;
@@ -17,7 +18,8 @@ type UseSearch = <T>(props: {
 export const useSearch: UseSearch = ({
   data,
   searchField = 'name',
-  debounceWait = 0,
+  debounceWait = 100,
+  setQuerySearch,
 }) => {
   const [search, setSearch] = useState<string>('');
 
@@ -36,11 +38,17 @@ export const useSearch: UseSearch = ({
     });
   }, [search, data, searchField]);
 
+  const debounceSearch = (setSearchString: (nextValue: string) => void) => {
+    return debounce(
+      (event: Event) => setSearchString(event.target.value || ''),
+      debounceWait,
+    );
+  };
+
   return {
     filteredData,
-    onChange: debounce(
-      (event: Event) => setSearch(event.target.value || ''),
-      debounceWait,
-    ),
+    onChange: setQuerySearch
+      ? debounceSearch(setQuerySearch)
+      : debounceSearch(setSearch),
   };
 };

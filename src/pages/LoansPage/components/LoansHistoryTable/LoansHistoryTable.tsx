@@ -16,6 +16,7 @@ export interface LoansHistoryTableProps {
   className?: string;
   breakpoints?: PartialBreakpoints;
   setQueryData: (nextValue: Sort) => void;
+  setQuerySearch: (nextValue: string) => void;
 }
 
 export const LoansHistoryTable: FC<LoansHistoryTableProps> = ({
@@ -23,12 +24,14 @@ export const LoansHistoryTable: FC<LoansHistoryTableProps> = ({
   className,
   breakpoints,
   setQueryData,
+  setQuerySearch,
 }) => {
   const { viewState } = useTableView();
 
   const { filteredData, onChange } = useSearch({
     data,
     searchField: 'nftName',
+    setQuerySearch,
   });
 
   const { table } = useTable({ data: filteredData, columns: COLUMNS });
