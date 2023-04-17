@@ -34,6 +34,7 @@ export const OfferPage = () => {
     onDurationChange,
     onOfferSizeChange,
     onInterestChange,
+    handleInterestOnBlur,
     onCreateOffer,
     isValid,
     isEdit,
@@ -44,6 +45,7 @@ export const OfferPage = () => {
     onEditOffer,
     onRemoveOffer,
     autocompoundFeature,
+
     onChangeAutocompoundFeature,
     receiveNftFeature,
     onChangeReceiveNftFeature,
@@ -115,6 +117,7 @@ export const OfferPage = () => {
             <TokenField
               value={interest}
               onValueChange={onInterestChange}
+              onBlur={handleInterestOnBlur}
               label="Interest"
               labelRightNode={
                 <div className={styles.labelRow}>
