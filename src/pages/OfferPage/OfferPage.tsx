@@ -116,7 +116,7 @@ export const OfferPage = () => {
             <TokenField
               value={interest}
               onValueChange={onInterestChange}
-              onBlur={handleInterestOnBlur}
+              onBlur={() => handleInterestOnBlur(interest)}
               label="Interest"
               labelRightNode={
                 <div className={styles.labelRow}>

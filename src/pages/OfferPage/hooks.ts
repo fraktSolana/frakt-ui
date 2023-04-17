@@ -99,13 +99,13 @@ export const useOfferPage = () => {
     setInterest(value);
   };
 
-  const handleInterestOnBlur = () => {
-    const isDecimal = parseFloat(interest) > 10;
+  const handleInterestOnBlur = (interest: string) => {
+    const isDecimalNumber = parseFloat(interest) > 10;
 
     const interestSliced =
       parseFloat(interest) > 99.99
         ? String(99.99)
-        : interest.slice(0, isDecimal ? 5 : 4);
+        : interest.slice(0, isDecimalNumber ? 5 : 4);
 
     return onInterestChange(interestSliced);
   };
