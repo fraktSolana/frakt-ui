@@ -21,8 +21,8 @@ export const useSearch: UseSearch = ({
 }) => {
   const [search, setSearch] = useState<string>('');
 
-  const filtering = (filteredString = '') =>
-    filteredString.toUpperCase().includes(search.toUpperCase());
+  const filtering = (filterableString = '') =>
+    filterableString.toUpperCase().includes(search.toUpperCase());
 
   const filteredData = useMemo(() => {
     if (!search) return data;

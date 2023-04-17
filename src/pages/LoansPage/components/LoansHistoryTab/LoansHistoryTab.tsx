@@ -3,6 +3,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 
 import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
 import { useIntersection } from '@frakt/hooks/useIntersection';
+import EmptyList from '@frakt/components/EmptyList';
 import { Loader } from '@frakt/components/Loader';
 import { Sort } from '@frakt/components/Table';
 
@@ -10,7 +11,6 @@ import { LoansHistoryTable } from '../LoansHistoryTable';
 import { useFetchLoansHistory } from './hooks';
 
 import styles from './LoansHistoryTab.module.scss';
-import EmptyList from '@frakt/components/EmptyList';
 
 const LoansHistoryTab: FC = () => {
   const { ref, inView } = useIntersection();
