@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { MouseEventHandler, useCallback, useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
 import { sum, filter, map } from 'ramda';
@@ -18,70 +18,64 @@ interface CurrentUserTableProps {
   className?: string;
 }
 
-interface UsersRewards {
-  lenders?: [{ user: string; reward: number }];
-  borrowers?: [{ user: string; reward: number }];
-}
-
 const CurrentUserTable = ({
   className = '',
 }: CurrentUserTableProps): JSX.Element => {
   const { disconnect, publicKey } = useWallet();
   const { account } = useNativeAccount();
-  const [usersRewards, setUsersRewars] = useState<UsersRewards>(null);
   const { data: userData } = useUserInfo();
 
-  if (!publicKey) {
-    return null;
-  }
+  // if (!publicKey) {
+  //   return null;
+  // }
 
-  useEffect(() => {
-    (async () => {
-      const data = await networkRequest({
-        url: `${process.env.REWARDS_ENDPOINT}/${publicKey?.toBase58()}`,
-      });
+  // useEffect(() => {
+  //   (async () => {
+  //     const data = await networkRequest({
+  //       url: `${process.env.REWARDS_ENDPOINT}/${publicKey?.toBase58()}`,
+  //     });
 
-      setUsersRewars(data);
-    })();
-  }, []);
+  //     setUsersRewars(data);
+  //   })();
+  // }, []);
 
-  const getRewardsValue = () => {
-    const publicKeyString = publicKey.toBase58();
-    const currentUser = ({ user }) => user === publicKeyString;
-    const reward = ({ reward }) => reward;
+  // const getRewardsValue = () => {
+  //   const publicKeyString = publicKey.toBase58();
+  //   const currentUser = ({ user }) => user === publicKeyString;
+  //   const reward = ({ reward }) => reward;
 
-    if (usersRewards) {
-      const { lenders, borrowers } = usersRewards;
+  //   if (usersRewards) {
+  //     const { lenders, borrowers } = usersRewards;
 
-      const allUsersRewards = [...lenders, ...borrowers];
+  //     const allUsersRewards = [...lenders, ...borrowers];
 
-      const userRewards = filter(currentUser, allUsersRewards);
-      const valueUserRewards = sum(map(reward, userRewards)) || 0;
+  //     const userRewards = filter(currentUser, allUsersRewards);
+  //     const valueUserRewards = sum(map(reward, userRewards)) || 0;
 
-      return valueUserRewards.toFixed(2);
-    }
-  };
+  //     return valueUserRewards.toFixed(2);
+  //   }
+  // };
 
   const [visibleWalletItems, setVisibleWalletItems] = useState<boolean>(false);
 
-  useEffect(() => {
-    setAmplitudeUserId(publicKey?.toBase58());
-  }, [publicKey]);
+  // useEffect(() => {
+  //   setAmplitudeUserId(publicKey?.toBase58());
+  // }, [publicKey]);
 
-  const getBalanceValue = () => {
-    const valueStr = `${formatNumber.format(
-      (account?.lamports || 0) / web3.LAMPORTS_PER_SOL,
-    )}`;
+  // const getBalanceValue = () => {
+  //   const valueStr = `${formatNumber.format(
+  //     (account?.lamports || 0) / web3.LAMPORTS_PER_SOL,
+  //   )}`;
 
-    return (
-      <div className={styles.column}>
-        <p className={styles.columnTitle}>Balance</p>
-        <p className={styles.columnValue}>
-          {valueStr} <Solana />
-        </p>
-      </div>
-    );
-  };
+  //   return (
+  //     <div className={styles.column}>
+  //       <p className={styles.columnTitle}>Balance</p>
+  //       <p className={styles.columnValue}>
+  //         {valueStr} <Solana />
+  //       </p>
+  //     </div>
+  //   );
+  // };
 
   return (
     <>
@@ -90,7 +84,7 @@ const CurrentUserTable = ({
           <div className={styles.userWrapper}>
             <UserAvatar
               className={styles.avatar}
-              imageUrl={userData?.avatarUrl}
+              // imageUrl={userData?.avatarUrl}
             />
             <div className={styles.userInfo}>
               <div
@@ -104,7 +98,7 @@ const CurrentUserTable = ({
               </div>
             </div>
           </div>
-          <div className={styles.balanceInfo}>
+          {/* <div className={styles.balanceInfo}>
             {getBalanceValue()}
             <div className={styles.column}>
               <p className={styles.columnTitle}>Rewards</p>
@@ -112,7 +106,7 @@ const CurrentUserTable = ({
                 {getRewardsValue() || '--'} <FRKT />
               </p>
             </div>
-          </div>
+          </div> */}
 
           <div className={styles.separator} />
 
@@ -124,7 +118,15 @@ const CurrentUserTable = ({
               <ChangeWallet />
               Change wallet
             </div>
-            <div className={styles.btnWrapper} onClick={disconnect}>
+            <div
+              className={styles.btnWrapper}
+              onClick={() => {
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                disconnect().catch(() => {
+                  // Silently catch because any errors are caught by the context `onError` handler
+                });
+              }}
+            >
               <SignOut />
               Sign out
             </div>
