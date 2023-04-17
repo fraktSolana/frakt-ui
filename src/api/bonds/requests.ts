@@ -59,9 +59,10 @@ export const fetchMarketPairs: FetchMarketPairs = async ({ marketPubkey }) => {
     `https://${BACKEND_DOMAIN}/pairs/${marketPubkey.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
-  return data?.filter(
-    ({ currentSpotPrice }) => currentSpotPrice <= BOND_DECIMAL_DELTA,
-  );
+  return data;
+  // .filter(
+  //   ({ currentSpotPrice }) => currentSpotPrice <= BOND_DECIMAL_DELTA,
+  // );
 };
 
 type FetchMarketPair = (props: { pairPubkey: web3.PublicKey }) => Promise<Pair>;

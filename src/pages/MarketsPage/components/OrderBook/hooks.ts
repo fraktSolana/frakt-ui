@@ -105,7 +105,9 @@ export const useMarketOrders: UseMarketOrders = ({
   }, [allOffers]);
 
   return {
-    offers: walletOwned ? ownerOffers : allOffers,
+    offers: walletOwned
+      ? ownerOffers
+      : allOffers.filter((offer) => offer.interest >= 0),
     isLoading,
     hidePair,
     bestOffer,
