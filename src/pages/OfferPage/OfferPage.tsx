@@ -45,7 +45,6 @@ export const OfferPage = () => {
     onEditOffer,
     onRemoveOffer,
     autocompoundFeature,
-
     onChangeAutocompoundFeature,
     receiveNftFeature,
     onChangeReceiveNftFeature,
