@@ -7,7 +7,6 @@ import {
 } from './types';
 
 const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN;
-const BACKEND_DOMAIN_TEST = process.env.BACKEND_DOMAIN_TEST;
 
 export const fetchTradePoolStats = async ({
   walletPublicKey,
@@ -15,7 +14,7 @@ export const fetchTradePoolStats = async ({
   walletPublicKey: string;
 }): Promise<TradePoolStats[]> => {
   const response = await fetch(
-    `https://${BACKEND_DOMAIN_TEST}/trade-pools/stats/${walletPublicKey}`,
+    `https://${BACKEND_DOMAIN}/trade-pools/stats/${walletPublicKey}`,
   );
 
   if (!response.ok) {
@@ -32,7 +31,7 @@ export const fetchTradePools = async ({
   const walletQuery = walletPublicKey ? `?wallet=${walletPublicKey}` : '';
 
   const response = await fetch(
-    `https://${BACKEND_DOMAIN_TEST}/trade-pools${walletQuery}`,
+    `https://${BACKEND_DOMAIN}/trade-pools${walletQuery}`,
   );
 
   if (!response.ok) {
@@ -43,7 +42,7 @@ export const fetchTradePools = async ({
 
 export const createTradePools = async (settings: Settings) => {
   const response = await axios.post(
-    `https://${BACKEND_DOMAIN_TEST}/trade-pools`,
+    `https://${BACKEND_DOMAIN}/trade-pools`,
     settings,
   );
 
@@ -69,7 +68,7 @@ export const setImageTradePools = async (file: File) => {
 
 export const updateTradePools = async (settings: Settings) => {
   const response = await axios.patch(
-    `https://${BACKEND_DOMAIN_TEST}/trade-pools`,
+    `https://${BACKEND_DOMAIN}/trade-pools`,
     settings,
   );
 
@@ -85,7 +84,7 @@ export const fetchAdminTradePools = async ({
   walletPublicKey: string;
 }): Promise<TradePoolAdmin[]> => {
   const response = await fetch(
-    `https://${BACKEND_DOMAIN_TEST}/trade-pools/admin?wallet=${walletPublicKey}`,
+    `https://${BACKEND_DOMAIN}/trade-pools/admin?wallet=${walletPublicKey}`,
   );
 
   if (!response.ok) {
