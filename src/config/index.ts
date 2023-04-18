@@ -13,7 +13,6 @@ export const getRightEndpoint = async () => {
     return process.env.ADBLOCKED_RPC_ENDPOINT;
   } catch (err) {
     console.error('Helios RPC doesnt work, use secondary RPC instead');
-
     try {
       const secondaryConnection = new Connection(process.env.RPC_ENDPOINT);
       await secondaryConnection.getLatestBlockhash();
