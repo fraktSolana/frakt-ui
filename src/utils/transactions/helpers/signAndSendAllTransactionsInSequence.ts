@@ -78,27 +78,29 @@ export const signAndSendAllTransactionsInSequence: SignAndSendAllTransactionsInS
 
       onAfterSend?.();
 
-      const results = await Promise.allSettled(
-        allTxnSignatures.map((signature) =>
-          connection.confirmTransaction(
-            {
-              signature,
-              blockhash,
-              lastValidBlockHeight,
-            },
-            commitment,
-          ),
-        ),
-      );
+      await new Promise((r) => setTimeout(r, 7000));
 
-      //? Can't cover this shit with types properly
-      const resultsContainErr = results
-        .map((res) => !!(res as any)?.value?.value?.err)
-        .find(Boolean);
+      // const results = await Promise.allSettled(
+      //   allTxnSignatures.map((signature) =>
+      //     connection.confirmTransaction(
+      //       {
+      //         signature,
+      //         blockhash,
+      //         lastValidBlockHeight,
+      //       },
+      //       commitment,
+      //     ),
+      //   ),
+      // );
 
-      if (resultsContainErr) {
-        throw new Error('Transaction contains error');
-      }
+      // //? Can't cover this shit with types properly
+      // const resultsContainErr = results
+      //   .map((res) => !!(res as any)?.value?.value?.err)
+      //   .find(Boolean);
+
+      // if (resultsContainErr) {
+      //   throw new Error('Transaction contains error');
+      // }
 
       onSuccess?.();
 
