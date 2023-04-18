@@ -1,12 +1,12 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import produce from 'immer';
 import { reduce, groupBy, map } from 'lodash';
 
 import { Pair } from '@frakt/api/bonds';
-import { BondCartOrder, BorrowNft } from '@frakt/api/nft';
+import { BondCartOrder } from '@frakt/api/nft';
 import { LoanType } from '@frakt/api/loans';
 
-import { BondOrderParams, CartOrder } from './types';
+import { CartOrder } from './types';
 import { calculateNextSpotPrice } from 'fbonds-core/lib/fbond-protocol/helpers';
 import { OrderType } from 'fbonds-core/lib/fbond-protocol/types';
 import {
@@ -25,6 +25,7 @@ interface CartState {
   }) => void;
   updateOrder: (props: { order: CartOrder; pairs?: Pair[] }) => void;
   removeOrder: (props: { nftMint: string }) => void;
+  removeOrder2: (props: { nftMint: string }) => void;
   findPair: (props: { pairPubkey: string }) => Pair | null;
   findOrder: (props: { nftMint: string }) => CartOrder | null;
   clearCart: () => void;
@@ -91,6 +92,49 @@ export const useCartState = create<CartState>((set, get) => ({
           } else {
             state.pairs[indexOfPairInState] = patchedPair;
           }
+        });
+      }),
+    );
+  },
+  removeOrder2({ nftMint }) {
+    set(
+      produce((state: CartState) => {
+        const order = state.orders.find(
+          ({ borrowNft }) => borrowNft.mint === nftMint,
+        );
+        state.orders = state.orders.filter(
+          ({ borrowNft }) => borrowNft.mint !== nftMint,
+        );
+
+        if (order.loanType !== LoanType.BOND) return;
+
+        //? Start pairs manipulations:
+        const { orderParams: bondOrders } = order.bondOrderParams;
+
+        const bondOrdersByPair = groupBy(
+          bondOrders,
+          ({ pairPubkey }) => pairPubkey,
+        );
+
+        const affectedPairs = state.pairs.filter(({ publicKey }) =>
+          Object.keys(bondOrdersByPair).includes(publicKey),
+        );
+
+        const patchedPairs = affectedPairs; //TODO call patchPairByBondOrders but in reverse direction
+        //   const patchedPairs = map(pairs, (pair) =>
+        //   patchPairByBondOrders({
+        //     pair,
+        //     bondOrders: bondOrdersByPair[pair.publicKey],
+        //     reverse,
+        //   }),
+        // );
+
+        patchedPairs.forEach((patchedPair) => {
+          const indexOfPairInState = state.pairs.findIndex(
+            ({ publicKey }) => publicKey === patchedPair.publicKey,
+          );
+
+          state.pairs[indexOfPairInState] = patchedPair;
         });
       }),
     );
@@ -388,7 +432,7 @@ const patchCurrentOrderInPair: PatchCurrentOrderInPair = ({
   //? Just to make sure
   const patchedPair = patchPairToNextOrderAfterSell(pair);
 
-  if (getCurrentOrderSize(patchedPair) <= orderSize)
+  if (getCurrentOrderSize(patchedPair) < orderSize)
     throw Error(
       "Order size should be less or equal to pair's current order size",
     );
