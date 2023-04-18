@@ -72,6 +72,7 @@ export interface LoansHistory {
   repayValue: number;
   status: string;
   when: number;
+  loanType: LoanType;
 }
 
 export interface FetchLoansHistoryParams {
