@@ -1,10 +1,9 @@
 import { ChangeEvent, FC } from 'react';
+import { SearchOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 import { Input } from 'antd';
 
-import { SearchOutlined } from '@ant-design/icons';
-
-import styles from '../../components/SearchInput/styles.module.scss';
+import styles from '@frakt/components/SearchInput/styles.module.scss';
 
 interface SearchProps {
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;

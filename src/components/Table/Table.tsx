@@ -1,35 +1,44 @@
-import { Table as AntdTable } from 'antd';
+import { ChangeEvent } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import { DebouncedFunc } from 'lodash';
-import classNames from 'classnames';
 
-import { ActiveRowParams, PartialBreakpoints } from './types';
-import { SortModalMobileProps } from './SortModalMobile';
+import {
+  ActiveRowParams,
+  ViewParams,
+  PartialBreakpoints,
+  SelectLoansParams,
+} from './types';
 import { Loader } from '../Loader';
-import { Search } from './Search';
 
-import styles from './Table.module.scss';
+import { SortDropdownProps } from './components/SortDropdown';
+import { TableView, CardView, SortView } from './views';
+import { Search } from './components/Search';
 
 export interface TableProps<T> {
   data: ReadonlyArray<T>;
   columns: ColumnsType<T>;
-  onRowClick?: (dataItem: T) => void;
-  rowKeyField?: string;
+
   loading?: boolean;
-  noDataMessage?: string;
-  className?: string;
+  rowKeyField?: string;
+  onRowClick?: (dataItem: T) => void;
   defaultField?: string;
   search?: {
     placeHolderText?: string;
-    onChange: DebouncedFunc<(event: any) => void>;
+    onChange: DebouncedFunc<(event: ChangeEvent<HTMLInputElement>) => void>;
   };
+
+  selectLoansParams?: SelectLoansParams;
   breakpoints?: PartialBreakpoints;
   activeRowParams?: ActiveRowParams;
+  viewParams?: ViewParams;
+
+  className?: string;
+  cardClassName?: string;
 }
 
-export interface TablePropsWithSortModalMobileProps<T>
+export interface TablePropsWithSortProps<T>
   extends TableProps<T>,
-    SortModalMobileProps<T> {}
+    SortDropdownProps<T> {}
 
 const Table = <T extends unknown>({
   data,
@@ -40,37 +49,50 @@ const Table = <T extends unknown>({
   className,
   breakpoints,
   activeRowParams,
-}: TablePropsWithSortModalMobileProps<T>): JSX.Element => {
+  sort,
+  setSort,
+  search,
+  viewParams,
+  selectLoansParams,
+  setQueryData,
+  cardClassName,
+}: TablePropsWithSortProps<T>): JSX.Element => {
   if (loading) return <Loader />;
 
   return (
-    <AntdTable
-      className={classNames(className, {
-        [styles.noDataTableMessage]: !data.length && !loading,
-      })}
-      rowClassName={(record) => {
-        if (!activeRowParams?.field) return 'rowClassName';
-        const field = record[activeRowParams?.field];
-        const value = activeRowParams.value;
-
-        if (!!field && !value) return activeRowParams?.className;
-        return value && field === value && 'activeRowClassName';
-      }}
-      columns={columns as ColumnsType}
-      dataSource={data as any}
-      pagination={false}
-      sortDirections={['descend', 'ascend']}
-      style={onRowClick && { cursor: 'pointer' }}
-      rowKey={(data) => data[rowKeyField]}
-      scroll={{ x: breakpoints?.scrollX, y: breakpoints?.scrollY }}
-      onRow={
-        onRowClick
-          ? (data) => ({
-              onClick: () => onRowClick(data as T),
-            })
-          : null
-      }
-    />
+    <>
+      {viewParams?.showSorting && (
+        <SortView
+          search={search}
+          sort={sort}
+          setSort={setSort}
+          columns={columns}
+          selectLoansParams={selectLoansParams}
+          setQueryData={setQueryData}
+        />
+      )}
+      {viewParams?.showCard ? (
+        <CardView
+          data={data}
+          columns={columns}
+          onRowClick={onRowClick}
+          rowKeyField={rowKeyField}
+          className={cardClassName}
+          activeRowParams={activeRowParams}
+        />
+      ) : (
+        <TableView
+          data={data}
+          className={className}
+          breakpoints={breakpoints}
+          activeRowParams={activeRowParams}
+          loading={loading}
+          columns={columns}
+          rowKeyField={rowKeyField}
+          onRowClick={onRowClick}
+        />
+      )}
+    </>
   );
 };
 
