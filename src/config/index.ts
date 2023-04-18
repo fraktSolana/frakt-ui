@@ -1,14 +1,27 @@
 export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 import { Connection } from '@solana/web3.js';
 
-export const GET_RIGHT_ENDPOINT = async () => {
+export const getRightEndpoint = () => {
   if (IS_DEVELOPMENT) return process.env.DEVELOPMENT_RPC_ENDPOINT;
 
   const primaryConnection = new Connection(process.env.ADBLOCKED_RPC_ENDPOINT);
-  try {
-    await primaryConnection.getLatestBlockhash();
+
+  const getLatestBlockhash = async () => {
+    try {
+      const { blockhash, lastValidBlockHeight } =
+        await primaryConnection.getLatestBlockhash();
+
+      return blockhash;
+    } catch (er) {
+      console.log(er);
+    }
+  };
+
+  const blockhash = getLatestBlockhash();
+
+  if (blockhash) {
     return process.env.ADBLOCKED_RPC_ENDPOINT;
-  } catch (err) {
+  } else {
     console.log(
       'helius rpc: ',
       process.env.ADBLOCKED_RPC_ENDPOINT,
@@ -18,6 +31,7 @@ export const GET_RIGHT_ENDPOINT = async () => {
     return process.env.RPC_ENDPOINT;
   }
 };
+
 export const ENDPOINT = IS_DEVELOPMENT
   ? process.env.DEVELOPMENT_RPC_ENDPOINT
   : process.env.RPC_ENDPOINT;

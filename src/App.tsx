@@ -24,7 +24,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { Router } from '@frakt/router';
 import store from '@frakt/state/store';
-import { ENDPOINT } from '@frakt/config';
+import { ENDPOINT, getRightEndpoint } from '@frakt/config';
 import { initSentry } from '@frakt/utils/sentry';
 import { initAmplitude } from '@frakt/utils/amplitude';
 import Confetti from '@frakt/components/Confetti';
@@ -52,6 +52,8 @@ const wallets = [
 const queryClient = new QueryClient();
 
 const App: FC = () => {
+  const endpoint = getRightEndpoint();
+
   return (
     <ErrorBoundary>
       <ReduxProvider store={store}>
