@@ -1,7 +1,9 @@
+import moment from 'moment';
+
+import { colorByPercentHealth, getColorByPercent } from '@frakt/utils/bonds';
 import { Solana } from '@frakt/icons';
 
 import styles from './TableComponents.module.scss';
-import { colorByPercentHealth, getColorByPercent } from '@frakt/utils/bonds';
 
 export const createSolValueJSX = (value: number) => (
   <span className={styles.value}>
@@ -31,3 +33,14 @@ export const createHighlitedPercentValueJSX = (value: number) => {
     </div>
   );
 };
+
+export const createValueJSX = (value = '') => (
+  <span className={styles.value}>{value || '--'}</span>
+);
+
+export const createValueTimeJSX = (value: number) => (
+  <span className={styles.value}>
+    {!value && '--'}
+    {!!value && moment.unix(value).fromNow(false)}
+  </span>
+);

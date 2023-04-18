@@ -1,51 +1,59 @@
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SortOrder } from 'antd/lib/table/interface';
 
-import { Loan } from '@frakt/api/loans';
+import { LoansHistory } from '@frakt/api/loans';
 import {
-  createPercentValueJSX,
   createSolValueJSX,
+  createValueJSX,
+  createValueTimeJSX,
   HeaderCell,
 } from '@frakt/components/TableComponents';
 
-import { CollectionInfoCell, DurationCell } from '../LoansActiveTable';
+import { CollectionInfoCell } from '../LoansActiveTable';
 
 export type SortColumns = {
-  column: ColumnType<Loan>;
+  column: ColumnType<LoansHistory>;
   order: SortOrder;
 }[];
 
-export const COLUMNS: ColumnsType<Loan> = [
+export const COLUMNS: ColumnsType<LoansHistory> = [
   {
+    key: 'nftName',
+    dataIndex: 'nftName',
     title: (column) => (
       <HeaderCell
         column={column}
         label="Collateral"
         value="nftName"
         fixedLeft
+        hiddenSort
       />
     ),
-    render: (_, { nft }) => (
-      <CollectionInfoCell nftName={nft.name} nftImage={nft.imageUrl} />
+    render: (_, { nftName, nftImage }) => (
+      <CollectionInfoCell nftName={nftName} nftImage={nftImage} />
     ),
   },
   {
-    key: 'loanValue',
-    dataIndex: 'loanValue',
+    key: 'borrowed',
+    dataIndex: 'borrowed',
     title: (column) => (
-      <HeaderCell column={column} label="Borrowed" value="loanValue" />
+      <HeaderCell
+        column={column}
+        label="Borrowed"
+        value="borrowed"
+        hiddenSort
+      />
     ),
     sorter: ({ loanValue: loanValueA }, { loanValue: loanValueB }) =>
       loanValueA - loanValueB,
     render: (_, { loanValue }) => createSolValueJSX(loanValue),
     showSorterTooltip: false,
-    defaultSortOrder: 'ascend',
   },
   {
-    key: 'repayValue',
-    dataIndex: 'repayValue',
+    key: 'debt',
+    dataIndex: 'debt',
     title: (column) => (
-      <HeaderCell column={column} label="Debt" value="repayValue" />
+      <HeaderCell column={column} label="Debt" value="debt" hiddenSort />
     ),
     sorter: ({ repayValue: repayValueA }, { repayValue: repayValueB }) =>
       repayValueA - repayValueB,
@@ -56,19 +64,21 @@ export const COLUMNS: ColumnsType<Loan> = [
     key: 'status',
     dataIndex: 'status',
     title: (column) => (
-      <HeaderCell column={column} label="Status" value="status" />
+      <HeaderCell column={column} label="Status" value="status" hiddenSort />
     ),
-    render: (_, { classicParams }) =>
-      createPercentValueJSX(classicParams?.priceBased?.health),
+    render: (_, { status }) => createValueJSX(status),
     showSorterTooltip: false,
   },
   {
-    key: 'when',
-    dataIndex: 'when',
+    key: 'date',
+    dataIndex: 'date',
     title: (column) => (
-      <HeaderCell column={column} label="When" value="duration" />
+      <HeaderCell column={column} label="When" value="date" hiddenSort />
     ),
-    render: (_, loan) => <DurationCell loan={loan} />,
+    sorter: ({ when: whenA, when: whenB }) => whenA - whenB,
+    render: (_, { when }) => createValueTimeJSX(when),
     showSorterTooltip: false,
+    defaultSortOrder: 'descend',
+    width: 136,
   },
 ];

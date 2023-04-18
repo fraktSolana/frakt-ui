@@ -8,7 +8,6 @@ export const LOANS_TABS: Tab[] = [
   {
     label: 'History',
     value: 'history',
-    disabled: true,
   },
 ];
 

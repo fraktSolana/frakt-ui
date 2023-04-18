@@ -1,7 +1,6 @@
 import { FC } from 'react';
 
 import { Tabs, useTabs } from '@frakt/components/Tabs';
-import { Loan } from '@frakt/api/loans';
 
 import { LOANS_TABS, LoansTabsNames } from '../../constants';
 import LoansActiveTab from '../LoansActiveTab/LoansActiveTab';
@@ -9,15 +8,7 @@ import LoansHistoryTab from '../LoansHistoryTab';
 
 import styles from './LoansPageContent.module.scss';
 
-interface LoansPageContentProps {
-  loans: Loan[];
-  isLoading: boolean;
-}
-
-export const LoansPageContent: FC<LoansPageContentProps> = ({
-  loans,
-  isLoading,
-}) => {
+export const LoansPageContent: FC = () => {
   const {
     tabs: marketTabs,
     value: tabValue,
@@ -34,9 +25,7 @@ export const LoansPageContent: FC<LoansPageContentProps> = ({
       />
       <div className={styles.tabContent}>
         {tabValue === LoansTabsNames.ACTIVE && <LoansActiveTab />}
-        {tabValue === LoansTabsNames.HISTORY && (
-          <LoansHistoryTab loans={loans} isLoading={isLoading} />
-        )}
+        {tabValue === LoansTabsNames.HISTORY && <LoansHistoryTab />}
       </div>
     </div>
   );

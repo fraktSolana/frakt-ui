@@ -1,7 +1,7 @@
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SortOrder } from 'antd/lib/table/interface';
 
-import { Search } from '@frakt/components/Table/Search';
+import { Search } from '@frakt/components/Table/components/Search';
 import { MarketPreview } from '@frakt/api/bonds';
 
 import {

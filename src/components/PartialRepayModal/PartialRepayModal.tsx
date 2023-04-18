@@ -86,7 +86,7 @@ export const PartialRepayModal: FC<PartialRepayModalProps> = ({
 
   return (
     <Modal
-      visible={!!visible}
+      open={!!visible}
       centered
       onCancel={(event) => {
         onCancel();
@@ -100,7 +100,6 @@ export const PartialRepayModal: FC<PartialRepayModalProps> = ({
       <div className={styles.closeModal} onClick={onCancel}>
         <CloseModal className={styles.closeIcon} />
       </div>
-
       <div className={styles.lable}>
         <p>Debt:</p> <span>{repayValueConverted?.toFixed(2)} SOL</span>
       </div>
