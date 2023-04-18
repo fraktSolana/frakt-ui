@@ -18,13 +18,13 @@ import {
   ConnectionProvider,
   WalletProvider,
 } from '@solana/wallet-adapter-react';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { Router } from '@frakt/router';
 import store from '@frakt/state/store';
-import { ENDPOINT, getRightEndpoint } from '@frakt/config';
+import { getRightEndpoint } from '@frakt/config';
 import { initSentry } from '@frakt/utils/sentry';
 import { initAmplitude } from '@frakt/utils/amplitude';
 import Confetti from '@frakt/components/Confetti';
@@ -52,12 +52,21 @@ const wallets = [
 const queryClient = new QueryClient();
 
 const App: FC = () => {
-  const endpoint = await getRightEndpoint();
+  const [endpoint, setEndpoint] = useState<string>(null);
+
+  useEffect(() => {
+    (async () => {
+      const endpoint = await getRightEndpoint();
+      setEndpoint(endpoint);
+    })();
+  }, []);
+
+  if (!endpoint) return <></>;
 
   return (
     <ErrorBoundary>
       <ReduxProvider store={store}>
-        <ConnectionProvider endpoint={ENDPOINT}>
+        <ConnectionProvider endpoint={endpoint}>
           <WalletProvider wallets={wallets} autoConnect>
             <QueryClientProvider client={queryClient}>
               <Router />

@@ -1,5 +1,6 @@
-export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 import { Connection } from '@solana/web3.js';
+
+export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 
 export const getRightEndpoint = async () => {
   if (IS_DEVELOPMENT) return process.env.DEVELOPMENT_RPC_ENDPOINT;
@@ -9,12 +10,8 @@ export const getRightEndpoint = async () => {
     await primaryConnection.getLatestBlockhash();
     return process.env.ADBLOCKED_RPC_ENDPOINT;
   } catch (err) {
-    console.log(
-      'helius rpc: ',
-      process.env.ADBLOCKED_RPC_ENDPOINT,
-      ' is adblocked, using this: ',
-      process.env.RPC_ENDPOINT,
-    );
+    console.error('Helios RPC doesnt work, use secondary RPC instead');
+
     return process.env.RPC_ENDPOINT;
   }
 };
