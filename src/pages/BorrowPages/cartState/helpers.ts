@@ -81,3 +81,12 @@ export const patchPairWithProtocolFee: PatchPairWithProtocolFee = (pair) => {
       (pair.baseSpotPrice * BONDS_PROTOCOL_FEE_IN_BASE_POINTS) / BASE_POINTS,
   };
 };
+
+type PatchBorrowValueWithProtocolFee = (borrowValue: number) => number;
+export const patchBorrowValueWithProtocolFee: PatchBorrowValueWithProtocolFee =
+  (borrowValue) => {
+    return (
+      borrowValue -
+      (borrowValue * BONDS_PROTOCOL_FEE_IN_BASE_POINTS) / BASE_POINTS
+    );
+  };
