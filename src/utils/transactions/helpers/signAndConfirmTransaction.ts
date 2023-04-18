@@ -53,12 +53,14 @@ export const signAndConfirmTransaction: SignAndConfirmTransaction = async ({
     type: NotifyType.INFO,
   });
 
-  await connection.confirmTransaction(
-    {
-      signature: txid,
-      blockhash,
-      lastValidBlockHeight,
-    },
-    commitment,
-  );
+  // await connection.confirmTransaction(
+  //   {
+  //     signature: txid,
+  //     blockhash,
+  //     lastValidBlockHeight,
+  //   },
+  //   commitment,
+  // );
+
+  await new Promise((r) => setTimeout(r, 4000));
 };

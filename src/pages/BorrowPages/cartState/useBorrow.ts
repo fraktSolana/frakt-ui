@@ -2,7 +2,11 @@ import { useMemo } from 'react';
 import { sum, map } from 'lodash';
 
 import { BorrowNft } from '@frakt/api/nft';
-import { useMarket, useMarketPairs } from '@frakt/utils/bonds';
+import {
+  BOND_DECIMAL_DELTA,
+  useMarket,
+  useMarketPairs,
+} from '@frakt/utils/bonds';
 
 import { useCurrentNft } from './useCurrentNft';
 import { useCartState } from './useCartState';
@@ -174,6 +178,9 @@ const useMarketAndPairs = (marketPubkey: string | null) => {
       isLoadingPairs
         ? []
         : rawPairs
+            .filter(
+              ({ currentSpotPrice }) => currentSpotPrice <= BOND_DECIMAL_DELTA,
+            )
             .map((rawPair) => {
               const samePairSelected = cartPairs.find(
                 (cartPair) => cartPair.publicKey === rawPair.publicKey,

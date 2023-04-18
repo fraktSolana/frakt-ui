@@ -22,15 +22,15 @@ const HistoryTab: FC = () => {
   const { ref, inView } = useIntersection();
   const { queryData } = useHistoryBondsSort();
 
-  const [showOwnerBonds, setShowOwnerBonds] = useState<boolean>(false);
+  const [showOwnerBonds, setShowOwnerBonds] = useState<boolean>(true);
   const [filterOption, setFilterOption] = useState<string>(options[0].value);
 
   const {
     data: bondsHistory,
     fetchNextPage,
     isFetchingNextPage,
-    isListEnded,
     isLoading,
+    hasNextPage,
   } = useFetchBondsHistory({
     queryData,
     showOwnerBonds,
@@ -39,14 +39,18 @@ const HistoryTab: FC = () => {
   });
 
   useEffect(() => {
-    if (inView && !isFetchingNextPage && !isListEnded) {
+    if (inView && hasNextPage) {
       fetchNextPage();
     }
-  }, [inView, fetchNextPage, isFetchingNextPage, isListEnded]);
+  }, [inView, fetchNextPage, hasNextPage]);
 
   const onChangeFilterOption = (nextOption: RBOption<string>) => {
     setFilterOption(nextOption.value);
   };
+
+  const showLoader = connected
+    ? !bondsHistory.length && isLoading
+    : !bondsHistory.length && isLoading && !showOwnerBonds;
 
   return (
     <>
@@ -64,12 +68,13 @@ const HistoryTab: FC = () => {
             />
           </div>
           <Toggle
+            value={showOwnerBonds}
             onChange={() => setShowOwnerBonds(!showOwnerBonds)}
             label="My activity"
           />
         </div>
 
-        {!bondsHistory.length && isLoading && <Loader />}
+        {showLoader && <Loader />}
 
         {!connected && showOwnerBonds ? (
           <ConnectWalletSection
@@ -83,7 +88,7 @@ const HistoryTab: FC = () => {
               data={bondsHistory}
               breakpoints={{ scrollX: 744 }}
             />
-            {!!isFetchingNextPage && <Loader />}
+            {isFetchingNextPage && <Loader />}
             <div ref={ref} />
           </>
         )}
@@ -92,7 +97,7 @@ const HistoryTab: FC = () => {
       {!showOwnerBonds && !bondsHistory.length && !isLoading && (
         <EmptyList className={styles.emptyList} text="No bonds at the moment" />
       )}
-      {showOwnerBonds && !bondsHistory.length && !isLoading && (
+      {connected && showOwnerBonds && !bondsHistory.length && !isLoading && (
         <EmptyList className={styles.emptyList} text="No bonds at the moment" />
       )}
     </>

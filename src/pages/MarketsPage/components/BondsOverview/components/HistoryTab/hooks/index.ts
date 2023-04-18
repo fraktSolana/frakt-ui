@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { SortOrder } from 'antd/lib/table/interface';
@@ -24,8 +23,6 @@ export const useFetchBondsHistory = ({
 }) => {
   const { publicKey } = useWallet();
 
-  const [isListEnded, setIsListEnded] = useState<boolean>(false);
-
   const fetchData = async ({ pageParam }: { pageParam: number }) => {
     const data = await fetchBondsHistory({
       skip: LIMIT * pageParam,
@@ -37,17 +34,13 @@ export const useFetchBondsHistory = ({
       marketPubkey,
     });
 
-    if (!data?.length) {
-      setIsListEnded(true);
-    }
-
     return {
       pageParam,
       data,
     };
   };
 
-  const { data, fetchNextPage, isFetchingNextPage, isLoading } =
+  const { data, fetchNextPage, isFetchingNextPage, hasNextPage, isLoading } =
     useInfiniteQuery({
       queryKey: [publicKey, queryData, showOwnerBonds, eventType, marketPubkey],
       queryFn: ({ pageParam = 0 }) => fetchData({ pageParam }),
@@ -70,7 +63,7 @@ export const useFetchBondsHistory = ({
     data: bondsData,
     fetchNextPage,
     isFetchingNextPage,
-    isListEnded,
+    hasNextPage,
     isLoading,
   };
 };

@@ -1,4 +1,8 @@
-import { useMarket, useMarketPairs } from '@frakt/utils/bonds';
+import {
+  BOND_DECIMAL_DELTA,
+  useMarket,
+  useMarketPairs,
+} from '@frakt/utils/bonds';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { Bond } from '@frakt/api/bonds';
@@ -15,9 +19,9 @@ export const getMarketAndPairsByBond = (bond: Bond) => {
     marketPubkey: bond?.marketPubkey,
   });
 
-  const pairs = rawPairs.filter(
-    ({ assetReceiver }) => assetReceiver !== publicKey?.toBase58(),
-  );
+  const pairs = rawPairs
+    .filter(({ currentSpotPrice }) => currentSpotPrice <= BOND_DECIMAL_DELTA)
+    .filter(({ assetReceiver }) => assetReceiver !== publicKey?.toBase58());
 
   return { market, pairs, isLoading: pairsLoading || marketLoading };
 };

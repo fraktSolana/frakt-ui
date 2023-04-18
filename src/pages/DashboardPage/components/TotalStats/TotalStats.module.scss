@@ -19,7 +19,7 @@
   text-align: center;
   text-transform: uppercase;
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     margin-bottom: 5px;
   }
 
@@ -47,7 +47,7 @@
     margin-left: 4px;
   }
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     width: 12px;
   }
 }
@@ -71,7 +71,7 @@
   justify-content: center;
   gap: 24px;
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
   }
 }
 
@@ -80,7 +80,7 @@
   flex-direction: column;
   gap: 4px;
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     padding: 8px;
   }
 }

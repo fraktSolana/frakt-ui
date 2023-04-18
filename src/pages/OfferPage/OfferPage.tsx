@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import classNames from 'classnames/bind';
 
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import Tooltip from '@frakt/components/Tooltip';
@@ -21,6 +20,7 @@ import {
   EARNER_INTEREST_OPTIONS,
   RECEIVE_OPTIONS,
 } from './constants';
+import classNames from 'classnames';
 
 export const OfferPage = () => {
   const {
@@ -34,6 +34,7 @@ export const OfferPage = () => {
     onDurationChange,
     onOfferSizeChange,
     onInterestChange,
+    handleInterestOnBlur,
     onCreateOffer,
     isValid,
     isEdit,
@@ -115,6 +116,7 @@ export const OfferPage = () => {
             <TokenField
               value={interest}
               onValueChange={onInterestChange}
+              onBlur={() => handleInterestOnBlur(interest)}
               label="Interest"
               labelRightNode={
                 <div className={styles.labelRow}>

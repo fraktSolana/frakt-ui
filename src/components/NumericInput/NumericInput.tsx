@@ -12,6 +12,7 @@ export interface NumericInputProps extends Omit<InputProps, 'onChange'> {
   maxLength?: number;
   error?: boolean;
   readonly?: boolean;
+  onBlur?: () => void;
 }
 
 function isNumeric(value: any): boolean {
@@ -21,6 +22,7 @@ function isNumeric(value: any): boolean {
 const NumericInput: FC<NumericInputProps> = ({
   onChange,
   value,
+  onBlur,
   placeholder = '0.0',
   positiveOnly = false,
   integerOnly = false,
@@ -44,6 +46,7 @@ const NumericInput: FC<NumericInputProps> = ({
   return (
     <Input
       value={value}
+      onBlur={onBlur}
       onChange={onChangeHanlder}
       placeholder={placeholder}
       maxLength={25}

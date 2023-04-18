@@ -3,6 +3,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useSelector } from 'react-redux';
 import { sum, map, filter } from 'ramda';
 
+import { useTradePoolStats } from '@frakt/utils/strategies';
 import { selectLiquidityPools } from '@frakt/state/loans/selectors';
 import { calcWeightedAverage } from '@frakt/utils';
 import { BondsUserStats } from '@frakt/api/user';
@@ -106,7 +107,11 @@ const PoolsInfoJSX = ({ weightedAvarageApy, totalLiquidity }) => {
 };
 
 const StrategiesInfoJSX = () => {
-  const { connected } = useWallet();
+  const { connected, publicKey } = useWallet();
+
+  const { tradePoolStats } = useTradePoolStats({
+    walletPublicKey: publicKey?.toBase58(),
+  });
 
   return (
     <Block className={styles.wrapper}>
@@ -120,12 +125,12 @@ const StrategiesInfoJSX = () => {
           <div className={styles.content}>
             <DashboardStatsValues
               label="Weighted APY"
-              value={0}
+              value={tradePoolStats?.userWeightedAPY}
               type="percent"
             />
             <DashboardStatsValues
               label="Total liquidity"
-              value={0}
+              value={tradePoolStats?.userTotalLiquidity}
               type="solana"
             />
           </div>
@@ -146,8 +151,7 @@ const StrategiesInfoJSX = () => {
         />
       )}
       <NavigationButtonJSX
-        disabled={true}
-        path={PATHS.LEND}
+        path={PATHS.STRATEGIES}
         label={connected ? 'Manage' : 'Jump to strategies'}
       />
     </Block>

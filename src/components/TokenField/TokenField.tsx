@@ -2,11 +2,10 @@ import React, { FC, ReactNode, useState } from 'react';
 import classNames from 'classnames';
 import { TokenInfo } from '@frakt-protocol/frakt-sdk';
 
-import Tooltip from '@frakt/components/Tooltip';
-import { ChevronDown, Solana } from '@frakt/icons';
 import NumericInput from '../NumericInput';
+import Tooltip from '../Tooltip';
+import { ChevronDown, Solana } from '@frakt/icons';
 import styles from './styles.module.scss';
-import { QuestionCircleOutlined } from '@ant-design/icons';
 
 export interface TokenFieldProps {
   tokensList?: TokenInfo[];
@@ -24,9 +23,10 @@ export interface TokenFieldProps {
   amountMaxLength?: number;
   disabled?: boolean;
   labelRight?: boolean;
-  lpBalance?: number | string;
+  lpBalance?: number;
   toolTipText?: string;
   labelRightNode?: ReactNode;
+  onBlur?: () => void;
 }
 
 const TokenField: FC<TokenFieldProps> = ({
@@ -47,13 +47,14 @@ const TokenField: FC<TokenFieldProps> = ({
   lpBalance,
   toolTipText,
   labelRightNode,
+  onBlur,
 }) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   return (
     <div
       style={style}
-      className={classNames([
+      className={classNames(styles.wrapper, [
         { [styles.focused]: isFocused },
         { [styles.error]: error },
       ])}
@@ -72,18 +73,13 @@ const TokenField: FC<TokenFieldProps> = ({
               !!labelRightNode && styles.labelSeparete,
             )}
           >
-            <div className={styles.labelRow}>
-              {label}
-              {toolTipText && (
-                <Tooltip placement="bottom" overlay={toolTipText}>
-                  <QuestionCircleOutlined className={styles.questionIcon} />
-                </Tooltip>
-              )}
-            </div>
-            {labelRightNode}
+            {label}
+            {toolTipText && (
+              <Tooltip placement="bottom" overlay={toolTipText} />
+            )}
             {!!lpBalance && (
-              <span>
-                {lpBalance} {currentToken?.symbol}
+              <span className={styles.balance}>
+                {lpBalance.toFixed(2)} {currentToken?.symbol}
               </span>
             )}
           </div>
@@ -96,6 +92,7 @@ const TokenField: FC<TokenFieldProps> = ({
         onBlur={() => setIsFocused(false)}
       >
         <NumericInput
+          onBlur={onBlur}
           value={value}
           maxLength={amountMaxLength}
           onChange={onValueChange}

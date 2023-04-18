@@ -4,7 +4,7 @@
   padding-right: 280px;
 
   @media (max-width: 1240px) {
-    padding-bottom: 290px;
+    padding-bottom: 340px;
     padding-right: 0;
   }
 }
@@ -24,7 +24,7 @@
     padding: 24px;
   }
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     padding: 16px;
   }
 }
@@ -59,7 +59,7 @@
     width: 48px;
   }
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 960px) {
     height: 38px;
     width: 38px;
   }
