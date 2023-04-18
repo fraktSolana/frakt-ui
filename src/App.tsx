@@ -52,7 +52,7 @@ const wallets = [
 const queryClient = new QueryClient();
 
 const App: FC = () => {
-  const endpoint = getRightEndpoint();
+  const endpoint = await getRightEndpoint();
 
   return (
     <ErrorBoundary>
