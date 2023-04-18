@@ -5,46 +5,7 @@
   width: 100%;
 }
 
-.disconnectButton {
-  margin-top: 10px;
-  width: 100%;
-  height: 48px;
-  font: var(--font-body-small);
-}
-
-.discordButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  column-gap: 8px;
-  margin-top: 32px;
-  width: 100%;
-  height: 48px;
-  color: var(--connect-btn-text);
-  background-color: var(--light-green-color-2);
-  border: 1px solid var(--light-green-color);
-  font: var(--font-body-small);
-  cursor: pointer;
-  transition: background-color var(--transition-1), color var(--transition-1);
-
-  &:hover {
-    background-color: var(--light-green-color-1);
-    color: var(--connect-btn-text);
-  }
-}
-
-.logo {
-  margin-top: -2px;
-  width: 24px;
-  height: 24px;
-  fill: var(--connect-btn-text);
-}
-
-.table {
-  margin-bottom: 12px;
-}
-
-.btnWrapperRow {
+.buttonWrapper {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -59,7 +20,7 @@
   }
 }
 
-.separator {
+.separateLine {
   display: block;
   height: 1px;
   width: 100%;
@@ -67,7 +28,7 @@
   margin-top: 16px;
 }
 
-.btnWrapper {
+.button {
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -75,92 +36,8 @@
   gap: 8px;
   color: var(--secondary-border);
   font: var(--font-btn-middle);
-
-  svg {
-    path {
-      fill: var(--secondary-border);
-    }
-  }
 }
 
-.column {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  width: 100px;
-  font: var(--font-text-8);
-}
-
-.columnTitle {
-  color: var(--secondary-text);
-  font: var(--font-text-6);
-  text-transform: uppercase;
-}
-
-.columnValue {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-}
-
-.userWrapper {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-
-  .myCollectionLink {
-    color: var(--blue-color);
-    border-bottom: 1px solid var(--blue-color);
-    font: var(--font-btn-middle);
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-  @media (max-width: 960px) {
-    gap: 16px;
-    flex-direction: column;
-  }
-}
-
-.userInfo {
-  width: 100%;
-  margin-left: 16px;
-
-  @media (max-width: 960px) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-}
-
-.address {
-  color: var(--secondary-text);
-  font: var(--font-body-small);
-  font-weight: 700;
-}
-
-.avatar {
-  max-width: 72px;
-}
-
-.walletInfo {
-  display: flex;
-  align-items: center;
-  padding-bottom: 6px;
-  cursor: pointer;
-
-  svg {
-    path {
-      fill: var(--secondary-text);
-    }
-  }
-}
-
-.balanceInfo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+.button svg path {
+  fill: var(--secondary-border);
 }

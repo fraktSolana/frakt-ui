@@ -16,6 +16,7 @@ export const useFetchUserRewards = ({ walletPublicKey }) => {
     {
       staleTime: 60_000,
       refetchOnWindowFocus: false,
+      enabled: !!walletPublicKey,
     },
   );
 
