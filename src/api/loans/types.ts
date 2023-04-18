@@ -1,3 +1,5 @@
+import { web3 } from '@frakt-protocol/frakt-sdk';
+
 export enum LoanType {
   TIME_BASED = 'timeBased',
   PRICE_BASED = 'priceBased',
@@ -71,4 +73,13 @@ export interface LoansHistory {
   status: string;
   when: number;
   loanType: LoanType;
+}
+
+export interface FetchLoansHistoryParams {
+  walletPubkey: web3.PublicKey;
+  skip: number;
+  limit: number;
+  sortBy: string;
+  direction: string;
+  querySearch: string;
 }

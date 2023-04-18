@@ -3,6 +3,7 @@ import { web3 } from 'fbonds-core';
 
 import { Loan, LoanType, LoansHistory } from './types';
 import { patchBorrowValueWithProtocolFee } from '@frakt/pages/BorrowPages/cartState';
+import { FetchLoansHistoryParams, Loan, LoansHistory } from './types';
 
 const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN;
 
@@ -24,15 +25,20 @@ export const fetchWalletLoans: FetchWalletLoans = async ({ publicKey }) => {
   }));
 };
 
-type FetchLoansHistory = (props: {
-  walletPubkey: web3.PublicKey;
-}) => Promise<LoansHistory[]>;
+type FetchLoansHistory = (
+  props: FetchLoansHistoryParams,
+) => Promise<LoansHistory[]>;
 
 export const fetchLoansHistory: FetchLoansHistory = async ({
   walletPubkey,
+  skip,
+  limit = 10,
+  sortBy = 'date',
+  direction = 'desc',
+  querySearch = '',
 }) => {
   const { data } = await axios.get<LoansHistory[]>(
-    `https://${BACKEND_DOMAIN}/loan/history/${walletPubkey?.toBase58()}`,
+    `https://${BACKEND_DOMAIN}/history/loans/${walletPubkey?.toBase58()}?sort=${direction}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&search=${querySearch}`,
   );
 
   return data ?? [];

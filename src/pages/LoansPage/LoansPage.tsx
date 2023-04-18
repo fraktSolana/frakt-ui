@@ -12,15 +12,14 @@ import styles from './LoansPage.module.scss';
 const LoansPage: FC = () => {
   const wallet = useWallet();
 
-  const { loans, isLoading } = useWalletLoans({
-    walletPublicKey: wallet.publicKey,
-  });
+  //TODO Replace with another request
+  const { loans } = useWalletLoans({ walletPublicKey: wallet.publicKey });
 
   return (
     <AppLayout>
       <div className={styles.content}>
         <LoansGeneralInfo allLoans={loans} />
-        <LoansPageContent loans={loans} isLoading={isLoading} />
+        <LoansPageContent />
       </div>
     </AppLayout>
   );
