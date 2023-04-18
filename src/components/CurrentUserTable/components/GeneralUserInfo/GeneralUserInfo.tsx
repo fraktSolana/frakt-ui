@@ -15,14 +15,14 @@ const GeneralUserInfo: FC = () => {
   return (
     <div className={styles.userWrapper}>
       <UserAvatar className={styles.avatar} />
-      <CopiedUserAdress publicKey={publicKey} />
+      <CopiedUserAddress publicKey={publicKey} />
     </div>
   );
 };
 
 export default GeneralUserInfo;
 
-const CopiedUserAdress = ({ publicKey }: { publicKey: web3.PublicKey }) => (
+const CopiedUserAddress = ({ publicKey }: { publicKey: web3.PublicKey }) => (
   <div className={styles.userInfo}>
     <div
       className={styles.walletInfo}
