@@ -36,4 +36,11 @@ export const fetchLoansHistory: FetchLoansHistory = async ({
   );
 
   return data ?? [];
+  // .map((loan) => ({
+  //   ...loan,
+  //   loanValue:
+  //     loan.loanType === LoanType.BOND
+  //       ? patchBorrowValueWithProtocolFee(loan.loanValue)
+  //       : loan.loanValue,
+  // }));
 };
