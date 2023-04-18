@@ -1,5 +1,5 @@
+// Reset default styles
 .loansTable :global {
-  display: block !important;
   .ant-table-thead > tr > th:first-child,
   .ant-table-tbody > tr > td:first-child {
     padding-left: 0;
@@ -12,21 +12,6 @@
     height: 0px;
   }
 }
-
-.loansTable :global {
-  .ant-table-tbody > tr > td:nth-last-child(-n + 2) {
-    text-align: end;
-  }
-  .ant-table-thead > tr > th {
-    vertical-align: middle;
-  }
-
-  padding: 0 23px;
-  @media (max-width: 960px) {
-    padding: 0 16px;
-  }
-}
-
 // Empty data styles
 .loansTable :global {
   .ant-table-empty .ant-table-tbody > tr.ant-table-placeholder {
@@ -38,11 +23,19 @@
   }
 }
 
+.loansTable :global {
+  padding: 0 23px;
+
+  @media (max-width: 960px) {
+    padding: 0 16px;
+  }
+}
+
 .repayButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 16px;
+  margin: 0 auto;
 }
 
 .loanActiveTab {
@@ -51,4 +44,8 @@
 
 .emptyList {
   padding: 120px 0 150px !important;
+}
+
+.card {
+  cursor: pointer;
 }

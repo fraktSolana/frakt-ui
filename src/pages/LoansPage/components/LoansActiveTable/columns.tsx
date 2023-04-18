@@ -1,8 +1,6 @@
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SortOrder } from 'antd/lib/table/interface';
 
-import { Search } from '@frakt/components/Table/Search';
-import Checkbox from '@frakt/components/Checkbox';
 import { Loan, LoanType } from '@frakt/api/loans';
 import {
   createHighlitedPercentValueJSX,
@@ -13,11 +11,10 @@ import {
 
 import { useSelectedLoans } from '../../loansState';
 import {
-  RepayLoanCell,
   DurationCell,
   MoreActionsCell,
-  StakingSupportCell,
   CollectionInfoCell,
+  StakingLoanCell,
 } from './LoansTableCells';
 
 import styles from './LoansTable.module.scss';
@@ -25,34 +22,21 @@ import styles from './LoansTable.module.scss';
 export type SortColumns = {
   column: ColumnType<Loan>;
   order: SortOrder;
+  isCardView: boolean;
 }[];
 
-export const TableList = ({ onChange, data }) => {
-  const { findLoanInSelection, setSelection, selection, clearSelection } =
-    useSelectedLoans();
-
-  const onChangeCheckbox = (): void => {
-    if (selection?.length) {
-      clearSelection();
-    } else {
-      setSelection(data);
-    }
-  };
+export const TableList = ({ isCardView }) => {
+  const { findLoanInSelection } = useSelectedLoans();
 
   const COLUMNS: ColumnsType<Loan> = [
     {
-      title: () => (
+      title: (column) => (
         <div className={styles.rowCenter}>
-          <Checkbox
-            className={styles.checkbox}
-            classNameInnerContent={styles.checkboxInnerContent}
-            onChange={onChangeCheckbox}
-            checked={!!selection?.length}
-          />
-          <Search
-            placeHolderText="Search by name"
-            className={styles.searchInput}
-            onChange={onChange}
+          <HeaderCell
+            column={column}
+            label="Collateral"
+            value="collateral"
+            hiddenSort
           />
         </div>
       ),
@@ -63,35 +47,38 @@ export const TableList = ({ onChange, data }) => {
           selected={!!findLoanInSelection(pubkey)}
         />
       ),
-      width: 177,
-    },
-    {
-      render: (_, loan) => <StakingSupportCell loan={loan} />,
-      width: 103,
     },
     {
       key: 'loanValue',
       dataIndex: 'loanValue',
       title: (column) => (
-        <HeaderCell column={column} label="Borrowed" value="loanValue" />
+        <HeaderCell
+          column={column}
+          label="Borrowed"
+          value="loanValue"
+          hiddenSort
+        />
       ),
+      render: (_, { loanValue }) => createSolValueJSX(loanValue),
       sorter: ({ loanValue: loanValueA }, { loanValue: loanValueB }) =>
         loanValueA - loanValueB,
-      render: (_, { loanValue }) => createSolValueJSX(loanValue),
       showSorterTooltip: false,
-      width: 92,
     },
     {
       key: 'repayValue',
       dataIndex: 'repayValue',
       title: (column) => (
-        <HeaderCell column={column} label="Debt" value="repayValue" />
+        <HeaderCell
+          column={column}
+          label="Debt"
+          value="repayValue"
+          hiddenSort
+        />
       ),
+      render: (_, { repayValue }) => createSolValueJSX(repayValue),
       sorter: ({ repayValue: repayValueA }, { repayValue: repayValueB }) =>
         repayValueA - repayValueB,
-      render: (_, { repayValue }) => createSolValueJSX(repayValue),
       showSorterTooltip: false,
-      width: 88,
     },
     {
       key: 'liquidationPrice',
@@ -101,6 +88,7 @@ export const TableList = ({ onChange, data }) => {
           column={column}
           label="Liquidation price"
           value="liquidationPrice"
+          hiddenSort
         />
       ),
       render: (_, { classicParams }) =>
@@ -112,30 +100,33 @@ export const TableList = ({ onChange, data }) => {
         classicParamsA?.priceBased?.liquidationPrice -
         classicParamsB?.priceBased?.liquidationPrice,
       showSorterTooltip: false,
-      width: 136,
     },
     {
       key: 'interest',
       dataIndex: 'interest',
       title: (column) => (
-        <HeaderCell column={column} label="Borrow interest" value="interest" />
+        <HeaderCell
+          column={column}
+          label="Borrow interest"
+          value="interest"
+          hiddenSort
+        />
       ),
+      render: (_, { classicParams }) =>
+        createPercentValueJSX(classicParams?.priceBased?.borrowAPRPercent),
       sorter: (
         { classicParams: classicParamsA },
         { classicParams: classicParamsB },
       ) =>
         classicParamsA?.priceBased?.borrowAPRPercent -
         classicParamsB?.priceBased?.borrowAPRPercent,
-      render: (_, { classicParams }) =>
-        createPercentValueJSX(classicParams?.priceBased?.borrowAPRPercent),
       showSorterTooltip: false,
-      width: 136,
     },
     {
       key: 'health',
       dataIndex: 'health',
       title: (column) => (
-        <HeaderCell column={column} label="Health" value="health" />
+        <HeaderCell column={column} label="Health" value="health" hiddenSort />
       ),
       render: (_, { classicParams }) =>
         createHighlitedPercentValueJSX(classicParams?.priceBased?.health),
@@ -145,16 +136,21 @@ export const TableList = ({ onChange, data }) => {
       ) =>
         classicParamsA?.priceBased?.health - classicParamsB?.priceBased?.health,
       showSorterTooltip: false,
-      width: 72,
     },
     {
       key: 'duration',
       dataIndex: 'duration',
       title: (column) => (
-        <HeaderCell column={column} label="Duration" value="duration" />
+        <HeaderCell
+          column={column}
+          label="Duration"
+          value="duration"
+          hiddenSort
+        />
       ),
       render: (_, loan) => <DurationCell loan={loan} />,
       showSorterTooltip: false,
+      defaultSortOrder: 'ascend',
       sorter: (loanA, loanB) => {
         if (loanA.loanType === LoanType.PRICE_BASED) return 1;
         if (loanB.loanType === LoanType.PRICE_BASED) return -1;
@@ -169,16 +165,16 @@ export const TableList = ({ onChange, data }) => {
 
         return timeToRepayA - timeToRepayB;
       },
-      defaultSortOrder: 'ascend',
-      width: 118,
     },
     {
-      render: (_, loan) => <RepayLoanCell loan={loan} />,
-      width: 60,
+      render: (_, loan) => (
+        <StakingLoanCell loan={loan} isCardView={isCardView} />
+      ),
     },
     {
-      render: (_, loan) => <MoreActionsCell loan={loan} />,
-      width: 32,
+      render: (_, loan) => (
+        <MoreActionsCell loan={loan} isCardView={isCardView} />
+      ),
     },
   ];
 

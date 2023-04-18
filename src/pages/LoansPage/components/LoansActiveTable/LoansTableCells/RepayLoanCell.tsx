@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import classNames from 'classnames';
 
 import { PartialRepayModal } from '@frakt/components/PartialRepayModal';
 import { LoadingModal } from '@frakt/components/LoadingModal';
@@ -11,7 +12,10 @@ import styles from '../LoansTable.module.scss';
 
 type Event = MouseEvent | TouchEvent;
 
-export const RepayLoanCell: FC<{ loan: Loan }> = ({ loan }) => {
+export const RepayLoanCell: FC<{ loan: Loan; isCardView: boolean }> = ({
+  loan,
+  isCardView,
+}) => {
   const {
     closeLoadingModal,
     loadingModalVisible,
@@ -30,7 +34,9 @@ export const RepayLoanCell: FC<{ loan: Loan }> = ({ loan }) => {
           onPayback();
           event.stopPropagation();
         }}
-        className={styles.repayButton}
+        className={classNames(styles.repayButton, {
+          [styles.cardView]: isCardView,
+        })}
       >
         Repay
       </Button>

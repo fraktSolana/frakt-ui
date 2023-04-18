@@ -19,6 +19,7 @@ interface HeaderCellProps<T> {
   value: string;
   tooltipText?: string;
   fixedLeft?: boolean;
+  hiddenSort?: boolean;
 }
 
 export const HeaderCell = <T extends unknown>({
@@ -27,6 +28,7 @@ export const HeaderCell = <T extends unknown>({
   value,
   tooltipText,
   fixedLeft,
+  hiddenSort,
 }: HeaderCellProps<T>) => {
   const sortedColumn = column?.sortColumns?.find(
     ({ column }) => column.key === value,
@@ -46,10 +48,13 @@ export const HeaderCell = <T extends unknown>({
           <QuestionCircleOutlined className={styles.questionIcon} />
         </Tooltip>
       )}
-      {sortedOrder === SortOrders.ASC && <ArrowUpTableSort />}
-      {sortedOrder === SortOrders.DESC && <ArrowDownTableSort />}
-      {sortedOrder !== SortOrders.DESC && sortedOrder !== SortOrders.ASC && (
-        <ArrowTableSort />
+      {!hiddenSort && (
+        <>
+          {sortedOrder === SortOrders.ASC && <ArrowUpTableSort />}
+          {sortedOrder === SortOrders.DESC && <ArrowDownTableSort />}
+          {sortedOrder !== SortOrders.DESC &&
+            sortedOrder !== SortOrders.ASC && <ArrowTableSort />}
+        </>
       )}
     </div>
   );
