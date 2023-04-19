@@ -9,10 +9,7 @@ import { LoanType } from '@frakt/api/loans';
 import { CartOrder } from './types';
 import { calculateNextSpotPrice } from 'fbonds-core/lib/fbond-protocol/helpers';
 import { OrderType } from 'fbonds-core/lib/fbond-protocol/types';
-import {
-  getTopOrderSize,
-  getCurrentOrderSize,
-} from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+import { getTopOrderSize } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
 
 interface CartState {
   pairs: Pair[];
@@ -25,19 +22,9 @@ interface CartState {
   }) => void;
   updateOrder: (props: { order: CartOrder; pairs?: Pair[] }) => void;
   removeOrder: (props: { nftMint: string }) => void;
-  removeOrder2: (props: { nftMint: string }) => void;
   findPair: (props: { pairPubkey: string }) => Pair | null;
   findOrder: (props: { nftMint: string }) => CartOrder | null;
   clearCart: () => void;
-  // addOrder: (props: {
-  //   loanType: LoanType;
-  //   loanValue: number;
-  //   nft: BorrowNft;
-  //   pair?: Pair;
-  //   market?: Market;
-  //   unshift?: boolean;
-  // }) => void;
-  // addBondOrder: (props: { bondOrder: CartOrder; pairs: Pair[] }) => void;
 }
 
 export const useCartState = create<CartState>((set, get) => ({
@@ -52,6 +39,13 @@ export const useCartState = create<CartState>((set, get) => ({
     );
   },
   addOrder: ({ order, pairs = [], unshift = false }) => {
+    //! ADD BOND ORDER LOGIC
+    //? 1. chunk by pair: [[5, 10], [10, 200, 5]]
+    //? 2. loop chunk patch(pair, [5, 100, 5000]) --> patchedPair[]
+    //? 3. push pairs to state
+    //? 3.1 pair already in state --> replace
+    //? 3.2 new pair --> push
+    //? 4. push order
     set(
       produce((state: CartState) => {
         const orderInStateIdx = state.orders.findIndex(
@@ -96,7 +90,15 @@ export const useCartState = create<CartState>((set, get) => ({
       }),
     );
   },
-  removeOrder2({ nftMint }) {
+  removeOrder({ nftMint }) {
+    //! REMOVE BOND ORDER LOGIC
+    //? 1. Get affected pairs by order
+    //? 2. Chunk bondOrders by pairPubkey: [[5, 10], [10, 200, 5]]
+    //? 3. loop chunk patchReverse(pair, [5, 100, 5000]) --> patchedPairs[]
+    //? 4. push pairs to state
+    //? 4.1 pair already in state --> replace
+    //? 4.2 new pair --> push
+    //? 5. Push order
     set(
       produce((state: CartState) => {
         const order = state.orders.find(
@@ -120,14 +122,13 @@ export const useCartState = create<CartState>((set, get) => ({
           Object.keys(bondOrdersByPair).includes(publicKey),
         );
 
-        const patchedPairs = affectedPairs; //TODO call patchPairByBondOrders but in reverse direction
-        //   const patchedPairs = map(pairs, (pair) =>
-        //   patchPairByBondOrders({
-        //     pair,
-        //     bondOrders: bondOrdersByPair[pair.publicKey],
-        //     reverse,
-        //   }),
-        // );
+        const patchedPairs = map(affectedPairs, (pair) =>
+          patchPairByBondOrders({
+            pair,
+            bondOrders: bondOrdersByPair[pair.publicKey],
+            reverse: true,
+          }),
+        );
 
         patchedPairs.forEach((patchedPair) => {
           const indexOfPairInState = state.pairs.findIndex(
@@ -136,48 +137,6 @@ export const useCartState = create<CartState>((set, get) => ({
 
           state.pairs[indexOfPairInState] = patchedPair;
         });
-      }),
-    );
-  },
-  removeOrder: ({ nftMint }) => {
-    set(
-      produce((state: CartState) => {
-        const order = state.orders.find(
-          ({ borrowNft }) => borrowNft.mint === nftMint,
-        );
-
-        if (order.loanType === LoanType.BOND) {
-          for (const orderParam of order.bondOrderParams?.orderParams) {
-            let amount_of_bonds_left = orderParam.orderSize;
-            const indexOfPairInState = state.pairs.findIndex(
-              ({ publicKey }) => publicKey === orderParam.pairPubkey,
-            );
-            let patchedPair = patchPairToNextOrderAfterBuy(
-              state.pairs[indexOfPairInState],
-            );
-            while (amount_of_bonds_left) {
-              const amountToRemove = Math.min(
-                amount_of_bonds_left,
-                patchedPair.bidCap - getTopOrderSize(patchedPair),
-              );
-              amount_of_bonds_left -= amountToRemove;
-              patchedPair = patchPairToNextOrderAfterBuy({
-                ...patchedPair,
-                edgeSettlement:
-                  patchedPair.buyOrdersQuantity === 1
-                    ? patchedPair.edgeSettlement + amountToRemove
-                    : patchedPair.edgeSettlement,
-                bidSettlement: patchedPair.bidSettlement + amountToRemove,
-              });
-            }
-
-            state.pairs[indexOfPairInState] = patchedPair;
-          }
-        }
-
-        state.orders = state.orders.filter(
-          ({ borrowNft }) => borrowNft.mint !== nftMint,
-        );
       }),
     );
   },
@@ -208,124 +167,7 @@ export const useCartState = create<CartState>((set, get) => ({
         state.pairs = [];
       }),
     ),
-  // addOrder: ({ loanType, nft, loanValue, pair, market, unshift = false }) => {
-  //   if (loanType !== LoanType.BOND) {
-  //     return set(
-  //       produce((state: CartState) => {
-  //         const order = convertBorrowNftToOrder({
-  //           nft,
-  //           loanType,
-  //           loanValue,
-  //         });
-
-  //         unshift ? state.orders.unshift(order) : state.orders.push(order);
-  //       }),
-  //     );
-  //   }
-  //   const patchedPair: Pair = patchPairToNextOrderAfterSell(pair);
-
-  //   const bondsAmount = calcBondsAmount({
-  //     loanValue,
-  //     spotPrice: pair.currentSpotPrice,
-  //   });
-
-  //   set(
-  //     produce((state: CartState) => {
-  //       const orderInState = state.orders.find(
-  //         ({ borrowNft }) => borrowNft.mint === nft.mint,
-  //       );
-
-  //       if (!orderInState) {
-  //         state.orders.push(
-  //           convertBorrowNftToOrder({
-  //             nft,
-  //             loanType,
-  //             loanValue,
-  //             bondOrderParams: {
-  //               market,
-  //               orderParams: [
-  //                 {
-  //                   orderSize: bondsAmount,
-  //                   spotPrice: patchedPair.currentSpotPrice,
-  //                   pairPubkey: patchedPair.publicKey,
-  //                   assetReceiver: patchedPair.assetReceiver,
-  //                   durationFilter: patchedPair.validation.durationFilter,
-  //                   bondFeature: patchedPair.validation.bondFeatures,
-  //                 },
-  //               ],
-  //             },
-  //           }),
-  //         );
-  //       } else {
-  //         orderInState.bondOrderParams.orderParams.push({
-  //           orderSize: bondsAmount,
-  //           spotPrice: patchedPair.currentSpotPrice,
-  //           pairPubkey: patchedPair.publicKey,
-  //           assetReceiver: patchedPair.assetReceiver,
-  //           durationFilter: patchedPair.validation.durationFilter,
-  //           bondFeature: patchedPair.validation.bondFeatures,
-  //         });
-  //       }
-
-  //       const indexOfPairInState = state.pairs.findIndex(
-  //         ({ publicKey }) => publicKey === patchedPair.publicKey,
-  //       );
-  //       const nextPairState: Pair = patchPairToNextOrderAfterSell({
-  //         ...patchedPair,
-  //         edgeSettlement:
-  //           patchedPair.buyOrdersQuantity === 1
-  //             ? patchedPair.edgeSettlement - bondsAmount
-  //             : patchedPair.edgeSettlement,
-  //         bidSettlement: patchedPair.bidSettlement - bondsAmount,
-  //       });
-  //       if (indexOfPairInState === -1) {
-  //         state.pairs.push(nextPairState);
-  //       } else {
-  //         state.pairs[indexOfPairInState] = nextPairState;
-  //       }
-  //     }),
-  //   );
-  // },
-  // addBondOrder: ({ bondOrder, pairs }) => {
-  //   const { addOrder, findPair } = get();
-
-  //   for (const orderParam of bondOrder.bondOrderParams.orderParams) {
-  //     let amount_left_to_add = orderParam.orderSize;
-  //     while (amount_left_to_add > 0) {
-  //       const pair = patchPairToNextOrderAfterSell(
-  //         findPair({ pairPubkey: orderParam.pairPubkey }) ||
-  //           pairs.find((pair) => pair.publicKey === orderParam.pairPubkey),
-  //       );
-
-  //       const currentAmountToAdd = Math.min(
-  //         amount_left_to_add,
-  //         getTopOrderSize(pair),
-  //       );
-  //       amount_left_to_add -= currentAmountToAdd;
-  //       const currentLoanValue = currentAmountToAdd * pair.currentSpotPrice;
-  //       addOrder({
-  //         loanType: LoanType.BOND,
-  //         loanValue: currentLoanValue,
-  //         nft: bondOrder.borrowNft,
-  //         pair: pair,
-  //         market: bondOrder.bondOrderParams.market,
-  //         unshift: false,
-  //       });
-  //     }
-  //   }
-  // },
 }));
-
-type CalcBondsAmount = (props: {
-  loanValue: number;
-  spotPrice: number;
-}) => number;
-export const calcBondsAmount: CalcBondsAmount = ({ loanValue, spotPrice }) => {
-  loanValue;
-  spotPrice;
-  // return 0;
-  return Math.trunc(loanValue / spotPrice);
-};
 
 const patchPairToNextOrderAfterSell = (pair: Pair): Pair =>
   pair.bidSettlement === pair.bidCap * -1
@@ -364,32 +206,20 @@ const patchPairToNextOrderAfterBuy = (pair: Pair): Pair =>
       }
     : pair;
 
-//! ADD BOND ORDER LOGIC
-//? 1. chunk by pair: [[5, 10], [10, 200, 5]]
-//? 2. loop chunk patch(pair, [5, 100, 5000]) --> patchedPair[]
-//? 3. push pairs to state
-//? 3.1 pair already in state --> replace
-//? 3.2 new pair --> push
-//? 4. push order
-
-//! REMOVE BOND ORDER LOGIC
-//? 1. Get affected pairs by order
-//? 2. Chunk bondOrders by pairPubkey: [[5, 10], [10, 200, 5]]
-//? 3. loop chunk patchReverse(pair, [5, 100, 5000]) --> patchedPairs[]
-//? 4. push pairs to state
-//? 4.1 pair already in state --> replace
-//? 4.2 new pair --> push
-//? 5. Push order
-
 type PatchPairByBondOrders = (props: {
   pair: Pair;
   bondOrders: BondCartOrder[];
+  reverse?: boolean;
 }) => Pair;
-const patchPairByBondOrders: PatchPairByBondOrders = ({ pair, bondOrders }) => {
+const patchPairByBondOrders: PatchPairByBondOrders = ({
+  pair,
+  bondOrders,
+  reverse,
+}) => {
   return reduce(
     bondOrders,
     (pair: Pair, bondOrder: BondCartOrder) =>
-      patchPairByBondOrder({ pair, bondOrder }),
+      patchPairByBondOrder({ pair, bondOrder, reverse }),
     pair,
   );
 };
@@ -397,8 +227,13 @@ const patchPairByBondOrders: PatchPairByBondOrders = ({ pair, bondOrders }) => {
 type PatchPairByBondOrder = (props: {
   pair: Pair;
   bondOrder: BondCartOrder;
+  reverse?: boolean;
 }) => Pair;
-const patchPairByBondOrder: PatchPairByBondOrder = ({ pair, bondOrder }) => {
+const patchPairByBondOrder: PatchPairByBondOrder = ({
+  pair,
+  bondOrder,
+  reverse = false,
+}) => {
   const { orderSize } = bondOrder;
 
   let orderSizeLeftToAdd = orderSize;
@@ -407,12 +242,15 @@ const patchPairByBondOrder: PatchPairByBondOrder = ({ pair, bondOrder }) => {
   while (orderSizeLeftToAdd > 0) {
     const currentAmountToAdd = Math.min(
       orderSizeLeftToAdd,
-      getTopOrderSize(pair),
+      reverse
+        ? patchedPair.bidCap - getTopOrderSize(patchedPair)
+        : getTopOrderSize(pair),
     );
 
     patchedPair = patchCurrentOrderInPair({
       pair,
       orderSize: currentAmountToAdd,
+      reverse,
     });
 
     orderSizeLeftToAdd -= currentAmountToAdd;
@@ -424,26 +262,46 @@ const patchPairByBondOrder: PatchPairByBondOrder = ({ pair, bondOrder }) => {
 type PatchCurrentOrderInPair = (props: {
   pair: Pair;
   orderSize: number;
+  reverse?: boolean;
 }) => Pair;
 const patchCurrentOrderInPair: PatchCurrentOrderInPair = ({
   pair,
   orderSize, //? Order size should be less or equal to pair's current order size
+  reverse = false,
 }) => {
   //? Just to make sure
-  const patchedPair = patchPairToNextOrderAfterSell(pair);
+  const patchedPair = reverse
+    ? patchPairToNextOrderAfterSell(pair)
+    : patchPairToNextOrderAfterBuy(pair);
 
-  if (getCurrentOrderSize(patchedPair) < orderSize)
-    throw Error(
-      "Order size should be less or equal to pair's current order size",
-    );
+  if (!reverse) {
+    if (getTopOrderSize(patchedPair) < orderSize)
+      throw Error(
+        "Order size should be less or equal to pair's current order size",
+      );
 
-  const nextPairState = patchPairToNextOrderAfterSell({
+    const nextPairState = patchPairToNextOrderAfterSell({
+      ...patchedPair,
+      edgeSettlement:
+        patchedPair.buyOrdersQuantity === 1
+          ? patchedPair.edgeSettlement - orderSize
+          : patchedPair.edgeSettlement,
+      bidSettlement: patchedPair.bidSettlement - orderSize,
+    });
+
+    return nextPairState;
+  }
+
+  if (patchedPair.bidCap - getTopOrderSize(patchedPair) < orderSize)
+    throw Error("Order size should be less or equal to pair's free order size");
+
+  const nextPairState = patchPairToNextOrderAfterBuy({
     ...patchedPair,
     edgeSettlement:
       patchedPair.buyOrdersQuantity === 1
-        ? patchedPair.edgeSettlement - orderSize
+        ? patchedPair.edgeSettlement + orderSize
         : patchedPair.edgeSettlement,
-    bidSettlement: patchedPair.bidSettlement - orderSize,
+    bidSettlement: patchedPair.bidSettlement + orderSize,
   });
 
   return nextPairState;

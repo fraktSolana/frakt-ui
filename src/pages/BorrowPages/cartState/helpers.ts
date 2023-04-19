@@ -1,7 +1,5 @@
-import { maxBy } from 'lodash';
-
 import { Pair } from '@frakt/api/bonds';
-import { BOND_DECIMAL_DELTA, pairLoanDurationFilter } from '@frakt/utils/bonds';
+import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
 import { LoanType } from '@frakt/api/loans';
 
 import { CartOrder } from './types';
@@ -89,4 +87,15 @@ export const calcBondFee: CalcBondFee = ({ order, pair }) => {
     (loanValue * BOND_DECIMAL_DELTA) / currentSpotPrice - loanValue;
 
   return feeLamports;
+};
+
+type CalcBondsAmount = (props: {
+  loanValue: number;
+  spotPrice: number;
+}) => number;
+export const calcBondsAmount: CalcBondsAmount = ({ loanValue, spotPrice }) => {
+  loanValue;
+  spotPrice;
+  // return 0;
+  return Math.trunc(loanValue / spotPrice);
 };
