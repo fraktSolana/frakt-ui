@@ -3,6 +3,7 @@ import { IS_PRIVATE_MARKETS } from '@frakt/config';
 import axios from 'axios';
 
 import { BorrowNft, BulkSuggestion } from './types';
+import { patchBorrowValueWithProtocolFee } from '@frakt/pages/BorrowPages/cartState';
 
 const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN;
 
@@ -29,7 +30,13 @@ export const fetchWalletBorrowNfts: FetchWalletBorrowNfts = async ({
     `https://${BACKEND_DOMAIN}/nft/meta2/${publicKey?.toBase58()}?${searchQuery}limit=${limit}&skip=${offset}&sortBy=${sortBy}&sort=${sortOrder}&isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
-  return data;
+  return data.map((nft) => ({
+    ...nft,
+    maxLoanValue:
+      nft.maxLoanValue > nft.classicParams.maxLoanValue
+        ? patchBorrowValueWithProtocolFee(nft.maxLoanValue)
+        : nft.maxLoanValue,
+  }));
 };
 
 type FetchBulkSuggestion = (props: {

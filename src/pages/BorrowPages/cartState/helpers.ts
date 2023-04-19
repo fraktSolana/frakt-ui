@@ -1,5 +1,8 @@
 import { Pair } from '@frakt/api/bonds';
-import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
+import {
+  BASE_POINTS,
+  BONDS_PROTOCOL_FEE_IN_BASE_POINTS,
+} from '@frakt/utils/bonds';
 import { LoanType } from '@frakt/api/loans';
 
 import { CartOrder } from './types';
@@ -78,24 +81,24 @@ export const calcPriceBasedUpfrontFee = (order: CartOrder) => {
   return loanValue * 0.01;
 };
 
-type CalcBondFee = (props: { order: CartOrder; pair: Pair }) => number;
-export const calcBondFee: CalcBondFee = ({ order, pair }) => {
-  const { loanValue } = order;
-  const { currentSpotPrice } = pair;
-
-  const feeLamports =
-    (loanValue * BOND_DECIMAL_DELTA) / currentSpotPrice - loanValue;
-
-  return feeLamports;
+type PatchPairWithProtocolFee = (pair: Pair) => Pair;
+export const patchPairWithProtocolFee: PatchPairWithProtocolFee = (pair) => {
+  return {
+    ...pair,
+    currentSpotPrice:
+      pair.currentSpotPrice -
+      (pair.currentSpotPrice * BONDS_PROTOCOL_FEE_IN_BASE_POINTS) / BASE_POINTS,
+    baseSpotPrice:
+      pair.baseSpotPrice -
+      (pair.baseSpotPrice * BONDS_PROTOCOL_FEE_IN_BASE_POINTS) / BASE_POINTS,
+  };
 };
 
-type CalcBondsAmount = (props: {
-  loanValue: number;
-  spotPrice: number;
-}) => number;
-export const calcBondsAmount: CalcBondsAmount = ({ loanValue, spotPrice }) => {
-  loanValue;
-  spotPrice;
-  // return 0;
-  return Math.trunc(loanValue / spotPrice);
-};
+type PatchBorrowValueWithProtocolFee = (borrowValue: number) => number;
+export const patchBorrowValueWithProtocolFee: PatchBorrowValueWithProtocolFee =
+  (borrowValue) => {
+    return (
+      borrowValue -
+      (borrowValue * BONDS_PROTOCOL_FEE_IN_BASE_POINTS) / BASE_POINTS
+    );
+  };

@@ -13,7 +13,6 @@ import { getLoanFields } from './helpers';
 import { CARD_VALUES_TYPES, LoanCardValue } from './types';
 import { useBorrowBulkOverviewPage } from './hooks';
 import { CartOrder } from '../cartState';
-import { Pair } from '@frakt/api/bonds';
 
 export const BorrowBulkOverviewPage: FC = () => {
   const {
@@ -56,11 +55,6 @@ export const BorrowBulkOverviewPage: FC = () => {
           <LoanCard
             key={order.borrowNft.mint}
             order={order}
-            pair={cartPairs?.find(
-              ({ publicKey }) =>
-                publicKey ===
-                order?.bondOrderParams?.orderParams?.[0]?.pairPubkey,
-            )}
             onEditClick={() => onBulkEdit(order.borrowNft.mint)}
           />
         ))}
@@ -91,15 +85,13 @@ export const BorrowBulkOverviewPage: FC = () => {
 
 interface LoanCardprops {
   order: CartOrder;
-  pair?: Pair;
   onEditClick: () => void;
 }
-const LoanCard: FC<LoanCardprops> = ({ order, pair, onEditClick }) => {
+const LoanCard: FC<LoanCardprops> = ({ order, onEditClick }) => {
   const { imageUrl, name } = order.borrowNft;
 
   const fields = getLoanFields({
     order,
-    pair,
   });
 
   return (

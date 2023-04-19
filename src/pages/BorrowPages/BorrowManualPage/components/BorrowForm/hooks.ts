@@ -14,6 +14,7 @@ import {
 } from './helpers';
 import { getBestOrdersByBorrowValue } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
 import { pairLoanDurationFilter } from '@frakt/utils/bonds';
+import { calcDurationByMultiOrdersBond } from '@frakt/pages/BorrowPages/helpers';
 
 export const useBorrowForm = () => {
   const {
@@ -68,8 +69,7 @@ export const useBorrowForm = () => {
           }
           const sameBondDuration =
             value?.type === LoanType.BOND &&
-            currentBondOrderParams?.orderParams?.at(0)?.durationFilter /
-              86400 ===
+            calcDurationByMultiOrdersBond(currentBondOrderParams) / 86400 ===
               value?.duration;
 
           return sameLoanType && sameBondDuration;

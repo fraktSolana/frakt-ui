@@ -55,14 +55,15 @@ export const redeemBond: RedeemBond = async ({
       type: NotifyType.INFO,
     });
 
-    await Promise.all(
-      txids.map((txid) =>
-        connection.confirmTransaction(
-          { signature: txid, blockhash, lastValidBlockHeight },
-          'confirmed',
-        ),
-      ),
-    );
+    // await Promise.all(
+    //   txids.map((txid) =>
+    //     connection.confirmTransaction(
+    //       { signature: txid, blockhash, lastValidBlockHeight },
+    //       'confirmed',
+    //     ),
+    //   ),
+    // );
+    await new Promise((r) => setTimeout(r, 7000));
 
     notify({
       message: 'Redeemed successfully!',

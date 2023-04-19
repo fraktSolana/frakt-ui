@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { web3 } from 'fbonds-core';
 
-import { FetchLoansHistoryParams, Loan, LoansHistory } from './types';
+import { patchBorrowValueWithProtocolFee } from '@frakt/pages/BorrowPages/cartState';
+import { FetchLoansHistoryParams, Loan, LoansHistory, LoanType } from './types';
 
 const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN;
 
@@ -14,7 +15,13 @@ export const fetchWalletLoans: FetchWalletLoans = async ({ publicKey }) => {
     `https://${BACKEND_DOMAIN}/loan/all/${publicKey?.toBase58()}`,
   );
 
-  return data ?? [];
+  return (data ?? []).map((loan) => ({
+    ...loan,
+    loanValue:
+      loan.loanType === LoanType.BOND
+        ? patchBorrowValueWithProtocolFee(loan.loanValue)
+        : loan.loanValue,
+  }));
 };
 
 type FetchLoansHistory = (
@@ -33,5 +40,14 @@ export const fetchLoansHistory: FetchLoansHistory = async ({
     `https://${BACKEND_DOMAIN}/history/loans/${walletPubkey?.toBase58()}?sort=${direction}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&search=${querySearch}`,
   );
 
-  return data ?? [];
+  return (
+    data ??
+    [].map((loan) => ({
+      ...loan,
+      loanValue:
+        loan.loanType === LoanType.BOND
+          ? patchBorrowValueWithProtocolFee(loan.loanValue)
+          : loan.loanValue,
+    }))
+  );
 };

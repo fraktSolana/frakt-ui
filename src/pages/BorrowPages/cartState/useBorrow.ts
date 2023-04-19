@@ -11,6 +11,7 @@ import {
 import { useCurrentNft } from './useCurrentNft';
 import { useCartState } from './useCartState';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { patchPairWithProtocolFee } from './helpers';
 
 export const useBorrow = () => {
   const {
@@ -181,6 +182,7 @@ const useMarketAndPairs = (marketPubkey: string | null) => {
             .filter(
               ({ currentSpotPrice }) => currentSpotPrice <= BOND_DECIMAL_DELTA,
             )
+            .map(patchPairWithProtocolFee)
             .map((rawPair) => {
               const samePairSelected = cartPairs.find(
                 (cartPair) => cartPair.publicKey === rawPair.publicKey,
