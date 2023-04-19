@@ -55,7 +55,7 @@ export const getLoanFields: GetLoanFields = ({ order }) => {
   }
   //? Bond Fees here
   if (loanType === LoanType.BOND) {
-    const fee = calcBondMultiOrdersFee(order);
+    const fee = calcBondMultiOrdersFee(order.bondOrderParams);
 
     fields.push({
       title: 'Fee',
@@ -105,7 +105,7 @@ export const getLoanFields: GetLoanFields = ({ order }) => {
 
   //TODO Bond duration here
   if (loanType === LoanType.BOND) {
-    const durationFilter = calcDurationByMultiOrdersBond(order);
+    const durationFilter = calcDurationByMultiOrdersBond(order.bondOrderParams);
 
     fields.push({
       title: 'Duration',
@@ -167,7 +167,7 @@ export const getLoanFields: GetLoanFields = ({ order }) => {
 
   //? Bond repay value
   if (loanType === LoanType.BOND) {
-    const fee = calcBondMultiOrdersFee(order);
+    const fee = calcBondMultiOrdersFee(order.bondOrderParams);
 
     fields.push({
       title: 'Repay value',

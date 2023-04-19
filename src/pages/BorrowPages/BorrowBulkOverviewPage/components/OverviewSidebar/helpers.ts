@@ -72,9 +72,10 @@ const calcOrderFees: CalcOrderFees = ({ order }) => {
   }
 
   if (loanType === LoanType.BOND) {
-    const fee = calcBondMultiOrdersFee(order);
+    const fee = calcBondMultiOrdersFee(order.bondOrderParams);
 
-    const durationDays = calcDurationByMultiOrdersBond(order) / 86400;
+    const durationDays =
+      calcDurationByMultiOrdersBond(order.bondOrderParams) / 86400;
 
     return {
       '1d': fee,
