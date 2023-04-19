@@ -4,6 +4,7 @@ import { LoanType } from '@frakt/api/loans';
 import {
   BondOrder,
   convertTakenOrdersToOrderParams,
+  patchPairWithProtocolFee,
   useBorrow,
 } from '@frakt/pages/BorrowPages/cartState';
 
@@ -15,11 +16,13 @@ import {
 } from './helpers';
 import { getBestOrdersByBorrowValue } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
 import { pairLoanDurationFilter } from '@frakt/utils/bonds';
+import { calcDurationByMultiOrdersBond } from '@frakt/pages/BorrowPages/helpers';
 
 export const useBorrowForm = () => {
   const {
     currentNft,
     currentLoanValue,
+    currentBondOrder,
     setCurrentLoanValue,
     market,
     pairs,
@@ -29,7 +32,6 @@ export const useBorrowForm = () => {
     setCurrentPair,
     setCurrentBondOrder,
     currentLoanType,
-    currentPair,
   } = useBorrow();
 
   const [selectedOption, setSelectedOption] = useState<SelectValue | null>(
@@ -70,7 +72,8 @@ export const useBorrowForm = () => {
           }
           const sameBondDuration =
             value?.type === LoanType.BOND &&
-            currentPair?.validation?.durationFilter / 86400 === value?.duration;
+            calcDurationByMultiOrdersBond(currentBondOrder) / 86400 ===
+              value?.duration;
 
           return sameLoanType && sameBondDuration;
         });
@@ -86,13 +89,6 @@ export const useBorrowForm = () => {
   //? Recalc cheapest pair on currentLoanValue change
   useEffect(() => {
     if (selectedOption?.value?.type === LoanType.BOND && market) {
-      const pair = getCheapestPairForBorrowValue({
-        borrowValue: currentLoanValue,
-        valuation: market?.oracleFloor?.floor,
-        pairs,
-        duration: selectedOption.value.duration,
-      });
-
       const bestOrdersAndBorrowValue = getBestOrdersByBorrowValue({
         borrowValue: currentLoanValue,
         collectionFloor: market?.oracleFloor?.floor,
@@ -135,7 +131,6 @@ export const useBorrowForm = () => {
       };
 
       setCurrentBondOrder(bondOrder);
-      setCurrentPair(pair);
     } else {
       setCurrentBondOrder(null);
       setCurrentPair(null);

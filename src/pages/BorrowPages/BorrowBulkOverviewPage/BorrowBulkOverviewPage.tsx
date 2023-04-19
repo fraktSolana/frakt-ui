@@ -56,11 +56,6 @@ export const BorrowBulkOverviewPage: FC = () => {
           <LoanCard
             key={order.borrowNft.mint}
             order={order}
-            pair={cartPairs?.find(
-              ({ publicKey }) =>
-                publicKey ===
-                order?.bondOrderParams?.orderParams?.[0]?.pairPubkey,
-            )}
             onEditClick={() => onBulkEdit(order.borrowNft.mint)}
           />
         ))}
@@ -91,15 +86,13 @@ export const BorrowBulkOverviewPage: FC = () => {
 
 interface LoanCardprops {
   order: BondOrder;
-  pair?: Pair;
   onEditClick: () => void;
 }
-const LoanCard: FC<LoanCardprops> = ({ order, pair, onEditClick }) => {
+const LoanCard: FC<LoanCardprops> = ({ order, onEditClick }) => {
   const { imageUrl, name } = order.borrowNft;
 
   const fields = getLoanFields({
     order,
-    pair,
   });
 
   return (

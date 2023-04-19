@@ -59,15 +59,16 @@ export const signAndSendAllTransactions: SignAndSendAllTransactions = async ({
 
     onAfterSend?.();
 
-    await Promise.all(
-      txids.map((txid) =>
-        connection.confirmTransaction({
-          signature: txid,
-          blockhash,
-          lastValidBlockHeight,
-        }),
-      ),
-    );
+    // await Promise.all(
+    //   txids.map((txid) =>
+    //     connection.confirmTransaction({
+    //       signature: txid,
+    //       blockhash,
+    //       lastValidBlockHeight,
+    //     }),
+    //   ),
+    // );
+    await new Promise((r) => setTimeout(r, 7000));
 
     onSuccess?.();
 

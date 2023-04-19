@@ -1,7 +1,12 @@
 import { maxBy } from 'lodash';
 
 import { Pair } from '@frakt/api/bonds';
-import { BOND_DECIMAL_DELTA, pairLoanDurationFilter } from '@frakt/utils/bonds';
+import {
+  BASE_POINTS,
+  BONDS_PROTOCOL_FEE_IN_BASE_POINTS,
+  BOND_DECIMAL_DELTA,
+  pairLoanDurationFilter,
+} from '@frakt/utils/bonds';
 import { LoanType } from '@frakt/api/loans';
 
 import { BondOrder } from './types';
@@ -64,13 +69,24 @@ export const calcPriceBasedUpfrontFee = (order: BondOrder) => {
   return loanValue * 0.01;
 };
 
-type CalcBondFee = (props: { order: BondOrder; pair: Pair }) => number;
-export const calcBondFee: CalcBondFee = ({ order, pair }) => {
-  const { loanValue } = order;
-  const { currentSpotPrice } = pair;
-
-  const feeLamports =
-    (loanValue * BOND_DECIMAL_DELTA) / currentSpotPrice - loanValue;
-
-  return feeLamports;
+type PatchPairWithProtocolFee = (pair: Pair) => Pair;
+export const patchPairWithProtocolFee: PatchPairWithProtocolFee = (pair) => {
+  return {
+    ...pair,
+    currentSpotPrice:
+      pair.currentSpotPrice -
+      (pair.currentSpotPrice * BONDS_PROTOCOL_FEE_IN_BASE_POINTS) / BASE_POINTS,
+    baseSpotPrice:
+      pair.baseSpotPrice -
+      (pair.baseSpotPrice * BONDS_PROTOCOL_FEE_IN_BASE_POINTS) / BASE_POINTS,
+  };
 };
+
+type PatchBorrowValueWithProtocolFee = (borrowValue: number) => number;
+export const patchBorrowValueWithProtocolFee: PatchBorrowValueWithProtocolFee =
+  (borrowValue) => {
+    return (
+      borrowValue -
+      (borrowValue * BONDS_PROTOCOL_FEE_IN_BASE_POINTS) / BASE_POINTS
+    );
+  };
