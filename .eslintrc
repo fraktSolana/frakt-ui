@@ -12,19 +12,24 @@
     "react/react-in-jsx-scope": 0,
     "react-hooks/rules-of-hooks": "off",
     "react-hooks/exhaustive-deps": "warn",
-    "no-console": "off",
+    "no-console": ["warn", { "allow": ["error"] }],
     "no-debugger": "warn",
     "require-await": "error",
     "no-undef": "error",
     "no-param-reassign": "error",
     "prefer-const": "error",
     "no-duplicate-imports": "error",
-    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "args": "after-used",
+        "ignoreRestSiblings": true
+      }
+    ],
     "no-use-before-define": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off"
-
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
