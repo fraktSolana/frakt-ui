@@ -3,19 +3,33 @@ interface Breakpoints {
   scrollX: number;
   scrollY: number;
 }
-
 export type PartialBreakpoints = Partial<Breakpoints>;
-
-export interface ActiveRowParams {
-  field: string;
-  value?: string;
-  className?: string;
-}
 
 interface SearchParams {
   searchField: string | string[];
   debounceWait: number;
   placeHolderText: string;
 }
-
 export type PartialSearchParams = Partial<SearchParams>;
+
+export interface ActiveRowParams {
+  field: string;
+  value?: string;
+  className?: string;
+  cardClassName?: string;
+}
+
+export interface ViewParams {
+  showCard: boolean;
+  showSorting: boolean;
+}
+
+export interface SelectLoansParams {
+  onChange: () => void;
+  selected: boolean;
+}
+
+export interface Sort {
+  field: string | null;
+  direction: 'desc' | 'asc';
+}

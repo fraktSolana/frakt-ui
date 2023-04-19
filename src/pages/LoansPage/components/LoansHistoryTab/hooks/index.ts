@@ -1,20 +1,54 @@
-import { fetchLoansHistory } from '@frakt/api/loans';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
-export const useFetchLoansHistory = () => {
+import { fetchLoansHistory } from '@frakt/api/loans';
+import { Sort } from '@frakt/components/Table';
+
+const LIMIT = 10;
+
+export const useFetchLoansHistory = ({
+  queryData,
+  querySearch,
+}: {
+  queryData: Sort;
+  querySearch: string;
+}) => {
   const { publicKey } = useWallet();
 
-  const { data, isLoading } = useQuery(
-    ['fetchLoansHistory', publicKey],
-    () => fetchLoansHistory({ walletPubkey: publicKey }),
-    {
+  const fetchData = async ({ pageParam }: { pageParam: number }) => {
+    const data = await fetchLoansHistory({
+      skip: LIMIT * pageParam,
+      limit: LIMIT,
+      sortBy: queryData?.field,
+      direction: queryData?.direction,
+      walletPubkey: publicKey,
+      querySearch,
+    });
+
+    return { pageParam, data };
+  };
+
+  const { data, fetchNextPage, isFetchingNextPage, isLoading, hasNextPage } =
+    useInfiniteQuery({
+      queryKey: [publicKey, queryData, querySearch],
+      queryFn: ({ pageParam = 0 }) => fetchData({ pageParam }),
+      getPreviousPageParam: ({ pageParam }) => pageParam - 1 ?? undefined,
+      getNextPageParam: ({ data, pageParam }) =>
+        data?.length ? pageParam + 1 : undefined,
       staleTime: 60 * 1000,
+      cacheTime: 100_000,
+      networkMode: 'offlineFirst',
       keepPreviousData: true,
       refetchOnWindowFocus: false,
-      enabled: !!publicKey,
-    },
-  );
+    });
 
-  return { data, isLoading };
+  const loansHistory = data?.pages?.map(({ data }) => data).flat() || [];
+
+  return {
+    data: loansHistory,
+    isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  };
 };

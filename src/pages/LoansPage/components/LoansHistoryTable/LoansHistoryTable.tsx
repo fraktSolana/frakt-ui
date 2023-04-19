@@ -1,24 +1,49 @@
 import { FC } from 'react';
 
-import Table, { PartialBreakpoints, useTable } from '@frakt/components/Table';
-import { Loan } from '@frakt/api/loans';
+import { LoansHistory } from '@frakt/api/loans';
+import Table, {
+  PartialBreakpoints,
+  useSearch,
+  useTable,
+  Sort,
+  useTableView,
+} from '@frakt/components/Table';
 
 import { COLUMNS } from './columns';
 
 export interface LoansHistoryTableProps {
-  data: ReadonlyArray<Loan>;
-  loading: boolean;
+  data: ReadonlyArray<LoansHistory>;
   className?: string;
   breakpoints?: PartialBreakpoints;
+  setQueryData: (nextValue: Sort) => void;
+  setQuerySearch: (nextValue: string) => void;
 }
 
 export const LoansHistoryTable: FC<LoansHistoryTableProps> = ({
   data,
   className,
-  loading,
   breakpoints,
+  setQueryData,
+  setQuerySearch,
 }) => {
-  const { table } = useTable({ data, columns: COLUMNS, loading });
+  const { viewState } = useTableView();
 
-  return <Table {...table} breakpoints={breakpoints} className={className} />;
+  const { filteredData, onChange } = useSearch({
+    data,
+    searchField: 'nftName',
+    setQuerySearch,
+  });
+
+  const { table } = useTable({ data: filteredData, columns: COLUMNS });
+
+  return (
+    <Table
+      {...table}
+      viewParams={{ showCard: viewState === 'card', showSorting: true }}
+      breakpoints={breakpoints}
+      search={{ onChange }}
+      className={className}
+      setQueryData={setQueryData}
+    />
+  );
 };
