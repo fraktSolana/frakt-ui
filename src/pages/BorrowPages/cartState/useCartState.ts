@@ -1,15 +1,18 @@
 import { create } from 'zustand';
 import produce from 'immer';
 import { reduce, groupBy, map } from 'lodash';
+import { calculateNextSpotPrice } from 'fbonds-core/lib/fbond-protocol/helpers';
+import { OrderType } from 'fbonds-core/lib/fbond-protocol/types';
+import {
+  getCurrentOrderSize,
+  getTopOrderSize,
+} from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
 
 import { Pair } from '@frakt/api/bonds';
 import { BondCartOrder } from '@frakt/api/nft';
 import { LoanType } from '@frakt/api/loans';
 
 import { CartOrder } from './types';
-import { calculateNextSpotPrice } from 'fbonds-core/lib/fbond-protocol/helpers';
-import { OrderType } from 'fbonds-core/lib/fbond-protocol/types';
-import { getTopOrderSize } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
 
 interface CartState {
   pairs: Pair[];
@@ -169,7 +172,7 @@ export const useCartState = create<CartState>((set, get) => ({
     ),
 }));
 
-const patchPairToNextOrderAfterSell = (pair: Pair): Pair =>
+const patchPairToNextOrderAfterAdd = (pair: Pair): Pair =>
   pair.bidSettlement === pair.bidCap * -1
     ? {
         ...pair,
@@ -189,7 +192,7 @@ const patchPairToNextOrderAfterSell = (pair: Pair): Pair =>
       }
     : pair;
 
-const patchPairToNextOrderAfterBuy = (pair: Pair): Pair =>
+const patchPairToNextOrderAfterRemove = (pair: Pair): Pair =>
   pair.bidSettlement === 0
     ? {
         ...pair,
@@ -243,7 +246,7 @@ const patchPairByBondOrder: PatchPairByBondOrder = ({
     const currentAmountToAdd = Math.min(
       orderSizeLeftToAdd,
       reverse
-        ? patchedPair.bidCap - getTopOrderSize(patchedPair)
+        ? patchedPair.bidCap - getCurrentOrderSize(patchedPair)
         : getTopOrderSize(pair),
     );
 
@@ -271,8 +274,8 @@ const patchCurrentOrderInPair: PatchCurrentOrderInPair = ({
 }) => {
   //? Just to make sure
   const patchedPair = reverse
-    ? patchPairToNextOrderAfterSell(pair)
-    : patchPairToNextOrderAfterBuy(pair);
+    ? patchPairToNextOrderAfterRemove(pair)
+    : patchPairToNextOrderAfterAdd(pair);
 
   if (!reverse) {
     if (getTopOrderSize(patchedPair) < orderSize)
@@ -280,7 +283,7 @@ const patchCurrentOrderInPair: PatchCurrentOrderInPair = ({
         "Order size should be less or equal to pair's current order size",
       );
 
-    const nextPairState = patchPairToNextOrderAfterSell({
+    const nextPairState = patchPairToNextOrderAfterAdd({
       ...patchedPair,
       edgeSettlement:
         patchedPair.buyOrdersQuantity === 1
@@ -295,7 +298,7 @@ const patchCurrentOrderInPair: PatchCurrentOrderInPair = ({
   if (patchedPair.bidCap - getTopOrderSize(patchedPair) < orderSize)
     throw Error("Order size should be less or equal to pair's free order size");
 
-  const nextPairState = patchPairToNextOrderAfterBuy({
+  const nextPairState = patchPairToNextOrderAfterRemove({
     ...patchedPair,
     edgeSettlement:
       patchedPair.buyOrdersQuantity === 1
