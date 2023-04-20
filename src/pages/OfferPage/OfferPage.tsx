@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import classNames from 'classnames';
 
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import Tooltip from '@frakt/components/Tooltip';
@@ -20,7 +21,6 @@ import {
   EARNER_INTEREST_OPTIONS,
   RECEIVE_OPTIONS,
 } from './constants';
-import classNames from 'classnames';
 
 export const OfferPage = () => {
   const {
@@ -48,6 +48,8 @@ export const OfferPage = () => {
     onChangeAutocompoundFeature,
     receiveNftFeature,
     onChangeReceiveNftFeature,
+    onMaxLoanValueChange,
+    maxLoanValue,
   } = useOfferPage();
 
   const apr = (parseFloat(interest) / duration) * 365;
@@ -89,6 +91,14 @@ export const OfferPage = () => {
             </div>
           </div>
           <SliderGradient value={ltv} setValue={onLtvChange} />
+
+          <TokenField
+            value={maxLoanValue}
+            onValueChange={onMaxLoanValueChange}
+            label="Max loan value"
+            currentToken={SOL_TOKEN}
+            toolTipText="Max loan value"
+          />
 
           <div className={styles.radio}>
             <h6 className={styles.subtitle}>duration</h6>

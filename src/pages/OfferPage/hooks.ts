@@ -60,6 +60,7 @@ export const useOfferPage = () => {
   const [duration, setDuration] = useState<number>(7);
   const [interest, setInterest] = useState<string>('0');
   const [offerSize, setOfferSize] = useState<string>('0');
+  const [maxLoanValue, setMaxLoanValue] = useState<string>('0');
   const [receiveNftFeature, setReceiveNftFeature] = useState<BondFeatures>(
     BondFeatures.ReceiveNftOnLiquidation,
   );
@@ -93,6 +94,10 @@ export const useOfferPage = () => {
   const onLtvChange = useCallback((value: number) => setLtv(value), []);
   const onDurationChange = (nextOption: RBOption<number>) => {
     setDuration(nextOption.value);
+  };
+
+  const onMaxLoanValueChange = (value: string) => {
+    setMaxLoanValue(value);
   };
 
   const onInterestChange = (value: string) => {
@@ -313,5 +318,7 @@ export const useOfferPage = () => {
     onChangeAutocompoundFeature,
     receiveNftFeature: isEdit ? editReceiveBondFeature : receiveNftFeature,
     onChangeReceiveNftFeature,
+    onMaxLoanValueChange,
+    maxLoanValue,
   };
 };
