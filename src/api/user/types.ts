@@ -91,3 +91,13 @@ export interface LedningPools {
   nftName: string;
   tvl: number;
 }
+
+export interface UserRewards {
+  lenders: Rewards[];
+  borrowers: Rewards[];
+}
+
+interface Rewards {
+  user: string;
+  reward: number;
+}
