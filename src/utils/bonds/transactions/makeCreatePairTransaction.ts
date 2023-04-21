@@ -63,17 +63,14 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
   const amountOfTokensInOrder = Math.floor(solDepositLamports / spotPrice);
 
   const bidCap = amountOfTokensInOrder * bidCapMultiplier;
-
-  const maxReturnAmountFilter = Math.min(
-    maxLoanValueLamports,
-    Math.ceil(
-      (marketFloor *
-        ((maxLTVRaw *
-          (BASE_POINTS + BOND_MAX_RETURN_AMOUNT_PROTECTION_BASE_POINTS)) /
-          BASE_POINTS)) /
-        BASE_POINTS,
-    ),
+  const standartMaxLoanValue = Math.ceil(
+    (marketFloor *
+      ((maxLTVRaw *
+        (BASE_POINTS + BOND_MAX_RETURN_AMOUNT_PROTECTION_BASE_POINTS)) /
+        BASE_POINTS)) /
+      BASE_POINTS,
   );
+  const maxReturnAmountFilter = maxLoanValueLamports || standartMaxLoanValue;
   console.log({ maxReturnAmountFilter, marketFloor, maxLTVRaw });
   const {
     instructions: instructions1,
