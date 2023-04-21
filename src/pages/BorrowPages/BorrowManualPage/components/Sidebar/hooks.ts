@@ -29,7 +29,7 @@ export const useSidebar = () => {
     currentNft,
     onRemoveNft,
     onNextNftSelect,
-    currentBondOrder,
+    currentBondOrderParams,
     market,
     currentLoanType,
     currentLoanValue,
@@ -68,9 +68,7 @@ export const useSidebar = () => {
 
       const result = await borrowSingle({
         nft: currentNft,
-        bondOrderParams: currentBondOrder
-          ? currentBondOrder.bondOrderParams.orderParams
-          : [],
+        bondOrderParams: currentBondOrderParams.orderParams,
         loanType: currentLoanType,
         loanValue: currentLoanValue,
         market,

@@ -1,18 +1,16 @@
 import create from 'zustand';
 import produce from 'immer';
 
-import { Pair } from '@frakt/api/bonds';
 import { BorrowNft } from '@frakt/api/nft';
 import { LoanType } from '@frakt/api/loans';
-import { BondOrder } from './types';
+
+import { BondOrderParams } from './types';
 
 interface CurrentNftState {
   nft: BorrowNft;
   setNft: (nft: BorrowNft) => void;
-  pair: Pair | null;
-  bondOrder: BondOrder | null;
-  setPair: (pair: Pair) => void;
-  setBondOrder: (bondOrder: BondOrder) => void;
+  bondOrderParams: BondOrderParams | null;
+  setBondOrderParams: (bondOrderParams: BondOrderParams) => void;
   loanType: LoanType | null;
   setLoanType: (loanType: LoanType) => void;
   loanValue: number;
@@ -20,8 +18,7 @@ interface CurrentNftState {
   clearState: () => void;
   setState: (props: {
     nft: BorrowNft;
-    pair: Pair | null;
-    bondOrder: BondOrder | null;
+    bondOrderParams: BondOrderParams | null;
     loanType: LoanType;
     loanValue: number;
   }) => void;
@@ -35,18 +32,11 @@ export const useCurrentNft = create<CurrentNftState>((set) => ({
         state.nft = nft;
       }),
     ),
-  pair: null,
-  setPair: (pair) =>
+  bondOrderParams: null,
+  setBondOrderParams: (bondOrderParams) =>
     set(
       produce((state: CurrentNftState) => {
-        state.pair = pair;
-      }),
-    ),
-  bondOrder: null,
-  setBondOrder: (bondOrder) =>
-    set(
-      produce((state: CurrentNftState) => {
-        state.bondOrder = bondOrder;
+        state.bondOrderParams = bondOrderParams;
       }),
     ),
   loanType: null,
@@ -63,12 +53,12 @@ export const useCurrentNft = create<CurrentNftState>((set) => ({
         state.loanValue = loanValue;
       }),
     ),
-  setState: ({ nft, pair, loanType, loanValue, bondOrder }) =>
+  setState: ({ nft, loanType, loanValue, bondOrderParams }) =>
     set(
       produce((state: CurrentNftState) => {
         state.nft = nft;
-        state.pair = pair;
-        (state.bondOrder = bondOrder), (state.loanType = loanType);
+        state.bondOrderParams = bondOrderParams;
+        state.loanType = loanType;
         state.loanValue = loanValue;
       }),
     ),
@@ -76,10 +66,9 @@ export const useCurrentNft = create<CurrentNftState>((set) => ({
     set(
       produce((state: CurrentNftState) => {
         state.nft = null;
-        state.pair = null;
         state.loanType = null;
         state.loanValue = 0;
-        state.bondOrder = null;
+        state.bondOrderParams = null;
       }),
     ),
 }));
