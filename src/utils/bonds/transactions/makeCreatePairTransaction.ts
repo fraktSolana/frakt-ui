@@ -22,6 +22,7 @@ import { isBondFeaturesAutomated } from '../utils';
 type MakeCreatePairTransaction = (params: {
   maxLTV: number; //? % 0-100
   maxDuration: number; //? days 7or14
+  maxLoanValue: number; //? Max loan value in SOL. Normal values (F.e. 1, 20, 100)
   solDeposit: number; //? Amount of deposit in SOL. Normal values (F.e. 1, 20, 100)
   interest: number; //? % 0-Infinity
   marketFloor: number; //? % 0-Infinity
@@ -41,6 +42,7 @@ type MakeCreatePairTransaction = (params: {
 export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
   maxLTV,
   maxDuration,
+  maxLoanValue,
   solDeposit,
   interest,
   marketFloor,
@@ -53,6 +55,7 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
   const maxLTVRaw = maxLTV * 100; //? Max LTV (2000 --> 20%)
   const maxDurationSec = maxDuration * 24 * 60 * 60; //? Max duration (seconds)
   const solDepositLamports = solDeposit * 1e9;
+  const maxLoanValueLamports = maxLoanValue * 1e9;
 
   const spotPrice = BOND_DECIMAL_DELTA - interest * 100;
 
@@ -61,12 +64,15 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
 
   const bidCap = amountOfTokensInOrder * bidCapMultiplier;
 
-  const maxReturnAmountFilter = Math.ceil(
-    (marketFloor *
-      ((maxLTVRaw *
-        (BASE_POINTS + BOND_MAX_RETURN_AMOUNT_PROTECTION_BASE_POINTS)) /
-        BASE_POINTS)) /
-      BASE_POINTS,
+  const maxReturnAmountFilter = Math.min(
+    maxLoanValueLamports,
+    Math.ceil(
+      (marketFloor *
+        ((maxLTVRaw *
+          (BASE_POINTS + BOND_MAX_RETURN_AMOUNT_PROTECTION_BASE_POINTS)) /
+          BASE_POINTS)) /
+        BASE_POINTS,
+    ),
   );
   console.log({ maxReturnAmountFilter, marketFloor, maxLTVRaw });
   const {
