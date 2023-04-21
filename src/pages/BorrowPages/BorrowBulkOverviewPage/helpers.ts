@@ -1,4 +1,3 @@
-import { Pair } from '@frakt/api/bonds';
 import { LoanType } from '@frakt/api/loans';
 import {
   calcBondMultiOrdersFee,
@@ -9,10 +8,10 @@ import {
   calcTimeBasedRepayValue,
 } from '@frakt/pages/BorrowPages/helpers';
 
-import { BondOrder } from '../cartState';
+import { CartOrder } from '../cartState';
 import { CARD_VALUES_TYPES, LoanCardValue, LOAN_TYPE_NAME } from './types';
 
-type GetLoanFields = (props: { order: BondOrder }) => Array<LoanCardValue>;
+type GetLoanFields = (props: { order: CartOrder }) => Array<LoanCardValue>;
 export const getLoanFields: GetLoanFields = ({ order }) => {
   const { loanType, loanValue, borrowNft } = order;
 
@@ -56,7 +55,7 @@ export const getLoanFields: GetLoanFields = ({ order }) => {
   }
   //? Bond Fees here
   if (loanType === LoanType.BOND) {
-    const fee = calcBondMultiOrdersFee(order);
+    const fee = calcBondMultiOrdersFee(order.bondOrderParams);
 
     fields.push({
       title: 'Fee',
@@ -106,7 +105,7 @@ export const getLoanFields: GetLoanFields = ({ order }) => {
 
   //TODO Bond duration here
   if (loanType === LoanType.BOND) {
-    const durationFilter = calcDurationByMultiOrdersBond(order);
+    const durationFilter = calcDurationByMultiOrdersBond(order.bondOrderParams);
 
     fields.push({
       title: 'Duration',
@@ -168,7 +167,7 @@ export const getLoanFields: GetLoanFields = ({ order }) => {
 
   //? Bond repay value
   if (loanType === LoanType.BOND) {
-    const fee = calcBondMultiOrdersFee(order);
+    const fee = calcBondMultiOrdersFee(order.bondOrderParams);
 
     fields.push({
       title: 'Repay value',

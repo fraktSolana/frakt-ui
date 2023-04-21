@@ -2,7 +2,7 @@ import { sumBy, uniq } from 'lodash';
 
 import { Pair } from '@frakt/api/bonds';
 import { LoanType } from '@frakt/api/loans';
-import { BondOrder } from '@frakt/pages/BorrowPages/cartState';
+import { CartOrder } from '@frakt/pages/BorrowPages/cartState';
 import {
   calcBondMultiOrdersFee,
   calcDurationByMultiOrdersBond,
@@ -10,7 +10,7 @@ import {
 } from '@frakt/pages/BorrowPages/helpers';
 
 type CalcCartFees = (props: {
-  orders: BondOrder[];
+  orders: CartOrder[];
   pairs: Pair[];
 }) => [string, number][];
 export const calcCartFees: CalcCartFees = ({ orders, pairs }) => {
@@ -37,7 +37,7 @@ interface FeesByDay {
   '1y'?: number;
 }
 
-type CalcOrderFees = (props: { order: BondOrder }) => FeesByDay;
+type CalcOrderFees = (props: { order: CartOrder }) => FeesByDay;
 const calcOrderFees: CalcOrderFees = ({ order }) => {
   const { loanType, loanValue } = order;
 
@@ -72,9 +72,10 @@ const calcOrderFees: CalcOrderFees = ({ order }) => {
   }
 
   if (loanType === LoanType.BOND) {
-    const fee = calcBondMultiOrdersFee(order);
+    const fee = calcBondMultiOrdersFee(order.bondOrderParams);
 
-    const durationDays = calcDurationByMultiOrdersBond(order) / 86400;
+    const durationDays =
+      calcDurationByMultiOrdersBond(order.bondOrderParams) / 86400;
 
     return {
       '1d': fee,
@@ -90,7 +91,7 @@ const calcOrderFees: CalcOrderFees = ({ order }) => {
 };
 
 type IsBulkHasDifferentDurations = (props: {
-  orders: BondOrder[];
+  orders: CartOrder[];
   pairs: Pair[];
 }) => boolean;
 

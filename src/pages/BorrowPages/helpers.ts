@@ -1,7 +1,6 @@
 import { BorrowNft } from '@frakt/api/nft';
-import { BASE_POINTS, BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
-import { Pair } from '@frakt/api/bonds';
-import { BondOrder } from './cartState';
+import { BASE_POINTS } from '@frakt/utils/bonds';
+import { BondOrderParams } from './cartState';
 
 type CalcLtv = (props: { nft: BorrowNft; loanValue: number }) => number;
 export const calcLtv: CalcLtv = ({ nft, loanValue }) => {
@@ -67,19 +66,11 @@ export const calcTimeBasedRepayValue: CalcTimeBasedRepayValue = ({
   return loanValue + fee;
 };
 
-// type CalcBondFee = (props: { loanValue: number; pair: Pair }) => number;
-// export const calcBondFee: CalcBondFee = ({ loanValue, pair }) => {
-//   const { currentSpotPrice } = pair;
-
-//   const feeLamports =
-//     (loanValue * BOND_DECIMAL_DELTA) / currentSpotPrice - loanValue;
-
-//   return feeLamports;
-// };
-
-type CalcBondMultiOrdersFee = (order: BondOrder) => number;
-export const calcBondMultiOrdersFee: CalcBondMultiOrdersFee = (order) => {
-  const feeLamports = order.bondOrderParams.orderParams.reduce(
+type CalcBondMultiOrdersFee = (bondOrderParams: BondOrderParams) => number;
+export const calcBondMultiOrdersFee: CalcBondMultiOrdersFee = (
+  bondOrderParams,
+) => {
+  const feeLamports = bondOrderParams.orderParams.reduce(
     (feeSum, orderParam) =>
       feeSum + orderParam.orderSize * (BASE_POINTS - orderParam.spotPrice),
     0,
@@ -87,11 +78,13 @@ export const calcBondMultiOrdersFee: CalcBondMultiOrdersFee = (order) => {
   return feeLamports;
 };
 
-type CalcDurationByMultiOrdersBond = (order: BondOrder) => number;
+type CalcDurationByMultiOrdersBond = (
+  bondOrderParams: BondOrderParams,
+) => number;
 export const calcDurationByMultiOrdersBond: CalcDurationByMultiOrdersBond = (
-  order,
+  bondOrderParams,
 ) => {
-  const duration = order.bondOrderParams.orderParams.reduce(
+  const duration = bondOrderParams.orderParams.reduce(
     (maxDuration, orderParam) =>
       Math.max(maxDuration, orderParam.durationFilter),
     0,

@@ -9,8 +9,7 @@ import {
 } from '@frakt/utils/bonds';
 
 import { useCurrentNft } from './useCurrentNft';
-import { calcBondsAmount, useCartState } from './useCartState';
-import { LoanType } from '@frakt/api/loans';
+import { useCartState } from './useCartState';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { patchPairWithProtocolFee } from './helpers';
 
@@ -19,10 +18,8 @@ export const useBorrow = () => {
     orders: cartOrders,
     pairs: cartPairs,
     addOrder,
-    addBondOrder,
     removeOrder,
     findOrder: findOrderInCart,
-    findPair: findPairInCart,
     clearCart,
     setCartState,
   } = useCartState();
@@ -30,9 +27,8 @@ export const useBorrow = () => {
   const {
     nft: currentNft,
     setNft: setCurrentNft,
-    setPair: setCurrentPair,
-    bondOrder: currentBondOrder,
-    setBondOrder: setCurrentBondOrder,
+    bondOrderParams: currentBondOrderParams,
+    setBondOrderParams: setCurrentBondOrderParams,
     loanType: currentLoanType,
     setLoanType: setCurrentLoanType,
     loanValue: currentLoanValue,
@@ -47,29 +43,23 @@ export const useBorrow = () => {
 
   const saveUpcomingOrderToCart = (unshift = false) => {
     if (currentNft && currentLoanType && currentLoanValue) {
-      if (currentLoanType === LoanType.BOND) {
-        console.log(
-          'saveUpcomingOrderToCart currentBondOrder: ',
-          currentBondOrder,
-        );
-        addBondOrder({
-          bondOrder: currentBondOrder,
-          pairs: pairs.filter((pair) =>
-            currentBondOrder.bondOrderParams.orderParams.find(
-              (orderParam) => orderParam.pairPubkey === pair.publicKey,
-            ),
-          ),
-        });
-      } else {
-        addOrder({
+      addOrder({
+        order: {
+          borrowNft: currentNft,
           loanType: currentLoanType,
-          nft: currentNft,
           loanValue: currentLoanValue,
-          pair: null,
-          market: null,
-          unshift,
-        });
-      }
+          bondOrderParams: currentBondOrderParams,
+        },
+        pairs: currentBondOrderParams
+          ? pairs.filter((pair) =>
+              currentBondOrderParams.orderParams.find(
+                (orderParam) => orderParam.pairPubkey === pair.publicKey,
+              ),
+            )
+          : null,
+        unshift,
+      });
+
       clearCurrentNftState();
     }
   };
@@ -97,18 +87,11 @@ export const useBorrow = () => {
 
         removeOrder({ nftMint: cartOrder?.borrowNft?.mint });
 
-        const cartPair = findPairInCart({
-          pairPubkey: cartOrder?.bondOrderParams?.orderParams?.[0]?.pairPubkey,
-        });
-        console.log('cartPair Remove: ', cartPair);
-
         setCurrentNftState({
           nft: cartOrder.borrowNft,
           loanType: cartOrder.loanType,
           loanValue: cartOrder.loanValue,
-
-          pair: cartPair || null,
-          bondOrder: cartOrder,
+          bondOrderParams: cartOrder.bondOrderParams,
         });
       }
     }
@@ -118,23 +101,14 @@ export const useBorrow = () => {
     saveUpcomingOrderToCart(reverse);
 
     const cartOrder = reverse ? cartOrders.at(-1) : cartOrders.at(0);
-    const cartPair = findPairInCart({
-      pairPubkey: cartOrder?.bondOrderParams?.orderParams?.[0]?.pairPubkey,
-    });
-    removeOrder({ nftMint: cartOrder?.borrowNft?.mint });
 
-    console.log('cartPair Next: ', cartPair);
+    removeOrder({ nftMint: cartOrder?.borrowNft?.mint });
 
     setCurrentNftState({
       nft: cartOrder.borrowNft,
       loanType: cartOrder.loanType,
       loanValue: cartOrder.loanValue,
-      pair: cartPair
-        ? {
-            ...cartPair,
-          }
-        : null,
-      bondOrder: cartOrder,
+      bondOrderParams: cartOrder.bondOrderParams,
     });
   };
 
@@ -142,10 +116,6 @@ export const useBorrow = () => {
     const cartOrder = cartOrders.find(
       ({ borrowNft }) => borrowNft.mint === mint,
     );
-    const cartPair = findPairInCart({
-      pairPubkey: cartOrder?.bondOrderParams?.orderParams?.[0]?.pairPubkey,
-    });
-    console.log('setCurrentNftFromOrder cartPair: ', cartPair);
 
     removeOrder({ nftMint: cartOrder?.borrowNft?.mint });
 
@@ -153,12 +123,7 @@ export const useBorrow = () => {
       nft: cartOrder.borrowNft,
       loanType: cartOrder.loanType,
       loanValue: cartOrder.loanValue,
-      pair: cartPair
-        ? {
-            ...cartPair,
-          }
-        : null,
-      bondOrder: cartOrder,
+      bondOrderParams: cartOrder.bondOrderParams,
     });
   };
 
@@ -185,11 +150,10 @@ export const useBorrow = () => {
     currentLoanValue,
     setCurrentLoanValue,
     setCurrentLoanType,
-    setCurrentPair,
-    setCurrentBondOrder,
+    currentBondOrderParams,
+    setCurrentBondOrderParams,
     findOrderInCart,
     currentLoanType,
-    currentBondOrder,
     saveUpcomingOrderToCart,
     setCurrentNftFromOrder,
     clearCart,

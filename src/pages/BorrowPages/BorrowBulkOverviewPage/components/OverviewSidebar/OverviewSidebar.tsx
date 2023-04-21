@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import { Alert, Solana } from '@frakt/icons';
 import Button from '@frakt/components/Button';
-import { BondOrder, useBorrow } from '@frakt/pages/BorrowPages/cartState';
+import { CartOrder, useBorrow } from '@frakt/pages/BorrowPages/cartState';
 
 import Checkbox from '@frakt/components/Checkbox';
 
@@ -12,7 +12,7 @@ import { Pair } from '@frakt/api/bonds';
 import { calcCartFees, isBulkHasDifferentDurations } from './helpers';
 
 interface OverviewSidebarProps {
-  orders: BondOrder[];
+  orders: CartOrder[];
   pairs: Pair[];
   onChangeAssets: () => void;
   onBorrow: () => void;

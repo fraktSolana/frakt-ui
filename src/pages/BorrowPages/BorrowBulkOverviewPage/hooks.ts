@@ -7,7 +7,7 @@ import { useConfirmModal } from '@frakt/components/ConfirmModal';
 import { useLoadingModalState } from '@frakt/components/LoadingModal';
 import { PATHS } from '@frakt/constants';
 import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
-import { BondOrder } from '@frakt/pages/BorrowPages/cartState';
+import { CartOrder } from '@frakt/pages/BorrowPages/cartState';
 import { notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { makeProposeTransaction } from '@frakt/utils/loans';
@@ -111,7 +111,7 @@ export const useBorrowBulkOverviewPage = () => {
 };
 
 type BorrowBulk = (props: {
-  orders: BondOrder[];
+  orders: CartOrder[];
   connection: web3.Connection;
   wallet: WalletContextState;
   isSupportSignAllTxns?: boolean;
