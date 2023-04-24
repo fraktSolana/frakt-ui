@@ -68,7 +68,7 @@ export const useSidebar = () => {
 
       const result = await borrowSingle({
         nft: currentNft,
-        bondOrderParams: currentBondOrderParams.orderParams,
+        bondOrderParams: currentBondOrderParams?.orderParams,
         loanType: currentLoanType,
         loanValue: currentLoanValue,
         market,
