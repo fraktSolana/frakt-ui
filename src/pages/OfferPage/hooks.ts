@@ -165,6 +165,7 @@ export const useOfferPage = () => {
         const { transaction, signers } = await makeCreatePairTransaction({
           marketPubkey: new web3.PublicKey(marketPubkey),
           maxDuration: duration,
+          maxLoanValue: parseFloat(maxLoanValue),
           maxLTV: ltv,
           solDeposit: parseFloat(offerSize),
           interest: parseFloat(interest),
