@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { getBestOrdersForExit } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+import { getBestOrdersForExit } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 import { FraktBondState } from 'fbonds-core/lib/fbond-protocol/types';
 
 import { Bond, Market, Pair } from '@frakt/api/bonds';
@@ -31,7 +31,7 @@ export const useBondActions = ({
     const bestOrdersAndBorrowValueNew = getBestOrdersForExit({
       loanToValueFilter: ltvBasePoints,
       amountOfBonds: stats.amountOfUserBonds,
-      pairs: pairs.map(patchPairWithProtocolFee).filter((p) =>
+      bondOffers: pairs.map(patchPairWithProtocolFee).filter((p) =>
         pairLoanDurationFilter({
           pair: p,
           duration:
