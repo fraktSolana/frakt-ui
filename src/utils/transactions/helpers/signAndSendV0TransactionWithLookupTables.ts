@@ -5,15 +5,15 @@ import { TxnsAndSigners } from './signAndSendAllTransactionsInSequence';
 export interface InstructionsAndSigners {
   instructions: web3.TransactionInstruction[];
   signers?: web3.Signer[];
-  // lookupTable?: web3.PublicKey
+  lookupTablePublicKeys: web3.PublicKey[];
 }
 
 type SignAndSendV0TransactionWithLookupTables = (props: {
-  lookupTablePublicKeys: web3.PublicKey[];
+  // lookupTablePublicKeys: web3.PublicKey[];
   createLookupTableTxns: web3.Transaction[];
   extendLookupTableTxns: web3.Transaction[];
 
-  v0InstructionsAndSigners: InstructionsAndSigners;
+  v0InstructionsAndSigners: InstructionsAndSigners[];
 
   connection: web3.Connection;
   wallet: WalletContextState;
@@ -29,7 +29,6 @@ type SignAndSendV0TransactionWithLookupTables = (props: {
 //? It needs when transactions from next chunk are related to transactions from previos chunk
 export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionWithLookupTables =
   async ({
-    lookupTablePublicKeys,
     createLookupTableTxns,
     extendLookupTableTxns,
     v0InstructionsAndSigners,
@@ -94,33 +93,39 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
         if (txnsAndSigners[i].length > 0)
           await new Promise((r) => setTimeout(r, 7000));
       }
+      await new Promise((r) => setTimeout(r, 8000));
 
       onAfterSend?.();
 
-      const lookupTables = await Promise.all(
-        lookupTablePublicKeys.map(
-          async (lookupTablePublicKey) =>
-            (
-              await connection.getAddressLookupTable(
-                new web3.PublicKey(lookupTablePublicKey),
-              )
-            ).value,
-        ),
+      const v0Transactions = await Promise.all(
+        v0InstructionsAndSigners.map(async (ixAndSigner) => {
+          const lookupTables = await Promise.all(
+            ixAndSigner.lookupTablePublicKeys.map(
+              async (lookupTablePublicKey) =>
+                (
+                  await connection.getAddressLookupTable(
+                    new web3.PublicKey(lookupTablePublicKey),
+                  )
+                ).value,
+            ),
+          );
+
+          const transactionsMessageV0 = new web3.VersionedTransaction(
+            new web3.TransactionMessage({
+              payerKey: wallet.publicKey,
+              recentBlockhash: blockhash,
+              instructions: ixAndSigner.instructions,
+            }).compileToV0Message([...lookupTables]),
+          );
+
+          transactionsMessageV0.sign([...ixAndSigner.signers]);
+          return transactionsMessageV0;
+        }),
       );
 
-      const transactionsMessageV0 = new web3.VersionedTransaction(
-        new web3.TransactionMessage({
-          payerKey: wallet.publicKey,
-          recentBlockhash: blockhash,
-          instructions: v0InstructionsAndSigners.instructions,
-        }).compileToV0Message([...lookupTables]),
+      const signedTransactionsV0 = await wallet.signAllTransactions(
+        v0Transactions,
       );
-
-      transactionsMessageV0.sign([...v0InstructionsAndSigners.signers]);
-
-      const signedTransactionsV0 = await wallet.signAllTransactions([
-        transactionsMessageV0,
-      ]);
 
       const txnSignatures = await Promise.all(
         signedTransactionsV0.map((signedTransaction) =>

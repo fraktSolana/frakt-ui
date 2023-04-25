@@ -18,7 +18,7 @@ import {
 } from '../constants';
 import { isBondFeaturesAutomated, mergeBondOrderParamsByPair } from '../utils';
 import { chunk } from 'lodash';
-import { InstructionAndSigners } from '@frakt/utils/transactions';
+import { InstructionsAndSigners } from '@frakt/utils/transactions';
 
 type MakeCreateBondTransaction = (params: {
   market: Market;
@@ -125,11 +125,7 @@ type MakeCreateBondMultiOrdersTransaction = (params: {
 }) => Promise<{
   createLookupTableTxn: web3.Transaction;
   extendLookupTableTxns: web3.Transaction[];
-  createAndSellBondsIxsAndSigners: {
-    instructions: web3.TransactionInstruction[];
-    signers: web3.Signer[];
-  };
-  lookupTable: web3.PublicKey;
+  createAndSellBondsIxsAndSigners: InstructionsAndSigners;
 }>;
 
 export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTransaction =
@@ -267,7 +263,7 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
           ...createBondSigners,
           ...sellingBondsIxsAndSignersWithLookupAccounts.signers,
         ],
+        lookupTablePublicKeys: [lookupTableAddress],
       },
-      lookupTable: lookupTableAddress,
     };
   };

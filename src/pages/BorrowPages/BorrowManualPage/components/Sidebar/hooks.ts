@@ -172,7 +172,6 @@ const borrowSingle: BorrowSingle = async ({
     createLookupTableTxn,
     extendLookupTableTxns,
     createAndSellBondsIxsAndSigners,
-    lookupTable,
   } = await makeCreateBondMultiOrdersTransaction({
     nftMint: nft.mint,
     market,
@@ -184,8 +183,7 @@ const borrowSingle: BorrowSingle = async ({
   return await signAndSendV0TransactionWithLookupTables({
     createLookupTableTxns: [createLookupTableTxn],
     extendLookupTableTxns: extendLookupTableTxns,
-    v0InstructionsAndSigners: createAndSellBondsIxsAndSigners,
-    lookupTablePublicKeys: [lookupTable],
+    v0InstructionsAndSigners: [createAndSellBondsIxsAndSigners],
     connection,
     wallet,
     commitment: 'confirmed',
