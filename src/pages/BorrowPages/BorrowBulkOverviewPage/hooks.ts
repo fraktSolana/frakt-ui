@@ -174,7 +174,7 @@ const borrowBulk: BorrowBulk = async ({
       .flat(),
   ];
 
-  const thirdChunk: InstructionsAndSigners[] = [
+  const createAndSellBondsIxsAndSignersChunk: InstructionsAndSigners[] = [
     ...bondTransactionsAndSignersChunks
       .map((chunk) => chunk.createAndSellBondsIxsAndSigners)
       .flat(),
@@ -183,7 +183,7 @@ const borrowBulk: BorrowBulk = async ({
   return await signAndSendV0TransactionWithLookupTables({
     createLookupTableTxns: firstChunk.map((txn) => txn.transaction),
     extendLookupTableTxns: secondChunk.map((txn) => txn.transaction),
-    v0InstructionsAndSigners: thirdChunk,
+    v0InstructionsAndSigners: createAndSellBondsIxsAndSignersChunk,
     // lookupTablePublicKey: bondTransactionsAndSignersChunks,
     connection,
     wallet,
