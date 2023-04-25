@@ -14,8 +14,10 @@ import { makeProposeTransaction } from '@frakt/utils/loans';
 import { LoanType } from '@frakt/api/loans';
 import { useConnection } from '@frakt/hooks';
 import {
+  InstructionsAndSigners,
   showSolscanLinkNotification,
   signAndSendAllTransactionsInSequence,
+  signAndSendV0TransactionWithLookupTables,
   TxnsAndSigners,
 } from '@frakt/utils/transactions';
 import { captureSentryError } from '@frakt/utils/sentry';
@@ -154,18 +156,35 @@ const borrowBulk: BorrowBulk = async ({
   const firstChunk: TxnsAndSigners[] = [
     ...notBondTransactionsAndSigners,
     ...bondTransactionsAndSignersChunks
-      .map((chunk) => chunk.createBondTxnAndSigners)
+      .map((chunk) => ({
+        transaction: chunk.createLookupTableTxn,
+        signers: [],
+      }))
       .flat(),
   ];
 
   const secondChunk: TxnsAndSigners[] = [
     ...bondTransactionsAndSignersChunks
-      .map((chunk) => chunk.sellingBondsTxnsAndSigners)
+      .map((chunk) =>
+        chunk.extendLookupTableTxns.map((transaction) => ({
+          transaction,
+          signers: [],
+        })),
+      )
       .flat(),
   ];
 
-  return await signAndSendAllTransactionsInSequence({
-    txnsAndSigners: [firstChunk, secondChunk],
+  const thirdChunk: InstructionsAndSigners[] = [
+    ...bondTransactionsAndSignersChunks
+      .map((chunk) => chunk.createAndSellBondsIxsAndSigners)
+      .flat(),
+  ];
+
+  return await signAndSendV0TransactionWithLookupTables({
+    createLookupTableTxns: firstChunk.map((txn) => txn.transaction),
+    extendLookupTableTxns: secondChunk.map((txn) => txn.transaction),
+    v0InstructionsAndSigners: thirdChunk,
+    // lookupTablePublicKey: bondTransactionsAndSignersChunks,
     connection,
     wallet,
     commitment: 'confirmed',

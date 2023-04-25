@@ -8,6 +8,7 @@ import {
   showSolscanLinkNotification,
   signAndSendAllTransactions,
   signAndSendAllTransactionsInSequence,
+  signAndSendV0TransactionWithLookupTables,
 } from '@frakt/utils/transactions';
 import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
 import { useConnection } from '@frakt/hooks';
@@ -167,17 +168,24 @@ const borrowSingle: BorrowSingle = async ({
     });
   }
 
-  const { createBondTxnAndSigners, sellingBondsTxnsAndSigners } =
-    await makeCreateBondMultiOrdersTransaction({
-      nftMint: nft.mint,
-      market,
-      bondOrderParams: bondOrderParams,
-      connection,
-      wallet,
-    });
+  const {
+    createLookupTableTxn,
+    extendLookupTableTxns,
+    createAndSellBondsIxsAndSigners,
+    lookupTable,
+  } = await makeCreateBondMultiOrdersTransaction({
+    nftMint: nft.mint,
+    market,
+    bondOrderParams: bondOrderParams,
+    connection,
+    wallet,
+  });
 
-  return await signAndSendAllTransactionsInSequence({
-    txnsAndSigners: [[createBondTxnAndSigners], sellingBondsTxnsAndSigners],
+  return await signAndSendV0TransactionWithLookupTables({
+    createLookupTableTxns: [createLookupTableTxn],
+    extendLookupTableTxns: extendLookupTableTxns,
+    v0InstructionsAndSigners: createAndSellBondsIxsAndSigners,
+    lookupTablePublicKeys: [lookupTable],
     connection,
     wallet,
     commitment: 'confirmed',
