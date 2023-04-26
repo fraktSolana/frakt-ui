@@ -1,11 +1,9 @@
-import { QuestionCircleOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import Tooltip from '@frakt/components/Tooltip';
 
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
-import { RadioButton } from '@frakt/components/RadioButton';
 import TokenField from '@frakt/components/TokenField';
 import Button from '@frakt/components/Button';
 import { SOL_TOKEN } from '@frakt/utils';
@@ -26,6 +24,7 @@ import {
 import styles from './OfferPage.module.scss';
 import { OfferTypes } from './types';
 import TotalOverview from './components/TotalOverview';
+import RadioButtonField from './components/RadioButtonField';
 
 export const OfferPage = () => {
   const {
@@ -72,17 +71,15 @@ export const OfferPage = () => {
 
         <div className={styles.block}>
           <CollectionGereralInfo market={market} loading={isLoading} />
-          <div className={styles.radio}>
-            <h6 className={styles.subtitle}>Offer type</h6>
-            <RadioButton
-              currentOption={{
-                label: offerType,
-                value: offerType,
-              }}
-              onOptionChange={onOfferTypeChange}
-              options={OFFER_TYPE_OPTIONS}
-            />
-          </div>
+          <RadioButtonField
+            label="Offer type"
+            currentOption={{
+              label: offerType,
+              value: offerType,
+            }}
+            onOptionChange={onOfferTypeChange}
+            options={OFFER_TYPE_OPTIONS}
+          />
 
           {offerType === OfferTypes.FIXED && (
             <TokenField
@@ -110,17 +107,15 @@ export const OfferPage = () => {
             </>
           )}
 
-          <div className={styles.radio}>
-            <h6 className={styles.subtitle}>duration</h6>
-            <RadioButton
-              currentOption={{
-                label: `${duration} days`,
-                value: duration,
-              }}
-              onOptionChange={onDurationChange}
-              options={DURATION_OPTIONS}
-            />
-          </div>
+          <RadioButtonField
+            label="Duration"
+            currentOption={{
+              label: `${duration} days`,
+              value: duration,
+            }}
+            onOptionChange={onDurationChange}
+            options={DURATION_OPTIONS}
+          />
           <div className={styles.fieldWrapper}>
             <SizeField
               value={offerSize}
@@ -143,10 +138,8 @@ export const OfferPage = () => {
                   APR: <p>{(apr || 0).toFixed(2)} %</p>
                   <Tooltip
                     placement="bottom"
-                    overlay={'Analyzed profit from repaying the loan'}
-                  >
-                    <QuestionCircleOutlined className={styles.questionIcon} />
-                  </Tooltip>
+                    overlay="Analyzed profit from repaying the loan"
+                  />
                 </div>
               }
               currentToken={{
@@ -157,46 +150,30 @@ export const OfferPage = () => {
               }}
               toolTipText="Interest (in %) for the duration of this loan"
             />
-            <div className={classNames(styles.radio, styles.radioWrapper)}>
-              <div className={styles.radioTitle}>
-                <h6 className={styles.subtitle}>Repayments</h6>
-                <Tooltip
-                  placement="bottom"
-                  overlay="Lenders have an option to place same offer right after repayment together with earned interest"
-                >
-                  <QuestionCircleOutlined className={styles.questionIcon} />
-                </Tooltip>
-              </div>
-              <RadioButton
-                currentOption={{
-                  label: autocompoundFeature,
-                  value: autocompoundFeature,
-                }}
-                disabled={isEdit}
-                onOptionChange={onChangeAutocompoundFeature}
-                options={EARNER_INTEREST_OPTIONS}
-              />
-            </div>
-            <div className={classNames(styles.radio, styles.radioWrapper)}>
-              <div className={styles.radioTitle}>
-                <h6 className={styles.subtitle}>Defaults</h6>
-                <Tooltip
-                  placement="bottom"
-                  overlay="When funding full loans, lenders have the option to get defaulted NFTs instead of the SOL recovered from the liquidation"
-                >
-                  <QuestionCircleOutlined className={styles.questionIcon} />
-                </Tooltip>
-              </div>
-              <RadioButton
-                currentOption={{
-                  label: receiveNftFeature,
-                  value: receiveNftFeature,
-                }}
-                disabled={isEdit}
-                onOptionChange={onChangeReceiveNftFeature}
-                options={RECEIVE_OPTIONS}
-              />
-            </div>
+            <RadioButtonField
+              label="Repayments"
+              currentOption={{
+                label: autocompoundFeature,
+                value: autocompoundFeature,
+              }}
+              disabled={isEdit}
+              onOptionChange={onChangeAutocompoundFeature}
+              options={EARNER_INTEREST_OPTIONS}
+              className={styles.radioWrapper}
+              tooltipText="Lenders have an option to place same offer right after repayment together with earned interest"
+            />
+            <RadioButtonField
+              label="Defaults"
+              options={RECEIVE_OPTIONS}
+              currentOption={{
+                label: receiveNftFeature,
+                value: receiveNftFeature,
+              }}
+              disabled={isEdit}
+              onOptionChange={onChangeReceiveNftFeature}
+              className={styles.radioWrapper}
+              tooltipText="When funding full loans, lenders have the option to get defaulted NFTs instead of the SOL recovered from the liquidation"
+            />
           </div>
 
           <TotalOverview
