@@ -27,6 +27,7 @@ export interface TokenFieldProps {
   toolTipText?: string;
   labelRightNode?: ReactNode;
   onBlur?: () => void;
+  optional?: boolean;
 }
 
 const TokenField: FC<TokenFieldProps> = ({
@@ -48,6 +49,7 @@ const TokenField: FC<TokenFieldProps> = ({
   toolTipText,
   labelRightNode,
   onBlur,
+  optional,
 }) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
@@ -136,6 +138,7 @@ const TokenField: FC<TokenFieldProps> = ({
           </button>
         </div>
       </div>
+      {optional && <span className={styles.optional}>Optional</span>}
     </div>
   );
 };

@@ -8,6 +8,7 @@ import TokenField from '@frakt/components/TokenField';
 import Button from '@frakt/components/Button';
 import { SOL_TOKEN } from '@frakt/utils';
 
+import { colorByPercentOffers, getColorByPercent } from '@frakt/utils/bonds';
 import { SliderGradient } from './components/SliderGradient/SliderGradient';
 import CollectionGereralInfo from './components/CollectionGereralInfo';
 import OrderBook from '../MarketsPage/components/OrderBook/OrderBook';
@@ -88,11 +89,7 @@ export const OfferPage = () => {
               label="Loan Value"
               value={maxLoanValue}
               onValueChange={onMaxLoanValueChange}
-              labelRightNode={
-                <div className={styles.labelRow}>
-                  <span>LTV: {(fixedLTV || 0).toFixed(2)} %</span>
-                </div>
-              }
+              labelRightNode={createLTVFieldRightLabel(fixedLTV)}
               currentToken={SOL_TOKEN}
             />
           )}
@@ -105,6 +102,7 @@ export const OfferPage = () => {
                 onValueChange={onMaxLoanValueChange}
                 label="Max limit"
                 currentToken={SOL_TOKEN}
+                optional
               />
             </>
           )}
@@ -135,15 +133,7 @@ export const OfferPage = () => {
               onValueChange={onInterestChange}
               onBlur={() => handleInterestOnBlur(interest)}
               label="Interest"
-              labelRightNode={
-                <div className={styles.labelRow}>
-                  APR: <p>{(apr || 0).toFixed(2)} %</p>
-                  <Tooltip
-                    placement="bottom"
-                    overlay="Analyzed profit from repaying the loan"
-                  />
-                </div>
-              }
+              labelRightNode={createIntrestFieldRihtLabel(apr)}
               currentToken={{
                 ...SOL_TOKEN,
                 symbol: '%',
@@ -234,3 +224,24 @@ export const OfferPage = () => {
     </AppLayout>
   );
 };
+
+const createLTVFieldRightLabel = (value = 0) => {
+  const colorLTV =
+    getColorByPercent(value, colorByPercentOffers) || colorByPercentOffers[100];
+
+  return (
+    <div className={styles.labelRow}>
+      LTV: <span style={{ color: colorLTV }}>{(value || 0).toFixed(2)} %</span>
+    </div>
+  );
+};
+
+const createIntrestFieldRihtLabel = (value = 0) => (
+  <div className={styles.labelRow}>
+    APR: <span>{(value || 0).toFixed(2)} %</span>
+    <Tooltip
+      placement="bottom"
+      overlay="Analyzed profit from repaying the loan"
+    />
+  </div>
+);
