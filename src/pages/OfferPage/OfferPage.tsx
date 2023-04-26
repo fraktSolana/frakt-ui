@@ -60,8 +60,6 @@ export const OfferPage = () => {
   } = useOfferPage();
 
   const apr = (parseFloat(interest) / duration) * 365;
-  const fixedLTV =
-    (parseFloat(maxLoanValue) / (market?.oracleFloor?.floor / 1e9)) * 100;
 
   return (
     <AppLayout>
@@ -89,7 +87,7 @@ export const OfferPage = () => {
               label="Loan Value"
               value={maxLoanValue}
               onValueChange={onMaxLoanValueChange}
-              labelRightNode={createLTVFieldRightLabel(fixedLTV)}
+              labelRightNode={createLTVFieldRightLabel(ltv)}
               currentToken={SOL_TOKEN}
             />
           )}

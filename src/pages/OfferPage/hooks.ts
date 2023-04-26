@@ -29,6 +29,7 @@ import {
   DEFAULT_MAX_LOAN_VALUE_FOR_FLOOR_TYPE_OFFER,
   MAX_LOAN_VALUE,
 } from './constants';
+import { calculateLTV } from './helpers';
 
 export const useOfferPage = () => {
   const history = useHistory();
@@ -303,10 +304,12 @@ export const useOfferPage = () => {
     }
   };
 
+  const rawLTV = calculateLTV({ market, maxLoanValue, offerType, ltv });
+
   return {
     loadingModalVisible,
     closeLoadingModal,
-    ltv,
+    ltv: rawLTV,
     duration,
     offerSize,
     interest,
