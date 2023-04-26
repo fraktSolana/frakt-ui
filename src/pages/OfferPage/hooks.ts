@@ -24,6 +24,7 @@ import { PATHS } from '@frakt/constants';
 import { RBOption } from '../../components/RadioButton';
 import { makeModifyPairTransactions } from '@frakt/utils/bonds/transactions/makeModifyPairTransactions';
 import { parseMarketOrder } from '../MarketsPage/components/OrderBook/helpers';
+import { OfferTypes } from './types';
 
 export const useOfferPage = () => {
   const history = useHistory();
@@ -61,6 +62,7 @@ export const useOfferPage = () => {
   const [interest, setInterest] = useState<string>('0');
   const [offerSize, setOfferSize] = useState<string>('0');
   const [maxLoanValue, setMaxLoanValue] = useState<string>('0');
+  const [offerType, setOfferType] = useState<OfferTypes>(OfferTypes.FIXED);
   const [receiveNftFeature, setReceiveNftFeature] = useState<BondFeatures>(
     BondFeatures.ReceiveNftOnLiquidation,
   );
@@ -102,6 +104,10 @@ export const useOfferPage = () => {
 
   const onInterestChange = (value: string) => {
     setInterest(value);
+  };
+
+  const onOfferTypeChange = (value: RBOption<OfferTypes>) => {
+    setOfferType(value.value);
   };
 
   const handleInterestOnBlur = (interest: string) => {
@@ -321,5 +327,7 @@ export const useOfferPage = () => {
     onChangeReceiveNftFeature,
     onMaxLoanValueChange,
     maxLoanValue,
+    onOfferTypeChange,
+    offerType,
   };
 };

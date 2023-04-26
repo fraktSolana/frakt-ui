@@ -73,10 +73,13 @@ const TokenField: FC<TokenFieldProps> = ({
               !!labelRightNode && styles.labelSeparete,
             )}
           >
-            {label}
-            {toolTipText && (
-              <Tooltip placement="bottom" overlay={toolTipText} />
-            )}
+            <div className={styles.labelRow}>
+              {label}
+              {toolTipText && (
+                <Tooltip placement="bottom" overlay={toolTipText} />
+              )}
+            </div>
+            {labelRightNode}
             {!!lpBalance && (
               <span className={styles.balance}>
                 {lpBalance.toFixed(2)} {currentToken?.symbol}

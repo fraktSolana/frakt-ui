@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 
@@ -20,10 +19,13 @@ import { useOfferPage } from './hooks';
 import {
   DURATION_OPTIONS,
   EARNER_INTEREST_OPTIONS,
+  OFFER_TYPE_OPTIONS,
   RECEIVE_OPTIONS,
 } from './constants';
 
 import styles from './OfferPage.module.scss';
+import { OfferTypes } from './types';
+import TotalOverview from './components/TotalOverview';
 
 export const OfferPage = () => {
   const {
@@ -53,6 +55,8 @@ export const OfferPage = () => {
     onChangeReceiveNftFeature,
     onMaxLoanValueChange,
     maxLoanValue,
+    onOfferTypeChange,
+    offerType,
   } = useOfferPage();
 
   const apr = (parseFloat(interest) / duration) * 365;
@@ -68,14 +72,43 @@ export const OfferPage = () => {
 
         <div className={styles.block}>
           <CollectionGereralInfo market={market} loading={isLoading} />
-          <SliderGradient value={ltv} setValue={onLtvChange} />
+          <div className={styles.radio}>
+            <h6 className={styles.subtitle}>Offer type</h6>
+            <RadioButton
+              currentOption={{
+                label: offerType,
+                value: offerType,
+              }}
+              onOptionChange={onOfferTypeChange}
+              options={OFFER_TYPE_OPTIONS}
+            />
+          </div>
 
-          <TokenField
-            value={maxLoanValue}
-            onValueChange={onMaxLoanValueChange}
-            label="Max limit"
-            currentToken={SOL_TOKEN}
-          />
+          {offerType === OfferTypes.FIXED && (
+            <TokenField
+              value={interest}
+              onValueChange={onInterestChange}
+              label="Loan Value"
+              labelRightNode={
+                <div className={styles.labelRow}>
+                  <span>LTV: {(apr || 0).toFixed(2)} %</span>
+                </div>
+              }
+              currentToken={SOL_TOKEN}
+            />
+          )}
+
+          {offerType === OfferTypes.FLOOR && (
+            <>
+              <SliderGradient value={ltv} setValue={onLtvChange} />
+              <TokenField
+                value={maxLoanValue}
+                onValueChange={onMaxLoanValueChange}
+                label="Max limit"
+                currentToken={SOL_TOKEN}
+              />
+            </>
+          )}
 
           <div className={styles.radio}>
             <h6 className={styles.subtitle}>duration</h6>
@@ -107,7 +140,7 @@ export const OfferPage = () => {
               label="Interest"
               labelRightNode={
                 <div className={styles.labelRow}>
-                  APR: <span>{(apr || 0).toFixed(2)} %</span>
+                  APR: <p>{(apr || 0).toFixed(2)} %</p>
                   <Tooltip
                     placement="bottom"
                     overlay={'Analyzed profit from repaying the loan'}
@@ -122,9 +155,6 @@ export const OfferPage = () => {
                 logoURI: null,
                 name: null,
               }}
-              tokensList={[
-                { ...SOL_TOKEN, symbol: '%', logoURI: null, name: null },
-              ]}
               toolTipText="Interest (in %) for the duration of this loan"
             />
             <div className={classNames(styles.radio, styles.radioWrapper)}>
@@ -223,28 +253,5 @@ export const OfferPage = () => {
         onCancel={closeLoadingModal}
       />
     </AppLayout>
-  );
-};
-
-interface TotalOverviewProps {
-  size?: number;
-  interest?: number;
-  duration?: number;
-}
-
-const TotalOverview: FC<TotalOverviewProps> = ({
-  size = 0,
-  interest = 0,
-  duration = 7,
-}) => {
-  const estProfit = size * (interest / 1e2);
-
-  return (
-    <div className={styles.total}>
-      <h5 className={styles.blockTitle}>
-        {(estProfit || 0).toFixed(2)} SOL in {duration} days
-      </h5>
-      <span className={styles.blockSubtitle}>estimated profit</span>
-    </div>
   );
 };
