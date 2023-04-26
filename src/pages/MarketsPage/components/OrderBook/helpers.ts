@@ -11,6 +11,7 @@ import { MarketOrder } from './types';
 //? currentSpotPrice -- price for smallest part of token (BOND_SOL_DECIMAIL_DELTA)
 //? validation.loanToValueFilter -- LTV
 export const parseMarketOrder = (pair: Pair): MarketOrder => {
+  console.log(pair);
   return {
     ltv: (pair?.validation?.loanToValueFilter || 0) / 100,
     size:
