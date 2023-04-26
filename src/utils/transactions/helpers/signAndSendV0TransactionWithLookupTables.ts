@@ -95,8 +95,6 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
       }
       await new Promise((r) => setTimeout(r, 8000));
 
-      onAfterSend?.();
-
       const v0Transactions = await Promise.all(
         v0InstructionsAndSigners.map(async (ixAndSigner) => {
           const lookupTables = await Promise.all(
@@ -133,8 +131,9 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
         ),
       );
       //   );
-      await new Promise((r) => setTimeout(r, 7000));
+      onAfterSend?.();
 
+      await new Promise((r) => setTimeout(r, 7000));
       // //? Can't cover this shit with types properly
       // const resultsContainErr = results
       //   .map((res) => !!(res as any)?.value?.value?.err)
