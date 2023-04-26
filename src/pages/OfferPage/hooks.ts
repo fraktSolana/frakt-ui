@@ -25,6 +25,10 @@ import { RBOption } from '../../components/RadioButton';
 import { makeModifyPairTransactions } from '@frakt/utils/bonds/transactions/makeModifyPairTransactions';
 import { parseMarketOrder } from '../MarketsPage/components/OrderBook/helpers';
 import { OfferTypes } from './types';
+import {
+  DEFAULT_MAX_LOAN_VALUE_FOR_FLOOR_TYPE_OFFER,
+  MAX_LOAN_VALUE,
+} from './constants';
 
 export const useOfferPage = () => {
   const history = useHistory();
@@ -34,17 +38,10 @@ export const useOfferPage = () => {
   }>();
 
   const { account } = useNativeAccount();
-  const { market, isLoading: marketLoading } = useMarket({
-    marketPubkey,
-  });
 
-  const { pair, isLoading: pairLoading } = useMarketPair({
-    pairPubkey,
-  });
-
-  const { refetch: refetchMarketPairs } = useMarketPairs({
-    marketPubkey,
-  });
+  const { market, isLoading: marketLoading } = useMarket({ marketPubkey });
+  const { pair, isLoading: pairLoading } = useMarketPair({ pairPubkey });
+  const { refetch: refetchMarketPairs } = useMarketPairs({ marketPubkey });
 
   const isEdit = !!pairPubkey;
   const initialPairValues = parseMarketOrder(pair);
@@ -168,11 +165,19 @@ export const useOfferPage = () => {
       try {
         openLoadingModal();
 
+        const maxLoanValueNumber = parseFloat(maxLoanValue);
+        const rawLtv = offerType === OfferTypes.FIXED ? MAX_LOAN_VALUE : ltv;
+
+        const rawMaxLoanValue =
+          offerType === OfferTypes.FLOOR && !maxLoanValueNumber
+            ? DEFAULT_MAX_LOAN_VALUE_FOR_FLOOR_TYPE_OFFER
+            : maxLoanValueNumber;
+
         const { transaction, signers } = await makeCreatePairTransaction({
           marketPubkey: new web3.PublicKey(marketPubkey),
           maxDuration: duration,
-          maxLoanValue: parseFloat(maxLoanValue),
-          maxLTV: ltv,
+          maxLoanValue: rawMaxLoanValue,
+          maxLTV: rawLtv,
           solDeposit: parseFloat(offerSize),
           interest: parseFloat(interest),
           marketFloor: market.oracleFloor.floor,

@@ -11,9 +11,12 @@ import { SOL_TOKEN } from '@frakt/utils';
 import { SliderGradient } from './components/SliderGradient/SliderGradient';
 import CollectionGereralInfo from './components/CollectionGereralInfo';
 import OrderBook from '../MarketsPage/components/OrderBook/OrderBook';
+import RadioButtonField from './components/RadioButtonField';
 import SizeField from './components/SizeField/SizeField';
+import TotalOverview from './components/TotalOverview';
 import { Header } from './components/Header';
 import { useOfferPage } from './hooks';
+import { OfferTypes } from './types';
 import {
   DURATION_OPTIONS,
   EARNER_INTEREST_OPTIONS,
@@ -22,9 +25,6 @@ import {
 } from './constants';
 
 import styles from './OfferPage.module.scss';
-import { OfferTypes } from './types';
-import TotalOverview from './components/TotalOverview';
-import RadioButtonField from './components/RadioButtonField';
 
 export const OfferPage = () => {
   const {
@@ -59,6 +59,8 @@ export const OfferPage = () => {
   } = useOfferPage();
 
   const apr = (parseFloat(interest) / duration) * 365;
+  const fixedLTV =
+    (parseFloat(maxLoanValue) / (market?.oracleFloor?.floor / 1e9)) * 100;
 
   return (
     <AppLayout>
@@ -83,12 +85,12 @@ export const OfferPage = () => {
 
           {offerType === OfferTypes.FIXED && (
             <TokenField
-              value={interest}
-              onValueChange={onInterestChange}
               label="Loan Value"
+              value={maxLoanValue}
+              onValueChange={onMaxLoanValueChange}
               labelRightNode={
                 <div className={styles.labelRow}>
-                  <span>LTV: {(apr || 0).toFixed(2)} %</span>
+                  <span>LTV: {(fixedLTV || 0).toFixed(2)} %</span>
                 </div>
               }
               currentToken={SOL_TOKEN}
