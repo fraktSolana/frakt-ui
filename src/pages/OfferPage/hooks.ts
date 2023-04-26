@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { web3 } from 'fbonds-core';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -59,8 +60,8 @@ export const useOfferPage = () => {
   const [duration, setDuration] = useState<number>(7);
   const [interest, setInterest] = useState<string>('0');
   const [offerSize, setOfferSize] = useState<string>('0');
-  const [maxLoanValue, setMaxLoanValue] = useState<string>('0');
   const [offerType, setOfferType] = useState<OfferTypes>(OfferTypes.FIXED);
+  const [maxLoanValue, setMaxLoanValue] = useState<string>('0');
   const [receiveNftFeature, setReceiveNftFeature] = useState<BondFeatures>(
     BondFeatures.ReceiveNftOnLiquidation,
   );
@@ -90,6 +91,17 @@ export const useOfferPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, isLoading, pair]);
+
+  useEffect(() => {
+    if (!isLoading && !isEmpty(market)) {
+      const marketFloor = (market?.oracleFloor?.floor / 1e9 || 0)?.toFixed(2);
+
+      const defaultMaxLoanValue =
+        offerType === OfferTypes.FIXED ? marketFloor : '0';
+
+      setMaxLoanValue(defaultMaxLoanValue);
+    }
+  }, [isLoading, market]);
 
   const onLtvChange = useCallback((value: number) => setLtv(value), []);
   const onDurationChange = (nextOption: RBOption<number>) => {
