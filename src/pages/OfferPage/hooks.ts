@@ -101,7 +101,7 @@ export const useOfferPage = () => {
 
       setMaxLoanValue(defaultMaxLoanValue);
     }
-  }, [isLoading, market]);
+  }, [isLoading, market, offerType]);
 
   const onLtvChange = useCallback((value: number) => setLtv(value), []);
   const onDurationChange = (nextOption: RBOption<number>) => {
