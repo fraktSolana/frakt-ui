@@ -5,22 +5,25 @@ import classNames from 'classnames';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import Tooltip from '@frakt/components/Tooltip';
 
-import TokenField from '../../components/TokenField';
-import { AppLayout } from '../../components/Layout/AppLayout';
-import OrderBook from '../MarketsPage/components/OrderBook/OrderBook';
-import Button from '../../components/Button';
-import SizeField from './components/SizeField/SizeField';
-import { RadioButton } from '../../components/RadioButton';
+import { AppLayout } from '@frakt/components/Layout/AppLayout';
+import { RadioButton } from '@frakt/components/RadioButton';
+import TokenField from '@frakt/components/TokenField';
+import Button from '@frakt/components/Button';
+import { SOL_TOKEN } from '@frakt/utils';
+
 import { SliderGradient } from './components/SliderGradient/SliderGradient';
+import CollectionGereralInfo from './components/CollectionGereralInfo';
+import OrderBook from '../MarketsPage/components/OrderBook/OrderBook';
+import SizeField from './components/SizeField/SizeField';
 import { Header } from './components/Header';
 import { useOfferPage } from './hooks';
-import { SOL_TOKEN } from '../../utils';
-import styles from './OfferPage.module.scss';
 import {
   DURATION_OPTIONS,
   EARNER_INTEREST_OPTIONS,
   RECEIVE_OPTIONS,
 } from './constants';
+
+import styles from './OfferPage.module.scss';
 
 export const OfferPage = () => {
   const {
@@ -64,40 +67,14 @@ export const OfferPage = () => {
         />
 
         <div className={styles.block}>
-          <div className={styles.floorWrapper}>
-            <div className={styles.floorCard}>
-              <h6 className={styles.floorCardTitle}>collection</h6>
-
-              <div className={styles.cardCollection}>
-                <img
-                  className={styles.collectionImage}
-                  src={market?.collectionImage}
-                  alt={market?.collectionName}
-                />
-                <span className={styles.floorCardValue}>
-                  {!isLoading ? market?.collectionName : '--'}
-                </span>
-              </div>
-            </div>
-            <div className={styles.floorCard}>
-              <h6 className={styles.floorCardTitle}>floor</h6>
-              <span
-                className={classNames(styles.floorCardValue, styles.florPrice)}
-              >
-                {!isLoading
-                  ? (market?.oracleFloor.floor / 1e9).toFixed(2) + ' sol'
-                  : '--'}
-              </span>
-            </div>
-          </div>
+          <CollectionGereralInfo market={market} loading={isLoading} />
           <SliderGradient value={ltv} setValue={onLtvChange} />
 
           <TokenField
             value={maxLoanValue}
             onValueChange={onMaxLoanValueChange}
-            label="Max loan value"
+            label="Max limit"
             currentToken={SOL_TOKEN}
-            toolTipText="Max loan value"
           />
 
           <div className={styles.radio}>
