@@ -2,16 +2,14 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { LoanType } from '@frakt/api/loans';
 import {
-  BondOrder,
-  convertTakenOrdersToOrderParams,
-  patchPairWithProtocolFee,
+  BondOrderParams,
+  convertTakenOrderToOrderParams,
   useBorrow,
 } from '@frakt/pages/BorrowPages/cartState';
 
 import {
   generateSelectOptions,
   getBorrowValueRange,
-  getCheapestPairForBorrowValue,
   SelectValue,
 } from './helpers';
 import { getBestOrdersByBorrowValue } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
@@ -22,16 +20,15 @@ export const useBorrowForm = () => {
   const {
     currentNft,
     currentLoanValue,
-    currentBondOrder,
     setCurrentLoanValue,
     market,
     pairs,
     isBulk,
     totalBorrowValue,
     setCurrentLoanType,
-    setCurrentPair,
-    setCurrentBondOrder,
     currentLoanType,
+    currentBondOrderParams,
+    setCurrentBondOrderParams,
   } = useBorrow();
 
   const [selectedOption, setSelectedOption] = useState<SelectValue | null>(
@@ -72,7 +69,7 @@ export const useBorrowForm = () => {
           }
           const sameBondDuration =
             value?.type === LoanType.BOND &&
-            calcDurationByMultiOrdersBond(currentBondOrder) / 86400 ===
+            calcDurationByMultiOrdersBond(currentBondOrderParams) / 86400 ===
               value?.duration;
 
           return sameLoanType && sameBondDuration;
@@ -89,7 +86,7 @@ export const useBorrowForm = () => {
   //? Recalc cheapest pair on currentLoanValue change
   useEffect(() => {
     if (selectedOption?.value?.type === LoanType.BOND && market) {
-      const bestOrdersAndBorrowValue = getBestOrdersByBorrowValue({
+      const { takenOrders } = getBestOrdersByBorrowValue({
         borrowValue: currentLoanValue,
         collectionFloor: market?.oracleFloor?.floor,
         pairs: pairs.filter((p) =>
@@ -100,48 +97,30 @@ export const useBorrowForm = () => {
         ),
       });
 
-      console.log('bestOrdersAndBorrowValue: ', bestOrdersAndBorrowValue);
-      console.log(
-        'recalculated borrowValue: ',
-        bestOrdersAndBorrowValue.takenOrders.reduce(
-          (sum, order) => sum + order.orderSize * order.pricePerShare,
-          0,
-        ),
-      );
+      const bondOrderParams: BondOrderParams = {
+        market,
+        orderParams: takenOrders.map((order) => {
+          const affectedPair = pairs.find(
+            (pair) => pair.publicKey === order.pairPubkey,
+          );
 
-      const bondOrder: BondOrder = {
-        borrowNft: currentNft,
-        loanType: LoanType.BOND,
-        loanValue: bestOrdersAndBorrowValue.maxBorrowValue,
-        bondOrderParams: {
-          market,
-          orderParams: convertTakenOrdersToOrderParams({
-            pairs,
-            takenOrders: bestOrdersAndBorrowValue.takenOrders,
-          }),
-
-          // [
-          //   {
-          //     orderSize: bondsAmount,
-          //     spotPrice: patchedPair.currentSpotPrice,
-          //     pairPubkey: patchedPair.publicKey,
-          //   },
-          // ],
-        },
+          return convertTakenOrderToOrderParams({
+            pair: affectedPair,
+            takenOrder: order,
+          });
+        }),
       };
 
-      setCurrentBondOrder(bondOrder);
+      setCurrentBondOrderParams(bondOrderParams);
     } else {
-      setCurrentBondOrder(null);
-      setCurrentPair(null);
+      setCurrentBondOrderParams(null);
     }
   }, [
     market,
     currentLoanValue,
     pairs,
     selectedOption,
-    setCurrentPair,
-    setCurrentBondOrder,
+    setCurrentBondOrderParams,
   ]);
 
   //? Calc loanValue range

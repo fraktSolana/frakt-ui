@@ -1,15 +1,11 @@
-import { maxBy } from 'lodash';
-
 import { Pair } from '@frakt/api/bonds';
 import {
   BASE_POINTS,
   BONDS_PROTOCOL_FEE_IN_BASE_POINTS,
-  BOND_DECIMAL_DELTA,
-  pairLoanDurationFilter,
 } from '@frakt/utils/bonds';
 import { LoanType } from '@frakt/api/loans';
 
-import { BondOrder } from './types';
+import { CartOrder } from './types';
 import { Order } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
 import { BondCartOrder } from '@frakt/api/nft';
 
@@ -35,6 +31,22 @@ export const convertTakenOrdersToOrderParams: ConvertTakenOrdersToOrderParams =
     }));
   };
 
+type ConvertTakenOrderToOrderParams = (params: {
+  pair: Pair;
+  takenOrder: Order;
+}) => BondCartOrder;
+export const convertTakenOrderToOrderParams: ConvertTakenOrderToOrderParams = ({
+  pair,
+  takenOrder,
+}) => ({
+  orderSize: takenOrder.orderSize,
+  spotPrice: takenOrder.pricePerShare,
+  pairPubkey: takenOrder.pairPubkey,
+  assetReceiver: pair.assetReceiver,
+  durationFilter: pair.validation.durationFilter,
+  bondFeature: pair.validation.bondFeatures,
+});
+
 export interface SelectValue {
   label: string;
   value: {
@@ -43,14 +55,14 @@ export interface SelectValue {
   };
 }
 
-export const calcLtv = (order: BondOrder) => {
+export const calcLtv = (order: CartOrder) => {
   const { borrowNft, loanValue } = order;
   const ltv = (loanValue / borrowNft.valuation) * 100;
 
   return ltv;
 };
 
-export const calcTimeBasedRepayValue = (order: BondOrder) => {
+export const calcTimeBasedRepayValue = (order: CartOrder) => {
   const { loanValue } = order;
 
   const { fee, feeDiscountPercent } = order.borrowNft.classicParams.timeBased;
@@ -63,7 +75,7 @@ export const calcTimeBasedRepayValue = (order: BondOrder) => {
   return loanValue + feeAmountWithDiscount;
 };
 
-export const calcPriceBasedUpfrontFee = (order: BondOrder) => {
+export const calcPriceBasedUpfrontFee = (order: CartOrder) => {
   const { loanValue } = order;
 
   return loanValue * 0.01;

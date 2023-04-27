@@ -7,6 +7,7 @@ import {
   Notification,
   NotificationsSettings,
   UserStats,
+  UserRewards,
 } from './types';
 
 type FetchUser = (props: {
@@ -131,6 +132,17 @@ export const fetchAllUserStats: FetchAllUserStats = async ({ publicKey }) => {
     `https://${process.env.BACKEND_DOMAIN}/stats/all/${
       publicKey?.toBase58() || ''
     }`,
+  );
+
+  return data;
+};
+
+type FetchUserRewards = (props: {
+  publicKey: web3.PublicKey;
+}) => Promise<UserRewards>;
+export const fetchUserRewards: FetchUserRewards = async ({ publicKey }) => {
+  const { data } = await axios.get<UserRewards>(
+    `${process.env.REWARDS_ENDPOINT}/${publicKey?.toBase58() || ''}`,
   );
 
   return data;
