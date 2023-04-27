@@ -1,3 +1,4 @@
+import { useMarket, useMarketPair } from './../../../../utils/bonds/hooks';
 import { commonActions } from './../../../../state/common/actions';
 import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -8,11 +9,19 @@ import { usePartialRepayModal } from '@frakt/components/PartialRepayModal';
 import { stakeCardinal, unstakeCardinal } from '@frakt/utils/stake';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { Loan, RewardState, LoanType } from '@frakt/api/loans';
-import { paybackLoan } from '@frakt/utils/loans';
+import { paybackLoan, refinanceLoan } from '@frakt/utils/loans';
 import { throwLogsError } from '@frakt/utils';
 import { useConnection } from '@frakt/hooks';
 
 import { useHiddenLoansPubkeys, useSelectedLoans } from '../../loansState';
+import {
+  getMarketAndPairsByBond,
+  getMarketAndPairsByLoan,
+} from '@frakt/pages/MarketsPage/components/BondsOverview/components/BondsTable/helpers';
+import { getBestOrdersForRefinance } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+import { BASE_POINTS, pairLoanDurationFilter } from '@frakt/utils/bonds';
+import { getBestOrdersForExit } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
+import { convertTakenOrdersToOrderParams } from '@frakt/pages/BorrowPages/cartState';
 
 export const useLoanCard = (loan: Loan) => {
   const wallet = useWallet();
@@ -179,4 +188,48 @@ export const useLoanCard = (loan: Loan) => {
     loadingModalVisible,
     transactionsLeft,
   };
+};
+
+export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
+  const wallet = useWallet();
+  const connection = useConnection();
+
+  const {
+    visible: loadingModalVisible,
+    open: openLoadingModal,
+    close: closeLoadingModal,
+  } = useLoadingModal();
+  const { pairs, market } = getMarketAndPairsByLoan(loan);
+  console.log('MARKET: ', market);
+  const ltvBasePoints =
+    (loan.loanValue / market?.oracleFloor?.floor || 0) * BASE_POINTS;
+  console.log('PAIRS: ', pairs);
+  const bestOrdersForRefinance = getBestOrdersForExit({
+    bondOffers: pairs?.length ? pairs : [],
+    loanToValueFilter: ltvBasePoints,
+    amountOfBonds: loan.repayValue / BASE_POINTS,
+  });
+
+  const onRefinance = async (): Promise<void> => {
+    try {
+      openLoadingModal();
+
+      const result = await refinanceLoan({
+        wallet,
+        connection,
+        loan,
+        market,
+        bondOrderParams: convertTakenOrdersToOrderParams({
+          pairs,
+          takenOrders: bestOrdersForRefinance.takenOrders,
+        }),
+      });
+    } catch (error) {
+      throwLogsError(error);
+    } finally {
+      closeLoadingModal();
+    }
+  };
+
+  return { onRefinance };
 };

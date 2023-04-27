@@ -172,9 +172,7 @@ export const TableList = ({ isCardView }) => {
       ),
     },
     {
-      render: (_, loan) => (
-        <MoreActionsCell loan={loan} isCardView={isCardView} />
-      ),
+      render: (_, loan) => <MoreActionsCell loan={loan} />,
     },
   ];
 

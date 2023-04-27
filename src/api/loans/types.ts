@@ -58,6 +58,7 @@ export interface Loan {
   };
 
   bondParams?: {
+    marketPubkey: string;
     bondTokenMint: string;
     collateralOrSolReceiver: string;
     collateralTokenAccount: string;

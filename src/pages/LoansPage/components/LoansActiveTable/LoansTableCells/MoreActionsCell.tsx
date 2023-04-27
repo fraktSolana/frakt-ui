@@ -1,19 +1,15 @@
 import { FC } from 'react';
-import classNames from 'classnames';
 
-import { Loan } from '@frakt/api/loans/types';
+import { Loan, LoanType } from '@frakt/api/loans/types';
 import Button from '@frakt/components/Button';
 
 import { PartialRepayModal } from '@frakt/components/PartialRepayModal';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 
-import { useLoanCard } from '../../LoanCard/hooks';
+import { useLoanCard, useLoanTransactions } from '../../LoanCard/hooks';
 import styles from '../LoansTable.module.scss';
 
-export const MoreActionsCell: FC<{ loan: Loan; isCardView: boolean }> = ({
-  loan,
-  isCardView,
-}) => {
+export const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
   const {
     closeLoadingModal,
     loadingModalVisible,
@@ -23,7 +19,8 @@ export const MoreActionsCell: FC<{ loan: Loan; isCardView: boolean }> = ({
     onPayback,
     transactionsLeft,
   } = useLoanCard(loan);
-
+  const isLoanBond = loan.loanType === LoanType.BOND;
+  const { onRefinance } = useLoanTransactions({ loan });
   return (
     <>
       <div className={styles.buttonWrapper}>
@@ -33,28 +30,16 @@ export const MoreActionsCell: FC<{ loan: Loan; isCardView: boolean }> = ({
             onPayback();
             event.stopPropagation();
           }}
-          className={classNames(styles.repayButton, {
-            [styles.cardView]: isCardView,
-          })}
+          className={styles.repayButton}
         >
           Repay
         </Button>
-        {/* <Button
-          className={classNames(styles.repayButton, {
-            [styles.cardView]: isCardView,
-          })}
-          disabled
-        >
-          Extend
-        </Button>
-        <Button
-          className={classNames(styles.repayButton, {
-            [styles.cardView]: isCardView,
-          })}
-          disabled
-        >
-          Sell
-        </Button> */}
+        {isLoanBond && (
+          <Button onClick={onRefinance} className={styles.repayButton}>
+            Extend
+          </Button>
+        )}
+        <Button className={styles.repayButton}>Sell</Button>
       </div>
       <PartialRepayModal
         visible={partialRepayModalVisible}
