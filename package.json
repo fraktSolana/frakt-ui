@@ -62,7 +62,7 @@
     "bundle": "cross-env webpack build --config webpack.prod.js",
     "type-scss": "cross-env typed-scss-modules src --exportType default --nameFormat none",
     "build": "npm run type-scss && npm run bundle",
-    "lint": "eslint . --ext .ts,.tsx",
+    "lint": "prettier-eslint --write $PWD/'**/*.{ts,tsx}'",
     "format": "prettier-eslint --write $PWD/'**/*.{ts,tsx}'",
     "lint-staged": "lint-staged",
     "prepare": "husky install",

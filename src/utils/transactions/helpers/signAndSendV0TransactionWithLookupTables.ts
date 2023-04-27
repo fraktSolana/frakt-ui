@@ -68,7 +68,7 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
       const addressesPerTxn = 20;
 
       const supposedBigIntDeactivationSlot = BigInt('18446744073518870550');
-      const slotCorrection = txnsAndSigners.length + 1;
+      const slotCorrection = txnsAndSigners.flat().length + 2;
       console.log('slotCorrection: ', slotCorrection);
       const lastSlot = (await connection.getSlot()) + slotCorrection;
 
@@ -182,6 +182,19 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
       //   );
       onAfterSend?.();
 
+      // const actualTableAccounts =
+      //   (await Promise.all(
+      //     v0InstructionsAndSigners.map(r => r.lookupTablePublicKeys).flat().map(
+      //       async (lookupTablePublicKey) =>
+      //         (
+      //           await connection.getAddressLookupTable(
+      //             new web3.PublicKey(lookupTablePublicKey.tablePubkey),
+      //           )
+      //         ).value,
+      //     ),
+      //   ));
+      // console.log('actualTableAccounts: ', actualTableAccounts[0])
+      // console.log('actualTableAccounts: ', JSON.stringify(actualTableAccounts, null, 2))
       // await new Promise((r) => setTimeout(r, 7000));
       // //? Can't cover this shit with types properly
       // const resultsContainErr = results
