@@ -79,8 +79,12 @@ export const BorrowForm: FC<BorrowFormProps> = ({ onSubmit }) => {
 };
 
 const LoanDetails: FC = () => {
-  const { currentNft, currentLoanType, currentLoanValue, currentBondOrder } =
-    useBorrow();
+  const {
+    currentNft,
+    currentLoanType,
+    currentLoanValue,
+    currentBondOrderParams,
+  } = useBorrow();
 
   if (!currentNft || !currentLoanType) return null;
 
@@ -88,7 +92,7 @@ const LoanDetails: FC = () => {
     nft: currentNft,
     loanType: currentLoanType,
     loanValue: currentLoanValue,
-    order: currentBondOrder,
+    bondOrderParams: currentBondOrderParams,
   });
 
   return (

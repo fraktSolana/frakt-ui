@@ -21,12 +21,11 @@
     "classnames": "^2.3.1",
     "crypto-browserify": "^3.12.0",
     "d3": "^7.6.1",
-    "fbonds-core": "^0.4.74",
+    "fbonds-core": "^0.5.0-beta.10",
     "firebase": "^9.8.3",
-    "i": "^0.3.7",
     "immer": "^9.0.18",
+    "lodash": "^4.17.21",
     "moment": "^2.29.1",
-    "npm": "^9.6.4",
     "os-browserify": "^0.3.0",
     "ramda": "^0.28.0",
     "ramda-adjunct": "^3.1.0",
@@ -63,7 +62,7 @@
     "bundle": "cross-env webpack build --config webpack.prod.js",
     "type-scss": "cross-env typed-scss-modules src --exportType default --nameFormat none",
     "build": "npm run type-scss && npm run bundle",
-    "lint": "eslint . --ext .ts,.tsx",
+    "lint": "prettier-eslint --write $PWD/'**/*.{ts,tsx}'",
     "format": "prettier-eslint --write $PWD/'**/*.{ts,tsx}'",
     "lint-staged": "lint-staged",
     "prepare": "husky install",
@@ -97,6 +96,7 @@
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "@types/bn.js": "^4.11.6",
+    "@types/lodash": "^4.14.194",
     "@types/ramda": "^0.28.13",
     "@types/react": "^16.9.50",
     "@types/react-dom": "^16.9.8",
@@ -130,6 +130,7 @@
   },
   "resolutions": {
     "**/@typescript-eslint/eslint-plugin": "^4.1.1",
-    "**/@typescript-eslint/parser": "^4.1.1"
+    "**/@typescript-eslint/parser": "^4.1.1",
+    "@solana/wallet-standard-wallet-adapter-base": "1.0.1"
   }
 }

@@ -1,5 +1,6 @@
 import { uniq, maxBy } from 'lodash';
 import classNames from 'classnames';
+import { getMaxBorrowValueOptimized } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 
 import { Market, Pair } from '@frakt/api/bonds';
 import { LoanType } from '@frakt/api/loans';
@@ -13,14 +14,10 @@ import {
   calcTimeBasedFee,
   calcTimeBasedRepayValue,
 } from '@frakt/pages/BorrowPages/helpers';
+import { BondOrderParams } from '@frakt/pages/BorrowPages/cartState';
 
 import { LoanDetailsField } from './types';
 import styles from './BorrowForm.module.scss';
-import { getMaxBorrowValueOptimized } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
-import {
-  BondOrder,
-  patchPairWithProtocolFee,
-} from '@frakt/pages/BorrowPages/cartState';
 
 export interface SelectValue {
   label: string;
@@ -58,7 +55,7 @@ export const getBorrowValueRange: GetBorrowValueRange = ({
     if (loanType === LoanType.TIME_BASED) return maxBorrowValueTimeBased;
 
     const maxBorrowValue = getMaxBorrowValueOptimized({
-      pairs: bondsParams?.pairs.filter((p) =>
+      bondOffers: bondsParams?.pairs.filter((p) =>
         pairLoanDurationFilter({ pair: p, duration: bondsParams.duration }),
       ),
       collectionFloor: bondsParams?.market?.oracleFloor?.floor,
@@ -208,13 +205,13 @@ type GenerateLoanDetails = (props: {
   nft: BorrowNft;
   loanType: LoanType;
   loanValue: number;
-  order?: BondOrder;
+  bondOrderParams?: BondOrderParams;
 }) => Array<LoanDetailsField>;
 export const generateLoanDetails: GenerateLoanDetails = ({
   nft,
   loanType,
   loanValue,
-  order,
+  bondOrderParams,
 }) => {
   const fields: Array<LoanDetailsField> = [];
 
@@ -350,8 +347,8 @@ export const generateLoanDetails: GenerateLoanDetails = ({
   }
 
   //? Bond fee and repay value
-  if (loanType === LoanType.BOND && order) {
-    const fee = calcBondMultiOrdersFee(order);
+  if (loanType === LoanType.BOND && bondOrderParams) {
+    const fee = calcBondMultiOrdersFee(bondOrderParams);
 
     fields.push({
       label: 'Fee',

@@ -49,7 +49,7 @@ export const fetchBulkSuggestion: FetchBulkSuggestion = async ({
   totalValue,
 }) => {
   const { data } = await axios.get<BulkSuggestion>(
-    `https://${BACKEND_DOMAIN}/nft/suggest/${publicKey?.toBase58()}?solAmount=${totalValue}&isPrivate=${IS_PRIVATE_MARKETS}`,
+    `https://${BACKEND_DOMAIN}/nft/suggest-bondsV2/${publicKey?.toBase58()}?solAmount=${totalValue}&isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data ?? null;
@@ -63,7 +63,7 @@ export const fetchMaxBorrowValue: FetchMaxBorrowValue = async ({
   publicKey,
 }) => {
   const { data } = await axios.get<{ maxBorrow: number }>(
-    `https://${BACKEND_DOMAIN}/nft/max-borrow/${publicKey?.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
+    `https://${BACKEND_DOMAIN}/nft/max-borrow-bondsV2/${publicKey?.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data?.maxBorrow ?? 0;

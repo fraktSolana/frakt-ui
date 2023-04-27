@@ -7,15 +7,17 @@ import { useConfirmModal } from '@frakt/components/ConfirmModal';
 import { useLoadingModalState } from '@frakt/components/LoadingModal';
 import { PATHS } from '@frakt/constants';
 import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
-import { BondOrder } from '@frakt/pages/BorrowPages/cartState';
+import { CartOrder } from '@frakt/pages/BorrowPages/cartState';
 import { notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { makeProposeTransaction } from '@frakt/utils/loans';
 import { LoanType } from '@frakt/api/loans';
 import { useConnection } from '@frakt/hooks';
 import {
+  InstructionsAndSigners,
   showSolscanLinkNotification,
   signAndSendAllTransactionsInSequence,
+  signAndSendV0TransactionWithLookupTables,
   TxnsAndSigners,
 } from '@frakt/utils/transactions';
 import { captureSentryError } from '@frakt/utils/sentry';
@@ -111,7 +113,7 @@ export const useBorrowBulkOverviewPage = () => {
 };
 
 type BorrowBulk = (props: {
-  orders: BondOrder[];
+  orders: CartOrder[];
   connection: web3.Connection;
   wallet: WalletContextState;
   isSupportSignAllTxns?: boolean;
@@ -154,18 +156,35 @@ const borrowBulk: BorrowBulk = async ({
   const firstChunk: TxnsAndSigners[] = [
     ...notBondTransactionsAndSigners,
     ...bondTransactionsAndSignersChunks
-      .map((chunk) => chunk.createBondTxnAndSigners)
+      .map((chunk) => ({
+        transaction: chunk.createLookupTableTxn,
+        signers: [],
+      }))
       .flat(),
   ];
 
   const secondChunk: TxnsAndSigners[] = [
     ...bondTransactionsAndSignersChunks
-      .map((chunk) => chunk.sellingBondsTxnsAndSigners)
+      .map((chunk) =>
+        chunk.extendLookupTableTxns.map((transaction) => ({
+          transaction,
+          signers: [],
+        })),
+      )
       .flat(),
   ];
 
-  return await signAndSendAllTransactionsInSequence({
-    txnsAndSigners: [firstChunk, secondChunk],
+  const createAndSellBondsIxsAndSignersChunk: InstructionsAndSigners[] = [
+    ...bondTransactionsAndSignersChunks
+      .map((chunk) => chunk.createAndSellBondsIxsAndSigners)
+      .flat(),
+  ];
+
+  return await signAndSendV0TransactionWithLookupTables({
+    createLookupTableTxns: firstChunk.map((txn) => txn.transaction),
+    extendLookupTableTxns: secondChunk.map((txn) => txn.transaction),
+    v0InstructionsAndSigners: createAndSellBondsIxsAndSignersChunk,
+    // lookupTablePublicKey: bondTransactionsAndSignersChunks,
     connection,
     wallet,
     commitment: 'confirmed',
