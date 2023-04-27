@@ -65,45 +65,13 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
       const { blockhash, lastValidBlockHeight } =
         await connection.getLatestBlockhash();
 
-      const transactionsFlatArr = txnsAndSignersFiltered
-        .flat()
-        .map(({ transaction, signers = [] }) => {
-          transaction.recentBlockhash = blockhash;
-          transaction.feePayer = wallet.publicKey;
-
-          if (signers.length) {
-            transaction.sign(...signers);
-          }
-
-          return transaction;
-        });
-
-      const signedTransactions = await wallet.signAllTransactions(
-        transactionsFlatArr,
-      );
-
-      const lastSlot = (await connection.getSlot()) + 2;
-      let currentTxIndex = 0;
-      for (let i = 0; i < txnsAndSigners.length; i++) {
-        for (let r = 0; r < txnsAndSigners[i].length; r++) {
-          console.log('currentTxIndex: ', currentTxIndex);
-          const txn = signedTransactions[currentTxIndex];
-          // lastSlot = await connection.getSlot();
-          const tx = await connection.sendRawTransaction(txn.serialize(), {
-            skipPreflight: false,
-            preflightCommitment: 'processed',
-          });
-          currentTxIndex += 1;
-          // console.log("MinContextSlot: ", txn.minNonceContextSlot)
-        }
-        if (txnsAndSigners[i].length > 0)
-          await new Promise((r) => setTimeout(r, 7000));
-      }
-      await new Promise((r) => setTimeout(r, 8000));
-
       const addressesPerTxn = 20;
 
       const supposedBigIntDeactivationSlot = BigInt('18446744073518870550');
+      const slotCorrection = txnsAndSigners.length + 1;
+      console.log('slotCorrection: ', slotCorrection);
+      const lastSlot = (await connection.getSlot()) + slotCorrection;
+
       const v0Transactions = await Promise.all(
         v0InstructionsAndSigners.map(async (ixAndSigner) => {
           const lookupTables: web3.AddressLookupTableAccount[] =
@@ -148,10 +116,6 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
             lookupTables[0].state.authority.toBase58(),
           );
 
-          // const artState = new web3.AddressLookupTableState();
-
-          // const artTable = new web3.AddressLookupTableAccount({ key: ixAndSigner.lookupTablePublicKeys[0], state: { addresses: [], authority: wallet.publicKey, deactivationSlot: slot} })
-
           const transactionsMessageV0 = new web3.VersionedTransaction(
             new web3.TransactionMessage({
               payerKey: wallet.publicKey,
@@ -165,19 +129,60 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
         }),
       );
 
-      const signedTransactionsV0 = await wallet.signAllTransactions(
-        v0Transactions,
-      );
+      const transactionsFlatArr = [
+        ...txnsAndSignersFiltered
+          .flat()
+          .map(({ transaction, signers = [] }) => {
+            transaction.recentBlockhash = blockhash;
+            transaction.feePayer = wallet.publicKey;
 
-      const txnSignatures = await Promise.all(
-        signedTransactionsV0.map((signedTransaction) =>
-          connection.sendTransaction(signedTransaction, { maxRetries: 5 }),
-        ),
-      );
+            if (signers.length) {
+              transaction.sign(...signers);
+            }
+
+            return transaction;
+          }),
+        ...v0Transactions,
+      ];
+
+      const signedTransactions = await wallet.signAllTransactions([
+        ...transactionsFlatArr,
+      ]);
+
+      const txnsAndSignersWithV0Txns = [...txnsAndSigners, v0Transactions];
+
+      let currentTxIndex = 0;
+      for (let i = 0; i < txnsAndSignersWithV0Txns.length; i++) {
+        for (let r = 0; r < txnsAndSignersWithV0Txns[i].length; r++) {
+          console.log('currentTxIndex: ', currentTxIndex);
+          const txn = signedTransactions[currentTxIndex];
+          // lastSlot = await connection.getSlot();
+          const tx = await connection.sendRawTransaction(txn.serialize(), {
+            skipPreflight: false,
+            preflightCommitment: 'processed',
+          });
+          currentTxIndex += 1;
+          // console.log("MinContextSlot: ", txn.minNonceContextSlot)
+        }
+        if (txnsAndSignersWithV0Txns[i].length > 0)
+          await new Promise((r) => setTimeout(r, 7000));
+      }
+      await new Promise((r) => setTimeout(r, 8000));
+
+      // const signedTransactionsV0 = await wallet.signAllTransactions(
+      //   v0Transactions,
+      // );
+
+      // const txnSignatures = await Promise.all(
+      //   signedTransactionsV0.map((signedTransaction) =>
+      //     connection.sendTransaction(signedTransaction, { maxRetries: 5 }),
+      //   ),
+      // );
+
       //   );
       onAfterSend?.();
 
-      await new Promise((r) => setTimeout(r, 7000));
+      // await new Promise((r) => setTimeout(r, 7000));
       // //? Can't cover this shit with types properly
       // const resultsContainErr = results
       //   .map((res) => !!(res as any)?.value?.value?.err)
