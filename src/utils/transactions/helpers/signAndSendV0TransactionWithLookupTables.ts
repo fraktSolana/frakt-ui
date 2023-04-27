@@ -68,7 +68,7 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
       const addressesPerTxn = 20;
 
       const supposedBigIntDeactivationSlot = BigInt('18446744073518870550');
-      const slotCorrection = txnsAndSigners.flat().length + 2;
+      const slotCorrection = txnsAndSigners.length + 2;
       console.log('slotCorrection: ', slotCorrection);
       const lastSlot = (await connection.getSlot()) + slotCorrection;
 
@@ -129,6 +129,44 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
         }),
       );
 
+      // const deactivateLookupTableTxns = v0InstructionsAndSigners.map(ixAndSigners => ixAndSigners.lookupTablePublicKeys).flat().map(lookupTableData =>
+      // web3.AddressLookupTableProgram.deactivateLookupTable({
+      //   authority: wallet.publicKey,
+      //   lookupTable: lookupTableData.tablePubkey
+      // })).map(instructions => new web3.Transaction().add(instructions)).map(transaction => {
+      //     transaction.recentBlockhash = blockhash;
+      //     transaction.feePayer = wallet.publicKey;
+      //     return transaction;
+      //   });
+
+      const closeLookupTablesTxns = [];
+      // v0InstructionsAndSigners.map(ixAndSigners => ixAndSigners.lookupTablePublicKeys).flat().map(lookupTableData =>
+      // ([
+      //   web3.AddressLookupTableProgram.deactivateLookupTable({
+      //     authority: wallet.publicKey,
+      //     lookupTable: lookupTableData.tablePubkey
+      //   }),
+      //   web3.AddressLookupTableProgram.closeLookupTable({
+      //     authority: wallet.publicKey,
+      //     recipient: wallet.publicKey,
+      //     lookupTable: lookupTableData.tablePubkey
+      //   })])).map(instructions => new web3.Transaction().add(instructions[0], instructions[1])).map(transaction => {
+      //     transaction.recentBlockhash = blockhash;
+      //     transaction.feePayer = wallet.publicKey;
+      //     return transaction;
+      //   });
+
+      // const closeLook
+      // web3.AddressLookupTableProgram.closeLookupTable({
+      //   authority: wallet.publicKey,
+      //   lookupTable:
+      // });
+
+      const v0MainAndCloseTableTxns = [
+        ...v0Transactions,
+        ...closeLookupTablesTxns,
+      ];
+
       const transactionsFlatArr = [
         ...txnsAndSignersFiltered
           .flat()
@@ -142,14 +180,17 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
 
             return transaction;
           }),
-        ...v0Transactions,
+        ...v0MainAndCloseTableTxns,
       ];
 
       const signedTransactions = await wallet.signAllTransactions([
         ...transactionsFlatArr,
       ]);
 
-      const txnsAndSignersWithV0Txns = [...txnsAndSigners, v0Transactions];
+      const txnsAndSignersWithV0Txns = [
+        ...txnsAndSigners,
+        v0MainAndCloseTableTxns,
+      ];
 
       let currentTxIndex = 0;
       for (let i = 0; i < txnsAndSignersWithV0Txns.length; i++) {
