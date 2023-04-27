@@ -5,7 +5,10 @@ import { TxnsAndSigners } from './signAndSendAllTransactionsInSequence';
 export interface InstructionsAndSigners {
   instructions: web3.TransactionInstruction[];
   signers?: web3.Signer[];
-  lookupTablePublicKeys: web3.PublicKey[];
+  lookupTablePublicKeys: {
+    tablePubkey: web3.PublicKey;
+    addresses: web3.PublicKey[];
+  }[];
 }
 
 type SignAndSendV0TransactionWithLookupTables = (props: {
@@ -79,34 +82,75 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
         transactionsFlatArr,
       );
 
+      const lastSlot = (await connection.getSlot()) + 2;
       let currentTxIndex = 0;
       for (let i = 0; i < txnsAndSigners.length; i++) {
         for (let r = 0; r < txnsAndSigners[i].length; r++) {
           console.log('currentTxIndex: ', currentTxIndex);
           const txn = signedTransactions[currentTxIndex];
-          await connection.sendRawTransaction(txn.serialize(), {
+          // lastSlot = await connection.getSlot();
+          const tx = await connection.sendRawTransaction(txn.serialize(), {
             skipPreflight: false,
             preflightCommitment: 'processed',
           });
           currentTxIndex += 1;
+          // console.log("MinContextSlot: ", txn.minNonceContextSlot)
         }
         if (txnsAndSigners[i].length > 0)
           await new Promise((r) => setTimeout(r, 7000));
       }
       await new Promise((r) => setTimeout(r, 8000));
 
+      const addressesPerTxn = 20;
+
+      const supposedBigIntDeactivationSlot = BigInt('18446744073518870550');
       const v0Transactions = await Promise.all(
         v0InstructionsAndSigners.map(async (ixAndSigner) => {
-          const lookupTables = await Promise.all(
+          const lookupTables: web3.AddressLookupTableAccount[] =
             ixAndSigner.lookupTablePublicKeys.map(
-              async (lookupTablePublicKey) =>
-                (
-                  await connection.getAddressLookupTable(
-                    new web3.PublicKey(lookupTablePublicKey),
-                  )
-                ).value,
-            ),
+              (tableData) =>
+                new web3.AddressLookupTableAccount({
+                  key: tableData.tablePubkey,
+                  state: {
+                    addresses: tableData.addresses,
+                    authority: wallet.publicKey,
+                    deactivationSlot:
+                      supposedBigIntDeactivationSlot + BigInt(lastSlot),
+                    lastExtendedSlot: lastSlot,
+                    lastExtendedSlotStartIndex:
+                      Math.floor(tableData.addresses.length / addressesPerTxn) *
+                      addressesPerTxn,
+                  },
+                }),
+            );
+          // (await Promise.all(
+          //   ixAndSigner.lookupTablePublicKeys.map(
+          //     async (lookupTablePublicKey) =>
+          //       (
+          //         await connection.getAddressLookupTable(
+          //           new web3.PublicKey(lookupTablePublicKey.tablePubkey),
+          //         )
+          //       ).value,
+          //   ),
+          // )).map(tableAccount => ({
+          //   ...tableAccount, state: {
+          //     ...tableAccount.state,
+          //     lastExtendedSlot: lastSlot,
+          //     deactivationSlot: supposedBigIntDeactivationSlot + BigInt(tableAccount.state.lastExtendedSlot)
+          //   }
+          // }));
+          console.log(
+            'INITIALIZED LOOKUP TABLES SLOTS: ',
+            lookupTables[0].state,
           );
+          console.log(
+            'Authority: ',
+            lookupTables[0].state.authority.toBase58(),
+          );
+
+          // const artState = new web3.AddressLookupTableState();
+
+          // const artTable = new web3.AddressLookupTableAccount({ key: ixAndSigner.lookupTablePublicKeys[0], state: { addresses: [], authority: wallet.publicKey, deactivationSlot: slot} })
 
           const transactionsMessageV0 = new web3.VersionedTransaction(
             new web3.TransactionMessage({

@@ -142,13 +142,6 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
           : orderParams,
     ).durationFilter;
 
-    const proof = await (async () => {
-      if (market.whitelistEntry?.whitelistType !== WhitelistType.MERKLE_TREE) {
-        return [];
-      }
-      return await getNftMerkleTreeProof({ mint: new web3.PublicKey(nftMint) });
-    })();
-
     const {
       fbond: bondPubkey,
       collateralBox: collateralBoxPubkey,
@@ -215,6 +208,7 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
       });
     const slot = await connection.getSlot();
 
+    console.log('INITIAL PASSED SLOT: ', slot);
     const combinedAddressesForLookupTable = [
       ...addressesForLookupTable,
       ...sellingBondsIxsAndSignersWithLookupAccounts.addressesForLookupTable,
@@ -263,7 +257,12 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
           ...createBondSigners,
           ...sellingBondsIxsAndSignersWithLookupAccounts.signers,
         ],
-        lookupTablePublicKeys: [lookupTableAddress],
+        lookupTablePublicKeys: [
+          {
+            tablePubkey: lookupTableAddress,
+            addresses: combinedAddressesForLookupTable,
+          },
+        ],
       },
     };
   };
