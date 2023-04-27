@@ -94,7 +94,7 @@ export const fetchAllBonds: FetchAllBonds = async ({
     : '';
 
   const { data } = await axios.get<Bond[]>(
-    `https://${BACKEND_DOMAIN}/bonds?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}&isPrivate=${IS_PRIVATE_MARKETS}`,
+    `https://${BACKEND_DOMAIN}/bonds-v2?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}&isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data;
