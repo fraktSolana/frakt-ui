@@ -110,6 +110,7 @@ export const makeRefinanceLoanTransaction: MakeRefinanceLoanTransaction =
           BONDS_ADMIN_PUBKEY || PUBKEY_PLACEHOLDER,
         ),
       },
+      addComputeUnits: true,
       sendTxn: sendTxnPlaceHolder,
     });
 
