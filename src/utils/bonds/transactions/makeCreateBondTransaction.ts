@@ -173,7 +173,7 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
         minAmountToGet:
           orderParam.orderSize * orderParam.spotPrice -
           PRECISION_CORRECTION_LAMPORTS -
-          Math.floor(Math.random() * 150),
+          Math.floor(Math.random() * 10000),
         amountToSell: orderParam.orderSize,
         bondOfferV2: new web3.PublicKey(orderParam.pairPubkey),
         assetReceiver: new web3.PublicKey(orderParam.assetReceiver),

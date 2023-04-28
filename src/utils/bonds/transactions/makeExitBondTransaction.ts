@@ -360,7 +360,7 @@ export const makeExitBondMultiOrdersTransactionV2: MakeExitBondMultiOrdersTransa
         minAmountToGet:
           orderParam.orderSize * orderParam.spotPrice -
           PRECISION_CORRECTION_LAMPORTS -
-          Math.floor(Math.random() * 150),
+          Math.floor(Math.random() * 1000),
         amountToSell: orderParam.orderSize,
         bondOfferV2: new web3.PublicKey(orderParam.pairPubkey),
         assetReceiver: new web3.PublicKey(orderParam.assetReceiver),
