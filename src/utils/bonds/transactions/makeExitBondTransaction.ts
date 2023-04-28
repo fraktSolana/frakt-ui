@@ -204,7 +204,7 @@ export const makeExitBondMultiOrdersTransaction: MakeExitBondMultiOrdersTransact
               userPubkey: wallet.publicKey,
               fbond: new web3.PublicKey(bond.fbond.publicKey),
               fbondsTokenMint: new web3.PublicKey(bond.fbond.fbondTokenMint),
-              pair: new web3.PublicKey(autocompoundDeposit.pair),
+              pair: new web3.PublicKey(autocompoundDeposit.bondOffer),
             },
             args: {
               amountToClaim: amountToSell,
