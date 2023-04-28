@@ -200,14 +200,14 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
     close: closeLoadingModal,
   } = useLoadingModal();
   const { pairs, market } = getMarketAndPairsByLoan(loan);
-  console.log('MARKET: ', market);
+
   const ltvBasePoints =
     (loan.loanValue / market?.oracleFloor?.floor || 0) * BASE_POINTS;
-  console.log('PAIRS: ', pairs);
+
   const bestOrdersForRefinance = getBestOrdersForExit({
     bondOffers: pairs?.length ? pairs : [],
     loanToValueFilter: ltvBasePoints,
-    amountOfBonds: loan.repayValue / BASE_POINTS,
+    amountOfBonds: loan.repayValue / BASE_POINTS + 5000, //TODO: create method to get best orders for refinance or find way to calculate amountOfBonds as param for getBestOrdersForExit
   });
 
   const onRefinance = async (): Promise<void> => {

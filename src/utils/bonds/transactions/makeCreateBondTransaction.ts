@@ -170,9 +170,10 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
 
     const sellBondParamsAndAccounts = mergedPairsOrderParams.map(
       (orderParam) => ({
-        minAmountToGet:
+        minAmountToGet: Math.floor(
           orderParam.orderSize * orderParam.spotPrice -
-          PRECISION_CORRECTION_LAMPORTS,
+            PRECISION_CORRECTION_LAMPORTS,
+        ),
         amountToSell: orderParam.orderSize,
         bondOfferV2: new web3.PublicKey(orderParam.pairPubkey),
         assetReceiver: new web3.PublicKey(orderParam.assetReceiver),
