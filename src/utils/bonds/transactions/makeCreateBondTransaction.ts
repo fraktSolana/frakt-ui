@@ -170,15 +170,17 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
 
     const sellBondParamsAndAccounts = mergedPairsOrderParams.map(
       (orderParam) => ({
-        minAmountToGet:
+        minAmountToGet: Math.floor(
           orderParam.orderSize * orderParam.spotPrice -
-          PRECISION_CORRECTION_LAMPORTS -
-          Math.floor(Math.random() * 10000),
+            PRECISION_CORRECTION_LAMPORTS -
+            Math.floor(Math.random() * 1000),
+        ),
         amountToSell: orderParam.orderSize,
         bondOfferV2: new web3.PublicKey(orderParam.pairPubkey),
         assetReceiver: new web3.PublicKey(orderParam.assetReceiver),
       }),
     );
+    console.log('sellBondParamsAndAccounts: ', sellBondParamsAndAccounts);
 
     const sellingBondsIxsAndSignersWithLookupAccounts =
       await validateAndSellToBondOffersV2({
