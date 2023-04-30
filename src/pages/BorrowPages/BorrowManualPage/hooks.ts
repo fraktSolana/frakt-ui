@@ -16,6 +16,19 @@ export const useWalletNfts = () => {
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [sortName, setSortName] = useState<SortName>('maxLoanValue');
 
+  const fetchData = async ({ pageParam }: { pageParam: number }) => {
+    const data = await fetchWalletBorrowNfts({
+      publicKey: wallet.publicKey,
+      limit: FETCH_LIMIT,
+      offset: pageParam * FETCH_LIMIT,
+      search,
+      sortBy: sortName,
+      sortOrder: sortOrder,
+    });
+
+    return { pageParam, data };
+  };
+
   const { data, hasNextPage, fetchNextPage, isLoading, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: [
@@ -25,20 +38,12 @@ export const useWalletNfts = () => {
         sortOrder,
         sortName,
       ],
-      queryFn: ({ pageParam = 0 }) =>
-        fetchWalletBorrowNfts({
-          publicKey: wallet.publicKey,
-          limit: FETCH_LIMIT,
-          offset: pageParam * FETCH_LIMIT,
-          search,
-          sortBy: sortName,
-          sortOrder: sortOrder,
-        }),
-      getNextPageParam: (lastPage, allPages) => {
-        const nextPage = allPages.length + 1;
-        const isLastPageBlank = lastPage.length === 0;
-        //? It's necessary to return undefined (not null) to show react-query that there are no more pages
-        return !isLastPageBlank ? nextPage : undefined;
+      queryFn: ({ pageParam = 0 }) => fetchData({ pageParam }),
+      getPreviousPageParam: (firstPage) => {
+        return firstPage.pageParam - 1 ?? undefined;
+      },
+      getNextPageParam: (lastPage) => {
+        return lastPage.data?.length ? lastPage.pageParam + 1 : undefined;
       },
       staleTime: 5 * 60 * 1000,
       refetchOnWindowFocus: false,
@@ -46,7 +51,7 @@ export const useWalletNfts = () => {
     });
 
   return {
-    nfts: data?.pages?.flat() || [],
+    nfts: data?.pages?.map((page) => page.data).flat() || [],
     initialLoading: isLoading,
     fetchNextPage,
     isFetchingNextPage,
