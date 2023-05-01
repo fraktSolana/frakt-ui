@@ -26,11 +26,12 @@ import { RBOption } from '../../components/RadioButton';
 import { makeModifyPairTransactions } from '@frakt/utils/bonds/transactions/makeModifyPairTransactions';
 import { parseMarketOrder } from '../MarketsPage/components/OrderBook/helpers';
 import { OfferTypes } from './types';
+import { MAX_LOAN_VALUE } from './constants';
 import {
-  DEFAULT_MAX_LOAN_VALUE_FOR_FLOOR_TYPE_OFFER,
-  MAX_LOAN_VALUE,
-} from './constants';
-import { calculateLTV } from './helpers';
+  calculateLTV,
+  calculateLtvAcordingByOfferType,
+  calculateMaxLoanValueAcordingByOfferType,
+} from './helpers';
 
 export const useOfferPage = () => {
   const history = useHistory();
@@ -82,18 +83,23 @@ export const useOfferPage = () => {
   useEffect(() => {
     if (isEdit && !isLoading) {
       const { duration, interest, size, ltv, rawData } = initialPairValues;
+      const offerType =
+        ltv === MAX_LOAN_VALUE ? OfferTypes.FIXED : OfferTypes.FLOOR;
+
       setDuration(duration || 0);
       setInterest((interest * 100)?.toFixed(2));
       setOfferSize((size || 0).toFixed(2));
       setLtv(ltv || 0);
       setAutocompoundFeature(rawData?.bondFeature);
       setReceiveNftFeature(rawData?.bondFeature);
+      setOfferType(offerType);
+      setMaxLoanValue((rawData?.maxReturnAmountFilter / 1e9)?.toFixed(2));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, isLoading, pair]);
 
   useEffect(() => {
-    if (!isLoading && !isEmpty(market)) {
+    if (!isLoading && !isEmpty(market) && !isEdit) {
       const marketFloor = (market?.oracleFloor?.floor / 1e9 || 0)?.toFixed(2);
 
       const defaultMaxLoanValue =
@@ -101,7 +107,7 @@ export const useOfferPage = () => {
 
       setMaxLoanValue(defaultMaxLoanValue);
     }
-  }, [isLoading, market, offerType]);
+  }, [isLoading, market, offerType, isEdit]);
 
   const onLtvChange = useCallback((value: number) => setLtv(value), []);
   const onDurationChange = (nextOption: RBOption<number>) => {
@@ -178,13 +184,11 @@ export const useOfferPage = () => {
       try {
         openLoadingModal();
 
-        const maxLoanValueNumber = parseFloat(maxLoanValue);
-        const rawLtv = offerType === OfferTypes.FIXED ? MAX_LOAN_VALUE : ltv;
-
-        const rawMaxLoanValue =
-          offerType === OfferTypes.FLOOR && !maxLoanValueNumber
-            ? DEFAULT_MAX_LOAN_VALUE_FOR_FLOOR_TYPE_OFFER
-            : maxLoanValueNumber;
+        const rawLtv = calculateLtvAcordingByOfferType(offerType, ltv);
+        const rawMaxLoanValue = calculateMaxLoanValueAcordingByOfferType(
+          offerType,
+          maxLoanValue,
+        );
 
         const { transaction, signers } = await makeCreatePairTransaction({
           marketPubkey: new web3.PublicKey(marketPubkey),
@@ -235,14 +239,21 @@ export const useOfferPage = () => {
       try {
         openLoadingModal();
 
+        const rawLtv = calculateLtvAcordingByOfferType(offerType, ltv);
+        const rawMaxLoanValue = calculateMaxLoanValueAcordingByOfferType(
+          offerType,
+          maxLoanValue,
+        );
+
         const { transaction, signers } = await makeModifyPairTransactions({
           solDeposit: parseFloat(offerSize),
           interest: parseFloat(interest),
           marketFloor: market.oracleFloor.floor,
+          maxLoanValue: rawMaxLoanValue,
           pair,
           connection,
           maxDuration: duration,
-          maxLTV: ltv,
+          maxLTV: rawLtv,
           wallet,
         });
 

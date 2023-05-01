@@ -128,6 +128,7 @@ export interface Pair {
   updatedAt: string;
   validation: {
     bondFeatures: BondFeatures;
+    maxReturnAmountFilter: number;
     publicKey: string;
     createdAt: string;
     durationFilter: number;
