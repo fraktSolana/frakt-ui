@@ -6,6 +6,7 @@ import {
   Market,
   Pair,
 } from '@frakt/api/bonds';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { useQuery } from '@tanstack/react-query';
 import { web3 } from 'fbonds-core';
 import produce from 'immer';
@@ -63,6 +64,7 @@ const useHiddenPairsPubkeys = create<HiddenPairsPubkeysState>((set) => ({
 
 export const useMarketPairs = ({ marketPubkey }) => {
   const { hiddenPairsPubkeys, hidePair } = useHiddenPairsPubkeys();
+  const { publicKey } = useWallet();
 
   const { data, isLoading, refetch } = useQuery(
     ['marketPairs', marketPubkey],
@@ -75,10 +77,15 @@ export const useMarketPairs = ({ marketPubkey }) => {
   );
 
   return {
-    pairs:
+    pairs: (
       data?.filter(
         ({ publicKey }) => !hiddenPairsPubkeys.includes(publicKey),
-      ) || [],
+      ) || []
+    ).filter(
+      (bondOffer) =>
+        bondOffer.fundsSolOrTokenBalance > 0 ||
+        bondOffer.assetReceiver === publicKey.toBase58(),
+    ),
     isLoading,
     hidePair,
     refetch,
