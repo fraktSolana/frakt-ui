@@ -31,16 +31,12 @@ export const getMarketAndPairsByLoan = (loan: Loan) => {
   const { publicKey } = useWallet();
   if (loan.loanType != LoanType.BOND) return {};
   const { market, isLoading: marketLoading } = useMarket({
-    //TODO: replace with this line:
-    // marketPubkey: loan.bondParams?.marketPubkey,
-    marketPubkey: '6bUAJarFDjdQ7fFEe8DWf99FwNzdnM1Xr2HrrbGVkjA1',
+    marketPubkey: loan.bondParams?.marketPubkey,
   });
 
   //? Filter wallet pairs (to prevent selling to yourself)
   const { pairs: rawPairs, isLoading: pairsLoading } = useMarketPairs({
-    //TODO: replace with this line:
-    // marketPubkey: loan.bondParams?.marketPubkey,
-    marketPubkey: '6bUAJarFDjdQ7fFEe8DWf99FwNzdnM1Xr2HrrbGVkjA1',
+    marketPubkey: loan.bondParams?.marketPubkey,
   });
 
   const pairs = rawPairs
