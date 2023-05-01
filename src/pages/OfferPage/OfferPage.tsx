@@ -21,6 +21,7 @@ import { OfferTypes } from './types';
 import {
   DURATION_OPTIONS,
   EARNER_INTEREST_OPTIONS,
+  MAX_LIMIT_INTEREST,
   OFFER_TYPE_OPTIONS,
   RECEIVE_OPTIONS,
 } from './constants';
@@ -59,6 +60,7 @@ export const OfferPage = () => {
     offerType,
   } = useOfferPage();
 
+  const isMaxLimitInterest = parseFloat(interest) > MAX_LIMIT_INTEREST;
   const apr = (parseFloat(interest) / duration) * 365;
 
   return (
@@ -192,7 +194,7 @@ export const OfferPage = () => {
             )}
             {!isEdit && (
               <Button
-                disabled={!isValid}
+                disabled={!isValid || isMaxLimitInterest}
                 onClick={isEdit ? onEditOffer : onCreateOffer}
                 className={styles.btn}
                 type="secondary"

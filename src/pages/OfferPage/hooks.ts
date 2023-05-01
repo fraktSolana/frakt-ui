@@ -29,8 +29,8 @@ import { OfferTypes } from './types';
 import { MAX_LOAN_VALUE } from './constants';
 import {
   calculateLTV,
-  calculateLtvAcordingByOfferType,
-  calculateMaxLoanValueAcordingByOfferType,
+  calculateLtvByOfferType,
+  calculateMaxLoanValueByOfferType,
 } from './helpers';
 
 export const useOfferPage = () => {
@@ -184,8 +184,8 @@ export const useOfferPage = () => {
       try {
         openLoadingModal();
 
-        const rawLtv = calculateLtvAcordingByOfferType(offerType, ltv);
-        const rawMaxLoanValue = calculateMaxLoanValueAcordingByOfferType(
+        const rawLtv = calculateLtvByOfferType(offerType, ltv);
+        const rawMaxLoanValue = calculateMaxLoanValueByOfferType(
           offerType,
           maxLoanValue,
         );
@@ -239,8 +239,8 @@ export const useOfferPage = () => {
       try {
         openLoadingModal();
 
-        const rawLtv = calculateLtvAcordingByOfferType(offerType, ltv);
-        const rawMaxLoanValue = calculateMaxLoanValueAcordingByOfferType(
+        const rawLtv = calculateLtvByOfferType(offerType, ltv);
+        const rawMaxLoanValue = calculateMaxLoanValueByOfferType(
           offerType,
           maxLoanValue,
         );

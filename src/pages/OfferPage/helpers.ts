@@ -28,17 +28,14 @@ export const calculateLTV = ({
   return rawLTV > 100 ? MAX_LOAN_VALUE : rawLTV;
 };
 
-export const calculateLtvAcordingByOfferType = (
-  offerType: OfferTypes,
-  ltv: number,
-) => {
+export const calculateLtvByOfferType = (offerType: OfferTypes, ltv: number) => {
   if (offerType === OfferTypes.FIXED) return MAX_LOAN_VALUE;
 
   //? - 0.01 used to determine the type of offer
   return ltv - 0.01;
 };
 
-export const calculateMaxLoanValueAcordingByOfferType = (
+export const calculateMaxLoanValueByOfferType = (
   offerType: OfferTypes,
   maxLoanValue: string,
 ) => {
