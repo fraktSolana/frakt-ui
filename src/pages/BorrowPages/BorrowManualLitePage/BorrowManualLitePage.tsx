@@ -10,12 +10,12 @@ import { BorrowHeader } from '../components/BorrowHeader';
 import { Filters } from './components/Filters';
 import { useWalletNfts } from './hooks';
 import { NftCard } from './components/NftCard';
-import styles from './BorrowSelectPage.module.scss';
+import styles from './BorrowManualLitePage.module.scss';
 import { Sidebar } from './components/Sidebar';
 import { useBorrow } from '../cartState';
 import { BulkForm } from './components/BulkForm';
 
-export const BorrowSelectPage: FC = () => {
+export const BorrowManualLitePage: FC = () => {
   const {
     cartOrders,
     onSelectNft,
