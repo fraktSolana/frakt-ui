@@ -129,17 +129,22 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
         }),
       );
 
-      // const deactivateLookupTableTxns = v0InstructionsAndSigners.map(ixAndSigners => ixAndSigners.lookupTablePublicKeys).flat().map(lookupTableData =>
-      // web3.AddressLookupTableProgram.deactivateLookupTable({
-      //   authority: wallet.publicKey,
-      //   lookupTable: lookupTableData.tablePubkey
-      // })).map(instructions => new web3.Transaction().add(instructions)).map(transaction => {
-      //     transaction.recentBlockhash = blockhash;
-      //     transaction.feePayer = wallet.publicKey;
-      //     return transaction;
-      //   });
+      const deactivateLookupTableTxns = v0InstructionsAndSigners
+        .map((ixAndSigners) => ixAndSigners.lookupTablePublicKeys)
+        .flat()
+        .map((lookupTableData) =>
+          web3.AddressLookupTableProgram.deactivateLookupTable({
+            authority: wallet.publicKey,
+            lookupTable: lookupTableData.tablePubkey,
+          }),
+        )
+        .map((instructions) => new web3.Transaction().add(instructions))
+        .map((transaction) => {
+          transaction.recentBlockhash = blockhash;
+          transaction.feePayer = wallet.publicKey;
+          return transaction;
+        });
 
-      const closeLookupTablesTxns = [];
       // v0InstructionsAndSigners.map(ixAndSigners => ixAndSigners.lookupTablePublicKeys).flat().map(lookupTableData =>
       // ([
       //   web3.AddressLookupTableProgram.deactivateLookupTable({
@@ -164,7 +169,7 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
 
       const v0MainAndCloseTableTxns = [
         ...v0Transactions,
-        ...closeLookupTablesTxns,
+        ...deactivateLookupTableTxns,
       ];
 
       const transactionsFlatArr = [

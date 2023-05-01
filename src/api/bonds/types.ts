@@ -13,6 +13,7 @@ import {
   BondFeatures,
   AutocompoundDeposit,
   BondOfferV2,
+  BondTradeTransactionV2,
 } from 'fbonds-core/lib/fbond-protocol/types';
 
 interface FMarket {
@@ -90,7 +91,7 @@ export interface MarketPreview {
   activeBondsAmount: number;
 }
 
-export type Pair = BondOfferV2
+export type Pair = BondOfferV2;
 
 interface FBond {
   publicKey: string;
@@ -152,7 +153,7 @@ export interface BondStats {
 export interface Bond {
   fbond: FBond;
   collateralBox: CollateralBox;
-  autocompoundDeposits?: AutocompoundDeposit[];
+  autocompoundDeposits?: BondTradeTransactionV2[];
   ownerPubkey?: string;
   marketPubkey: string;
   stats: BondStats;
