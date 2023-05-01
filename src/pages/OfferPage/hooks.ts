@@ -292,8 +292,7 @@ export const useOfferPage = () => {
         openLoadingModal();
 
         const { transaction, signers } = await makeRemoveOrderTransaction({
-          pairPubkey: new web3.PublicKey(pairPubkey),
-          authorityAdapter: new web3.PublicKey(pair.authorityAdapterPublicKey),
+          bondOfferV2: new web3.PublicKey(pairPubkey),
           wallet,
           connection,
         });

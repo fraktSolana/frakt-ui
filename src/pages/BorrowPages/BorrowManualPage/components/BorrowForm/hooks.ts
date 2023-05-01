@@ -12,7 +12,7 @@ import {
   getBorrowValueRange,
   SelectValue,
 } from './helpers';
-import { getBestOrdersByBorrowValue } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+import { getBestOrdersByBorrowValue } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 import { pairLoanDurationFilter } from '@frakt/utils/bonds';
 import { calcDurationByMultiOrdersBond } from '@frakt/pages/BorrowPages/helpers';
 
@@ -89,7 +89,7 @@ export const useBorrowForm = () => {
       const { takenOrders } = getBestOrdersByBorrowValue({
         borrowValue: currentLoanValue,
         collectionFloor: market?.oracleFloor?.floor,
-        pairs: pairs.filter((p) =>
+        bondOffers: pairs.filter((p) =>
           pairLoanDurationFilter({
             pair: p,
             duration: selectedOption.value.duration,

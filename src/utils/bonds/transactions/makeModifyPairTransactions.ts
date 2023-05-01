@@ -5,7 +5,7 @@ import { web3 } from 'fbonds-core';
 import { virtual as pairs } from 'fbonds-core/lib/fbond-protocol/functions/market-factory/pair';
 import * as fBondsValidation from 'fbonds-core/lib/fbond-protocol/functions/validation';
 import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
-import { getTopOrderSize } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+import { getTopOrderSize } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 
 import {
   BASE_POINTS,
@@ -30,8 +30,6 @@ type MakeModifyPairTransactions = (params: {
   signers: web3.Signer[];
   accountsPublicKeys: {
     pairPubkey: web3.PublicKey;
-    validationPubkey: web3.PublicKey;
-    authorityAdapterPubkey: web3.PublicKey;
   };
 }>;
 export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
@@ -73,17 +71,18 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
   console.log({ maxReturnAmountFilter, marketFloor, maxLTVRaw });
 
   const { instructions: instructions1, signers: signers1 } =
-    await pairs.mutations.modifyPair({
+    await pairs.mutations.updateBondOfferV2({
       accounts: {
-        pair: new web3.PublicKey(pair.publicKey),
-        authorityAdapter: new web3.PublicKey(pair.authorityAdapterPublicKey),
+        bondOfferV2: new web3.PublicKey(pair.publicKey),
         userPubkey: wallet.publicKey,
       },
       args: {
         bidCap, //? 1 ORDER size. Amount of fBonds that user wants to buy
         delta: 0, //? Doesn't affect anything
-        fee: 0, //? Doesn't affect anything
         spotPrice, //? Price for decimal of fBond price (fBond --> Token that has BOND_SOL_DECIMAIL_DELTA decimals)
+        loanToValueFilter: maxLTVRaw,
+        maxDurationFilter: maxDurationSec,
+        maxReturnAmountFilter: maxReturnAmountFilter,
       },
       programId: BONDS_PROGRAM_PUBKEY,
       connection,
@@ -93,29 +92,29 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
   const depositInstructionsAndSigners = [];
 
   if (!!amountTokenToUpdate && amountOfTokensInOrder > topOrderSize) {
-    const { instructions, signers } = await pairs.deposits.depositSolToPair({
-      accounts: {
-        authorityAdapter: new web3.PublicKey(pair.authorityAdapterPublicKey),
-        pair: new web3.PublicKey(pair.publicKey),
-        userPubkey: wallet.publicKey,
+    const { instructions, signers } = await pairs.deposits.depositToBondOfferV2(
+      {
+        accounts: {
+          bondOfferV2: new web3.PublicKey(pair.publicKey),
+          userPubkey: wallet.publicKey,
+        },
+        args: {
+          amountOfTokensToBuy: amountTokenToUpdate, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
+        },
+        programId: BONDS_PROGRAM_PUBKEY,
+        connection,
+        sendTxn: sendTxnPlaceHolder,
       },
-      args: {
-        amountOfTokensToBuy: amountTokenToUpdate, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
-      },
-      programId: BONDS_PROGRAM_PUBKEY,
-      connection,
-      sendTxn: sendTxnPlaceHolder,
-    });
+    );
 
     depositInstructionsAndSigners.push({ instructions, signers });
   }
 
   if (!!amountTokenToUpdate && amountOfTokensInOrder < topOrderSize) {
     const { instructions, signers } =
-      await pairs.withdrawals.withdrawSolFromPair({
+      await pairs.withdrawals.withdrawFromBondOfferV2({
         accounts: {
-          authorityAdapter: new web3.PublicKey(pair.authorityAdapterPublicKey),
-          pair: new web3.PublicKey(pair.publicKey),
+          bondOfferV2: new web3.PublicKey(pair.publicKey),
           userPubkey: wallet.publicKey,
         },
         args: {
@@ -129,23 +128,6 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
     depositInstructionsAndSigners.push({ instructions, signers });
   }
 
-  const { instructions: instructions2, signers: signers2 } =
-    await fBondsValidation.updateValidationFilter({
-      accounts: {
-        authorityAdapter: new web3.PublicKey(pair.authorityAdapterPublicKey),
-        pair: new web3.PublicKey(pair.publicKey),
-        userPubkey: wallet.publicKey,
-      },
-      args: {
-        loanToValueFilter: maxLTVRaw,
-        maxDurationFilter: maxDurationSec,
-        maxReturnAmountFilter: maxReturnAmountFilter,
-      },
-      connection,
-      programId: BONDS_PROGRAM_PUBKEY,
-      sendTxn: sendTxnPlaceHolder,
-    });
-
   return {
     transaction: new web3.Transaction().add(
       ...[
@@ -153,7 +135,6 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
         depositInstructionsAndSigners?.length
           ? depositInstructionsAndSigners[0]?.instructions
           : null,
-        instructions2,
       ]
         .filter((instructions) => instructions)
         .flat(),
@@ -163,16 +144,11 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
       depositInstructionsAndSigners?.length
         ? depositInstructionsAndSigners[0]?.signers
         : null,
-      signers2,
     ]
       .filter((signers) => signers)
       .flat(),
     accountsPublicKeys: {
       pairPubkey: new web3.PublicKey(pair?.publicKey),
-      validationPubkey: new web3.PublicKey(pair.validation?.publicKey),
-      authorityAdapterPubkey: new web3.PublicKey(
-        pair.authorityAdapterPublicKey,
-      ),
     },
   };
 };
