@@ -106,6 +106,7 @@ const TokenField: FC<TokenFieldProps> = ({
           className={classNames([
             styles.valueInput,
             { [styles.valueInput_disabled]: disabled },
+            { [styles.valueInput_optional]: optional && !isFocused },
           ])}
         />
         {!!onUseMaxButtonClick && (
