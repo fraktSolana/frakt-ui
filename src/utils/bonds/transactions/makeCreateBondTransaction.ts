@@ -17,7 +17,7 @@ import {
   PRECISION_CORRECTION_LAMPORTS,
 } from '../constants';
 import { isBondFeaturesAutomated, mergeBondOrderParamsByPair } from '../utils';
-import { chunk } from 'lodash';
+import { chunk, uniqBy } from 'lodash';
 import { InstructionsAndSigners } from '@frakt/utils/transactions';
 
 type MakeCreateBondTransaction = (params: {
@@ -215,10 +215,13 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
     const slot = await connection.getSlot();
 
     console.log('INITIAL PASSED SLOT: ', slot);
-    const combinedAddressesForLookupTable = [
-      ...addressesForLookupTable,
-      ...sellingBondsIxsAndSignersWithLookupAccounts.addressesForLookupTable,
-    ];
+    const combinedAddressesForLookupTable = uniqBy(
+      [
+        ...addressesForLookupTable,
+        ...sellingBondsIxsAndSignersWithLookupAccounts.addressesForLookupTable,
+      ],
+      (publicKey) => publicKey.toBase58(),
+    );
     console.log(
       'combinedAddressesForLookupTable: ',
       combinedAddressesForLookupTable.length,

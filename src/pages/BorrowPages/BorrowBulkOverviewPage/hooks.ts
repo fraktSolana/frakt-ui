@@ -23,6 +23,7 @@ import {
 import { captureSentryError } from '@frakt/utils/sentry';
 
 import { useBorrow } from '../cartState';
+import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from '@frakt/utils/transactions/helpers/signAndSendV0TransactionWithLookupTablesSeparateSignatures';
 
 export const useBorrowBulkOverviewPage = () => {
   const history = useHistory();
@@ -180,7 +181,7 @@ const borrowBulk: BorrowBulk = async ({
       .flat(),
   ];
 
-  return await signAndSendV0TransactionWithLookupTables({
+  return await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
     createLookupTableTxns: firstChunk.map((txn) => txn.transaction),
     extendLookupTableTxns: secondChunk.map((txn) => txn.transaction),
     v0InstructionsAndSigners: createAndSellBondsIxsAndSignersChunk,
