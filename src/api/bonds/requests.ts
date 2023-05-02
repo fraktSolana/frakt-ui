@@ -31,7 +31,7 @@ export const fetchCertainMarket: FetchCertainMarket = async ({
   marketPubkey,
 }) => {
   const { data } = await axios.get<Market>(
-    `https://${BACKEND_DOMAIN}/markets/${marketPubkey.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
+    `https://${BACKEND_DOMAIN}/markets/${marketPubkey?.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data;
@@ -56,7 +56,7 @@ type FetchMarketPairs = (props: {
 }) => Promise<Pair[]>;
 export const fetchMarketPairs: FetchMarketPairs = async ({ marketPubkey }) => {
   const { data } = await axios.get<Pair[]>(
-    `https://${BACKEND_DOMAIN}/pairs/${marketPubkey.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
+    `https://${BACKEND_DOMAIN}/pairs/${marketPubkey?.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data;
@@ -68,7 +68,7 @@ export const fetchMarketPairs: FetchMarketPairs = async ({ marketPubkey }) => {
 type FetchMarketPair = (props: { pairPubkey: web3.PublicKey }) => Promise<Pair>;
 export const fetchMarketPair: FetchMarketPair = async ({ pairPubkey }) => {
   const { data } = await axios.get<Pair>(
-    `https://${BACKEND_DOMAIN}/pair/${pairPubkey.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
+    `https://${BACKEND_DOMAIN}/pair/${pairPubkey?.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data;
@@ -83,8 +83,8 @@ type FetchAllBonds = ({
 export const fetchAllBonds: FetchAllBonds = async ({
   skip,
   limit,
-  sortBy = 'nftName',
-  order = 'asc',
+  sortBy,
+  order,
   walletPubkey,
   marketPubkey,
 }) => {
