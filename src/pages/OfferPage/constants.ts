@@ -2,6 +2,8 @@ import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 
 import { RBOption } from '../../components/RadioButton';
 
+export const CREATE_OFFER_TRANSACTION_FEE_SOL = 0.005;
+
 export const riskMarks: { [key: string]: string | JSX.Element } = {
   10: '10%',
   25: '25%',

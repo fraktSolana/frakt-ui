@@ -24,6 +24,7 @@ import { PATHS } from '@frakt/constants';
 import { RBOption } from '../../components/RadioButton';
 import { makeModifyPairTransactions } from '@frakt/utils/bonds/transactions/makeModifyPairTransactions';
 import { parseMarketOrder } from '../MarketsPage/components/OrderBook/helpers';
+import { CREATE_OFFER_TRANSACTION_FEE_SOL } from './constants';
 
 export const useOfferPage = () => {
   const history = useHistory();
@@ -157,11 +158,14 @@ export const useOfferPage = () => {
       try {
         openLoadingModal();
 
+        const solDepositWithTransactionFee =
+          parseFloat(offerSize) - CREATE_OFFER_TRANSACTION_FEE_SOL;
+
         const { transaction, signers } = await makeCreatePairTransaction({
           marketPubkey: new web3.PublicKey(marketPubkey),
           maxDuration: duration,
           maxLTV: ltv,
-          solDeposit: parseFloat(offerSize),
+          solDeposit: solDepositWithTransactionFee,
           interest: parseFloat(interest),
           marketFloor: market.oracleFloor.floor,
           bondFeature: findNeededBondFeature(),
