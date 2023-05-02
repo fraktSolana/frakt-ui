@@ -10,13 +10,14 @@ export const formateMarketPreviewValues = (marketPreview: MarketPreview) => {
     ? `${duration.join(' / ')} days`
     : '--';
 
-  const formattedAprValue = (apy || 0).toFixed(2);
+  const formattedAprValue = (apy || 0).toFixed(0);
+  const formattedOfferTVLValue = parseFloat(offerTVL)?.toFixed(1);
 
   return {
     bestOffer: formattedBestOfferValue,
     duration: formattedDurationValue,
     apr: formattedAprValue,
     bestLTV,
-    offerTVL,
+    offerTVL: formattedOfferTVLValue,
   };
 };
