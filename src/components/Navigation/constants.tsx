@@ -1,4 +1,4 @@
-import { PATHS } from '../../constants';
+import { PATHS } from '@frakt/constants';
 import {
   Discord,
   DiscordDark,
@@ -28,6 +28,8 @@ import {
   StrategiesDark,
 } from '@frakt/icons';
 
+import { Navigation } from './types';
+
 export const community = [
   {
     label: 'Discord',
@@ -45,6 +47,12 @@ export const community = [
 
 export const documentation = [
   {
+    label: 'Docs',
+    icon: Docs,
+    iconDark: DocsDark,
+    href: 'https://docs.frakt.xyz/frakt/',
+  },
+  {
     label: 'Medium',
     icon: Medium,
     iconDark: MediumDark,
@@ -56,15 +64,9 @@ export const documentation = [
     iconDark: GithubDark,
     href: 'https://github.com/frakt-solana',
   },
-  {
-    label: 'Docs',
-    icon: Docs,
-    iconDark: DocsDark,
-    href: 'https://docs.frakt.xyz/frakt/',
-  },
 ];
 
-export const NAVIGATION_LINKS = [
+export const NAVIGATION_LINKS: Navigation[] = [
   {
     pathname: PATHS.ROOT,
     to: PATHS.ROOT,
@@ -82,17 +84,17 @@ export const NAVIGATION_LINKS = [
     iconDark: BorrowDark,
   },
   {
-    pathname: PATHS.LEND,
-    to: PATHS.LEND,
-    label: 'Lending',
-    event: 'navigation-lend',
-    icon: Lending,
-    iconDark: LendingDark,
+    pathname: PATHS.LOANS,
+    to: PATHS.LOANS,
+    label: 'My loans',
+    event: 'navigation-loans',
+    icon: MyLoans,
+    iconDark: MyLoansDark,
   },
   {
     pathname: PATHS.BONDS,
     to: PATHS.BONDS,
-    label: 'Bonds',
+    label: 'Lends',
     event: 'navigation-bonds',
     icon: Bonds,
     iconDark: BondsDark,
@@ -106,6 +108,24 @@ export const NAVIGATION_LINKS = [
     iconDark: StrategiesDark,
   },
   {
+    pathname: PATHS.LEND,
+    to: PATHS.LEND,
+    label: 'Pools',
+    event: 'navigation-lend',
+    icon: Lending,
+    iconDark: LendingDark,
+  },
+];
+
+export const SECONDARY_NAVIGATION_LINKS: Navigation[] = [
+  {
+    href: PATHS.STAKING,
+    label: 'Staking',
+    event: 'navigation-staking',
+    icon: Staking,
+    iconDark: StakingDark,
+  },
+  {
     pathname: PATHS.LIQUIDATIONS,
     to: PATHS.LIQUIDATIONS,
     label: 'Raffles',
@@ -113,20 +133,5 @@ export const NAVIGATION_LINKS = [
     icon: Raffles,
     iconDark: RafflesDark,
     fillIcon: true,
-  },
-  {
-    pathname: PATHS.LOANS,
-    to: PATHS.LOANS,
-    label: 'My loans',
-    event: 'navigation-loans',
-    icon: MyLoans,
-    iconDark: MyLoansDark,
-  },
-  {
-    href: PATHS.STAKING,
-    label: 'Staking',
-    event: 'navigation-staking',
-    icon: Staking,
-    iconDark: StakingDark,
   },
 ];

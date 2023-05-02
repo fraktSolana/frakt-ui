@@ -8,6 +8,7 @@ import {
   documentation,
   NAVIGATION_LINKS,
   MenuItem,
+  SECONDARY_NAVIGATION_LINKS,
 } from '@frakt/components/Navigation';
 import { selectTheme } from '../../state/theme/selectors';
 import { useBurgerMenu } from './hooks';
@@ -40,13 +41,13 @@ const BurgerMenu: FC<BurgerMenuProps> = ({ className = '' }) => {
         onClick={toggleVisibility}
       >
         <ul className={styles.navigation}>
-          {NAVIGATION_LINKS.map(({ label, to, pathname, href }) => (
+          {[...NAVIGATION_LINKS, ...SECONDARY_NAVIGATION_LINKS].map((item) => (
             <MenuItem
-              key={label}
-              label={label}
-              to={to}
-              href={href}
-              pathname={pathname}
+              key={item?.label}
+              label={item?.label}
+              to={item?.to}
+              href={item?.href}
+              pathname={item?.pathname}
               className={styles.link}
             />
           ))}

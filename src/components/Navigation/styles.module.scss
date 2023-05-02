@@ -2,7 +2,7 @@
 @import '../../scss/abstracts/typography';
 
 @mixin wrapper {
-  padding: 32px 16px;
+  padding: 24px 16px;
 }
 
 @mixin listItem {
@@ -114,10 +114,10 @@
 }
 
 .community {
+  border-bottom: 1px solid var(--primary-border);
   width: 100%;
   @include wrapper;
   @include text-menu-item;
-  padding-bottom: 0;
 
   & > div {
     @include listItem;

@@ -5,7 +5,12 @@ import { NavLink } from 'react-router-dom';
 import cx from 'classnames';
 
 import styles from './styles.module.scss';
-import { NAVIGATION_LINKS, community, documentation } from './constants';
+import {
+  NAVIGATION_LINKS,
+  SECONDARY_NAVIGATION_LINKS,
+  community,
+  documentation,
+} from './constants';
 import { selectTheme } from '../../state/theme/selectors';
 
 interface MenuItem {
@@ -103,7 +108,6 @@ export const Navigation: FC = () => {
             label={item.label}
             key={item.label}
             to={item.to}
-            href={item?.href}
             icon={(item as any).icon}
             iconDark={(item as any).iconDark}
             pathname={item.pathname}
@@ -111,8 +115,21 @@ export const Navigation: FC = () => {
           />
         ))}
       </div>
+      <div className={styles.navigation}>
+        {SECONDARY_NAVIGATION_LINKS.map((item) => (
+          <MenuItem
+            label={item.label}
+            key={item.label}
+            to={item.to}
+            icon={(item as any).icon}
+            href={item?.href}
+            iconDark={(item as any).iconDark}
+            pathname={item.pathname}
+            fillIcon={item?.fillIcon}
+          />
+        ))}
+      </div>
       <div className={styles.community}>
-        <div className={styles.section}>Community</div>
         {community.map((item) => (
           <MenuItem
             label={item.label}
@@ -124,7 +141,6 @@ export const Navigation: FC = () => {
         ))}
       </div>
       <div className={styles.documentation}>
-        <div className={styles.section}>Documentation</div>
         {documentation.map((item) => (
           <MenuItem
             label={item.label}
