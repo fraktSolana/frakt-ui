@@ -98,11 +98,11 @@ export const OfferPage = () => {
             <>
               <SliderGradient value={ltv} setValue={onLtvChange} />
               <TokenField
-                value={maxLoanValue}
+                value={parseFloat(maxLoanValue) ? maxLoanValue : ''}
                 onValueChange={onMaxLoanValueChange}
                 label="Max limit"
+                placeholder="0"
                 currentToken={SOL_TOKEN}
-                optional
               />
             </>
           )}
@@ -128,7 +128,7 @@ export const OfferPage = () => {
           </div>
 
           <div className={styles.fieldWrapper}>
-            <div>
+            <>
               <TokenField
                 value={interest}
                 onValueChange={onInterestChange}
@@ -149,7 +149,7 @@ export const OfferPage = () => {
                   <p>max interest rate is {MAX_LIMIT_INTEREST}%</p>
                 )}
               </div>
-            </div>
+            </>
 
             <RadioButtonField
               label="Repayments"

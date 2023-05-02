@@ -139,7 +139,6 @@ const TokenField: FC<TokenFieldProps> = ({
           </button>
         </div>
       </div>
-      {optional && <span className={styles.optional}>Optional</span>}
     </div>
   );
 };
