@@ -50,7 +50,7 @@ export const MenuItem: FC<MenuItem> = ({
         to={to}
         className={cx(styles.link, className, {
           [styles.active]: isActive,
-          [styles.bonds]: label === 'Bonds',
+          [styles.bonds]: label === 'Lends',
           [styles.strategies]: label === 'Strategies',
         })}
       >
