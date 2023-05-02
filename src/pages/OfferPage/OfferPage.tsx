@@ -128,20 +128,29 @@ export const OfferPage = () => {
           </div>
 
           <div className={styles.fieldWrapper}>
-            <TokenField
-              value={interest}
-              onValueChange={onInterestChange}
-              onBlur={() => handleInterestOnBlur(interest)}
-              label="Interest"
-              labelRightNode={createIntrestFieldRihtLabel(apr)}
-              currentToken={{
-                ...SOL_TOKEN,
-                symbol: '%',
-                logoURI: null,
-                name: null,
-              }}
-              toolTipText="Interest (in %) for the duration of this loan"
-            />
+            <div>
+              <TokenField
+                value={interest}
+                onValueChange={onInterestChange}
+                onBlur={() => handleInterestOnBlur(interest)}
+                label="Interest"
+                labelRightNode={createIntrestFieldRihtLabel(apr)}
+                error={isMaxLimitInterest}
+                currentToken={{
+                  ...SOL_TOKEN,
+                  symbol: '%',
+                  logoURI: null,
+                  name: null,
+                }}
+                toolTipText="Interest (in %) for the duration of this loan"
+              />
+              <div className={styles.errors}>
+                {isMaxLimitInterest && (
+                  <p>max interest rate is {MAX_LIMIT_INTEREST}%</p>
+                )}
+              </div>
+            </div>
+
             <RadioButtonField
               label="Repayments"
               currentOption={{
