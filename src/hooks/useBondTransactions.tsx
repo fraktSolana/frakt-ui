@@ -10,7 +10,7 @@ import {
 } from '@frakt/utils/bonds';
 
 import { useConnection } from './useConnection';
-import { Order } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+import { Order } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 import { BondCartOrder } from '@frakt/api/nft';
 
 type UseBondsTransactions = ({

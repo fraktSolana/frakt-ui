@@ -6,7 +6,7 @@ import {
 import { LoanType } from '@frakt/api/loans';
 
 import { CartOrder } from './types';
-import { Order } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+import { Order } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 import { BondCartOrder } from '@frakt/api/nft';
 
 type ConvertTakenOrdersToOrderParams = (params: {
