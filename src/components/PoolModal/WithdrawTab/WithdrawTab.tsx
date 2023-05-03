@@ -43,7 +43,8 @@ const WithdrawTab: FC<WithdrawTabProps> = ({
     onClearDepositValue,
   });
 
-  const notEnoughDepositError = depositAmount < Number(withdrawValue);
+  const notEnoughDepositError =
+    Number(depositAmount.toFixed(2)) < Number(withdrawValue);
 
   const isDisabledWithdrawBtn =
     Number(withdrawValue) === 0 || notEnoughDepositError;
