@@ -91,7 +91,7 @@
 }
 
 .strategies {
-  &:after {
+  &::after {
     content: 'BETA';
     padding: 4px 6px;
     width: 48px;
@@ -111,4 +111,7 @@
       right: -40%;
     }
   }
+}
+.active.strategies::after {
+  right: -12px !important;
 }
