@@ -23,6 +23,7 @@ import {
 import { captureSentryError } from '@frakt/utils/sentry';
 
 import { useBorrow } from '../cartState';
+import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from '@frakt/utils/transactions/helpers/signAndSendV0TransactionWithLookupTablesSeparateSignatures';
 
 export const useBorrowBulkOverviewPage = () => {
   const history = useHistory();
@@ -152,9 +153,12 @@ const borrowBulk: BorrowBulk = async ({
       });
     }),
   );
+  console.log(
+    'bondTransactionsAndSignersChunks: ',
+    bondTransactionsAndSignersChunks,
+  );
 
   const firstChunk: TxnsAndSigners[] = [
-    ...notBondTransactionsAndSigners,
     ...bondTransactionsAndSignersChunks
       .map((chunk) => ({
         transaction: chunk.createLookupTableTxn,
@@ -180,7 +184,8 @@ const borrowBulk: BorrowBulk = async ({
       .flat(),
   ];
 
-  return await signAndSendV0TransactionWithLookupTables({
+  return await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+    notBondTxns: notBondTransactionsAndSigners.flat(),
     createLookupTableTxns: firstChunk.map((txn) => txn.transaction),
     extendLookupTableTxns: secondChunk.map((txn) => txn.transaction),
     v0InstructionsAndSigners: createAndSellBondsIxsAndSignersChunk,
