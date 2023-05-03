@@ -100,7 +100,7 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
           // console.log("MinContextSlot: ", txn.minNonceContextSlot)
         }
         if (txnsAndSigners[i].length > 0)
-          await new Promise((r) => setTimeout(r, 9000));
+          await new Promise((r) => setTimeout(r, 11000));
       }
 
       const addressesPerTxn = 20;
