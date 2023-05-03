@@ -16,10 +16,10 @@ import {
   BorrowDark,
   Raffles,
   RafflesDark,
-  Bonds,
-  BondsDark,
   Staking,
   StakingDark,
+  Lending,
+  LendingDark,
 } from '@frakt/icons';
 
 import { Navigation } from './types';
@@ -89,8 +89,8 @@ export const NAVIGATION_LINKS: Navigation[] = [
     to: PATHS.BONDS,
     label: 'Lends',
     event: 'navigation-bonds',
-    icon: Bonds,
-    iconDark: BondsDark,
+    icon: Lending,
+    iconDark: LendingDark,
     primary: true,
   },
   {
