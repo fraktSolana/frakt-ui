@@ -153,9 +153,12 @@ const borrowBulk: BorrowBulk = async ({
       });
     }),
   );
+  console.log(
+    'bondTransactionsAndSignersChunks: ',
+    bondTransactionsAndSignersChunks,
+  );
 
   const firstChunk: TxnsAndSigners[] = [
-    ...notBondTransactionsAndSigners,
     ...bondTransactionsAndSignersChunks
       .map((chunk) => ({
         transaction: chunk.createLookupTableTxn,
@@ -182,6 +185,7 @@ const borrowBulk: BorrowBulk = async ({
   ];
 
   return await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+    notBondTxns: notBondTransactionsAndSigners.flat(),
     createLookupTableTxns: firstChunk.map((txn) => txn.transaction),
     extendLookupTableTxns: secondChunk.map((txn) => txn.transaction),
     v0InstructionsAndSigners: createAndSellBondsIxsAndSignersChunk,

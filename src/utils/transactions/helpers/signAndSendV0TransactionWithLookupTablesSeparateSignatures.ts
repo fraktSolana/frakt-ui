@@ -13,6 +13,8 @@ export interface InstructionsAndSigners {
 
 type SignAndSendV0TransactionWithLookupTablesSeparateSignatures = (props: {
   // lookupTablePublicKeys: web3.PublicKey[];
+  notBondTxns: TxnsAndSigners[];
+
   createLookupTableTxns: web3.Transaction[];
   extendLookupTableTxns: web3.Transaction[];
 
@@ -32,6 +34,7 @@ type SignAndSendV0TransactionWithLookupTablesSeparateSignatures = (props: {
 //? It needs when transactions from next chunk are related to transactions from previos chunk
 export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAndSendV0TransactionWithLookupTablesSeparateSignatures =
   async ({
+    notBondTxns,
     createLookupTableTxns,
     extendLookupTableTxns,
     v0InstructionsAndSigners,
@@ -46,10 +49,13 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
   }) => {
     try {
       const txnsAndSigners: TxnsAndSigners[][] = [
-        createLookupTableTxns.map((transaction) => ({
-          transaction,
-          signers: [],
-        })),
+        [
+          ...notBondTxns,
+          ...createLookupTableTxns.map((transaction) => ({
+            transaction,
+            signers: [],
+          })),
+        ],
         extendLookupTableTxns.map((transaction) => ({
           transaction,
           signers: [],
@@ -66,7 +72,7 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
       const transactionsFlatArrLookupTables = [
         ...txnsAndSignersCreateAndExtendLookupTables
           .flat()
-          .map(({ transaction, signers = [] }) => {
+          .map(({ transaction, signers }) => {
             transaction.recentBlockhash = blockhash;
             transaction.feePayer = wallet.publicKey;
 
@@ -89,6 +95,8 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
       let currentTxIndexLookupTable = 0;
       for (let i = 0; i < txnsAndSigners.length; i++) {
         for (let r = 0; r < txnsAndSigners[i].length; r++) {
+          if (txnsAndSigners[i].length === 0) continue;
+
           console.log('currentTxIndexLookupTable: ', currentTxIndexLookupTable);
           const txn = signedTransactionsLookupTables[currentTxIndexLookupTable];
           // lastSlot = await connection.getSlot();
@@ -99,8 +107,7 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
           currentTxIndexLookupTable += 1;
           // console.log("MinContextSlot: ", txn.minNonceContextSlot)
         }
-        if (txnsAndSigners[i].length > 0)
-          await new Promise((r) => setTimeout(r, 11000));
+        await new Promise((r) => setTimeout(r, 8000));
       }
 
       const addressesPerTxn = 20;
@@ -224,6 +231,8 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
       let currentTxIndex = 0;
       for (let i = 0; i < txnsAndSignersWithV0Txns.length; i++) {
         for (let r = 0; r < txnsAndSignersWithV0Txns[i].length; r++) {
+          if (txnsAndSigners[i].length === 0) continue;
+
           console.log('currentTxIndex: ', currentTxIndex);
           const txn = signedTransactions[currentTxIndex];
           // lastSlot = await connection.getSlot();
@@ -234,8 +243,7 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
           currentTxIndex += 1;
           // console.log("MinContextSlot: ", txn.minNonceContextSlot)
         }
-        if (txnsAndSignersWithV0Txns[i].length > 0)
-          await new Promise((r) => setTimeout(r, 7000));
+        await new Promise((r) => setTimeout(r, 7000));
       }
 
       // const signedTransactionsV0 = await wallet.signAllTransactions(
