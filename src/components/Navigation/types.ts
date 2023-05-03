@@ -6,7 +6,7 @@ export interface Navigation {
   to?: string;
   label: string;
   event?: string;
-  icon: FC;
+  icon?: FC;
   iconDark?: FC;
-  fillIcon?: boolean;
+  primary?: boolean;
 }

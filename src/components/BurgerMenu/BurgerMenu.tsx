@@ -4,11 +4,11 @@ import { useSelector } from 'react-redux';
 import ThemeSwitcher from '../ThemeSwitcher';
 import styles from './BurgerMenu.module.scss';
 import {
-  community,
-  documentation,
   NAVIGATION_LINKS,
   MenuItem,
   SECONDARY_NAVIGATION_LINKS,
+  COMMUNITY_LINKS,
+  DOCUMENTATIONS_LINKS,
 } from '@frakt/components/Navigation';
 import { selectTheme } from '../../state/theme/selectors';
 import { useBurgerMenu } from './hooks';
@@ -55,7 +55,7 @@ const BurgerMenu: FC<BurgerMenuProps> = ({ className = '' }) => {
         <div className={styles.community}>
           <p className={styles.subtitle}>Community</p>
           <div className={styles.icons}>
-            {community.map(({ icon, iconDark, href }, idx) => (
+            {COMMUNITY_LINKS.map(({ icon, iconDark, href }, idx) => (
               <a
                 key={idx}
                 target="_blank"
@@ -70,7 +70,7 @@ const BurgerMenu: FC<BurgerMenuProps> = ({ className = '' }) => {
         <div className={styles.documentation}>
           <p className={styles.subtitle}>Documentation</p>
           <div className={styles.icons}>
-            {documentation.map(({ icon, iconDark, href }, idx) => (
+            {DOCUMENTATIONS_LINKS.map(({ icon, iconDark, href }, idx) => (
               <a
                 key={idx}
                 target="_blank"

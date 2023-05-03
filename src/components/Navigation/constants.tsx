@@ -14,23 +14,17 @@ import {
   DashboardDark,
   Borrow,
   BorrowDark,
-  Lending,
-  LendingDark,
   Raffles,
   RafflesDark,
-  MyLoans,
-  MyLoansDark,
   Bonds,
   BondsDark,
   Staking,
   StakingDark,
-  Strategies,
-  StrategiesDark,
 } from '@frakt/icons';
 
 import { Navigation } from './types';
 
-export const community = [
+export const COMMUNITY_LINKS = [
   {
     label: 'Discord',
     icon: Discord,
@@ -45,7 +39,7 @@ export const community = [
   },
 ];
 
-export const documentation = [
+export const DOCUMENTATIONS_LINKS = [
   {
     label: 'Docs',
     icon: Docs,
@@ -73,7 +67,7 @@ export const NAVIGATION_LINKS: Navigation[] = [
     label: 'Dashboard',
     icon: Dashboard,
     iconDark: DashboardDark,
-    fillIcon: true,
+    primary: true,
   },
   {
     pathname: PATHS.BORROW_ROOT,
@@ -82,14 +76,13 @@ export const NAVIGATION_LINKS: Navigation[] = [
     event: 'navigation-borrow',
     icon: Borrow,
     iconDark: BorrowDark,
+    primary: true,
   },
   {
     pathname: PATHS.LOANS,
     to: PATHS.LOANS,
     label: 'My loans',
     event: 'navigation-loans',
-    icon: MyLoans,
-    iconDark: MyLoansDark,
   },
   {
     pathname: PATHS.BONDS,
@@ -98,22 +91,19 @@ export const NAVIGATION_LINKS: Navigation[] = [
     event: 'navigation-bonds',
     icon: Bonds,
     iconDark: BondsDark,
+    primary: true,
   },
   {
     pathname: PATHS.STRATEGIES,
     to: PATHS.STRATEGIES,
     label: 'Strategies',
     event: 'navigation-strategies',
-    icon: Strategies,
-    iconDark: StrategiesDark,
   },
   {
     pathname: PATHS.LEND,
     to: PATHS.LEND,
     label: 'Pools',
     event: 'navigation-lend',
-    icon: Lending,
-    iconDark: LendingDark,
   },
 ];
 
@@ -132,6 +122,5 @@ export const SECONDARY_NAVIGATION_LINKS: Navigation[] = [
     event: 'navigation-liquidation',
     icon: Raffles,
     iconDark: RafflesDark,
-    fillIcon: true,
   },
 ];
