@@ -18,7 +18,7 @@ import {
 
 import styles from './styles.module.scss';
 
-export interface MenuItem {
+interface MenuItem {
   label: string;
   icon?: any;
   iconDark?: any;
