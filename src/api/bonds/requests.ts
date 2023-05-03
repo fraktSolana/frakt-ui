@@ -56,7 +56,7 @@ type FetchMarketPairs = (props: {
 }) => Promise<Pair[]>;
 export const fetchMarketPairs: FetchMarketPairs = async ({ marketPubkey }) => {
   const { data } = await axios.get<Pair[]>(
-    `https://${BACKEND_DOMAIN}/pairs/${marketPubkey?.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
+    `https://${BACKEND_DOMAIN}/bond-offers/${marketPubkey?.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data;
@@ -68,7 +68,7 @@ export const fetchMarketPairs: FetchMarketPairs = async ({ marketPubkey }) => {
 type FetchMarketPair = (props: { pairPubkey: web3.PublicKey }) => Promise<Pair>;
 export const fetchMarketPair: FetchMarketPair = async ({ pairPubkey }) => {
   const { data } = await axios.get<Pair>(
-    `https://${BACKEND_DOMAIN}/pair/${pairPubkey?.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
+    `https://${BACKEND_DOMAIN}/bond-offer/${pairPubkey?.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data;
@@ -94,7 +94,7 @@ export const fetchAllBonds: FetchAllBonds = async ({
     : '';
 
   const { data } = await axios.get<Bond[]>(
-    `https://${BACKEND_DOMAIN}/bonds?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}&isPrivate=${IS_PRIVATE_MARKETS}`,
+    `https://${BACKEND_DOMAIN}/bonds?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}&isPrivate=${IS_PRIVATE_MARKETS}&version=2`,
   );
 
   return data;
@@ -144,7 +144,7 @@ export const fetchBondsHistory: FetchBondsHistory = async ({
   const eventTypeQuery = eventType ? `eventType=${eventType}` : '';
 
   const { data } = await axios.get<Bond[]>(
-    `https://${BACKEND_DOMAIN}/bonds/history?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}${eventTypeQuery}&isPrivate=${IS_PRIVATE_MARKETS}`,
+    `https://${BACKEND_DOMAIN}/bonds/history?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}${eventTypeQuery}&isPrivate=${IS_PRIVATE_MARKETS}&version=2`,
   );
 
   return data;

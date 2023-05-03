@@ -37,9 +37,11 @@ export const useCollectionCard = ({
     duration,
   );
 
-  const offers = showOwnOrders
-    ? fitleredOffersByDuration.filter(isOwnOrder)
-    : fitleredOffersByDuration;
+  const offers = (
+    showOwnOrders
+      ? fitleredOffersByDuration.filter(isOwnOrder)
+      : fitleredOffersByDuration
+  ).filter((offer) => isOwnOrder(offer) || offer.size > 0);
 
   const goToEditOffer = (orderPubkey: string) =>
     history.push(`${PATHS.OFFER}/${marketPubkey}/${orderPubkey}`);

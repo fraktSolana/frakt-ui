@@ -52,16 +52,8 @@ export const getPairAccount: GetPairAccount = async ({
 
     return {
       ...createdPair,
-      createdAt: moment().toString(),
-      authorityAdapterPublicKey: authorityAdapterPubkey?.toBase58(),
-      updatedAt: moment().toString(),
-      isRemoved: false,
       validation: {
-        publicKey: validationPubkey?.toBase58(),
         ...createdValidation,
-        isRemoved: false,
-        createdAt: moment().toString(),
-        updatedAt: moment().toString(),
       },
     };
   } catch (error) {

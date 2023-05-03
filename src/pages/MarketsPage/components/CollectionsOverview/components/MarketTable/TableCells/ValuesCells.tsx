@@ -56,6 +56,6 @@ export const createHighestLtvJSX = (value = 0) => (
 
 export const createAprJSX = (value) => (
   <span className={classNames(styles.value, styles.upToLtvColor)}>
-    up to {(value || 0).toFixed(2)} %
+    up to {(value || 0).toFixed(0)} %
   </span>
 );

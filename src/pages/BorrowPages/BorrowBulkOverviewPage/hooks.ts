@@ -14,13 +14,16 @@ import { makeProposeTransaction } from '@frakt/utils/loans';
 import { LoanType } from '@frakt/api/loans';
 import { useConnection } from '@frakt/hooks';
 import {
+  InstructionsAndSigners,
   showSolscanLinkNotification,
   signAndSendAllTransactionsInSequence,
+  signAndSendV0TransactionWithLookupTables,
   TxnsAndSigners,
 } from '@frakt/utils/transactions';
 import { captureSentryError } from '@frakt/utils/sentry';
 
 import { useBorrow } from '../cartState';
+import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from '@frakt/utils/transactions/helpers/signAndSendV0TransactionWithLookupTablesSeparateSignatures';
 
 export const useBorrowBulkOverviewPage = () => {
   const history = useHistory();
@@ -154,18 +157,35 @@ const borrowBulk: BorrowBulk = async ({
   const firstChunk: TxnsAndSigners[] = [
     ...notBondTransactionsAndSigners,
     ...bondTransactionsAndSignersChunks
-      .map((chunk) => chunk.createBondTxnAndSigners)
+      .map((chunk) => ({
+        transaction: chunk.createLookupTableTxn,
+        signers: [],
+      }))
       .flat(),
   ];
 
   const secondChunk: TxnsAndSigners[] = [
     ...bondTransactionsAndSignersChunks
-      .map((chunk) => chunk.sellingBondsTxnsAndSigners)
+      .map((chunk) =>
+        chunk.extendLookupTableTxns.map((transaction) => ({
+          transaction,
+          signers: [],
+        })),
+      )
       .flat(),
   ];
 
-  return await signAndSendAllTransactionsInSequence({
-    txnsAndSigners: [firstChunk, secondChunk],
+  const createAndSellBondsIxsAndSignersChunk: InstructionsAndSigners[] = [
+    ...bondTransactionsAndSignersChunks
+      .map((chunk) => chunk.createAndSellBondsIxsAndSigners)
+      .flat(),
+  ];
+
+  return await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+    createLookupTableTxns: firstChunk.map((txn) => txn.transaction),
+    extendLookupTableTxns: secondChunk.map((txn) => txn.transaction),
+    v0InstructionsAndSigners: createAndSellBondsIxsAndSignersChunk,
+    // lookupTablePublicKey: bondTransactionsAndSignersChunks,
     connection,
     wallet,
     commitment: 'confirmed',
