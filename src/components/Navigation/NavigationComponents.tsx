@@ -42,6 +42,7 @@ export const createNavigationLink = ({
         [styles.active]: isActive,
         [styles.primary]: primary,
         [styles.secondary]: !icon,
+        [styles.strategies]: label === 'Strategies',
       })}
     >
       {icon && icon()}

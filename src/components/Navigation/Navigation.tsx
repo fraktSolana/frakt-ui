@@ -18,7 +18,7 @@ import {
 
 import styles from './styles.module.scss';
 
-interface MenuItem {
+export interface MenuItem {
   label: string;
   icon?: any;
   iconDark?: any;
@@ -33,15 +33,15 @@ interface MenuItem {
 }
 
 export const MenuItem: FC<MenuItem> = ({
-  label,
-  className,
   icon: rawIcon,
   iconDark,
-  to,
   selector,
   pathname = '',
   href,
+  label,
+  className,
   primary,
+  to,
 }) => {
   const theme = useSelector(selectTheme);
   const icon = theme === 'dark' ? iconDark : rawIcon;

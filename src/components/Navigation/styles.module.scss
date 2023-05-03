@@ -56,10 +56,6 @@
     background: var(--light-green-color-1);
   }
 }
-.link svg {
-  min-height: 24px;
-  min-width: 24px;
-}
 
 .active {
   border: 1px solid var(--light-green-color);
@@ -71,6 +67,9 @@
   & > * {
     cursor: default;
   }
+}
+.active.secondary {
+  padding: 7px 4px 7px 34px;
 }
 
 .navigation {
@@ -89,5 +88,27 @@
 
 .label {
   color: var(--primary-text);
-  line-height: 17px;
+}
+
+.strategies {
+  &:after {
+    content: 'BETA';
+    padding: 4px 6px;
+    width: 48px;
+    height: 22px;
+    background: var(--light-green-color);
+
+    font: var(--font-text-6);
+    color: #000;
+    text-align: center;
+
+    position: absolute;
+    top: 50%;
+    right: -11px;
+    transform: translateY(-50%);
+    @media (max-width: 960px) {
+      top: 30%;
+      right: -40%;
+    }
+  }
 }
