@@ -76,7 +76,6 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
             transaction.recentBlockhash = blockhash;
             transaction.feePayer = wallet.publicKey;
 
-            console.log('these signers: ', signers);
             if (signers.length) {
               transaction.sign(...signers);
             }
