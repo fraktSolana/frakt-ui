@@ -87,7 +87,7 @@ export const NAVIGATION_LINKS: Navigation[] = [
   {
     pathname: PATHS.BONDS,
     to: PATHS.BONDS,
-    label: 'Lends',
+    label: 'Lend',
     event: 'navigation-bonds',
     icon: Lending,
     iconDark: LendingDark,
