@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import classNames from 'classnames';
 
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import Tooltip from '@frakt/components/Tooltip';
@@ -18,9 +19,9 @@ import styles from './OfferPage.module.scss';
 import {
   DURATION_OPTIONS,
   EARNER_INTEREST_OPTIONS,
+  MAX_LIMIT_INTEREST,
   RECEIVE_OPTIONS,
 } from './constants';
-import classNames from 'classnames';
 
 export const OfferPage = () => {
   const {
@@ -50,6 +51,7 @@ export const OfferPage = () => {
     onChangeReceiveNftFeature,
   } = useOfferPage();
 
+  const isMaxLimitInterest = parseFloat(interest) > MAX_LIMIT_INTEREST;
   const apr = (parseFloat(interest) / duration) * 365;
 
   return (
@@ -113,33 +115,41 @@ export const OfferPage = () => {
           </div>
 
           <div className={styles.fieldWrapper}>
-            <TokenField
-              value={interest}
-              onValueChange={onInterestChange}
-              onBlur={() => handleInterestOnBlur(interest)}
-              label="Interest"
-              labelRightNode={
-                <div className={styles.labelRow}>
-                  APR: <span>{(apr || 0).toFixed(2)} %</span>
-                  <Tooltip
-                    placement="bottom"
-                    overlay={'Analyzed profit from repaying the loan'}
-                  >
-                    <QuestionCircleOutlined className={styles.questionIcon} />
-                  </Tooltip>
-                </div>
-              }
-              currentToken={{
-                ...SOL_TOKEN,
-                symbol: '%',
-                logoURI: null,
-                name: null,
-              }}
-              tokensList={[
-                { ...SOL_TOKEN, symbol: '%', logoURI: null, name: null },
-              ]}
-              toolTipText="Interest (in %) for the duration of this loan"
-            />
+            <>
+              <TokenField
+                value={interest}
+                onValueChange={onInterestChange}
+                onBlur={() => handleInterestOnBlur(interest)}
+                label="Interest"
+                labelRightNode={
+                  <div className={styles.labelRow}>
+                    APR: <span>{(apr || 0).toFixed(2)} %</span>
+                    <Tooltip
+                      placement="bottom"
+                      overlay={'Analyzed profit from repaying the loan'}
+                    >
+                      <QuestionCircleOutlined className={styles.questionIcon} />
+                    </Tooltip>
+                  </div>
+                }
+                currentToken={{
+                  ...SOL_TOKEN,
+                  symbol: '%',
+                  logoURI: null,
+                  name: null,
+                }}
+                tokensList={[
+                  { ...SOL_TOKEN, symbol: '%', logoURI: null, name: null },
+                ]}
+                toolTipText="Interest (in %) for the duration of this loan"
+              />
+              <div className={styles.errors}>
+                {isMaxLimitInterest && (
+                  <p>max interest rate is {MAX_LIMIT_INTEREST}%</p>
+                )}
+              </div>
+            </>
+
             <div className={classNames(styles.radio, styles.radioWrapper)}>
               <div className={styles.radioTitle}>
                 <h6 className={styles.subtitle}>Repayments</h6>
@@ -208,7 +218,7 @@ export const OfferPage = () => {
             )}
             {!isEdit && (
               <Button
-                disabled={!isValid}
+                disabled={!isValid || isMaxLimitInterest}
                 onClick={isEdit ? onEditOffer : onCreateOffer}
                 className={styles.btn}
                 type="secondary"

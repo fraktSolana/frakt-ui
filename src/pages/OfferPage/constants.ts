@@ -10,6 +10,8 @@ export const riskMarks: { [key: string]: string | JSX.Element } = {
   100: '100%',
 };
 
+export const MAX_LIMIT_INTEREST = 5;
+
 export const DURATION_OPTIONS: RBOption<number>[] = [
   {
     label: '7 days',
