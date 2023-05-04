@@ -1,48 +1,33 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { NavLink } from 'react-router-dom';
 
 import { useMaxBorrowValue } from '@frakt/pages/BorrowPages/BorrowRootPage/hooks';
 import Button from '@frakt/components/Button';
-import { PATHS } from '@frakt/constants';
-import { Solana } from '@frakt/icons';
 
 import styles from './AvailableBorrow.module.scss';
-import classNames from 'classnames';
-
-import Block from '../Block';
 
 const AvailableBorrow: FC = () => {
-  const { publicKey, connected } = useWallet();
+  const { connected, publicKey } = useWallet();
 
   const { maxBorrowValue } = useMaxBorrowValue({ walletPublicKey: publicKey });
 
   return (
-    <Block
-      className={classNames(styles.block, {
-        [styles.noConnectedBlock]: !connected,
-      })}
-    >
+    <div className={styles.wrapper}>
       <h3 className={styles.title}>Available to borrow</h3>
-      {connected ? (
-        <>
-          <div className={styles.valueWrapper}>
-            <p className={styles.value}>{(maxBorrowValue || 0)?.toFixed(2)}</p>
-            <Solana className={styles.icon} />
-          </div>
-          <NavLink style={{ width: '100%' }} to={PATHS.BORROW_ROOT}>
-            <Button className={styles.btn} type="secondary">
-              Borrow
-            </Button>
-          </NavLink>
-        </>
-      ) : (
-        <p className={styles.noConnectedMessage}>
-          Please connect wallet to check how much SOL you can borrow
-        </p>
+      {connected && (
+        <StatsValue label="You can borrow" value={maxBorrowValue} />
       )}
-    </Block>
+      {!connected && <StatsValue label="Collections whitelisted" value={198} />}
+      <Button type="secondary">Connect wallet to borrow SOL</Button>
+    </div>
   );
 };
 
 export default AvailableBorrow;
+
+const StatsValue = ({ label, value }) => (
+  <div className={styles.column}>
+    <p className={styles.label}>{label}</p>
+    <p className={styles.value}>{value}</p>
+  </div>
+);

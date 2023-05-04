@@ -1,68 +1,21 @@
-.block {
+.column {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
-  max-width: 580px;
-  height: 252px;
-  width: 100%;
-
-  @media screen and (max-width: 1024px) {
-    height: 230px;
-    max-width: unset;
-  }
-}
-.noConnectedBlock {
-  justify-content: unset;
 }
 
-.title {
-  font: var(--font-h6);
-  margin-bottom: 32px;
-  line-height: 34px;
-
-  @media screen and (max-width: 1024px) {
-    margin-bottom: 28px;
-  }
+.wrapper {
+  @extend .column;
+  padding: 0 0 16px 16px;
 }
 
-.valueWrapper {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
+.title,
 .value {
-  color: var(--secondary-text);
   font: var(--font-subtitle);
-  line-height: 42px;
+  font-size: 40px;
 }
 
-.btn {
-  height: 48px;
-  width: 100%;
-  margin-top: 32px;
-
-  @media screen and (max-width: 1024px) {
-    height: 40px;
-  }
-}
-
-.icon {
-  width: 20px;
-}
-
-.noConnectedMessage {
-  font: var(--font-text-4);
-  font-size: 22px;
-  max-width: 516px;
-  text-align: center;
-
-  @media screen and (max-width: 1290px) {
-    font-size: 20px;
-  }
-  @media screen and (max-width: 960px) {
-    font-size: 16px;
-    max-width: 300px;
-  }
+.label {
+  font: var(--font-text-5);
+  text-transform: uppercase;
 }
