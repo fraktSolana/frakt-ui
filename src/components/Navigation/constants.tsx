@@ -94,16 +94,16 @@ export const NAVIGATION_LINKS: Navigation[] = [
     primary: true,
   },
   {
-    pathname: PATHS.STRATEGIES,
-    to: PATHS.STRATEGIES,
-    label: 'Strategies',
-    event: 'navigation-strategies',
-  },
-  {
     pathname: PATHS.LEND,
     to: PATHS.LEND,
     label: 'Pools',
     event: 'navigation-lend',
+  },
+  {
+    pathname: PATHS.STRATEGIES,
+    to: PATHS.STRATEGIES,
+    label: 'Strategies',
+    event: 'navigation-strategies',
   },
 ];
 
