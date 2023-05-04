@@ -1,12 +1,13 @@
 import { FC } from 'react';
 
 import styles from './BorrowTab.module.scss';
-import NftCard from '../NftCard';
+import NFTsList from '../NFTsList';
 
 const BorrowTab: FC = () => {
   return (
-    <div className={styles.nftList}>
-      <NftCard />
+    <div className={styles.wrapper}>
+      <NFTsList />
+      <div className={styles.container}></div>
     </div>
   );
 };
