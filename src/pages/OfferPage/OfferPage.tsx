@@ -208,6 +208,7 @@ export const OfferPage = () => {
                   Delete offer
                 </Button>
                 <Button
+                  disabled={isMaxLimitInterest}
                   onClick={onEditOffer}
                   className={styles.btn}
                   type="secondary"
