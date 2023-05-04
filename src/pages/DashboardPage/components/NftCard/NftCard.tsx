@@ -1,28 +1,35 @@
+import { FC } from 'react';
 import classNames from 'classnames';
-import { FC, ReactNode } from 'react';
 
 import styles from './NftCard.module.scss';
+import { useWallet } from '@solana/wallet-adapter-react';
+import Button from '@frakt/components/Button';
 
 interface NftCardProps {
-  nftName: string;
-  nftImageUrl: string;
-  children: ReactNode;
-  className?: string;
+  nftImage?: string;
 }
 
 const NftCard: FC<NftCardProps> = ({
-  nftName,
-  nftImageUrl,
-  children,
-  className,
+  nftImage = 'https://pbs.twimg.com/media/FuaAl7sXoAIm_jk.png',
 }) => {
+  const { connected } = useWallet();
   return (
-    <div className={classNames(styles.card, className)}>
-      <div className={styles.nftInfo}>
-        <img src={nftImageUrl} className={styles.nftImage} />
-        <p className={styles.nftName}>{nftName}</p>
+    <div className={styles.card}>
+      <img src={nftImage} className={styles.nftImage} />
+      <div
+        className={classNames(styles.nftInfo, {
+          [styles.connected]: connected,
+        })}
+      >
+        <p className={styles.duration}>7 days</p>
+        <p className={styles.fee}>Fee: 1</p>
+        {connected && (
+          <Button type="secondary" className={styles.connectedBadge}>
+            Get 45
+          </Button>
+        )}
       </div>
-      {children}
+      {!connected && <div className={styles.badge}>+ 45</div>}
     </div>
   );
 };

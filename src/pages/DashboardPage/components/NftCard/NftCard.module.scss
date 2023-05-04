@@ -1,35 +1,65 @@
 .card {
+  cursor: pointer;
+  border: 1px solid var(--primary-border);
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  position: relative;
+}
+.card:hover .connectedBadge {
+  background-color: var(--light-green-hover);
 }
 
 .nftInfo {
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between;
+  padding: 8px;
+  position: relative;
+}
+
+.nftInfo.connected {
+  padding-top: 40px;
 }
 
 .nftImage {
-  width: 58px;
-  height: 58px;
-
-  @media screen and (max-width: 1024px) {
-    height: 48px;
-    width: 48px;
-  }
-
-  @media screen and (max-width: 960px) {
-    height: 38px;
-    width: 38px;
-  }
+  width: 100%;
+  height: 100%;
 }
 
-.nftName {
-  font: var(--font-text-2);
-  font-size: 20px;
+.duration {
+  font: var(--font-text-8);
+  font-size: 14px;
+}
 
-  @media screen and (max-width: 960px) {
-    font-size: 16px;
-  }
+.fee {
+  color: var(--secondary-text);
+  font: var(--font-text-6);
+  text-transform: uppercase;
+}
+
+.badge {
+  color: var(--button-text);
+  background-color: var(--light-green-color);
+
+  position: absolute;
+  left: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 34px;
+  width: 56px;
+}
+
+.connectedBadge {
+  position: absolute;
+  font: var(--font-btn-middle);
+
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  height: 40px;
+  width: 90%;
 }

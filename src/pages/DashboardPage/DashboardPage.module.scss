@@ -1,63 +1,22 @@
-.container {
-  padding-top: 96px;
-  padding-bottom: 64px;
+.content {
+  border: 1px solid var(--primary-border);
+  margin-top: 16px;
 }
 
-.header {
-  display: flex;
-  justify-content: center;
+.tabContent {
+  background: var(--primary-background);
+  padding: 24px;
+  min-height: 600px;
 }
 
-.title {
-  font: var(--font-title-2);
-  margin-bottom: 16px;
-  text-align: center;
-
-  @media screen and (max-width: 960px) {
-    margin-bottom: 0;
-  }
+.tab {
+  flex-wrap: nowrap;
+}
+.tab button {
+  border: 0;
+  border-bottom: 1px solid var(--primary-border);
+}
+.tab button:first-child {
+  border-right: 1px solid var(--primary-border);
 }
 
-.subtitle {
-  font: var(--font-text-2);
-  margin-bottom: 24px;
-  text-align: center;
-}
-
-.statsWrapper {
-  margin-top: 32px;
-}
-
-.statsContainer {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  row-gap: 24px;
-
-  @media screen and (max-width: 1024px) {
-    row-gap: 16px;
-  }
-}
-
-.rowDirection {
-  @media screen and (max-width: 1290px) {
-    flex-direction: row !important;
-  }
-  @media screen and (max-width: 1024px) {
-    flex-direction: column !important;
-  }
-}
-
-.row {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-
-  @media screen and (max-width: 1290px) {
-    flex-direction: column;
-  }
-
-  @media screen and (max-width: 960px) {
-    gap: 16px;
-  }
-}
