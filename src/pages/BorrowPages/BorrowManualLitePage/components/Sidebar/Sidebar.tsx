@@ -5,12 +5,17 @@ import CollapsedContent from '@frakt/components/Sidebar/components/CollapsedCont
 import NftsCarousel from '@frakt/components/Sidebar/components/Slider';
 import { Loader } from '@frakt/components/Loader';
 import { LoadingModal } from '@frakt/components/LoadingModal';
+import { LoanDuration } from '@frakt/api/nft';
 
 import styles from './Sidebar.module.scss';
 import { BorrowForm } from '../BorrowForm';
 import { useSidebar } from './hooks';
 
-export const Sidebar: FC = () => {
+interface SidebarProps {
+  duration?: LoanDuration;
+}
+
+export const Sidebar: FC<SidebarProps> = ({ duration = '7' }) => {
   const {
     isLoading,
     isBulk,
@@ -50,7 +55,7 @@ export const Sidebar: FC = () => {
                 onNext={() => onNextNftSelect()}
                 isBulkLoan={isBulk}
               />
-              <BorrowForm onSubmit={onSubmit} />
+              <BorrowForm onSubmit={onSubmit} duration={duration} />
             </>
           )}
         </div>

@@ -6,17 +6,22 @@ import {
   convertTakenOrderToOrderParams,
   useBorrow,
 } from '@frakt/pages/BorrowPages/cartState';
+import { getBestOrdersByBorrowValue } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+import { pairLoanDurationFilter } from '@frakt/utils/bonds';
+import { calcDurationByMultiOrdersBond } from '@frakt/pages/BorrowPages/helpers';
+import { LoanDuration } from '@frakt/api/nft';
 
 import {
   generateSelectOptions,
   getBorrowValueRange,
   SelectValue,
 } from './helpers';
-import { getBestOrdersByBorrowValue } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
-import { pairLoanDurationFilter } from '@frakt/utils/bonds';
-import { calcDurationByMultiOrdersBond } from '@frakt/pages/BorrowPages/helpers';
 
-export const useBorrowForm = () => {
+export const useBorrowForm = ({
+  duration = '7',
+}: {
+  duration: LoanDuration;
+}) => {
   const {
     currentNft,
     currentLoanValue,
@@ -57,7 +62,12 @@ export const useBorrowForm = () => {
   //? Select default select option (when user selects nft)
   useEffect(() => {
     if (selectOptions.length) {
-      const defaultOption = selectOptions.find((option) => !option.disabled);
+      const defaultOption = selectOptions.find((option) => {
+        const available = !option.disabled;
+        const sameDuration = option.value.duration === parseInt(duration);
+
+        return available && (sameDuration || !option.value.duration);
+      });
 
       if (currentNft && currentLoanType) {
         const selectOption = selectOptions.find(({ value }) => {

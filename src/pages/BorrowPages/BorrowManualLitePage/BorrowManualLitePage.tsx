@@ -6,38 +6,21 @@ import InfinityScroll from '@frakt/components/InfinityScroll';
 import { useDebounce } from '@frakt/hooks';
 import {
   BorrowNft,
-  MaxBorrow,
+  LoanDuration,
   fetchBulkSuggestionMinimized,
-  fetchMaxBorrowValuePro,
 } from '@frakt/api/nft';
-
-import { Filters } from './components/Filters';
-import { useWalletNfts } from './hooks';
-import { NftCard } from './components/NftCard';
-import styles from './BorrowManualLitePage.module.scss';
-import { Sidebar } from './components/Sidebar';
-import { CartOrder, useBorrow } from '../cartState';
-import { BulkForm } from './components/BulkForm';
-import { web3 } from 'fbonds-core';
 import { useQuery } from '@tanstack/react-query';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { LoanType } from '@frakt/api/loans';
 import { Tab, Tabs, useTabs } from '@frakt/components/Tabs';
 
-const DURATION_TABS: Tab[] = [
-  {
-    label: '7 days',
-    value: '7',
-  },
-  {
-    label: '14 days',
-    value: '14',
-  },
-  {
-    label: 'Perpetual',
-    value: '0',
-  },
-];
+import { Filters } from './components/Filters';
+import { useMaxBorrow, useWalletNfts } from './hooks';
+import { NftCard } from './components/NftCard';
+import styles from './BorrowManualLitePage.module.scss';
+import { Sidebar } from './components/Sidebar';
+import { CartOrder, useBorrow } from '../cartState';
+import { BulkForm } from './components/BulkForm';
 
 export const BorrowManualLitePage: FC = () => {
   const wallet = useWallet();
@@ -50,6 +33,13 @@ export const BorrowManualLitePage: FC = () => {
     value: duration,
     setValue: setDuration,
   } = useTabs({ tabs: DURATION_TABS, defaultValue: DURATION_TABS[0].value });
+
+  const onDurationTabClick = (value: string) => {
+    onBorrowValueChange('0');
+    setDuration(value);
+    clearCart();
+    clearCurrentNftState();
+  };
 
   const maxBorrowValue = useMemo(() => {
     return maxBorrow ? maxBorrow[duration] : 0;
@@ -66,6 +56,7 @@ export const BorrowManualLitePage: FC = () => {
     clearCurrentNftState,
     setCartState,
     setCurrentNftFromOrder,
+    totalBorrowValue,
   } = useBorrow();
 
   const [suggestionRequested, setSuggestionRequested] =
@@ -102,6 +93,12 @@ export const BorrowManualLitePage: FC = () => {
     [maxBorrowValue],
   );
 
+  //TODO: Fix leak
+  // useEffect(() => {
+  //   totalBorrowValue &&
+  //     onBorrowValueChange((totalBorrowValue / 1e9).toFixed(2));
+  // }, [totalBorrowValue, onBorrowValueChange]);
+
   const {
     nfts,
     fetchNextPage,
@@ -109,7 +106,7 @@ export const BorrowManualLitePage: FC = () => {
     setSearch,
     setSortName,
     setSortOrder,
-  } = useWalletNfts({ duration: duration as '7' | '14' | '0' });
+  } = useWalletNfts({ duration: duration as LoanDuration });
 
   const setSearchDebounced = useDebounce((value: string) => {
     setSearch(value);
@@ -132,7 +129,7 @@ export const BorrowManualLitePage: FC = () => {
       fetchBulkSuggestionMinimized({
         publicKey: wallet.publicKey,
         totalValue: borrowValue,
-        duration: duration as '7' | '14' | '0',
+        duration: duration as LoanDuration,
       }),
     {
       enabled: false,
@@ -206,9 +203,13 @@ export const BorrowManualLitePage: FC = () => {
         />
       )}
 
-      <Tabs tabs={durationTabs} value={duration} setValue={setDuration} />
+      <Tabs
+        tabs={durationTabs}
+        value={duration}
+        setValue={onDurationTabClick}
+      />
 
-      {!!currentNft && <Sidebar />}
+      {!!currentNft && <Sidebar duration={duration as LoanDuration} />}
       <div
         className={classNames([
           styles.content,
@@ -251,26 +252,17 @@ export const BorrowManualLitePage: FC = () => {
   );
 };
 
-type UseMaxBorrow = (props: { walletPublicKey?: web3.PublicKey }) => {
-  maxBorrow: MaxBorrow;
-  isLoading: boolean;
-};
-const useMaxBorrow: UseMaxBorrow = ({ walletPublicKey }) => {
-  const { data, isLoading } = useQuery(
-    ['maxBorrow', walletPublicKey?.toBase58()],
-    () =>
-      fetchMaxBorrowValuePro({
-        publicKey: walletPublicKey,
-      }),
-    {
-      enabled: !!walletPublicKey,
-      staleTime: 5 * 60 * 1000,
-      refetchOnWindowFocus: false,
-    },
-  );
-
-  return {
-    maxBorrow: data,
-    isLoading,
-  };
-};
+const DURATION_TABS: Tab[] = [
+  {
+    label: '7 days',
+    value: '7',
+  },
+  {
+    label: '14 days',
+    value: '14',
+  },
+  {
+    label: 'Perpetual',
+    value: '0',
+  },
+];

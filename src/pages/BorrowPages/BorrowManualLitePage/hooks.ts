@@ -1,8 +1,14 @@
 import { useState } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useWallet } from '@solana/wallet-adapter-react';
-
-import { fetchWalletBorrowNfts } from '@frakt/api/nft';
+import {
+  LoanDuration,
+  MaxBorrow,
+  fetchMaxBorrowValuePro,
+  fetchWalletBorrowNfts,
+} from '@frakt/api/nft';
+import { web3 } from 'fbonds-core';
+import { LoanType } from '@frakt/api/loans';
 
 const FETCH_LIMIT = 15;
 
@@ -12,7 +18,7 @@ type SortOrder = 'desc' | 'asc';
 export const useWalletNfts = ({
   duration = '7',
 }: {
-  duration?: '7' | '14' | '0';
+  duration?: LoanDuration;
 }) => {
   const wallet = useWallet();
 
@@ -29,6 +35,7 @@ export const useWalletNfts = ({
       sortBy: sortName,
       sortOrder: sortOrder,
       duration,
+      loanType: duration === '0' ? LoanType.PRICE_BASED : LoanType.BOND,
     });
 
     return { pageParam, data };
@@ -68,5 +75,29 @@ export const useWalletNfts = ({
     setSortOrder,
     sortName,
     setSortName,
+  };
+};
+
+type UseMaxBorrow = (props: { walletPublicKey?: web3.PublicKey }) => {
+  maxBorrow: MaxBorrow;
+  isLoading: boolean;
+};
+export const useMaxBorrow: UseMaxBorrow = ({ walletPublicKey }) => {
+  const { data, isLoading } = useQuery(
+    ['maxBorrow', walletPublicKey?.toBase58()],
+    () =>
+      fetchMaxBorrowValuePro({
+        publicKey: walletPublicKey,
+      }),
+    {
+      enabled: !!walletPublicKey,
+      staleTime: 5 * 60 * 1000,
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  return {
+    maxBorrow: data,
+    isLoading,
   };
 };

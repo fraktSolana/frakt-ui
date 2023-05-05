@@ -74,6 +74,8 @@ export type BulkSuggestion = {
   [key in BulkTypes]?: Suggestion;
 };
 
+export type LoanDuration = '7' | '14' | '0'; //? 0 for perpetual
+
 export interface MaxBorrow {
   '0': number;
   '7': number;
