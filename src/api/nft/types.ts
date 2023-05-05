@@ -73,3 +73,10 @@ export interface Suggestion {
 export type BulkSuggestion = {
   [key in BulkTypes]?: Suggestion;
 };
+
+export interface MaxBorrow {
+  '0': number;
+  '7': number;
+  '14': number;
+  all: number;
+}

@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
@@ -6,8 +6,9 @@ import InfinityScroll from '@frakt/components/InfinityScroll';
 import { useDebounce } from '@frakt/hooks';
 import {
   BorrowNft,
-  fetchBulkSuggestion,
-  fetchMaxBorrowValue,
+  MaxBorrow,
+  fetchBulkSuggestionMinimized,
+  fetchMaxBorrowValuePro,
 } from '@frakt/api/nft';
 
 import { Filters } from './components/Filters';
@@ -21,16 +22,43 @@ import { web3 } from 'fbonds-core';
 import { useQuery } from '@tanstack/react-query';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { LoanType } from '@frakt/api/loans';
+import { Tab, Tabs, useTabs } from '@frakt/components/Tabs';
+
+const DURATION_TABS: Tab[] = [
+  {
+    label: '7 days',
+    value: '7',
+  },
+  {
+    label: '14 days',
+    value: '14',
+  },
+  {
+    label: 'Perpetual',
+    value: '0',
+  },
+];
 
 export const BorrowManualLitePage: FC = () => {
   const wallet = useWallet();
-  const { maxBorrowValue, isLoading: maxBorrowValueLoading } =
-    useMaxBorrowValue({ walletPublicKey: wallet?.publicKey });
+  const { maxBorrow, isLoading: maxBorrowValueLoading } = useMaxBorrow({
+    walletPublicKey: wallet?.publicKey,
+  });
+
+  const {
+    tabs: durationTabs,
+    value: duration,
+    setValue: setDuration,
+  } = useTabs({ tabs: DURATION_TABS, defaultValue: DURATION_TABS[0].value });
+
+  const maxBorrowValue = useMemo(() => {
+    return maxBorrow ? maxBorrow[duration] : 0;
+  }, [maxBorrow, duration]);
 
   const {
     cartOrders,
     onSelectNft,
-    isBulk,
+    // isBulk,
     currentNft,
     findOrderInCart,
     onRemoveNft,
@@ -81,7 +109,7 @@ export const BorrowManualLitePage: FC = () => {
     setSearch,
     setSortName,
     setSortOrder,
-  } = useWalletNfts();
+  } = useWalletNfts({ duration: duration as '7' | '14' | '0' });
 
   const setSearchDebounced = useDebounce((value: string) => {
     setSearch(value);
@@ -99,29 +127,29 @@ export const BorrowManualLitePage: FC = () => {
   };
 
   const { isLoading: suggestionLoading, refetch: fetchSuggestion } = useQuery(
-    ['bulkSuggestion', borrowValue],
+    ['bulkSuggestion', borrowValue, duration],
     () =>
-      fetchBulkSuggestion({
+      fetchBulkSuggestionMinimized({
         publicKey: wallet.publicKey,
         totalValue: borrowValue,
+        duration: duration as '7' | '14' | '0',
       }),
     {
       enabled: false,
       staleTime: 5 * 60 * 1000,
       refetchOnWindowFocus: false,
-      onSuccess: (bulkSuggestion) => {
-        const bestSuggestion = bulkSuggestion?.best || bulkSuggestion?.max;
-        if (!bestSuggestion) return;
+      onSuccess: (suggestion) => {
+        if (!suggestion) return;
         clearCart();
         clearCurrentNftState();
-        const cartOrders: CartOrder[] = bestSuggestion.orders.map((order) => ({
+        const cartOrders: CartOrder[] = suggestion.orders.map((order) => ({
           borrowNft: order.borrowNft,
           loanType: order.loanType,
           loanValue: order.loanValue,
           bondOrderParams:
             order.loanType === LoanType.BOND
               ? {
-                  market: bestSuggestion.markets.find(
+                  market: suggestion.markets.find(
                     ({ marketPubkey }) =>
                       marketPubkey ===
                       order?.borrowNft?.bondParams?.marketPubkey,
@@ -133,7 +161,7 @@ export const BorrowManualLitePage: FC = () => {
 
         setCartState({
           orders: cartOrders,
-          pairs: bestSuggestion?.modifiedPairs,
+          pairs: suggestion?.modifiedPairs,
         });
       },
     },
@@ -178,6 +206,8 @@ export const BorrowManualLitePage: FC = () => {
         />
       )}
 
+      <Tabs tabs={durationTabs} value={duration} setValue={setDuration} />
+
       {!!currentNft && <Sidebar />}
       <div
         className={classNames([
@@ -221,15 +251,15 @@ export const BorrowManualLitePage: FC = () => {
   );
 };
 
-type UseMaxBorrowValue = (props: { walletPublicKey?: web3.PublicKey }) => {
-  maxBorrowValue: number;
+type UseMaxBorrow = (props: { walletPublicKey?: web3.PublicKey }) => {
+  maxBorrow: MaxBorrow;
   isLoading: boolean;
 };
-const useMaxBorrowValue: UseMaxBorrowValue = ({ walletPublicKey }) => {
+const useMaxBorrow: UseMaxBorrow = ({ walletPublicKey }) => {
   const { data, isLoading } = useQuery(
-    ['maxBorrowValue', walletPublicKey?.toBase58()],
+    ['maxBorrow', walletPublicKey?.toBase58()],
     () =>
-      fetchMaxBorrowValue({
+      fetchMaxBorrowValuePro({
         publicKey: walletPublicKey,
       }),
     {
@@ -240,7 +270,7 @@ const useMaxBorrowValue: UseMaxBorrowValue = ({ walletPublicKey }) => {
   );
 
   return {
-    maxBorrowValue: data || 0,
+    maxBorrow: data,
     isLoading,
   };
 };
