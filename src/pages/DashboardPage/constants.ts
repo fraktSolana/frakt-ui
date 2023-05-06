@@ -8,6 +8,7 @@ export const DASHBOARD_TABS: Tab[] = [
   {
     label: 'Lend',
     value: 'lend',
+    disabled: true,
   },
 ];
 

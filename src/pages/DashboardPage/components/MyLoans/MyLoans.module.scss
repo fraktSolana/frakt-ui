@@ -1,34 +1,37 @@
-.block {
+.column {
   display: flex;
   flex-direction: column;
+}
+.rowCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wrapper {
+  @extend .column;
   width: 100%;
   position: relative;
+  gap: 16px;
 }
 
 .title {
   font: var(--font-subtitle);
   font-size: 40px;
-  margin-bottom: 16px;
 }
 
-.chartWrapper {
-  display: flex;
-  align-items: center;
+.content {
+  @extend .rowCenter;
   gap: 24px;
 }
 
-.poolsConainer {
-  width: 100%;
-}
-
-.loansInfoWrapper1 {
-  display: flex;
-  flex-direction: column;
+.loansInfoWrapper {
+  @extend .column;
   align-items: center;
   gap: 16px;
 }
 
-.loansInfoWrapper {
+.stats {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,11 +57,22 @@
   align-items: center;
 }
 
-.chartInfo {
-  display: flex;
-  flex-direction: column;
+.loansList {
+  @extend .column;
   gap: 8px;
   width: 100%;
+}
+.loanInfo {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.loanName {
+  font: var(--font-text-6);
+  text-transform: uppercase;
+}
+.loanValue {
+  font: var(--font-text-8);
 }
 
 .dot {
@@ -67,40 +81,7 @@
   height: 8px;
 }
 
-.rowInfo {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.rowIcon {
-  height: 24px;
-  width: 24px;
-}
-
-.name {
-  font: var(--font-text-6);
-  text-transform: uppercase;
-}
-
-.value {
-  font: var(--font-text-8);
-}
-
-.icon {
-  width: 20px;
-}
-
-.btn {
-  margin-top: 32px;
+.button {
   height: 48px;
   width: 100%;
-
-  @media screen and (max-width: 1290px) {
-    margin-top: 24px;
-  }
-
-  @media screen and (max-width: 1024px) {
-    height: 40px;
-  }
 }

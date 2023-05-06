@@ -1,9 +1,8 @@
 import { filter, sum, map } from 'lodash';
 
-import { LiquidityPool } from '@frakt/state/loans/types';
 import { Loan } from '@frakt/api/loans';
 
-export const calcLoansAmounts = (userLoans: Loan[]) => {
+export const getLoansRepayValue = (userLoans: Loan[]) => {
   const flipLoans = filter(userLoans, { loanType: 'timeBased' });
   const perpetualLoans = filter(userLoans, { loanType: 'priceBased' });
   const bondLoans = filter(userLoans, { loanType: 'bond' });
@@ -22,11 +21,10 @@ export const calcLoansAmounts = (userLoans: Loan[]) => {
   const graceLoansValue = sum(map(graceLoans, 'repayValue'));
 
   return {
-    flipRepayValue: flipRepayValue / 1e9,
-    perpetualRepayValue: perpetualRepayValue / 1e9,
-    bondRepayValue: bondRepayValue / 1e9,
-    graceLoansValue: graceLoansValue / 1e9,
-    graceLoans,
+    flipValue: (flipRepayValue / 1e9)?.toFixed(3),
+    perpetualValue: (perpetualRepayValue / 1e9)?.toFixed(3),
+    bondValue: (bondRepayValue / 1e9)?.toFixed(3),
+    graceValue: (graceLoansValue / 1e9)?.toFixed(3),
   };
 };
 
@@ -40,29 +38,4 @@ export const calcTotalLoansAmout = (userLoans: Loan[]) => {
     totalDebt: totalDebt / 1e9,
     totalLoans,
   };
-};
-
-export const getFilteredPools = (liquidityPools: LiquidityPool[]) => {
-  const perpetualPools = filter(liquidityPools, 'isPriceBased');
-  const flipPools = filter(liquidityPools, { isPriceBased: false });
-
-  return {
-    perpetualPools,
-    flipPools,
-  };
-};
-
-export const getPoolsInfoForView = (
-  perpetualPools: LiquidityPool[],
-  flipPools: LiquidityPool[],
-) => {
-  const COUNT_IMAGE_FOR_VIEW = 9;
-
-  const splicedPerpetualPools = perpetualPools.splice(0, 8);
-  const poolsImages = map(splicedPerpetualPools, 'imageUrl')?.flat();
-
-  const restFlipPoolImages =
-    flipPools[0]?.collectionsAmount - COUNT_IMAGE_FOR_VIEW;
-
-  return { poolsImages, restFlipPoolImages };
 };

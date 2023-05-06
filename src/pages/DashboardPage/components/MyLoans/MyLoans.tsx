@@ -1,14 +1,13 @@
 import { FC } from 'react';
-import { NavLink } from 'react-router-dom';
 
-import { Loan } from '@frakt/api/loans';
-import Button from '@frakt/components/Button';
+import { NavigationButton } from '@frakt/components/Button';
 import { PATHS } from '@frakt/constants';
+import { Loan } from '@frakt/api/loans';
 
-import { ChartPie, defaultColors } from './components/ChartPie';
+import { calcTotalLoansAmout, getLoansRepayValue } from './helpers';
 import { DashboardStatsValues } from '../DashboardStatsValues';
-import Block from '../Block';
-import { calcLoansAmounts, calcTotalLoansAmout } from './helpers';
+import { ChartPie } from './components/ChartPie';
+import { defaultsColors } from './constants';
 
 import styles from './MyLoans.module.scss';
 
@@ -16,34 +15,34 @@ const MyLoans: FC<{ userLoans: Loan[] }> = ({ userLoans }) => {
   const { totalBorrowed, totalDebt, totalLoans } =
     calcTotalLoansAmout(userLoans);
 
-  const {
-    flipRepayValue,
-    perpetualRepayValue,
-    bondRepayValue,
-    graceLoansValue,
-  } = calcLoansAmounts(userLoans);
+  const { flipValue, perpetualValue, bondValue, graceValue } =
+    getLoansRepayValue(userLoans);
 
   const loansInfo = [
-    { name: 'Flip', value: flipRepayValue?.toFixed(3) },
-    { name: 'Perpetual', value: perpetualRepayValue?.toFixed(3) },
-    { name: 'Bond', value: bondRepayValue?.toFixed(3) },
-    { name: 'On grace', value: graceLoansValue?.toFixed(3) },
+    { name: 'Flip', key: 'flip', value: flipValue },
+    {
+      name: 'Perpetual',
+      key: 'perpetual',
+      value: perpetualValue,
+    },
+    { name: 'Bond', key: 'bond', value: bondValue },
+    { name: 'On grace', key: 'grace', value: graceValue },
   ];
 
   return (
-    <div className={styles.block}>
+    <div className={styles.wrapper}>
       <h3 className={styles.title}>My loans</h3>
-      <div className={styles.chartWrapper}>
+      <div className={styles.content}>
         <div className={styles.chart}>
           <ChartPie
-            rawData={loansInfo}
+            data={loansInfo}
             width={192}
             label="Loans"
             value={totalLoans}
           />
         </div>
-        <div className={styles.loansInfoWrapper1}>
-          <div className={styles.loansInfoWrapper}>
+        <div className={styles.loansInfoWrapper}>
+          <div className={styles.stats}>
             <DashboardStatsValues
               label="Total borrowed"
               value={totalBorrowed}
@@ -53,14 +52,9 @@ const MyLoans: FC<{ userLoans: Loan[] }> = ({ userLoans }) => {
           <LoansAmountList data={loansInfo} />
         </div>
       </div>
-      <NavLink
-        style={{ width: '100%' }}
-        to={userLoans.length ? PATHS.LOANS : PATHS.BORROW_ROOT}
-      >
-        <Button className={styles.btn} type="secondary">
-          {userLoans.length ? 'Repay' : 'Jump to borrowing'}
-        </Button>
-      </NavLink>
+      <NavigationButton className={styles.button} path={PATHS.LOANS}>
+        Manage my loans
+      </NavigationButton>
     </div>
   );
 };
@@ -68,17 +62,17 @@ const MyLoans: FC<{ userLoans: Loan[] }> = ({ userLoans }) => {
 export default MyLoans;
 
 const LoansAmountList = ({ data }) => (
-  <div className={styles.chartInfo}>
-    {data.map(({ name, value }, idx) => (
-      <div key={idx} className={styles.row}>
-        <div className={styles.rowInfo}>
+  <div className={styles.loansList}>
+    {data.map(({ name, value, key }) => (
+      <div key={key} className={styles.row}>
+        <div className={styles.loanInfo}>
           <div
             className={styles.dot}
-            style={{ background: defaultColors[idx] }}
+            style={{ background: defaultsColors[key] }}
           />
-          <p className={styles.name}>{name}</p>
+          <p className={styles.loanName}>{name}</p>
         </div>
-        <p className={styles.value}>{value}</p>
+        <p className={styles.loanValue}>{value}</p>
       </div>
     ))}
   </div>

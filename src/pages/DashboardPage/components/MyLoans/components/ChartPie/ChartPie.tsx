@@ -1,15 +1,14 @@
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 
+import { defaultsColors } from '../../constants';
 import styles from './ChartPie.module.scss';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export const defaultColors = ['#FFC01F', '#1FAEFF', '#1FFF50', '#FF701F'];
-
 interface ChartPieProps {
-  rawData?: any[];
+  data?: any[];
   colors?: string[];
   width?: number;
   label?: string;
@@ -17,7 +16,7 @@ interface ChartPieProps {
 }
 
 export const ChartPie: FC<ChartPieProps> = ({
-  rawData,
+  data: rawData,
   colors,
   width,
   label,
@@ -29,7 +28,9 @@ export const ChartPie: FC<ChartPieProps> = ({
     datasets: [
       {
         data: rawData,
-        backgroundColor: colors?.length ? colors : defaultColors,
+        backgroundColor: colors?.length
+          ? colors
+          : Object.values(defaultsColors),
         borderWidth: 0,
       },
     ],

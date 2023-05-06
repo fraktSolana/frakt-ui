@@ -15,7 +15,7 @@ import { useFetchAllLoans } from '@frakt/pages/LoansPage/components/LoansActiveT
 
 const BorrowTab: FC = () => {
   const { connected } = useWallet();
-  const { nfts, fetchNextPage, initialLoading, setSearch } = useWalletNfts();
+  // const { nfts, fetchNextPage, initialLoading, setSearch } = useWalletNfts();
   const { marketsPreview } = useMarketsPreview();
   const { loans, isLoading } = useFetchAllLoans();
 
@@ -35,7 +35,7 @@ const NotConnectedBorrowContent = ({ data }) => (
   <div className={styles.gridContainer}>
     <AvailableBorrow />
     {data.map((nft) => (
-      <NftCard nftImage={nft.imageUrl} />
+      <NftCard key={nft?.imageUrl} nftImage={nft.imageUrl} />
     ))}
   </div>
 );
