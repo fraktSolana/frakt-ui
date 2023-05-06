@@ -23,3 +23,28 @@
 .icon {
   width: 24px;
 }
+
+.column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.column.medium {
+  align-items: flex-start;
+  flex-direction: column-reverse;
+}
+.column.medium .columnValue {
+  font-size: 32px;
+}
+
+.columnLabel {
+  font: var(--font-text-5);
+  text-transform: uppercase;
+}
+
+.columnValue {
+  font: var(--font-subtitle);
+  font-size: 40px;
+}

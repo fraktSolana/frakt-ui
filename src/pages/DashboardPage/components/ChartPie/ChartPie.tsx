@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 
-import { defaultsColors } from '../../constants';
+import { defaultsColors } from '../BorrowTab/components/MyLoans/constants';
 import styles from './ChartPie.module.scss';
 
 ChartJS.register(ArcElement, Tooltip, Legend);

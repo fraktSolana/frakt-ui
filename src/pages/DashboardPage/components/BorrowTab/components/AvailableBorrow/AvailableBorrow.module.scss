@@ -1,0 +1,16 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.button {
+  min-height: 48px;
+  width: 100%;
+}

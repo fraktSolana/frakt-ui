@@ -29,6 +29,7 @@
   @extend .column;
   align-items: center;
   gap: 16px;
+  width: 100%;
 }
 
 .stats {
@@ -36,11 +37,12 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
+  width: 100%;
 }
 
 .chart {
-  height: 192px;
-  width: 192px;
+  height: 184px;
+  width: 184px;
   margin: 0 auto;
   position: relative;
 }

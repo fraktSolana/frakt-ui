@@ -2,10 +2,13 @@ import { FC } from 'react';
 
 import { Solana } from '@frakt/icons';
 import styles from './DashboardStatsValues.module.scss';
+import classNames from 'classnames';
 
 interface DashboardStatsValuesProps {
   label: string;
   value?: number;
+  className?: string;
+  size?: 'large' | 'medium';
 }
 
 export const DashboardStatsValues: FC<DashboardStatsValuesProps> = ({
@@ -21,3 +24,21 @@ export const DashboardStatsValues: FC<DashboardStatsValuesProps> = ({
     </div>
   );
 };
+
+export const DashboardColumnValue: FC<DashboardStatsValuesProps> = ({
+  label,
+  className,
+  value,
+  size = 'large',
+}) => (
+  <div
+    className={classNames(styles.column, className, {
+      [styles.medium]: size === 'medium',
+    })}
+  >
+    <p className={styles.columnLabel}>{label}</p>
+    <p className={styles.columnValue}>
+      {value?.toFixed(2) || '--'} <Solana className={styles.icon} />
+    </p>
+  </div>
+);

@@ -11,7 +11,7 @@ interface NftCardProps {
 }
 
 const NftCard: FC<NftCardProps> = ({
-  nftImage = 'https://pbs.twimg.com/media/FuaAl7sXoAIm_jk.png',
+  nftImage = 'https://pbs.twimg.com/media/FvXzltSWcAci9aZ?format=png&name=small',
   className,
 }) => {
   const { connected } = useWallet();

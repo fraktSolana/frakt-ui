@@ -1,9 +1,0 @@
-.block {
-  background: var(--primary-background);
-  border: 1px solid var(--secondary-text);
-  padding: 32px;
-
-  @media screen and (max-width: 1290px) {
-    padding: 24px;
-  }
-}
