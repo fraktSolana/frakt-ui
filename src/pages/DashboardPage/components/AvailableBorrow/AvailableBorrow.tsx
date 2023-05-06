@@ -13,12 +13,15 @@ const AvailableBorrow: FC = () => {
 
   return (
     <div className={styles.wrapper}>
-      <h3 className={styles.title}>Available to borrow</h3>
+      {/* <h3 className={styles.title}>Available to borrow</h3> */}
       {connected && (
         <StatsValue label="You can borrow" value={maxBorrowValue} />
       )}
+
       {!connected && <StatsValue label="Collections whitelisted" value={198} />}
-      <Button type="secondary">Connect wallet to borrow SOL</Button>
+      <Button className={styles.button} type="secondary">
+        Connect wallet to borrow SOL
+      </Button>
     </div>
   );
 };

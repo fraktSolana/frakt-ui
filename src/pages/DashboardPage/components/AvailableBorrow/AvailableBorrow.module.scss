@@ -1,12 +1,14 @@
 .column {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  width: 100%;
 }
 
 .wrapper {
-  @extend .column;
-  padding: 0 0 16px 16px;
+  display: flex;
+  flex-direction: column;
 }
 
 .title,
@@ -18,4 +20,9 @@
 .label {
   font: var(--font-text-5);
   text-transform: uppercase;
+}
+
+.button {
+  height: 48px;
+  width: 100%;
 }

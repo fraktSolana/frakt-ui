@@ -1,22 +1,26 @@
 import { FC } from 'react';
 
-import { useWalletNfts } from '@frakt/pages/BorrowPages/BorrowManualPage/hooks';
 import InfinityScroll from '@frakt/components/InfinityScroll';
-
+import { BorrowNft } from '@frakt/api/nft';
 import NftCard from '../NftCard';
+
 import styles from './NFTsList.module.scss';
 
-const NFTsList: FC = () => {
-  const { nfts, fetchNextPage, initialLoading, setSearch } = useWalletNfts();
+interface NFTsListProps {
+  isLoading?: boolean;
+  fetchNextPage?: () => void;
+  nfts: any[];
+}
 
+const NFTsList: FC<NFTsListProps> = ({ isLoading, fetchNextPage, nfts }) => {
   return (
     <InfinityScroll
       itemsToShow={nfts.length}
       next={fetchNextPage}
       wrapperClassName={styles.nftsList}
-      isLoading={initialLoading}
+      isLoading={isLoading}
     >
-      {nfts.map((nft) => (
+      {nfts.map((nft: BorrowNft) => (
         <NftCard nftImage={nft.imageUrl} />
       ))}
     </InfinityScroll>

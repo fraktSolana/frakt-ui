@@ -1,13 +1,29 @@
-.wrapper1 {
+.wrapper {
   display: flex;
   flex-direction: column;
 }
-.wrapper {
-  display: flex;
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+}
+.gridContainer div:nth-child(1) {
+  grid-column: 4 / 7;
+  grid-row: 1;
 }
 
-.container {
-  width: 550px;
-  height: 270px;
-  background-color: #fef234;
+.flexContainer {
+  display: flex;
+  width: 100%;
+  gap: 32px;
+
+  & > div {
+    width: 100%;
+  }
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
 }

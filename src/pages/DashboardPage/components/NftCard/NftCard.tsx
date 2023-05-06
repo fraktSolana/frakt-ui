@@ -7,14 +7,16 @@ import Button from '@frakt/components/Button';
 
 interface NftCardProps {
   nftImage?: string;
+  className?: string;
 }
 
 const NftCard: FC<NftCardProps> = ({
   nftImage = 'https://pbs.twimg.com/media/FuaAl7sXoAIm_jk.png',
+  className,
 }) => {
   const { connected } = useWallet();
   return (
-    <div className={styles.card}>
+    <div className={classNames(styles.card, className)}>
       <img src={nftImage} className={styles.nftImage} />
       <div
         className={classNames(styles.nftInfo, {
