@@ -4,9 +4,9 @@ import { AppLayout } from '@frakt/components/Layout/AppLayout';
 import { Tabs, useTabs } from '@frakt/components/Tabs';
 
 import { DASHBOARD_TABS, DashboardTabsNames } from './constants';
+import BorrowTab from './components/BorrowTab';
 
 import styles from './DashboardPage.module.scss';
-import BorrowTab from './components/BorrowTab';
 
 const DashboardPage: FC = () => {
   const {

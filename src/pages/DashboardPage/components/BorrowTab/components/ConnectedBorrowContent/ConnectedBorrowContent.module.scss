@@ -1,0 +1,22 @@
+.container {
+  display: flex;
+  width: 100%;
+  gap: 32px;
+
+  & > div {
+    overflow: auto;
+    max-height: 683px;
+    width: 100%;
+  }
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}

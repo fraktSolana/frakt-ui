@@ -4,6 +4,10 @@
   display: flex;
   flex-direction: column;
   position: relative;
+
+  &:hover {
+    border: 1px solid var(--secondary-border);
+  }
 }
 .card:hover .connectedBadge {
   background-color: var(--light-green-hover);
@@ -17,7 +21,7 @@
   position: relative;
 }
 
-.nftInfo.connected {
+.nftInfo.primary {
   padding-top: 40px;
 }
 

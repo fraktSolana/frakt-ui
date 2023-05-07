@@ -2,14 +2,14 @@ import { FC } from 'react';
 
 import InfinityScroll from '@frakt/components/InfinityScroll';
 import { BorrowNft } from '@frakt/api/nft';
-import NftCard from '../NftCard';
+import NftCard from '../NFTCard';
 
 import styles from './NFTsList.module.scss';
 
 interface NFTsListProps {
   isLoading?: boolean;
   fetchNextPage?: () => void;
-  nfts: any[];
+  nfts: BorrowNft[];
 }
 
 const NFTsList: FC<NFTsListProps> = ({ isLoading, fetchNextPage, nfts }) => {
@@ -21,7 +21,7 @@ const NFTsList: FC<NFTsListProps> = ({ isLoading, fetchNextPage, nfts }) => {
       isLoading={isLoading}
     >
       {nfts.map((nft: BorrowNft) => (
-        <NftCard nftImage={nft.imageUrl} />
+        <NftCard nftImage={nft.imageUrl} maxLoanValue={nft?.maxLoanValue} />
       ))}
     </InfinityScroll>
   );

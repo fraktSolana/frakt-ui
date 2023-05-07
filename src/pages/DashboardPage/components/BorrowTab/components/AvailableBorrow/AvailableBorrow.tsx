@@ -16,6 +16,7 @@ const AvailableBorrow: FC = () => {
 
   return (
     <div className={styles.wrapper}>
+      <h3 className={styles.title}>Available to borrow</h3>
       <div className={styles.stats}>
         <DashboardColumnValue label="Collections whitelisted" value={198} />
         <DashboardColumnValue label="Total liquidity" value={198} />

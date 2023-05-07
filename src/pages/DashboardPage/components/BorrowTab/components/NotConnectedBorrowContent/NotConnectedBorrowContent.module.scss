@@ -1,0 +1,28 @@
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+}
+.gridContainer div:nth-child(3) {
+  grid-column: 4 / 7;
+  grid-row: 2;
+}
+.gridContainer div:nth-child(1) {
+  grid-column: 1 / 4;
+  grid-row: 1;
+}
+.gridContainer div:nth-child(2) {
+  grid-column: 4 / 7;
+  grid-row: 1;
+}
+
+.mobileContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.title {
+  font: var(--font-subtitle);
+  font-size: 40px;
+}
