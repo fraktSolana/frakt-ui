@@ -4,11 +4,8 @@ import { NavigationButton } from '@frakt/components/Button';
 import { PATHS } from '@frakt/constants';
 import { Loan } from '@frakt/api/loans';
 
+import { DashboardColumnValue } from '../../../DashboardStatsValues';
 import { calcTotalLoansAmout, getLoansRepayValue } from './helpers';
-import {
-  DashboardColumnValue,
-  DashboardStatsValues,
-} from '../../../DashboardStatsValues';
 import { ChartPie } from '../../../ChartPie';
 import { defaultsColors } from './constants';
 

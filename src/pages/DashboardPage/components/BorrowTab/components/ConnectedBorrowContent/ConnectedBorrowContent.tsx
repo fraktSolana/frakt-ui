@@ -10,18 +10,13 @@ import BorrowInfo from '../BorrowInfo';
 import MyLoans from '../MyLoans';
 
 import styles from './ConnectedBorrowContent.module.scss';
-import { parseNft } from './helpers';
+import { useConnectedBorrowContent } from './hooks';
 
 const ConnectedBorrowContent: FC = () => {
-  const {
-    nfts: rawNFTs,
-    fetchNextPage,
-    initialLoading,
-    setSearch,
-  } = useWalletNfts();
+  const { nfts, fetchNextPage, initialLoading, setSearch } = useWalletNfts();
   const { loans } = useFetchAllLoans();
-
-  const nfts = parseNft(rawNFTs);
+  console.log(nfts);
+  const { setCurrentNft, onSubmit } = useConnectedBorrowContent();
 
   const setSearchDebounced = useDebounce((value: string) => {
     setSearch(value);
@@ -36,6 +31,7 @@ const ConnectedBorrowContent: FC = () => {
             nfts={nfts}
             fetchNextPage={fetchNextPage}
             isLoading={initialLoading}
+            onClick={onSubmit}
           />
         </div>
       </div>

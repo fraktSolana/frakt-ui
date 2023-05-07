@@ -11,9 +11,15 @@ interface NFTsListProps {
   isLoading?: boolean;
   fetchNextPage?: () => void;
   nfts: any[];
+  onClick: (nft: any) => any;
 }
 
-const NFTsList: FC<NFTsListProps> = ({ isLoading, fetchNextPage, nfts }) => {
+const NFTsList: FC<NFTsListProps> = ({
+  isLoading,
+  fetchNextPage,
+  nfts,
+  onClick,
+}) => {
   return (
     <InfinityScroll
       itemsToShow={nfts.length}
@@ -22,7 +28,7 @@ const NFTsList: FC<NFTsListProps> = ({ isLoading, fetchNextPage, nfts }) => {
       isLoading={isLoading}
     >
       {nfts.map((nft: any) => (
-        <NftCard {...nft} />
+        <NftCard onClick={() => onClick(nft)} {...nft} />
       ))}
     </InfinityScroll>
   );

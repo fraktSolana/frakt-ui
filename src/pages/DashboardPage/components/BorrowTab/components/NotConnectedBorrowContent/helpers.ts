@@ -5,8 +5,8 @@ export const parseMarketsPreview = (markets: MarketPreview[]) => {
     return {
       nftName: market.collectionName,
       pubkey: market.marketPubkey,
-      nftImage: market?.collectionImage,
-      maxLoanValue: (market?.bestOffer / 1e9)?.toFixed(0),
+      imageUrl: market?.collectionImage,
+      maxLoanValue: market?.bestOffer,
       duration: market?.duration[0],
       fee: 1,
     };

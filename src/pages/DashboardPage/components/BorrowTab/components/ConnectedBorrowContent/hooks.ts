@@ -21,7 +21,7 @@ import { captureSentryError } from '@frakt/utils/sentry';
 import { useEffect, useState } from 'react';
 import { BorrowNft } from '@frakt/api/nft';
 
-const useConnectedBorrowContent = () => {
+export const useConnectedBorrowContent = () => {
   const { wallet } = useWallet();
   const { connection } = useConnection();
 
@@ -31,8 +31,10 @@ const useConnectedBorrowContent = () => {
     useState<BondOrderParams>(null);
 
   const { market, pairs } = useMarketAndPairs(
-    currentNft?.bondParams.marketPubkey,
+    currentNft?.bondParams?.marketPubkey,
   );
+
+  console.log(currentBondOrderParams);
 
   useEffect(() => {
     if (market) {
@@ -46,6 +48,8 @@ const useConnectedBorrowContent = () => {
           }),
         ),
       });
+
+      console.log(market);
 
       const bondOrderParams: BondOrderParams = {
         market,
@@ -65,10 +69,17 @@ const useConnectedBorrowContent = () => {
     } else {
       setCurrentBondOrderParams(null);
     }
-  }, [market, pairs, setCurrentBondOrderParams]);
+  }, [market, pairs, currentNft, setCurrentBondOrderParams]);
 
-  const onSubmit = async () => {
+  const onSubmit = async (nft: BorrowNft) => {
     try {
+      console.log({
+        mint: currentNft?.mint,
+        bondOrderParams: currentBondOrderParams?.orderParams,
+        market,
+        wallet,
+        connection,
+      });
       const result = await borrowSingle({
         mint: currentNft?.mint,
         bondOrderParams: currentBondOrderParams?.orderParams,
