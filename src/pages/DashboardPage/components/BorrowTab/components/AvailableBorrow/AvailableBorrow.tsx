@@ -11,7 +11,7 @@ import styles from './AvailableBorrow.module.scss';
 const AvailableBorrow: FC = () => {
   const dispatch = useDispatch();
 
-  const onOpenConnectWalleModal = () =>
+  const openConnectWalleModal = () =>
     dispatch(commonActions.setWalletModal({ isVisible: true }));
 
   return (
@@ -23,7 +23,7 @@ const AvailableBorrow: FC = () => {
       </div>
 
       <Button
-        onClick={onOpenConnectWalleModal}
+        onClick={openConnectWalleModal}
         className={styles.button}
         type="secondary"
       >

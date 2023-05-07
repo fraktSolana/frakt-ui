@@ -162,7 +162,7 @@ export const useBorrow = () => {
   };
 };
 
-const useMarketAndPairs = (marketPubkey: string | null) => {
+export const useMarketAndPairs = (marketPubkey: string | null) => {
   const { pairs: cartPairs } = useCartState();
 
   const { pairs: rawPairs, isLoading: isLoadingPairs } = useMarketPairs({

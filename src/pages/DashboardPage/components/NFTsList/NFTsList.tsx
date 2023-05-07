@@ -5,11 +5,12 @@ import { BorrowNft } from '@frakt/api/nft';
 import NftCard from '../NFTCard';
 
 import styles from './NFTsList.module.scss';
+import classNames from 'classnames';
 
 interface NFTsListProps {
   isLoading?: boolean;
   fetchNextPage?: () => void;
-  nfts: BorrowNft[];
+  nfts: any[];
 }
 
 const NFTsList: FC<NFTsListProps> = ({ isLoading, fetchNextPage, nfts }) => {
@@ -20,8 +21,8 @@ const NFTsList: FC<NFTsListProps> = ({ isLoading, fetchNextPage, nfts }) => {
       wrapperClassName={styles.nftsList}
       isLoading={isLoading}
     >
-      {nfts.map((nft: BorrowNft) => (
-        <NftCard nftImage={nft.imageUrl} maxLoanValue={nft?.maxLoanValue} />
+      {nfts.map((nft: any) => (
+        <NftCard {...nft} />
       ))}
     </InfinityScroll>
   );

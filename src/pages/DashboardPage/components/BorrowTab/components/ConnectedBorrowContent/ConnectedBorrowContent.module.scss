@@ -4,7 +4,6 @@
   gap: 32px;
 
   & > div {
-    overflow: auto;
     max-height: 683px;
     width: 100%;
   }
@@ -19,4 +18,8 @@
   display: flex;
   flex-direction: column;
   gap: 32px;
+}
+
+.nftList {
+  overflow: auto;
 }

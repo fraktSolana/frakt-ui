@@ -9,8 +9,8 @@ import styles from './NFTCard.module.scss';
 interface NftCardProps {
   nftImage: string;
   className?: string;
-  maxLoanValue?: string;
-  duration?: number;
+  maxLoanValue: string;
+  duration: number;
   fee: number;
 }
 

@@ -10,10 +10,18 @@ import BorrowInfo from '../BorrowInfo';
 import MyLoans from '../MyLoans';
 
 import styles from './ConnectedBorrowContent.module.scss';
+import { parseNft } from './helpers';
 
 const ConnectedBorrowContent: FC = () => {
-  const { nfts, fetchNextPage, initialLoading, setSearch } = useWalletNfts();
+  const {
+    nfts: rawNFTs,
+    fetchNextPage,
+    initialLoading,
+    setSearch,
+  } = useWalletNfts();
   const { loans } = useFetchAllLoans();
+
+  const nfts = parseNft(rawNFTs);
 
   const setSearchDebounced = useDebounce((value: string) => {
     setSearch(value);
@@ -23,11 +31,13 @@ const ConnectedBorrowContent: FC = () => {
     <div className={styles.container}>
       <div className={styles.column}>
         <SearchHeading title="Click to borrow" onChange={setSearchDebounced} />
-        <NFTsList
-          nfts={nfts}
-          fetchNextPage={fetchNextPage}
-          isLoading={initialLoading}
-        />
+        <div className={styles.nftList}>
+          <NFTsList
+            nfts={nfts}
+            fetchNextPage={fetchNextPage}
+            isLoading={initialLoading}
+          />
+        </div>
       </div>
       <div className={styles.content}>
         <BorrowInfo />
