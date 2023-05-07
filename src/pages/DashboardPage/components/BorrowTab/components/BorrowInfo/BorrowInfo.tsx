@@ -18,7 +18,12 @@ const BorrowInfo: FC = () => {
       <h3 className={styles.title}>Borrow in bulk</h3>
       <div className={styles.stats}>
         <DashboardColumnValue label="Borrow up to" value={maxBorrowValue} />
-        <DashboardColumnValue label="From your" value={567} />
+        <DashboardColumnValue label="From your">
+          <span className={styles.value}>
+            567
+            <p>nfts</p>
+          </span>
+        </DashboardColumnValue>
       </div>
       <NavigationButton
         path={PATHS.BORROW_ROOT}

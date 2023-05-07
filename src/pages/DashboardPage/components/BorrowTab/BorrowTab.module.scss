@@ -1,6 +1,5 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  overflow: auto;
-  height: 550px;
+  max-height: 550px;
 }

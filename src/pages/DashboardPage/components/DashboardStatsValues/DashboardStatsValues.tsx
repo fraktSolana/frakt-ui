@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, PropsWithChildren } from 'react';
 
 import { Solana } from '@frakt/icons';
 import styles from './DashboardStatsValues.module.scss';
@@ -25,20 +25,20 @@ export const DashboardStatsValues: FC<DashboardStatsValuesProps> = ({
   );
 };
 
-export const DashboardColumnValue: FC<DashboardStatsValuesProps> = ({
-  label,
-  className,
-  value,
-  size = 'large',
-}) => (
+export const DashboardColumnValue: FC<
+  PropsWithChildren<DashboardStatsValuesProps>
+> = ({ label, className, value, children, size = 'large' }) => (
   <div
     className={classNames(styles.column, className, {
       [styles.medium]: size === 'medium',
     })}
   >
     <p className={styles.columnLabel}>{label}</p>
-    <p className={styles.columnValue}>
-      {value?.toFixed(2) || '--'} <Solana className={styles.icon} />
-    </p>
+    {children && children}
+    {!children && (
+      <p className={styles.columnValue}>
+        {value?.toFixed(2) || '--'} <Solana className={styles.icon} />
+      </p>
+    )}
   </div>
 );

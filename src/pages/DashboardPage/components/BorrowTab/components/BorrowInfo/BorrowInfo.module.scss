@@ -27,6 +27,19 @@
   padding: 50px 0;
 }
 
+.value {
+  display: flex;
+  align-items: baseline;
+  color: var(--secondary-text);
+  font: var(--font-subtitle);
+
+  p {
+    color: var(--primary-text);
+    font: var(--font-text-5);
+    text-transform: uppercase;
+  }
+}
+
 .button {
   height: 48px;
   width: 100%;

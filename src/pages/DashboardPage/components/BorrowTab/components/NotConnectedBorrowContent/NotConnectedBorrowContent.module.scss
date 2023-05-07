@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 16px;
+  overflow: auto;
 }
 .gridContainer div:nth-child(3) {
   grid-column: 4 / 7;
