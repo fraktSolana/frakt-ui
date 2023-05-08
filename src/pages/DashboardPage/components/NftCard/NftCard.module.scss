@@ -3,9 +3,11 @@
   display: flex;
   flex-direction: column;
   position: relative;
+  pointer-events: none;
 }
 .card.clicable {
   cursor: pointer;
+  pointer-events: unset;
   &:hover {
     border: 1px solid var(--secondary-border);
   }

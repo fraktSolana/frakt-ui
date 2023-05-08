@@ -1,13 +1,11 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import classNames from 'classnames';
 
-import { useMarketsPreview } from '@frakt/pages/MarketsPage/hooks';
-import { useDebounce, useWindowSize } from '@frakt/hooks';
+import { NFT } from '@frakt/pages/DashboardPage/types';
 import { Loader } from '@frakt/components/Loader';
-import { TABLET_SIZE } from '@frakt/constants';
 
+import { useNotConnectedBorrowContent } from './hooks';
 import AvailableBorrow from '../AvailableBorrow';
-import { parseMarketsPreview } from './helpers';
 import NFTsList from '../../../NFTsList';
 import NFTCard from '../../../NFTCard';
 import { Search } from '../Search';
@@ -15,49 +13,48 @@ import { Search } from '../Search';
 import styles from './NotConnectedBorrowContent.module.scss';
 
 const NotConnectedBorrowContent: FC = () => {
-  const { marketsPreview, isLoading } = useMarketsPreview();
+  const { isLoading, collections, isMobile, setSearch } =
+    useNotConnectedBorrowContent();
 
-  const [search, setSearch] = useState('');
-
-  const { width } = useWindowSize();
-  const isMobile = width <= TABLET_SIZE;
-
-  const collections = parseMarketsPreview(marketsPreview);
-
-  const setSearchDebounced = useDebounce((value: string) => {
-    setSearch(value);
-  }, 300);
-
-  const filteredCollections = collections.filter(({ name }) => {
-    return name.toUpperCase().includes(search.toUpperCase());
-  });
-
-  if (isLoading && !filteredCollections?.length) return <Loader />;
+  if (isLoading) return <Loader />;
 
   return (
     <div className={classNames(styles.wrapper, { [styles.mobile]: isMobile })}>
       {isMobile ? (
-        <div className={styles.mobileContainer}>
-          <AvailableBorrow />
-          <Search title="1 click loan" onChange={setSearchDebounced} />
-          <NFTsList nfts={filteredCollections} />
-        </div>
+        <MobileContentView collections={collections} setSearch={setSearch} />
       ) : (
-        <div className={styles.gridContainer}>
-          <Search
-            className={styles.search}
-            title="1 click loan"
-            onChange={setSearchDebounced}
-          />
-          <div className={styles.title}>Available to borrow</div>
-          <AvailableBorrow />
-          {filteredCollections.map((nft) => (
-            <NFTCard key={nft.image} {...nft} />
-          ))}
-        </div>
+        <DesktopContentView collections={collections} setSearch={setSearch} />
       )}
     </div>
   );
 };
 
 export default NotConnectedBorrowContent;
+
+interface ContentViewProps {
+  collections: NFT[];
+  setSearch: (value?: string) => void;
+}
+
+const MobileContentView = ({ collections, setSearch }: ContentViewProps) => (
+  <div className={styles.mobileContainer}>
+    <AvailableBorrow />
+    <Search title="1 click loan" onChange={setSearch} />
+    <NFTsList className={styles.nftsList} nfts={collections} />
+  </div>
+);
+
+const DesktopContentView = ({ collections, setSearch }: ContentViewProps) => (
+  <div className={styles.gridContainer}>
+    <Search
+      className={styles.search}
+      title="1 click loan"
+      onChange={setSearch}
+    />
+    <div className={styles.title}>Available to borrow</div>
+    <AvailableBorrow />
+    {collections.map((nft) => (
+      <NFTCard key={nft.image} {...nft} />
+    ))}
+  </div>
+);

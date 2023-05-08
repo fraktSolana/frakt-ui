@@ -1,6 +1,14 @@
-.wrapper {
+@mixin flex-column {
   display: flex;
   flex-direction: column;
+}
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+}
+
+.wrapper {
+  @include flex-column;
   width: 100%;
   position: relative;
 }
@@ -14,31 +22,27 @@
 }
 
 .content {
-  display: flex;
-  align-items: center;
+  @include flex-center;
   justify-content: center;
   gap: 24px;
-
-  @media (max-width: 960px) {
-    gap: 16px;
-  }
 }
 
 .loansInfoWrapper {
-  display: flex;
-  flex-direction: column;
+  @include flex-column;
   align-items: center;
   gap: 16px;
   width: 100%;
+
+  @media (max-width: 960px) {
+    max-width: 280px;
+  }
 }
 
 .stats {
-  display: flex;
-  align-items: center;
+  @include flex-center;
   justify-content: center;
   gap: 16px;
   width: 100%;
-  margin-top: 8px;
 }
 
 .row {
@@ -48,14 +52,12 @@
 }
 
 .loansList {
-  display: flex;
-  flex-direction: column;
+  @include flex-column;
   gap: 5px;
   width: 100%;
 }
 .loanInfo {
-  display: flex;
-  align-items: center;
+  @include flex-center;
   gap: 4px;
 }
 .loanName {

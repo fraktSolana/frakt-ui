@@ -1,43 +1,45 @@
+$contentHeight: 582px;
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
 .container {
   display: flex;
   padding: 32px;
   gap: 32px;
-  height: 582px;
+  height: $contentHeight;
   width: 100%;
-
-  & > div {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    width: 100%;
-  }
 
   @media (max-width: 1240px) {
     gap: 24px;
   }
 
   @media (max-width: 960px) {
-    flex-direction: column-reverse;
+    @include flex-column;
+    padding: 24px;
     height: 100%;
   }
 }
 
 .searchableList {
-  display: flex;
-  flex-direction: column;
+  @include flex-column;
+  gap: 16px;
+  width: 100%;
 
   @media (max-width: 1240px) {
-    width: 35% !important;
+    width: 35%;
   }
 
   @media (max-width: 960px) {
-    width: 100% !important;
+    width: unset;
   }
 }
 
 .search {
   @media (max-width: 1240px) {
-    flex-direction: column;
+    @include flex-column;
     align-items: flex-start !important;
   }
 
@@ -47,17 +49,22 @@
 }
 
 .content {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
+  @include flex-column;
+  gap: 24px;
+  width: 100%;
 
   @media (max-width: 1240px) {
-    width: 65% !important;
+    width: 65%;
   }
 
   @media (max-width: 960px) {
-    flex-direction: row !important;
-    width: 100% !important;
+    width: unset;
+    position: fixed;
+    bottom: 0;
+    background: var(--primary-background);
+    left: 0;
+    right: 0;
+    padding: 24px;
   }
 }
 
