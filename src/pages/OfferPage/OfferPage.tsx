@@ -98,7 +98,7 @@ export const OfferPage = () => {
             <>
               <SliderGradient value={ltv} setValue={onLtvChange} />
               <TokenField
-                value={parseFloat(maxLoanValue) ? maxLoanValue : ''}
+                value={maxLoanValue}
                 onValueChange={onMaxLoanValueChange}
                 label="Max limit"
                 placeholder="0"
