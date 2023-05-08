@@ -74,8 +74,8 @@ export const NAVIGATION_LINKS = [
     fillIcon: true,
   },
   {
-    pathname: PATHS.BORROW_SELECT,
-    to: PATHS.BORROW_SELECT,
+    pathname: PATHS.BORROW_LITE,
+    to: PATHS.BORROW_LITE,
     label: 'Borrow',
     event: 'navigation-borrow',
     icon: Borrow,

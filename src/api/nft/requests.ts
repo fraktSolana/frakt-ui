@@ -77,11 +77,11 @@ type FetchBulkSuggestionMinimized = (props: {
 
 export const fetchBulkSuggestionMinimized: FetchBulkSuggestionMinimized =
   async ({ publicKey, totalValue, duration = '7' }) => {
-    const { data } = await axios.get<{ best: Suggestion }>(
+    const { data } = await axios.get<{ best?: Suggestion; max?: Suggestion }>(
       `https://${BACKEND_DOMAIN}/nft/suggest-minimized/${publicKey?.toBase58()}?solAmount=${totalValue}&duration=${duration}&isPrivate=${IS_PRIVATE_MARKETS}`,
     );
 
-    return data?.best ?? null;
+    return data?.best ?? data?.max ?? null;
   };
 
 type FetchMaxBorrowValue = (props: {

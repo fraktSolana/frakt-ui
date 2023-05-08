@@ -1,4 +1,5 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { groupBy, map } from 'lodash';
 import classNames from 'classnames';
 
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
@@ -19,8 +20,10 @@ import { useMaxBorrow, useWalletNfts } from './hooks';
 import { NftCard } from './components/NftCard';
 import styles from './BorrowManualLitePage.module.scss';
 import { Sidebar } from './components/Sidebar';
-import { CartOrder, useBorrow } from '../cartState';
+import { CartOrder, calcTotalBorrowValue, useBorrow } from '../cartState';
 import { BulkForm } from './components/BulkForm';
+
+import { patchPairByBondOrders } from '../cartState/useCartState';
 
 export const BorrowManualLitePage: FC = () => {
   const wallet = useWallet();
@@ -46,20 +49,19 @@ export const BorrowManualLitePage: FC = () => {
   }, [maxBorrow, duration]);
 
   const {
-    cartOrders,
     onSelectNft,
-    // isBulk,
     currentNft,
+    currentLoanValue,
     findOrderInCart,
     onRemoveNft,
     clearCart,
     clearCurrentNftState,
     setCartState,
-    setCurrentNftFromOrder,
     totalBorrowValue,
+    setCurrentNftState,
   } = useBorrow();
 
-  const [suggestionRequested, setSuggestionRequested] =
+  const [isSuggestionRequested, setIsSuggestionRequested] =
     useState<boolean>(false);
 
   const [borrowValue, setBorrowValue] = useState<string>('');
@@ -93,12 +95,6 @@ export const BorrowManualLitePage: FC = () => {
     [maxBorrowValue],
   );
 
-  //TODO: Fix leak
-  // useEffect(() => {
-  //   totalBorrowValue &&
-  //     onBorrowValueChange((totalBorrowValue / 1e9).toFixed(2));
-  // }, [totalBorrowValue, onBorrowValueChange]);
-
   const {
     nfts,
     fetchNextPage,
@@ -123,22 +119,23 @@ export const BorrowManualLitePage: FC = () => {
     onSelectNft(nft);
   };
 
-  const { isLoading: suggestionLoading, refetch: fetchSuggestion } = useQuery(
+  const { isFetching: suggestionFetching, refetch: fetchSuggestion } = useQuery(
     ['bulkSuggestion', borrowValue, duration],
-    () =>
-      fetchBulkSuggestionMinimized({
+    () => {
+      return fetchBulkSuggestionMinimized({
         publicKey: wallet.publicKey,
         totalValue: borrowValue,
         duration: duration as LoanDuration,
-      }),
+      });
+    },
     {
       enabled: false,
       staleTime: 5 * 60 * 1000,
       refetchOnWindowFocus: false,
       onSuccess: (suggestion) => {
         if (!suggestion) return;
-        clearCart();
         clearCurrentNftState();
+        clearCart();
         const cartOrders: CartOrder[] = suggestion.orders.map((order) => ({
           borrowNft: order.borrowNft,
           loanType: order.loanType,
@@ -156,36 +153,81 @@ export const BorrowManualLitePage: FC = () => {
               : null,
         }));
 
-        setCartState({
-          orders: cartOrders,
-          pairs: suggestion?.modifiedPairs,
+        const totalBorrowVlaue = calcTotalBorrowValue({ cartOrders });
+        onBorrowValueChange((totalBorrowVlaue / 1e9).toFixed(2));
+
+        const currentOrder = cartOrders[0];
+        if (!currentOrder) return;
+
+        setCurrentNftState({
+          nft: currentOrder.borrowNft,
+          loanType: currentOrder.loanType,
+          loanValue: currentOrder.loanValue,
+          bondOrderParams: currentOrder.bondOrderParams,
         });
+
+        if (currentOrder.loanType !== LoanType.BOND) {
+          setCartState({
+            orders: cartOrders.filter(
+              ({ borrowNft }) => borrowNft.mint !== currentOrder.borrowNft.mint,
+            ),
+            pairs: suggestion?.modifiedPairs,
+          });
+        } else {
+          const { orderParams: bondOrders } = currentOrder.bondOrderParams;
+
+          const bondOrdersByPair = groupBy(
+            bondOrders,
+            ({ pairPubkey }) => pairPubkey,
+          );
+
+          const affectedPairs = suggestion?.modifiedPairs.filter(
+            ({ publicKey }) =>
+              Object.keys(bondOrdersByPair).includes(publicKey),
+          );
+
+          const patchedPairs = map(affectedPairs, (pair) =>
+            patchPairByBondOrders({
+              pair,
+              bondOrders: bondOrdersByPair[pair.publicKey],
+              reverse: true,
+            }),
+          );
+
+          setCartState({
+            orders: cartOrders.filter(
+              ({ borrowNft }) => borrowNft.mint !== currentOrder.borrowNft.mint,
+            ),
+            pairs: patchedPairs,
+          });
+        }
+
+        setIsSuggestionRequested(false);
       },
     },
   );
 
-  const debouncedRefetch = useDebounce(() => {
-    setSuggestionRequested(true);
-    fetchSuggestion();
-  }, 300);
-
   useEffect(() => {
-    if (parseFloat(borrowValue)) {
-      debouncedRefetch();
-    }
-  }, [borrowValue, debouncedRefetch]);
-
-  useEffect(() => {
-    if (suggestionRequested && cartOrders.length && !suggestionLoading) {
-      setCurrentNftFromOrder(cartOrders[0]?.borrowNft?.mint);
-      setSuggestionRequested(false);
-    }
+    !isSuggestionRequested &&
+      !suggestionFetching &&
+      onBorrowValueChange((totalBorrowValue / 1e9).toFixed(2));
   }, [
-    cartOrders,
-    suggestionRequested,
-    setCurrentNftFromOrder,
-    suggestionLoading,
+    totalBorrowValue,
+    currentLoanValue,
+    onBorrowValueChange,
+    isSuggestionRequested,
+    suggestionFetching,
   ]);
+
+  useEffect(() => {
+    if (isSuggestionRequested) {
+      fetchSuggestion();
+    }
+  }, [isSuggestionRequested, fetchSuggestion, clearCart, clearCurrentNftState]);
+
+  useEffect(() => {
+    onBorrowValueChange((totalBorrowValue / 1e9).toFixed(2));
+  }, [totalBorrowValue, onBorrowValueChange]);
 
   const isNotEnoughBalanceError =
     parseFloat(borrowValue) > parseFloat(maxBorrowValue.toFixed(2));
@@ -200,6 +242,12 @@ export const BorrowManualLitePage: FC = () => {
           onBorrowPercentChange={onBorrowPercentChange}
           maxBorrowValue={maxBorrowValue}
           isNotEnoughBalanceError={isNotEnoughBalanceError}
+          onAfterChange={() => {
+            if (isSuggestionRequested) {
+              fetchSuggestion({ cancelRefetch: true });
+            }
+            setIsSuggestionRequested(true);
+          }}
         />
       )}
 

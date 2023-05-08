@@ -77,7 +77,7 @@ export const routes: Route[] = [
   },
   {
     exact: true,
-    path: PATHS.BORROW_SELECT,
+    path: PATHS.BORROW_LITE,
     component: BorrowManualLitePage,
   },
   {

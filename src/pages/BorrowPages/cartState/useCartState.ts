@@ -214,7 +214,7 @@ type PatchPairByBondOrders = (props: {
   bondOrders: BondCartOrder[];
   reverse?: boolean;
 }) => Pair;
-const patchPairByBondOrders: PatchPairByBondOrders = ({
+export const patchPairByBondOrders: PatchPairByBondOrders = ({
   pair,
   bondOrders,
   reverse,

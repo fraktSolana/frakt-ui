@@ -47,7 +47,7 @@ export const useBorrowBulkOverviewPage = () => {
   //? Go to borrow root page if bulk selection doesn't exist
   useEffect(() => {
     if (history && !cartOrders.length) {
-      history.replace(PATHS.BORROW_SELECT);
+      history.replace(PATHS.BORROW_LITE);
     }
   }, [history, cartOrders]);
 
@@ -90,7 +90,7 @@ export const useBorrowBulkOverviewPage = () => {
     } else {
       setCurrentNftFromOrder(cartOrders[0]?.borrowNft?.mint);
     }
-    history.push(PATHS.BORROW_SELECT);
+    history.push(PATHS.BORROW_LITE);
   };
 
   return {
