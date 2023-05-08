@@ -9,12 +9,19 @@ import { useConnectedBorrowContent } from './hooks';
 import { SearchHeading } from '../SearchableList';
 import NFTsList from '../../../NFTsList';
 import BorrowInfo from '../BorrowInfo';
+import { parseNFTs } from './helpers';
 import MyLoans from '../MyLoans';
 
 import styles from './ConnectedBorrowContent.module.scss';
 
 const ConnectedBorrowContent: FC = () => {
-  const { nfts, fetchNextPage, initialLoading, setSearch } = useWalletNfts();
+  const {
+    nfts: rawNfts,
+    fetchNextPage,
+    initialLoading,
+    setSearch,
+  } = useWalletNfts();
+
   const { loans } = useFetchAllLoans();
 
   const { onSubmit, loadingModalVisible, closeLoadingModal } =
@@ -24,20 +31,24 @@ const ConnectedBorrowContent: FC = () => {
     setSearch(value);
   }, 300);
 
+  const nfts = parseNFTs(rawNfts);
+
   return (
     <>
       <div className={styles.container}>
-        <div className={styles.column}>
+        <div className={styles.searchableList}>
           <SearchHeading
             title="Click to borrow"
             onChange={setSearchDebounced}
+            className={styles.search}
           />
-          <div className={styles.nftList}>
+          <div className={styles.wrapperNftsList}>
             <NFTsList
               nfts={nfts}
               fetchNextPage={fetchNextPage}
               isLoading={initialLoading}
               onClick={onSubmit}
+              className={styles.nftsList}
             />
           </div>
         </div>

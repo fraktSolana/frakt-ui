@@ -33,6 +33,10 @@
 .duration {
   font: var(--font-text-8);
   font-size: 14px;
+
+  @media (max-width: 1140px) {
+    font-size: 12px;
+  }
 }
 
 .fee {

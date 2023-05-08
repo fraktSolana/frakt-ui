@@ -1,4 +1,6 @@
 import { FC } from 'react';
+import classNames from 'classnames';
+
 import { SearchInput } from '@frakt/components/SearchInput';
 
 import NFTsList from '../../../NFTsList';
@@ -9,11 +11,16 @@ interface SearchableListProps {
   data: any[];
   title?: string;
   onChange?: (value: string) => void;
+  className?: string;
 }
 type SearchHeadingProps = Omit<SearchableListProps, 'data'>;
 
-export const SearchHeading: FC<SearchHeadingProps> = ({ title, onChange }) => (
-  <div className={styles.heading}>
+export const SearchHeading: FC<SearchHeadingProps> = ({
+  title,
+  onChange,
+  className,
+}) => (
+  <div className={classNames(styles.heading, className)}>
     <h3 className={styles.title}>{title}</h3>
     <SearchInput
       type="input"

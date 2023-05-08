@@ -4,23 +4,21 @@ import classNames from 'classnames';
 
 import Button from '@frakt/components/Button';
 
+import { NFT } from '../../types';
 import styles from './NFTCard.module.scss';
 
-interface NftCardProps {
-  imageUrl: string;
+interface NftCardProps extends NFT {
+  onClick?: (nft: NFT) => void;
   className?: string;
-  maxLoanValue: number;
-  duration: number;
-  fee: number;
-  onClick?: (nft) => void;
 }
 
 const NftCard: FC<NftCardProps> = ({
-  imageUrl,
+  image,
   className,
   maxLoanValue: rawMaxLoanValue,
   duration,
   fee,
+  mint,
   onClick,
 }) => {
   const { connected } = useWallet();
@@ -28,8 +26,11 @@ const NftCard: FC<NftCardProps> = ({
   const maxLoanValue = (rawMaxLoanValue / 1e9)?.toFixed(0);
 
   return (
-    <div onClick={onClick} className={classNames(styles.card, className)}>
-      <img src={imageUrl} className={styles.nftImage} />
+    <div
+      onClick={mint ? onClick : null}
+      className={classNames(styles.card, className)}
+    >
+      <img src={image} className={styles.nftImage} />
       <div
         className={classNames(styles.nftInfo, {
           [styles.primary]: connected,

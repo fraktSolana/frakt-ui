@@ -1,17 +1,18 @@
 import { FC } from 'react';
 
 import InfinityScroll from '@frakt/components/InfinityScroll';
-import { BorrowNft } from '@frakt/api/nft';
 import NftCard from '../NFTCard';
 
 import styles from './NFTsList.module.scss';
+import { NFT } from '../../types';
 import classNames from 'classnames';
 
 interface NFTsListProps {
   isLoading?: boolean;
   fetchNextPage?: () => void;
-  nfts: any[];
-  onClick: (nft: any) => any;
+  nfts: NFT[];
+  onClick?: (nft: NFT) => void;
+  className?: string;
 }
 
 const NFTsList: FC<NFTsListProps> = ({
@@ -19,15 +20,16 @@ const NFTsList: FC<NFTsListProps> = ({
   fetchNextPage,
   nfts,
   onClick,
+  className,
 }) => {
   return (
     <InfinityScroll
       itemsToShow={nfts.length}
       next={fetchNextPage}
-      wrapperClassName={styles.nftsList}
+      wrapperClassName={classNames(styles.nftsList, className)}
       isLoading={isLoading}
     >
-      {nfts.map((nft: any) => (
+      {nfts.map((nft: NFT) => (
         <NftCard onClick={() => onClick(nft)} {...nft} />
       ))}
     </InfinityScroll>

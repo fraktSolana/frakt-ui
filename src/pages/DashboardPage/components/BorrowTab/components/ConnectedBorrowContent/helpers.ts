@@ -6,25 +6,26 @@ import {
 } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 
 import { pairLoanDurationFilter } from '@frakt/utils/bonds';
+import { NFT } from '@frakt/pages/DashboardPage/types';
+import { BorrowNft } from '@frakt/api/nft';
+import { Market } from '@frakt/api/bonds';
 import {
   BondOrderParams,
   convertTakenOrderToOrderParams,
   patchPairWithProtocolFee,
 } from '@frakt/pages/BorrowPages/cartState';
-import { BorrowNft } from '@frakt/api/nft';
-import { Market } from '@frakt/api/bonds';
 
 const getBondOrderParams = ({
   market,
   pairs,
-  nft,
+  maxLoanValue,
 }: {
   market: Market;
   pairs: BondOfferV2[];
-  nft: BorrowNft;
+  maxLoanValue: number;
 }): BondOrderParams => {
   const { takenOrders } = getBestOrdersByBorrowValue({
-    borrowValue: nft?.maxLoanValue,
+    borrowValue: maxLoanValue,
     collectionFloor: market?.oracleFloor?.floor,
     bondOffers: pairs.filter((pair) => pairLoanDurationFilter({ pair })),
   });
@@ -53,4 +54,17 @@ const filterPairs = (pairs: BondOfferV2[], walletPubkey: web3.PublicKey) => {
     .filter(({ assetReceiver }) => assetReceiver !== walletPubkey?.toBase58());
 };
 
-export { getBondOrderParams, filterPairs };
+const parseNFTs = (nfts: BorrowNft[]): NFT[] => {
+  return nfts.map((nft) => {
+    return {
+      image: nft?.imageUrl,
+      maxLoanValue: nft?.maxLoanValue,
+      duration: nft?.classicParams?.timeBased.returnPeriodDays,
+      marketPubkey: nft?.bondParams?.marketPubkey,
+      mint: nft?.mint,
+      fee: 1,
+    };
+  });
+};
+
+export { getBondOrderParams, filterPairs, parseNFTs };

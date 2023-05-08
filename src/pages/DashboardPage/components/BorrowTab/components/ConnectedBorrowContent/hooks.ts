@@ -1,20 +1,21 @@
+import { NFT } from './../../../../types';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
 
 import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
 import { fetchMarketPairs, fetchCertainMarket } from '@frakt/api/bonds';
+import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { captureSentryError } from '@frakt/utils/sentry';
 import { notify, throwLogsError } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { useConnection } from '@frakt/hooks';
-import { BorrowNft } from '@frakt/api/nft';
+
 import {
   showSolscanLinkNotification,
   signAndSendV0TransactionWithLookupTables,
 } from '@frakt/utils/transactions';
 
 import { filterPairs, getBondOrderParams } from './helpers';
-import { useLoadingModal } from '@frakt/components/LoadingModal';
 
 export const useConnectedBorrowContent = () => {
   const wallet = useWallet();
@@ -26,18 +27,22 @@ export const useConnectedBorrowContent = () => {
     close: closeLoadingModal,
   } = useLoadingModal();
 
-  const onSubmit = async (nft: BorrowNft) => {
+  const onSubmit = async (nft: NFT) => {
     try {
       openLoadingModal();
 
       const { market, pairs } = await fetchMarketAndPairs(
-        nft?.bondParams?.marketPubkey,
+        nft?.marketPubkey,
         wallet?.publicKey,
       );
 
       if (!market) return;
 
-      const bondOrderParams = getBondOrderParams({ market, pairs, nft });
+      const bondOrderParams = getBondOrderParams({
+        market,
+        pairs,
+        maxLoanValue: nft?.maxLoanValue,
+      });
 
       const result = await borrowSingle({
         mint: nft?.mint,

@@ -34,12 +34,7 @@ const MyLoans: FC<{ userLoans: Loan[] }> = ({ userLoans }) => {
       <h3 className={styles.title}>My loans</h3>
       <div className={styles.content}>
         <div className={styles.chart}>
-          <ChartPie
-            data={loansInfo}
-            width={184}
-            label="Loans"
-            value={totalLoans}
-          />
+          <ChartPie data={loansInfo} label="Loans" value={totalLoans} />
         </div>
         <div className={styles.loansInfoWrapper}>
           <div className={styles.stats}>

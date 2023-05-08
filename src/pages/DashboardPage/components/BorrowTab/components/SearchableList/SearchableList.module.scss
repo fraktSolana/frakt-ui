@@ -1,5 +1,9 @@
 .title {
   font: var(--font-subtitle);
+
+  @media (max-width: 1140px) {
+    font-size: 24px;
+  }
 }
 
 .heading {
@@ -10,6 +14,14 @@
 
 .searchInput {
   width: 192px;
+
+  @media (max-width: 960px) {
+    width: 173px;
+  }
+
+  @media (max-width: 550px) {
+    width: 144px;
+  }
 }
 
 .container {

@@ -12,16 +12,23 @@
   @extend .column;
   width: 100%;
   position: relative;
-  gap: 16px;
 }
 
 .title {
   font: var(--font-subtitle);
+
+  @media (max-width: 1140px) {
+    font-size: 24px;
+  }
 }
 
 .content {
   @extend .rowCenter;
   gap: 24px;
+
+  @media (max-width: 960px) {
+    gap: 16px;
+  }
 }
 
 .loansInfoWrapper {
@@ -37,11 +44,12 @@
   justify-content: center;
   gap: 16px;
   width: 100%;
+  margin-top: 8px;
 }
 
 .chart {
-  height: 184px;
-  width: 184px;
+  height: 141px;
+  width: 141px;
   margin: 0 auto;
   position: relative;
 }
@@ -60,7 +68,7 @@
 
 .loansList {
   @extend .column;
-  gap: 8px;
+  gap: 5px;
   width: 100%;
 }
 .loanInfo {
@@ -83,6 +91,7 @@
 }
 
 .button {
+  margin-top: 16px;
   height: 48px;
   width: 100%;
 }

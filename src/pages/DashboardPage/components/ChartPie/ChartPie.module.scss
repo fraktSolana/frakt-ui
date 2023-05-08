@@ -9,6 +9,18 @@
   gap: 4px;
 }
 
+.chart {
+  width: 141px;
+
+  @media (max-width: 1140px) {
+    width: 135px;
+  }
+
+  @media (max-width: 960px) {
+    width: 104px;
+  }
+}
+
 .value {
   color: var(--secondary-border);
   font: var(--font-text-8);

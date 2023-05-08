@@ -9,11 +9,21 @@
 .wrapper {
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 960px) {
+    width: 100%;
+  }
 }
 
 .title,
 .value {
   font: var(--font-subtitle);
+}
+
+.title {
+  @media (max-width: 1140px) {
+    font-size: 24px;
+  }
 }
 
 .label {
@@ -24,7 +34,11 @@
 .stats {
   display: flex;
   align-items: center;
-  padding: 50px 0;
+  padding: 38px 0;
+
+  @media (max-width: 960px) {
+    padding: 65.5px 0;
+  }
 }
 
 .value {

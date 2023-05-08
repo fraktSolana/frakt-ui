@@ -10,7 +10,6 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 interface ChartPieProps {
   data?: any[];
   colors?: string[];
-  width?: number;
   label?: string;
   value: number;
 }
@@ -18,7 +17,6 @@ interface ChartPieProps {
 export const ChartPie: FC<ChartPieProps> = ({
   data: rawData,
   colors,
-  width,
   label,
   value,
 }) => {
@@ -38,7 +36,7 @@ export const ChartPie: FC<ChartPieProps> = ({
 
   return (
     <>
-      <Doughnut data={data} options={options} width={width} />
+      <Doughnut data={data} options={options} className={styles.chart} />
       {!!value && (
         <div className={styles.innerContent}>
           <p className={styles.value}>{value}</p>

@@ -8,12 +8,12 @@ import { useWindowSize } from '@frakt/hooks';
 import { SearchHeading, SearchableList } from '../SearchableList';
 import AvailableBorrow from '../AvailableBorrow';
 import { parseMarketsPreview } from './helpers';
-import NftCard from '../../../NFTCard';
+import NFTCard from '../../../NFTCard';
 
 import styles from './NotConnectedBorrowContent.module.scss';
 
 const NotConnectedBorrowContent: FC = () => {
-  const { marketsPreview } = useMarketsPreview();
+  const { marketsPreview, isLoading } = useMarketsPreview();
 
   const { width } = useWindowSize();
   const isMobile = width <= TABLET_SIZE;
@@ -22,21 +22,30 @@ const NotConnectedBorrowContent: FC = () => {
 
   return (
     <>
-      {isMobile ? (
-        <div className={styles.mobileContainer}>
-          <AvailableBorrow />
-          <SearchableList data={collections} />
-        </div>
+      {isLoading && !collections?.length ? (
+        <Loader />
       ) : (
-        <div className={styles.gridContainer}>
-          <SearchHeading title="1 click loan" onChange={null} />
-          <div className={styles.title}>Available to borrow</div>
-          <AvailableBorrow />
-          {!collections?.length && <Loader />}
-          {collections.map((nft) => (
-            <NftCard key={nft?.pubkey} {...nft} />
-          ))}
-        </div>
+        <>
+          {isMobile ? (
+            <div className={styles.mobileContainer}>
+              <AvailableBorrow />
+              <SearchableList title="1 click loan" data={collections} />
+            </div>
+          ) : (
+            <div className={styles.gridContainer}>
+              <SearchHeading
+                className={styles.search}
+                title="1 click loan"
+                onChange={null}
+              />
+              <div className={styles.title}>Available to borrow</div>
+              <AvailableBorrow />
+              {collections.map((nft) => (
+                <NFTCard key={nft.image} {...nft} />
+              ))}
+            </div>
+          )}
+        </>
       )}
     </>
   );

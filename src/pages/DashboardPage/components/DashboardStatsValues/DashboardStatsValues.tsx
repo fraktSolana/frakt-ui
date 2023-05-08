@@ -11,20 +11,6 @@ interface DashboardStatsValuesProps {
   size?: 'large' | 'medium';
 }
 
-export const DashboardStatsValues: FC<DashboardStatsValuesProps> = ({
-  label,
-  value,
-}) => {
-  return (
-    <div className={styles.stats}>
-      <h3 className={styles.label}>{label}</h3>
-      <p className={styles.value}>
-        {value?.toFixed(2) || '--'} <Solana className={styles.icon} />
-      </p>
-    </div>
-  );
-};
-
 export const DashboardColumnValue: FC<
   PropsWithChildren<DashboardStatsValuesProps>
 > = ({ label, className, value, children, size = 'large' }) => (
@@ -33,10 +19,10 @@ export const DashboardColumnValue: FC<
       [styles.medium]: size === 'medium',
     })}
   >
-    <p className={styles.columnLabel}>{label}</p>
+    <p className={styles.label}>{label}</p>
     {children && children}
     {!children && (
-      <p className={styles.columnValue}>
+      <p className={styles.value}>
         {value?.toFixed(2) || '--'} <Solana className={styles.icon} />
       </p>
     )}
