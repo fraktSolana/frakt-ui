@@ -12,6 +12,7 @@ export interface MarketOrder {
     authorityAdapter: string;
     edgeSettlement: number;
     bondFeature?: BondFeatures;
+    maxReturnAmountFilter?: number;
   };
 }
 
