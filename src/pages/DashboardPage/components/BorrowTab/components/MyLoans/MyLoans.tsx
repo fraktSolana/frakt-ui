@@ -6,8 +6,9 @@ import { Loan } from '@frakt/api/loans';
 
 import { DashboardColumnValue } from '../../../DashboardStatsValues';
 import { calcTotalLoansAmout, getLoansRepayValue } from './helpers';
-import { LoansAmountList } from './LoansAmountList';
+import { ChartValuesList } from '../../../ChartPie/ChartValuesList';
 import { ChartPie } from '../../../ChartPie';
+import { defaultsColors } from './constants';
 
 import styles from './MyLoans.module.scss';
 
@@ -32,7 +33,12 @@ const MyLoans: FC<{ loans: Loan[] }> = ({ loans }) => {
     <div className={styles.wrapper}>
       <h3 className={styles.title}>My loans</h3>
       <div className={styles.content}>
-        <ChartPie data={loansInfo} label="Loans" value={totalLoans} />
+        <ChartPie
+          data={loansInfo}
+          label="Loans"
+          value={totalLoans}
+          className={styles.chart}
+        />
         <div className={styles.loansInfoWrapper}>
           <div className={styles.stats}>
             <DashboardColumnValue
@@ -46,7 +52,7 @@ const MyLoans: FC<{ loans: Loan[] }> = ({ loans }) => {
               type="secondary"
             />
           </div>
-          <LoansAmountList data={loansInfo} />
+          <ChartValuesList data={loansInfo} colors={defaultsColors} />
         </div>
       </div>
       <NavigationButton className={styles.button} path={PATHS.LOANS}>

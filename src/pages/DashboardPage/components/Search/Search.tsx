@@ -3,6 +3,7 @@ import classNames from 'classnames';
 
 import { SearchInput } from '@frakt/components/SearchInput';
 
+import Heading from '../Heading';
 import styles from './Search.module.scss';
 
 interface SearchProps {
@@ -13,7 +14,7 @@ interface SearchProps {
 
 export const Search: FC<SearchProps> = ({ title, onChange, className }) => (
   <div className={classNames(styles.heading, className)}>
-    {!!title && <h3 className={styles.title}>{title}</h3>}
+    <Heading title={title} />
     <SearchInput
       type="input"
       onChange={(event) => onChange(event.target.value)}

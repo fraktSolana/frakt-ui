@@ -40,42 +40,41 @@
 
 .stats {
   @include flex-center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 16px;
   width: 100%;
-}
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.loansList {
-  @include flex-column;
-  gap: 5px;
-  width: 100%;
-}
-.loanInfo {
-  @include flex-center;
-  gap: 4px;
-}
-.loanName {
-  font: var(--font-text-6);
-  text-transform: uppercase;
-}
-.loanValue {
-  font: var(--font-text-8);
-}
-
-.dot {
-  border-radius: 50%;
-  width: 8px;
-  height: 8px;
 }
 
 .button {
   margin-top: 16px;
   height: 48px;
   width: 100%;
+
+  @media (max-width: 960px) {
+    height: 40px;
+  }
+
+  @media (max-width: 550px) {
+    margin-top: 8px;
+  }
+}
+
+.chart {
+  height: 141px;
+  width: 141px;
+
+  @media (max-width: 1140px) {
+    height: 135px !important;
+    width: 135px !important;
+  }
+
+  @media (max-width: 960px) {
+    height: 184px !important;
+    width: 184px !important;
+  }
+
+  @media (max-width: 550px) {
+    height: 121px !important;
+    width: 121px !important;
+  }
 }

@@ -2,6 +2,7 @@ import { FC } from 'react';
 
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
 import { Tabs, useTabs } from '@frakt/components/Tabs';
+import LendTab from './components/LendTab';
 
 import { DASHBOARD_TABS, DashboardTabsNames } from './constants';
 import BorrowTab from './components/BorrowTab';
@@ -26,7 +27,7 @@ const DashboardPage: FC = () => {
         />
         <div className={styles.tabContent}>
           {tabValue === DashboardTabsNames.BORROW && <BorrowTab />}
-          {tabValue === DashboardTabsNames.LEND && <></>}
+          {tabValue === DashboardTabsNames.LEND && <LendTab />}
         </div>
       </div>
     </AppLayout>

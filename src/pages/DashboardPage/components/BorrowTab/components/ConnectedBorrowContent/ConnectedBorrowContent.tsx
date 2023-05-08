@@ -1,32 +1,21 @@
 import { FC } from 'react';
 
-import { useFetchAllLoans } from '@frakt/pages/LoansPage/components/LoansActiveTab/hooks';
-import { useWalletNfts } from '@frakt/pages/BorrowPages/BorrowManualPage/hooks';
 import { LoadingModal } from '@frakt/components/LoadingModal';
-import { useDebounce } from '@frakt/hooks';
 
-import { useConnectedBorrowContent } from './hooks';
+import { useBorrowSingleBond, useConnectedBorrowContent } from './hooks';
+import { Search } from '../../../Search';
 import NFTsList from '../../../NFTsList';
-import BorrowInfo from '../BorrowInfo';
-import { parseNFTs } from './helpers';
-import { Search } from '../Search';
 import MyLoans from '../MyLoans';
 
 import styles from './ConnectedBorrowContent.module.scss';
+import AvailableBorrow from '../AvailableBorrow';
 
 const ConnectedBorrowContent: FC = () => {
-  const { nfts, fetchNextPage, initialLoading, setSearch } = useWalletNfts();
-
-  const { loans } = useFetchAllLoans();
-
   const { onSubmit, loadingModalVisible, closeLoadingModal } =
+    useBorrowSingleBond();
+
+  const { setSearch, nfts, loans, loading, fetchNextPage } =
     useConnectedBorrowContent();
-
-  const setSearchDebounced = useDebounce((value: string) => {
-    setSearch(value);
-  }, 300);
-
-  const parsedNfts = parseNFTs(nfts);
 
   return (
     <>
@@ -34,22 +23,22 @@ const ConnectedBorrowContent: FC = () => {
         <div className={styles.searchableList}>
           <Search
             title="Click to borrow"
-            onChange={setSearchDebounced}
+            onChange={setSearch}
             className={styles.search}
           />
           <div className={styles.wrapperNftsList}>
             <NFTsList
-              nfts={parsedNfts}
+              nfts={nfts}
               fetchNextPage={fetchNextPage}
-              isLoading={initialLoading}
+              isLoading={loading}
               onClick={onSubmit}
               className={styles.nftsList}
             />
           </div>
         </div>
         <div className={styles.content}>
-          <BorrowInfo />
-          <MyLoans loans={loans} />
+          <AvailableBorrow />
+          {!!loans?.length && <MyLoans loans={loans} />}
         </div>
       </div>
       <LoadingModal

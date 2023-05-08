@@ -1,21 +1,17 @@
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+}
+
 .chartWrapper {
   position: relative;
 }
 
-.chart {
-  height: 141px;
-  width: 141px;
 
-  @media (max-width: 1140px) {
-    height: 135px !important;
-    width: 135px !important;
-  }
-
-  @media (max-width: 960px) {
-    height: 184px !important;
-    width: 184px !important;
-  }
-}
 
 .innerContent {
   position: absolute;
@@ -38,4 +34,32 @@
   color: var(--secondary-text);
   font: var(--font-text-7);
   text-transform: uppercase;
+}
+
+.list {
+  @include flex-column;
+  gap: 5px;
+  width: 100%;
+}
+.listRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.listInfo {
+  @include flex-center;
+  gap: 4px;
+}
+.listLabel {
+  font: var(--font-text-6);
+  text-transform: uppercase;
+}
+.listValue {
+  font: var(--font-text-8);
+}
+
+.dot {
+  border-radius: 50%;
+  width: 8px;
+  height: 8px;
 }

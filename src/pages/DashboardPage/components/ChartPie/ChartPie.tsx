@@ -3,6 +3,7 @@ import { Doughnut } from 'react-chartjs-2';
 
 import { defaultsColors } from '../BorrowTab/components/MyLoans/constants';
 import styles from './ChartPie.module.scss';
+import classNames from 'classnames';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -11,6 +12,7 @@ interface ChartPieProps<T> {
   colors?: string[];
   label?: string;
   value?: number;
+  className?: string;
 }
 
 export const ChartPie = <T extends unknown>({
@@ -18,6 +20,7 @@ export const ChartPie = <T extends unknown>({
   colors,
   label,
   value,
+  className,
 }: ChartPieProps<T>) => {
   const options = { maintainAspectRatio: false };
 
@@ -35,7 +38,7 @@ export const ChartPie = <T extends unknown>({
 
   return (
     <div className={styles.chartWrapper}>
-      <Doughnut data={data} options={options} className={styles.chart} />
+      <Doughnut data={data} options={options} className={className} />
       {!!value && (
         <div className={styles.innerContent}>
           <p className={styles.value}>{value}</p>

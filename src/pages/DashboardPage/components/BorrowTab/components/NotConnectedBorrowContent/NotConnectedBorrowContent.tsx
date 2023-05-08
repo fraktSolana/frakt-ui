@@ -5,10 +5,10 @@ import { NFT } from '@frakt/pages/DashboardPage/types';
 import { Loader } from '@frakt/components/Loader';
 
 import { useNotConnectedBorrowContent } from './hooks';
-import AvailableBorrow from '../AvailableBorrow';
+import CollectionsInfo from '../CollectionsInfo';
 import NFTsList from '../../../NFTsList';
 import NFTCard from '../../../NFTCard';
-import { Search } from '../Search';
+import { Search } from '../../../Search';
 
 import styles from './NotConnectedBorrowContent.module.scss';
 
@@ -38,7 +38,7 @@ interface ContentViewProps {
 
 const MobileContentView = ({ collections, setSearch }: ContentViewProps) => (
   <div className={styles.mobileContainer}>
-    <AvailableBorrow />
+    <CollectionsInfo />
     <Search title="1 click loan" onChange={setSearch} />
     <NFTsList className={styles.nftsList} nfts={collections} />
   </div>
@@ -52,7 +52,7 @@ const DesktopContentView = ({ collections, setSearch }: ContentViewProps) => (
       onChange={setSearch}
     />
     <div className={styles.title}>Available to borrow</div>
-    <AvailableBorrow />
+    <CollectionsInfo />
     {collections.map((nft) => (
       <NFTCard key={nft.image} {...nft} />
     ))}

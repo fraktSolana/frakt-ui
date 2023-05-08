@@ -21,6 +21,10 @@ $contentHeight: 582px;
     padding: 24px;
     height: 100%;
   }
+
+  @media (max-width: 550px) {
+    padding: 16px;
+  }
 }
 
 .searchableList {
@@ -66,10 +70,23 @@ $contentHeight: 582px;
     right: 0;
     padding: 24px;
   }
+
+  @media (max-width: 550px) {
+    padding: 16px;
+    gap: 16px;
+  }
 }
 
 .wrapperNftsList {
   overflow: auto;
+
+  @media (max-width: 960px) {
+    padding-bottom: 510px;
+  }
+
+  @media (max-width: 550px) {
+    padding-bottom: 390px;
+  }
 }
 
 .nftsList {
@@ -81,5 +98,9 @@ $contentHeight: 582px;
 
   @media (max-width: 960px) {
     grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  }
+
+  @media (max-width: 550px) {
+    grid-template-columns: repeat(auto-fill, minmax(109px, 1fr));
   }
 }

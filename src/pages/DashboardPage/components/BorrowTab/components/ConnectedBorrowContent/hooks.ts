@@ -2,24 +2,45 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
 import { useHistory } from 'react-router-dom';
 
+import { useFetchAllLoans } from '@frakt/pages/LoansPage/components/LoansActiveTab/hooks';
+import { useWalletNfts } from '@frakt/pages/BorrowPages/BorrowManualPage/hooks';
 import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
 import { fetchMarketPairs, fetchCertainMarket } from '@frakt/api/bonds';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
+import { useConnection, useDebounce } from '@frakt/hooks';
 import { captureSentryError } from '@frakt/utils/sentry';
 import { NFT } from '@frakt/pages/DashboardPage/types';
 import { notify, throwLogsError } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
-import { useConnection } from '@frakt/hooks';
 import { PATHS } from '@frakt/constants';
-
 import {
   showSolscanLinkNotification,
   signAndSendV0TransactionWithLookupTables,
 } from '@frakt/utils/transactions';
 
-import { filterPairs, getBondOrderParams } from './helpers';
+import { filterPairs, getBondOrderParams, parseNFTs } from './helpers';
 
 export const useConnectedBorrowContent = () => {
+  const { nfts, fetchNextPage, initialLoading, setSearch } = useWalletNfts();
+
+  const { loans } = useFetchAllLoans();
+
+  const setSearchDebounced = useDebounce((value: string) => {
+    setSearch(value);
+  }, 300);
+
+  const parsedNfts = parseNFTs(nfts);
+
+  return {
+    nfts: parsedNfts,
+    loans,
+    setSearch: setSearchDebounced,
+    loading: initialLoading,
+    fetchNextPage,
+  };
+};
+
+export const useBorrowSingleBond = () => {
   const connection = useConnection();
   const history = useHistory();
   const wallet = useWallet();

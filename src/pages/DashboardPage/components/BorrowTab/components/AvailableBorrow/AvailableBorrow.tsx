@@ -1,34 +1,38 @@
 import { FC } from 'react';
-import { useDispatch } from 'react-redux';
+import { useWallet } from '@solana/wallet-adapter-react';
 
-import { commonActions } from '@frakt/state/common/actions';
-import Button from '@frakt/components/Button';
+import { useMaxBorrowValue } from '@frakt/pages/BorrowPages/BorrowRootPage/hooks';
+import { NavigationButton } from '@frakt/components/Button';
+import { PATHS } from '@frakt/constants';
 
 import { DashboardColumnValue } from '../../../DashboardStatsValues';
+import Heading from '../../../Heading';
 
 import styles from './AvailableBorrow.module.scss';
 
 const AvailableBorrow: FC = () => {
-  const dispatch = useDispatch();
-
-  const openConnectWalleModal = () =>
-    dispatch(commonActions.setWalletModal({ isVisible: true }));
+  const { publicKey } = useWallet();
+  const { maxBorrowValue } = useMaxBorrowValue({ walletPublicKey: publicKey });
 
   return (
     <div className={styles.wrapper}>
-      <h3 className={styles.title}>Available to borrow</h3>
+      <Heading title="Borrow in bulk" />
       <div className={styles.stats}>
-        <DashboardColumnValue label="Collections whitelisted" value={198} />
-        <DashboardColumnValue label="Total liquidity" value={198} />
+        <DashboardColumnValue label="Borrow up to" value={maxBorrowValue} />
+        <DashboardColumnValue label="From your">
+          <span className={styles.value}>
+            567
+            <p className={styles.sub}>nfts</p>
+          </span>
+        </DashboardColumnValue>
       </div>
-
-      <Button
-        onClick={openConnectWalleModal}
+      <NavigationButton
+        path={PATHS.BORROW_ROOT}
         className={styles.button}
         type="secondary"
       >
-        Connect wallet to borrow SOL
-      </Button>
+        Borrow $SOL in bulk
+      </NavigationButton>
     </div>
   );
 };
