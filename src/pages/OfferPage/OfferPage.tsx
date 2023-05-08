@@ -23,6 +23,8 @@ import {
   EARNER_INTEREST_OPTIONS,
   MAX_LIMIT_INTEREST,
   OFFER_TYPE_OPTIONS,
+  MAX_LIMIT_INTEREST_FOR_14_DAYS,
+  MAX_LIMIT_INTEREST_FOR_7_DAYS,
   RECEIVE_OPTIONS,
 } from './constants';
 
@@ -60,7 +62,12 @@ export const OfferPage = () => {
     offerType,
   } = useOfferPage();
 
-  const isMaxLimitInterest = parseFloat(interest) > MAX_LIMIT_INTEREST;
+  const maxLimitInterest =
+    duration === 7
+      ? MAX_LIMIT_INTEREST_FOR_7_DAYS
+      : MAX_LIMIT_INTEREST_FOR_14_DAYS;
+
+  const isMaxLimitInterest = parseFloat(interest) > maxLimitInterest;
   const apr = (parseFloat(interest) / duration) * 365;
 
   return (
@@ -146,7 +153,7 @@ export const OfferPage = () => {
               />
               <div className={styles.errors}>
                 {isMaxLimitInterest && (
-                  <p>max interest rate is {MAX_LIMIT_INTEREST}%</p>
+                  <p>max interest rate is {maxLimitInterest}%</p>
                 )}
               </div>
             </>
@@ -193,6 +200,7 @@ export const OfferPage = () => {
                   Delete offer
                 </Button>
                 <Button
+                  disabled={isMaxLimitInterest}
                   onClick={onEditOffer}
                   className={styles.btn}
                   type="secondary"
