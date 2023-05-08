@@ -45,7 +45,7 @@ const Offer: FC<OfferProps> = ({
           left: ltv <= 27 ? `${ltv}%` : `calc(${ltv}%  - 74px)`,
         }}
       >
-        ltv: {`${ltv}%`}
+        ltv: {`${ltv?.toFixed(0)}%`}
       </div>
       <div
         className={styles.line}

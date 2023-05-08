@@ -1,0 +1,17 @@
+.radio {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.radioTitle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.subtitle {
+  font: var(--font-text-6);
+  color: var(--gray-color-2);
+  text-transform: uppercase;
+}

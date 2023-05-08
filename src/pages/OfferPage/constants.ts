@@ -1,6 +1,12 @@
 import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 
 import { RBOption } from '../../components/RadioButton';
+import { OfferTypes } from './types';
+
+export const MAX_LOAN_VALUE = 100;
+export const DEFAULT_MAX_LOAN_VALUE_FOR_FLOOR_TYPE_OFFER = 1000;
+
+export const MAX_LIMIT_INTEREST = 5;
 
 export const riskMarks: { [key: string]: string | JSX.Element } = {
   10: '10%',
@@ -10,6 +16,9 @@ export const riskMarks: { [key: string]: string | JSX.Element } = {
   100: '100%',
 };
 
+export const MAX_LIMIT_INTEREST_FOR_7_DAYS = 5;
+export const MAX_LIMIT_INTEREST_FOR_14_DAYS = 10;
+
 export const DURATION_OPTIONS: RBOption<number>[] = [
   {
     label: '7 days',
@@ -18,6 +27,17 @@ export const DURATION_OPTIONS: RBOption<number>[] = [
   {
     label: '14 days',
     value: 14,
+  },
+];
+
+export const OFFER_TYPE_OPTIONS: RBOption<OfferTypes>[] = [
+  {
+    label: 'Fixed',
+    value: OfferTypes.FIXED,
+  },
+  {
+    label: 'Floor',
+    value: OfferTypes.FLOOR,
   },
 ];
 
