@@ -31,6 +31,7 @@ import {
   calculateLTV,
   calculateLtvByOfferType,
   calculateMaxLoanValueByOfferType,
+  getLoanToValueWithProtection,
 } from './helpers';
 
 export const useOfferPage = () => {
@@ -113,6 +114,15 @@ export const useOfferPage = () => {
   const onDurationChange = (nextOption: RBOption<number>) => {
     setDuration(nextOption.value);
   };
+
+  useEffect(() => {
+    if (!isLoading && !isEmpty(market) && !isEdit) {
+      const marketFloor = market?.oracleFloor?.floor / 1e9;
+
+      const loanValue = getLoanToValueWithProtection(marketFloor, maxLoanValue);
+      setLtv(loanValue);
+    }
+  }, [maxLoanValue, isLoading]);
 
   const onMaxLoanValueChange = (value: string) => {
     setMaxLoanValue(value);

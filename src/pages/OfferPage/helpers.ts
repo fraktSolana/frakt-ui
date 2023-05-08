@@ -46,3 +46,16 @@ export const calculateMaxLoanValueByOfferType = (
 
   return maxLoanValueNumber;
 };
+
+export const getLoanToValueWithProtection = (
+  floor: number,
+  maxLoanValue: string,
+): number => {
+  const maxLoanValueNumber = parseFloat(maxLoanValue);
+  const loanToValueWithProtection = Math.floor(
+    (maxLoanValueNumber / floor) * 1e4,
+  );
+
+  const loanValue = loanToValueWithProtection / 100;
+  return loanValue;
+};
