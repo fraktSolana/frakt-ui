@@ -1,15 +1,6 @@
-.column {
+.wrapper {
   display: flex;
   flex-direction: column;
-}
-.rowCenter {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.wrapper {
-  @extend .column;
   width: 100%;
   position: relative;
 }
@@ -23,7 +14,9 @@
 }
 
 .content {
-  @extend .rowCenter;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 24px;
 
   @media (max-width: 960px) {
@@ -32,7 +25,8 @@
 }
 
 .loansInfoWrapper {
-  @extend .column;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 16px;
   width: 100%;
@@ -47,19 +41,6 @@
   margin-top: 8px;
 }
 
-.chart {
-  height: 141px;
-  width: 141px;
-  margin: 0 auto;
-  position: relative;
-}
-
-.subtitle {
-  font: var(--font-text-6);
-  text-transform: uppercase;
-  text-align: center;
-}
-
 .row {
   display: flex;
   justify-content: space-between;
@@ -67,7 +48,8 @@
 }
 
 .loansList {
-  @extend .column;
+  display: flex;
+  flex-direction: column;
   gap: 5px;
   width: 100%;
 }

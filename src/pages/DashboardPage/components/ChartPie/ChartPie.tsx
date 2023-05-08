@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 
@@ -7,35 +6,35 @@ import styles from './ChartPie.module.scss';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-interface ChartPieProps {
-  data?: any[];
+interface ChartPieProps<T> {
+  data: T[];
   colors?: string[];
   label?: string;
-  value: number;
+  value?: number;
 }
 
-export const ChartPie: FC<ChartPieProps> = ({
+export const ChartPie = <T extends unknown>({
   data: rawData,
   colors,
   label,
   value,
-}) => {
+}: ChartPieProps<T>) => {
   const options = { maintainAspectRatio: false };
 
   const data = {
     datasets: [
       {
-        data: rawData,
         backgroundColor: colors?.length
           ? colors
           : Object.values(defaultsColors),
         borderWidth: 0,
+        data: rawData,
       },
     ],
   };
 
   return (
-    <>
+    <div className={styles.chartWrapper}>
       <Doughnut data={data} options={options} className={styles.chart} />
       {!!value && (
         <div className={styles.innerContent}>
@@ -43,6 +42,6 @@ export const ChartPie: FC<ChartPieProps> = ({
           <p className={styles.label}>{label}</p>
         </div>
       )}
-    </>
+    </div>
   );
 };

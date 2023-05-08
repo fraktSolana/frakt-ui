@@ -1,4 +1,3 @@
-import { NFT } from './../../../../types';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
 
@@ -6,6 +5,7 @@ import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
 import { fetchMarketPairs, fetchCertainMarket } from '@frakt/api/bonds';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { captureSentryError } from '@frakt/utils/sentry';
+import { NFT } from '@frakt/pages/DashboardPage/types';
 import { notify, throwLogsError } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { useConnection } from '@frakt/hooks';

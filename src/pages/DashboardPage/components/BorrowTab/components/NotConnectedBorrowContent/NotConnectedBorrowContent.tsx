@@ -5,10 +5,11 @@ import { Loader } from '@frakt/components/Loader';
 import { TABLET_SIZE } from '@frakt/constants';
 import { useWindowSize } from '@frakt/hooks';
 
-import { SearchHeading, SearchableList } from '../SearchableList';
 import AvailableBorrow from '../AvailableBorrow';
 import { parseMarketsPreview } from './helpers';
+import NFTsList from '../../../NFTsList';
 import NFTCard from '../../../NFTCard';
+import { Search } from '../Search';
 
 import styles from './NotConnectedBorrowContent.module.scss';
 
@@ -29,11 +30,12 @@ const NotConnectedBorrowContent: FC = () => {
           {isMobile ? (
             <div className={styles.mobileContainer}>
               <AvailableBorrow />
-              <SearchableList title="1 click loan" data={collections} />
+              <Search title="1 click loan" onChange={null} />
+              <NFTsList nfts={collections} />
             </div>
           ) : (
             <div className={styles.gridContainer}>
-              <SearchHeading
+              <Search
                 className={styles.search}
                 title="1 click loan"
                 onChange={null}

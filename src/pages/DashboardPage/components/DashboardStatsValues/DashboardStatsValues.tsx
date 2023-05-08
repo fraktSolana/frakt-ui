@@ -8,15 +8,15 @@ interface DashboardStatsValuesProps {
   label: string;
   value?: number;
   className?: string;
-  size?: 'large' | 'medium';
+  type?: 'primary' | 'secondary';
 }
 
 export const DashboardColumnValue: FC<
   PropsWithChildren<DashboardStatsValuesProps>
-> = ({ label, className, value, children, size = 'large' }) => (
+> = ({ label, className, value, children, type = 'primary' }) => (
   <div
     className={classNames(styles.column, className, {
-      [styles.medium]: size === 'medium',
+      [styles.medium]: type === 'secondary',
     })}
   >
     <p className={styles.label}>{label}</p>

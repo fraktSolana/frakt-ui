@@ -11,12 +11,11 @@ import { defaultsColors } from './constants';
 
 import styles from './MyLoans.module.scss';
 
-const MyLoans: FC<{ userLoans: Loan[] }> = ({ userLoans }) => {
-  const { totalBorrowed, totalDebt, totalLoans } =
-    calcTotalLoansAmout(userLoans);
+const MyLoans: FC<{ loans: Loan[] }> = ({ loans }) => {
+  const { totalBorrowed, totalDebt, totalLoans } = calcTotalLoansAmout(loans);
 
   const { flipValue, perpetualValue, bondValue, graceValue } =
-    getLoansRepayValue(userLoans);
+    getLoansRepayValue(loans);
 
   const loansInfo = [
     { name: 'Flip', key: 'flip', value: flipValue },
@@ -33,20 +32,18 @@ const MyLoans: FC<{ userLoans: Loan[] }> = ({ userLoans }) => {
     <div className={styles.wrapper}>
       <h3 className={styles.title}>My loans</h3>
       <div className={styles.content}>
-        <div className={styles.chart}>
-          <ChartPie data={loansInfo} label="Loans" value={totalLoans} />
-        </div>
+        <ChartPie data={loansInfo} label="Loans" value={totalLoans} />
         <div className={styles.loansInfoWrapper}>
           <div className={styles.stats}>
             <DashboardColumnValue
               label="Total borrowed"
               value={totalBorrowed}
-              size="medium"
+              type="secondary"
             />
             <DashboardColumnValue
               label="Total debt"
               value={totalDebt}
-              size="medium"
+              type="secondary"
             />
           </div>
           <LoansAmountList data={loansInfo} />

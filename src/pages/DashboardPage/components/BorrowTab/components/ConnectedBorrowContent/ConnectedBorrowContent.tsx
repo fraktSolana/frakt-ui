@@ -1,26 +1,21 @@
 import { FC } from 'react';
 
-import { useWalletNfts } from '@frakt/pages/BorrowPages/BorrowManualPage/hooks';
 import { useFetchAllLoans } from '@frakt/pages/LoansPage/components/LoansActiveTab/hooks';
+import { useWalletNfts } from '@frakt/pages/BorrowPages/BorrowManualPage/hooks';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import { useDebounce } from '@frakt/hooks';
 
 import { useConnectedBorrowContent } from './hooks';
-import { SearchHeading } from '../SearchableList';
 import NFTsList from '../../../NFTsList';
 import BorrowInfo from '../BorrowInfo';
 import { parseNFTs } from './helpers';
+import { Search } from '../Search';
 import MyLoans from '../MyLoans';
 
 import styles from './ConnectedBorrowContent.module.scss';
 
 const ConnectedBorrowContent: FC = () => {
-  const {
-    nfts: rawNfts,
-    fetchNextPage,
-    initialLoading,
-    setSearch,
-  } = useWalletNfts();
+  const { nfts, fetchNextPage, initialLoading, setSearch } = useWalletNfts();
 
   const { loans } = useFetchAllLoans();
 
@@ -31,20 +26,20 @@ const ConnectedBorrowContent: FC = () => {
     setSearch(value);
   }, 300);
 
-  const nfts = parseNFTs(rawNfts);
+  const parsedNfts = parseNFTs(nfts);
 
   return (
     <>
       <div className={styles.container}>
         <div className={styles.searchableList}>
-          <SearchHeading
+          <Search
             title="Click to borrow"
             onChange={setSearchDebounced}
             className={styles.search}
           />
           <div className={styles.wrapperNftsList}>
             <NFTsList
-              nfts={nfts}
+              nfts={parsedNfts}
               fetchNextPage={fetchNextPage}
               isLoading={initialLoading}
               onClick={onSubmit}
@@ -54,7 +49,7 @@ const ConnectedBorrowContent: FC = () => {
         </div>
         <div className={styles.content}>
           <BorrowInfo />
-          <MyLoans userLoans={loans} />
+          <MyLoans loans={loans} />
         </div>
       </div>
       <LoadingModal
