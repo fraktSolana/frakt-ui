@@ -1,5 +1,9 @@
 .icon {
   width: 24px;
+
+  @media (max-width: 550px) {
+    width: 18px;
+  }
 }
 
 .column {
@@ -19,10 +23,15 @@
 
 .label {
   font: var(--font-text-6);
+  letter-spacing: -0.2px;
   text-transform: uppercase;
 
   @media (max-width: 960px) {
     font-size: 12px;
+  }
+
+  @media (max-width: 550px) {
+    font-size: 10px;
   }
 }
 

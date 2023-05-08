@@ -1,5 +1,6 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
+import { useHistory } from 'react-router-dom';
 
 import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
 import { fetchMarketPairs, fetchCertainMarket } from '@frakt/api/bonds';
@@ -9,6 +10,7 @@ import { NFT } from '@frakt/pages/DashboardPage/types';
 import { notify, throwLogsError } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { useConnection } from '@frakt/hooks';
+import { PATHS } from '@frakt/constants';
 
 import {
   showSolscanLinkNotification,
@@ -18,8 +20,11 @@ import {
 import { filterPairs, getBondOrderParams } from './helpers';
 
 export const useConnectedBorrowContent = () => {
-  const wallet = useWallet();
   const connection = useConnection();
+  const history = useHistory();
+  const wallet = useWallet();
+
+  const goToToBorrowSuccessPage = () => history.push(PATHS.BORROW_SUCCESS);
 
   const {
     visible: loadingModalVisible,
@@ -55,6 +60,7 @@ export const useConnectedBorrowContent = () => {
       if (!result) {
         throw new Error('Borrow failed');
       }
+      goToToBorrowSuccessPage();
     } catch (error) {
       console.log(error);
     } finally {

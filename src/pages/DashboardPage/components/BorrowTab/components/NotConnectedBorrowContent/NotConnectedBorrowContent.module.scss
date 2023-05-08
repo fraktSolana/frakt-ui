@@ -1,3 +1,11 @@
+.wrapper {
+  height: 582px;
+  overflow: auto;
+}
+.wrapper.mobile {
+  height: 100%;
+}
+
 .mobileContainer {
   display: flex;
   flex-direction: column;
@@ -22,10 +30,7 @@
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 16px;
-
-  overflow: auto;
   padding: 24px;
-  height: 582px;
 
   @media (max-width: 1140px) {
     grid-template-columns: repeat(5, 1fr);

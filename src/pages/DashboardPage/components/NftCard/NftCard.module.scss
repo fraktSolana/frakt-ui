@@ -1,10 +1,11 @@
 .card {
-  cursor: pointer;
   border: 1px solid var(--primary-border);
   display: flex;
   flex-direction: column;
   position: relative;
-
+}
+.card.clicable {
+  cursor: pointer;
   &:hover {
     border: 1px solid var(--secondary-border);
   }
@@ -20,7 +21,6 @@
   padding: 8px;
   position: relative;
 }
-
 .nftInfo.primary {
   padding-top: 40px;
 }
@@ -30,7 +30,8 @@
   height: 100%;
 }
 
-.duration {
+.value {
+  color: var(--primary-text);
   font: var(--font-text-8);
   font-size: 14px;
 
@@ -39,7 +40,10 @@
   }
 }
 
-.fee {
+.label {
+  display: flex;
+  align-items: center;
+  gap: 2px;
   color: var(--secondary-text);
   font: var(--font-text-6);
   text-transform: uppercase;
@@ -50,6 +54,7 @@
   background-color: var(--light-green-color);
 
   position: absolute;
+  top: 0;
   left: 8px;
 
   display: flex;
@@ -60,7 +65,7 @@
   width: 56px;
 }
 
-.connectedBadge {
+.button {
   position: absolute;
   font: var(--font-btn-middle);
 

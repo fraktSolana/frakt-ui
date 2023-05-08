@@ -4,6 +4,7 @@ export interface NFT {
   duration: number;
   fee: number;
 
+  name?: string;
   mint?: string;
   marketPubkey?: string;
 }

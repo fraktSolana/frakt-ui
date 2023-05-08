@@ -8,7 +8,7 @@ import { NFT } from '../../types';
 import styles from './NFTCard.module.scss';
 
 interface NftCardProps extends NFT {
-  onClick?: (nft: NFT) => void;
+  onClick?: () => void;
   className?: string;
 }
 
@@ -18,7 +18,6 @@ const NftCard: FC<NftCardProps> = ({
   maxLoanValue: rawMaxLoanValue,
   duration,
   fee,
-  mint,
   onClick,
 }) => {
   const { connected } = useWallet();
@@ -27,8 +26,10 @@ const NftCard: FC<NftCardProps> = ({
 
   return (
     <div
-      onClick={mint ? onClick : null}
-      className={classNames(styles.card, className)}
+      onClick={onClick ? onClick : null}
+      className={classNames(styles.card, className, {
+        [styles.clicable]: onClick,
+      })}
     >
       <img src={image} className={styles.nftImage} />
       <div
@@ -36,10 +37,12 @@ const NftCard: FC<NftCardProps> = ({
           [styles.primary]: connected,
         })}
       >
-        <p className={styles.duration}>{duration} days</p>
-        <p className={styles.fee}>Fee: {fee} ◎</p>
+        <p className={styles.value}>{duration} days</p>
+        <p className={styles.label}>
+          Fee: <p className={styles.value}> {fee} ◎</p>
+        </p>
         {connected && (
-          <Button type="secondary" className={styles.connectedBadge}>
+          <Button type="secondary" className={styles.button}>
             Get {maxLoanValue} ◎
           </Button>
         )}

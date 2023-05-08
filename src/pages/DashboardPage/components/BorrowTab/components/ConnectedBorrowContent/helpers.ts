@@ -55,16 +55,18 @@ const filterPairs = (pairs: BondOfferV2[], walletPubkey: web3.PublicKey) => {
 };
 
 const parseNFTs = (nfts: BorrowNft[]): NFT[] => {
-  return nfts.map((nft) => {
-    return {
-      image: nft?.imageUrl,
-      maxLoanValue: nft?.maxLoanValue,
-      duration: nft?.classicParams?.timeBased.returnPeriodDays,
-      marketPubkey: nft?.bondParams?.marketPubkey,
-      mint: nft?.mint,
-      fee: 1,
-    };
-  });
+  return nfts
+    .filter((nft) => nft?.bondParams?.marketPubkey)
+    .map((nft) => {
+      return {
+        image: nft?.imageUrl,
+        maxLoanValue: nft?.maxLoanValue,
+        duration: nft?.classicParams?.timeBased.returnPeriodDays,
+        marketPubkey: nft?.bondParams?.marketPubkey,
+        mint: nft?.mint,
+        fee: 1,
+      };
+    });
 };
 
 export { getBondOrderParams, filterPairs, parseNFTs };
