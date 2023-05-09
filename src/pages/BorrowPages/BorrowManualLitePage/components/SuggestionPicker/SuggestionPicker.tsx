@@ -14,7 +14,6 @@ interface SuggestionPickerProps {
   onPercentChange: (nextValue: number) => void;
   maxValue: number;
   onAfterChange?: (nextValue?: number) => void;
-  isNotEnoughBalanceError?: boolean;
   className?: string;
   style?: CSSProperties;
 }

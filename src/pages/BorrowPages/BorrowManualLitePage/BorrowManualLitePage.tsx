@@ -216,12 +216,8 @@ const useBorrowManualLitePage = () => {
     onBorrowValueChange((totalBorrowValue / 1e9).toFixed(2));
   }, [totalBorrowValue, onBorrowValueChange]);
 
-  const isNotEnoughBalanceError =
-    parseFloat(borrowValue) > parseFloat(maxBorrowValue.toFixed(2));
-
   return {
     wallet,
-    isNotEnoughBalanceError,
 
     maxBorrowValueLoading,
     maxBorrowValue,
@@ -248,7 +244,6 @@ const useBorrowManualLitePage = () => {
 export const BorrowManualLitePage: FC = () => {
   const {
     wallet,
-    isNotEnoughBalanceError,
 
     maxBorrowValueLoading,
     maxBorrowValue,
@@ -297,7 +292,6 @@ export const BorrowManualLitePage: FC = () => {
           onValueChange={onBorrowValueChange}
           onPercentChange={onBorrowPercentChange}
           maxValue={maxBorrowValue}
-          isNotEnoughBalanceError={isNotEnoughBalanceError}
           onAfterChange={() => {
             if (isSuggestionRequested) {
               fetchSuggestion({ cancelRefetch: true });
