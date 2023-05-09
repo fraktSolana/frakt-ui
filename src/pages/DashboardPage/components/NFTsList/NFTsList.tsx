@@ -2,7 +2,7 @@ import { FC } from 'react';
 import classNames from 'classnames';
 
 import InfinityScroll from '@frakt/components/InfinityScroll';
-import NftCard from '../NFTCard';
+import NFTCard from '../NFTCard';
 
 import styles from './NFTsList.module.scss';
 import { NFT } from '../../types';
@@ -30,7 +30,7 @@ const NFTsList: FC<NFTsListProps> = ({
       isLoading={isLoading}
     >
       {nfts.map((nft: NFT) => (
-        <NftCard onClick={() => onClick(nft)} {...nft} />
+        <NFTCard onClick={() => onClick(nft)} {...nft} />
       ))}
     </InfinityScroll>
   );

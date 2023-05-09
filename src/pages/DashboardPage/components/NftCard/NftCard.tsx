@@ -7,12 +7,12 @@ import Button from '@frakt/components/Button';
 import { NFT } from '../../types';
 import styles from './NFTCard.module.scss';
 
-interface NftCardProps extends NFT {
+interface NFTCardProps extends NFT {
   onClick?: () => void;
   className?: string;
 }
 
-const NftCard: FC<NftCardProps> = ({
+const NFTCard: FC<NFTCardProps> = ({
   image,
   className,
   maxLoanValue: rawMaxLoanValue,
@@ -52,4 +52,4 @@ const NftCard: FC<NftCardProps> = ({
   );
 };
 
-export default NftCard;
+export default NFTCard;
