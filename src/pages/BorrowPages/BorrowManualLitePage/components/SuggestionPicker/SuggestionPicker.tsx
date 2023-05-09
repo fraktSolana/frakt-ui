@@ -33,7 +33,10 @@ export const SuggestionPicker: FC<SuggestionPickerProps> = ({
       <Slider
         value={percentValue}
         setValue={onPercentChange}
-        onAfterChange={onAfterChange}
+        onAfterChange={(value) => {
+          onPercentChange(value);
+          onAfterChange();
+        }}
         className={styles.slider}
       />
       <div className={styles.inputWrapper}>
