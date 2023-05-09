@@ -26,6 +26,7 @@ export const SuggestionPicker: FC<SuggestionPickerProps> = ({
 }) => {
   return (
     <div className={styles.root}>
+      <p>Max: {maxValue.toFixed(2)}</p>
       <Button
         onClick={() => {
           onValueChange(maxValue.toFixed(2));
