@@ -3,8 +3,8 @@ import classNames from 'classnames';
 
 import InfinityScroll from '@frakt/components/InfinityScroll';
 
-import NFTCard from '../NFTCard/NFTCard';
 import { NFT } from '../../types';
+import { NFTCard } from '../NFTCard';
 
 import styles from './NFTsList.module.scss';
 

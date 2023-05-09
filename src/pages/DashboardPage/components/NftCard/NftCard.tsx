@@ -12,7 +12,7 @@ interface NFTCardProps extends NFT {
   className?: string;
 }
 
-const NFTCard: FC<NFTCardProps> = ({
+export const NFTCard: FC<NFTCardProps> = ({
   image,
   className,
   maxLoanValue: rawMaxLoanValue,
