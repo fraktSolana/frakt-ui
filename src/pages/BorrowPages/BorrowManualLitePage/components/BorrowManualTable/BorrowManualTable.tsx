@@ -9,6 +9,7 @@ import {
 } from '@frakt/components/Table/hooks';
 
 import { getTableColumns } from './columns';
+import styles from './BorrowManualTable.module.scss';
 
 export interface BorrowNftData {
   nft: BorrowNft;
@@ -34,7 +35,6 @@ export interface BorrowManualTableProps {
 
 export const BorrowManualTable: FC<BorrowManualTableProps> = ({
   data,
-  className,
   loading,
   breakpoints,
   duration,
@@ -64,7 +64,7 @@ export const BorrowManualTable: FC<BorrowManualTableProps> = ({
       {...table}
       breakpoints={breakpoints}
       search={{ onChange }}
-      className={className}
+      className={styles.rootTable}
       viewParams={{
         showCard: viewState === 'card',
         showSorting: true,

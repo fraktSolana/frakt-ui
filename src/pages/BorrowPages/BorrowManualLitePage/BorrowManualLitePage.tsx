@@ -12,18 +12,18 @@ import { useQuery } from '@tanstack/react-query';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { LoanType } from '@frakt/api/loans';
 import { Tabs, useTabs } from '@frakt/components/Tabs';
+import { Loader } from '@frakt/components/Loader';
+import { useIntersection } from '@frakt/hooks/useIntersection';
+import { Sort } from '@frakt/components/Table';
 
 import { useMaxBorrow, useWalletNfts } from './hooks';
-import styles from './BorrowManualLitePage.module.scss';
 import { Sidebar } from './components/Sidebar';
 import { CartOrder, calcTotalBorrowValue, useBorrow } from '../cartState';
 import { patchPairByBondOrders } from '../cartState/useCartState';
 import { SuggestionPicker } from './components/SuggestionPicker';
 import { DURATION_TABS } from './constants';
 import { BorrowManualTable } from './components/BorrowManualTable';
-import { Loader } from '@frakt/components/Loader';
-import { useIntersection } from '@frakt/hooks/useIntersection';
-import { Sort } from '@frakt/components/Table';
+import styles from './BorrowManualLitePage.module.scss';
 
 export const useBorrowManualLitePage = () => {
   const wallet = useWallet();
@@ -293,30 +293,43 @@ export const BorrowManualLitePage: FC = () => {
     <AppLayout>
       <div className={styles.container}>
         {wallet.connected && !maxBorrowValueLoading && (
-          <SuggestionPicker
+          <div
             style={{
-              width: 300,
-              backgroundColor: 'white',
+              display: 'flex',
+              justifyContent: 'center',
+              columnGap: 20,
             }}
-            value={borrowValue}
-            percentValue={borrowPercentValue}
-            onValueChange={onBorrowValueChange}
-            onPercentChange={onBorrowPercentChange}
-            maxValue={maxBorrowValue}
-            onAfterChange={() => {
-              if (isSuggestionRequested) {
-                fetchSuggestion({ cancelRefetch: true });
-              }
-              setIsSuggestionRequested(true);
-            }}
-          />
+          >
+            <SuggestionPicker
+              style={{
+                width: 300,
+                backgroundColor: 'white',
+              }}
+              value={borrowValue}
+              percentValue={borrowPercentValue}
+              onValueChange={onBorrowValueChange}
+              onPercentChange={onBorrowPercentChange}
+              maxValue={maxBorrowValue}
+              onAfterChange={() => {
+                if (isSuggestionRequested) {
+                  fetchSuggestion({ cancelRefetch: true });
+                }
+                setIsSuggestionRequested(true);
+              }}
+            />
+            <Tabs
+              tabs={durationTabs}
+              value={duration}
+              setValue={onDurationTabClick}
+              className={styles.tabs}
+              additionalClassNames={{
+                tabClassName: styles.tab,
+                tabActiveClassName: styles.tabActive,
+              }}
+              type="unset"
+            />
+          </div>
         )}
-
-        <Tabs
-          tabs={durationTabs}
-          value={duration}
-          setValue={onDurationTabClick}
-        />
 
         {!!currentNft && <Sidebar duration={duration as LoanDuration} />}
         <div
@@ -327,7 +340,6 @@ export const BorrowManualLitePage: FC = () => {
         >
           <>
             <BorrowManualTable
-              className={styles.rootTable}
               data={nfts.map((nft) => ({
                 nft,
                 active: currentNft?.mint === nft.mint,
