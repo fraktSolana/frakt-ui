@@ -40,9 +40,7 @@ export const Sidebar: FC<SidebarProps> = ({ duration = '7' }) => {
         <CollapsedContent
           isVisible={!minimizedOnMobile}
           onClick={onSubmit}
-          title={`${isBulk ? 'View bulk loan' : 'Borrow'} ${(
-            totalBorrowValue / 1e9
-          ).toFixed(2)} SOL`}
+          title={`Borrow ${(totalBorrowValue / 1e9).toFixed(2)} SOL`}
         />
         <div className={styles.sidebar}>
           {isLoading && <Loader size="large" />}

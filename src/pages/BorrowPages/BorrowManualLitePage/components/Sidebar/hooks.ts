@@ -33,7 +33,6 @@ export const useSidebar = () => {
     market,
     currentLoanType,
     currentLoanValue,
-    saveUpcomingOrderToCart,
     clearCart,
     clearCurrentNftState,
   } = useBorrow();
@@ -41,7 +40,7 @@ export const useSidebar = () => {
   const [minimizedOnMobile, setMinimizedOnMobile] = useState<boolean>(false);
 
   const history = useHistory();
-  const goToBulkOverviewPage = () => history.push(PATHS.BORROW_BULK_OVERVIEW);
+
   const goToToBorrowSuccessPage = () => {
     clearCart();
     clearCurrentNftState();
@@ -58,12 +57,9 @@ export const useSidebar = () => {
   } = useLoadingModalState();
 
   const onSubmit = async () => {
-    if (isBulk) {
-      saveUpcomingOrderToCart();
-      return goToBulkOverviewPage();
-    }
-
     try {
+      //TODO Logic txn here
+
       setLoadingModalVisible(true);
 
       const result = await borrowSingle({

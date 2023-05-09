@@ -13,7 +13,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { LoanType } from '@frakt/api/loans';
-import { Tab, Tabs, useTabs } from '@frakt/components/Tabs';
+import { Tabs, useTabs } from '@frakt/components/Tabs';
 
 import { Filters } from './components/Filters';
 import { useMaxBorrow, useWalletNfts } from './hooks';
@@ -23,8 +23,9 @@ import { Sidebar } from './components/Sidebar';
 import { CartOrder, calcTotalBorrowValue, useBorrow } from '../cartState';
 import { patchPairByBondOrders } from '../cartState/useCartState';
 import { SuggestionPicker } from './components/SuggestionPicker';
+import { DURATION_TABS } from './constants';
 
-export const BorrowManualLitePage: FC = () => {
+const useBorrowManualLitePage = () => {
   const wallet = useWallet();
   const { maxBorrow, isLoading: maxBorrowValueLoading } = useMaxBorrow({
     walletPublicKey: wallet?.publicKey,
@@ -93,19 +94,6 @@ export const BorrowManualLitePage: FC = () => {
     },
     [maxBorrowValue],
   );
-
-  const {
-    nfts,
-    fetchNextPage,
-    initialLoading,
-    setSearch,
-    setSortName,
-    setSortOrder,
-  } = useWalletNfts({ duration: duration as LoanDuration });
-
-  const setSearchDebounced = useDebounce((value: string) => {
-    setSearch(value);
-  }, 300);
 
   const onNftClick = (nft: BorrowNft) => {
     const isNftSelected =
@@ -231,6 +219,71 @@ export const BorrowManualLitePage: FC = () => {
   const isNotEnoughBalanceError =
     parseFloat(borrowValue) > parseFloat(maxBorrowValue.toFixed(2));
 
+  return {
+    wallet,
+    isNotEnoughBalanceError,
+
+    maxBorrowValueLoading,
+    maxBorrowValue,
+    borrowValue,
+
+    borrowPercentValue,
+    onBorrowValueChange,
+    onBorrowPercentChange,
+
+    isSuggestionRequested,
+    fetchSuggestion,
+    setIsSuggestionRequested,
+
+    durationTabs,
+    duration,
+    onDurationTabClick,
+
+    currentNft,
+    onNftClick,
+    findOrderInCart,
+  };
+};
+
+export const BorrowManualLitePage: FC = () => {
+  const {
+    wallet,
+    isNotEnoughBalanceError,
+
+    maxBorrowValueLoading,
+    maxBorrowValue,
+    borrowValue,
+
+    borrowPercentValue,
+    onBorrowValueChange,
+    onBorrowPercentChange,
+
+    isSuggestionRequested,
+    fetchSuggestion,
+    setIsSuggestionRequested,
+
+    durationTabs,
+    duration,
+    onDurationTabClick,
+
+    currentNft,
+    onNftClick,
+    findOrderInCart,
+  } = useBorrowManualLitePage();
+
+  const {
+    nfts,
+    fetchNextPage,
+    initialLoading,
+    setSearch,
+    setSortName,
+    setSortOrder,
+  } = useWalletNfts({ duration: duration as LoanDuration });
+
+  const setSearchDebounced = useDebounce((value: string) => {
+    setSearch(value);
+  }, 300);
+
   return (
     <AppLayout>
       {wallet.connected && !maxBorrowValueLoading && (
@@ -298,18 +351,3 @@ export const BorrowManualLitePage: FC = () => {
     </AppLayout>
   );
 };
-
-const DURATION_TABS: Tab[] = [
-  {
-    label: '7 days',
-    value: '7',
-  },
-  {
-    label: '14 days',
-    value: '14',
-  },
-  {
-    label: 'Perpetual',
-    value: '0',
-  },
-];
