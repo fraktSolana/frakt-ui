@@ -9,6 +9,7 @@ import {
 } from '@frakt/api/nft';
 import { web3 } from 'fbonds-core';
 import { LoanType } from '@frakt/api/loans';
+import { Sort } from '@frakt/components/Table';
 
 const FETCH_LIMIT = 15;
 
@@ -17,8 +18,10 @@ type SortOrder = 'desc' | 'asc';
 
 export const useWalletNfts = ({
   duration = '7',
+  queryData,
 }: {
   duration?: LoanDuration;
+  queryData?: Sort;
 }) => {
   const wallet = useWallet();
 
@@ -32,8 +35,8 @@ export const useWalletNfts = ({
       limit: FETCH_LIMIT,
       offset: pageParam * FETCH_LIMIT,
       search,
-      sortBy: sortName,
-      sortOrder: sortOrder,
+      sortBy: queryData?.field as any,
+      sortOrder: queryData?.direction,
       duration,
       loanType: duration === '0' ? LoanType.PRICE_BASED : LoanType.BOND,
     });
@@ -50,6 +53,7 @@ export const useWalletNfts = ({
         sortOrder,
         sortName,
         duration,
+        queryData,
       ],
       queryFn: ({ pageParam = 0 }) => fetchData({ pageParam }),
       getPreviousPageParam: (firstPage) => {

@@ -3,8 +3,6 @@ import { groupBy, map } from 'lodash';
 import classNames from 'classnames';
 
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
-import InfinityScroll from '@frakt/components/InfinityScroll';
-import { useDebounce } from '@frakt/hooks';
 import {
   BorrowNft,
   LoanDuration,
@@ -15,17 +13,19 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { LoanType } from '@frakt/api/loans';
 import { Tabs, useTabs } from '@frakt/components/Tabs';
 
-import { Filters } from './components/Filters';
 import { useMaxBorrow, useWalletNfts } from './hooks';
-import { NftCard } from './components/NftCard';
 import styles from './BorrowManualLitePage.module.scss';
 import { Sidebar } from './components/Sidebar';
 import { CartOrder, calcTotalBorrowValue, useBorrow } from '../cartState';
 import { patchPairByBondOrders } from '../cartState/useCartState';
 import { SuggestionPicker } from './components/SuggestionPicker';
 import { DURATION_TABS } from './constants';
+import { BorrowManualTable } from './components/BorrowManualTable';
+import { Loader } from '@frakt/components/Loader';
+import { useIntersection } from '@frakt/hooks/useIntersection';
+import { Sort } from '@frakt/components/Table';
 
-const useBorrowManualLitePage = () => {
+export const useBorrowManualLitePage = () => {
   const wallet = useWallet();
   const { maxBorrow, isLoading: maxBorrowValueLoading } = useMaxBorrow({
     walletPublicKey: wallet?.publicKey,
@@ -242,6 +242,8 @@ const useBorrowManualLitePage = () => {
 };
 
 export const BorrowManualLitePage: FC = () => {
+  const { ref, inView } = useIntersection();
+
   const {
     wallet,
 
@@ -262,89 +264,78 @@ export const BorrowManualLitePage: FC = () => {
     onDurationTabClick,
 
     currentNft,
-    onNftClick,
-    findOrderInCart,
   } = useBorrowManualLitePage();
+
+  const [queryData, setQueryData] = useState<Sort>(null);
 
   const {
     nfts,
-    fetchNextPage,
     initialLoading,
+    fetchNextPage,
+    isFetchingNextPage,
     setSearch,
-    setSortName,
-    setSortOrder,
-  } = useWalletNfts({ duration: duration as LoanDuration });
+    hasNextPage,
+  } = useWalletNfts({
+    duration: duration as LoanDuration,
+    queryData,
+  });
 
-  const setSearchDebounced = useDebounce((value: string) => {
-    setSearch(value);
-  }, 300);
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage, hasNextPage]);
 
   return (
     <AppLayout>
-      {wallet.connected && !maxBorrowValueLoading && (
-        <SuggestionPicker
-          style={{
-            width: 300,
-            backgroundColor: 'white',
-          }}
-          value={borrowValue}
-          percentValue={borrowPercentValue}
-          onValueChange={onBorrowValueChange}
-          onPercentChange={onBorrowPercentChange}
-          maxValue={maxBorrowValue}
-          onAfterChange={() => {
-            if (isSuggestionRequested) {
-              fetchSuggestion({ cancelRefetch: true });
-            }
-            setIsSuggestionRequested(true);
-          }}
-        />
-      )}
+      <div className={styles.container}>
+        {wallet.connected && !maxBorrowValueLoading && (
+          <SuggestionPicker
+            style={{
+              width: 300,
+              backgroundColor: 'white',
+            }}
+            value={borrowValue}
+            percentValue={borrowPercentValue}
+            onValueChange={onBorrowValueChange}
+            onPercentChange={onBorrowPercentChange}
+            maxValue={maxBorrowValue}
+            onAfterChange={() => {
+              if (isSuggestionRequested) {
+                fetchSuggestion({ cancelRefetch: true });
+              }
+              setIsSuggestionRequested(true);
+            }}
+          />
+        )}
 
-      <Tabs
-        tabs={durationTabs}
-        value={duration}
-        setValue={onDurationTabClick}
-      />
-
-      {!!currentNft && <Sidebar duration={duration as LoanDuration} />}
-      <div
-        className={classNames([
-          styles.content,
-          { [styles.contentSidebarVisible]: !!currentNft },
-        ])}
-      >
-        <Filters
-          setSearch={setSearchDebounced}
-          onSortChange={({ name, order }) => {
-            setSortName(name);
-            setSortOrder(order);
-          }}
+        <Tabs
+          tabs={durationTabs}
+          value={duration}
+          setValue={onDurationTabClick}
         />
-        <InfinityScroll
-          itemsToShow={nfts.length}
-          next={fetchNextPage}
-          wrapperClassName={styles.nftsList}
-          isLoading={initialLoading}
-          customLoader={<p className={styles.loader}>loading your jpegs</p>}
+
+        {!!currentNft && <Sidebar duration={duration as LoanDuration} />}
+        <div
+          className={classNames([
+            styles.content,
+            { [styles.contentSidebarVisible]: !!currentNft },
+          ])}
         >
-          {nfts.map((nft) => (
-            <NftCard
-              key={nft.mint}
-              nft={nft}
-              onClick={() => onNftClick(nft)}
-              selected={
-                !!findOrderInCart({ nftMint: nft.mint }) ||
-                currentNft?.mint === nft.mint
-              }
-              highlighted={currentNft?.mint === nft.mint}
-              disabled={
-                nft?.classicParams?.isLimitExceeded &&
-                !nft?.bondParams?.marketPubkey
-              }
+          <>
+            <BorrowManualTable
+              className={styles.rootTable}
+              data={nfts}
+              duration={duration}
+              setQuerySearch={setSearch}
+              setQueryData={setQueryData}
             />
-          ))}
-        </InfinityScroll>
+            {isFetchingNextPage && <Loader />}
+            <div ref={ref} />
+          </>
+
+          {!nfts?.length && initialLoading && <Loader />}
+        </div>
       </div>
     </AppLayout>
   );

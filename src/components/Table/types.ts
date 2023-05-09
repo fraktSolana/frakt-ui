@@ -13,7 +13,7 @@ interface SearchParams {
 export type PartialSearchParams = Partial<SearchParams>;
 
 export interface ActiveRowParams {
-  field: string;
+  field?: string;
   value?: string;
   className?: string;
   cardClassName?: string;

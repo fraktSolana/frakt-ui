@@ -34,7 +34,7 @@ const CardView = <T extends unknown>({
           {columns?.map(({ key, title, render }, idx: number) => (
             <div className={styles.cardRow} key={key}>
               <div className={styles.cardRowTitle}>{title && title()}</div>
-              {render(dataRow[key], dataRow, idx)}
+              {render && render(dataRow[key], dataRow, idx)}
             </div>
           ))}
         </div>
