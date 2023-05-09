@@ -1,1 +1,1 @@
-export { default } from './NFTCard';
+export { default } from './NftCard';
