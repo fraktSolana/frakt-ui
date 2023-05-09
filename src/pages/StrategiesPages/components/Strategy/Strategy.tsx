@@ -13,7 +13,7 @@ import Button from '@frakt/components/Button';
 import { Solana } from '@frakt/icons';
 
 import CollectionsPreviews from '../CollectionsPreviews';
-import { caclWidthrawValue } from './helpers';
+import { calcWithdrawValue } from './helpers';
 
 import styles from './Strategy.module.scss';
 
@@ -44,7 +44,7 @@ const Strategy: FC<StrategyProps> = ({ tradePool, isAdmin }) => {
   //   setTradePool(tradePool);
   // };
 
-  const withdrawValue = caclWidthrawValue(tradePool);
+  const withdrawValue = calcWithdrawValue(tradePool);
   const utilizationRate = (1e4 - tradePool?.reserveFundsRatio) / 100;
 
   return (
