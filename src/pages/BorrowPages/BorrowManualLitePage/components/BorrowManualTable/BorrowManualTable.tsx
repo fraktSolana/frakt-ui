@@ -1,24 +1,35 @@
 import { FC } from 'react';
 
 import Table, { PartialBreakpoints, Sort } from '@frakt/components/Table';
-import { BorrowNft } from '@frakt/api/nft';
+import { BorrowNft, LoanDuration } from '@frakt/api/nft';
 import {
   useTable,
   useSearch,
   useTableView,
 } from '@frakt/components/Table/hooks';
 
-import { TableList, TableListPerpetual } from './columns';
-import { useBorrowManualLitePage } from '../../BorrowManualLitePage';
+import { getTableColumns } from './columns';
+
+export interface BorrowNftData {
+  nft: BorrowNft;
+  selected: boolean;
+  active: boolean;
+  loanValue?: number;
+  fee?: number;
+  yearlyInterest?: number;
+  liquidationPrice?: number;
+}
 
 export interface BorrowManualTableProps {
-  data: ReadonlyArray<BorrowNft>;
+  data: ReadonlyArray<BorrowNftData>;
   loading?: boolean;
   className?: string;
   breakpoints?: PartialBreakpoints;
-  duration: string;
+  duration: LoanDuration;
   setQueryData: (nextValue: Sort) => void;
   setQuerySearch: (nextValue: string) => void;
+  onRowClick: (nft: BorrowNftData) => void;
+  activeNftMint?: string;
 }
 
 export const BorrowManualTable: FC<BorrowManualTableProps> = ({
@@ -29,14 +40,9 @@ export const BorrowManualTable: FC<BorrowManualTableProps> = ({
   duration,
   setQueryData,
   setQuerySearch,
+  onRowClick,
 }) => {
-  const { onNftClick } = useBorrowManualLitePage();
-
   const { viewState } = useTableView();
-
-  const onRowClick = (nft: BorrowNft) => {
-    onNftClick(nft);
-  };
 
   const { filteredData, onChange } = useSearch({
     data,
@@ -44,7 +50,7 @@ export const BorrowManualTable: FC<BorrowManualTableProps> = ({
     setQuerySearch,
   });
 
-  const COLUMNS = duration === '0' ? TableListPerpetual() : TableList();
+  const COLUMNS = getTableColumns({ duration });
 
   const { table } = useTable({
     data: filteredData,
@@ -64,9 +70,6 @@ export const BorrowManualTable: FC<BorrowManualTableProps> = ({
         showSorting: true,
       }}
       setQueryData={setQueryData}
-      // activeRowParams={{
-      //   className: styles.selected,
-      // }}
     />
   );
 };

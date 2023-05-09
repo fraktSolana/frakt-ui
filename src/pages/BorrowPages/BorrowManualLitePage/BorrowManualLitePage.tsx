@@ -263,7 +263,10 @@ export const BorrowManualLitePage: FC = () => {
     duration,
     onDurationTabClick,
 
+    findOrderInCart,
+
     currentNft,
+    onNftClick,
   } = useBorrowManualLitePage();
 
   const [queryData, setQueryData] = useState<Sort>(null);
@@ -325,10 +328,21 @@ export const BorrowManualLitePage: FC = () => {
           <>
             <BorrowManualTable
               className={styles.rootTable}
-              data={nfts}
-              duration={duration}
+              data={nfts.map((nft) => ({
+                nft,
+                active: currentNft?.mint === nft.mint,
+                selected:
+                  currentNft?.mint === nft.mint ||
+                  !!findOrderInCart({ nftMint: nft.mint }),
+                fee: 5 * 1e9,
+                loanValue: 10 * 1e9,
+                yearlyInterest: 15,
+                liquidationPrice: 9 * 1e9,
+              }))}
+              duration={duration as LoanDuration}
               setQuerySearch={setSearch}
               setQueryData={setQueryData}
+              onRowClick={(nft) => onNftClick(nft?.nft)}
             />
             {isFetchingNextPage && <Loader />}
             <div ref={ref} />
