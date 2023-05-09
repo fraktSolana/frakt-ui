@@ -1,19 +1,21 @@
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 import classNames from 'classnames';
+
+import Tooltip from '@frakt/components/Tooltip';
 
 import styles from './Heading.module.scss';
 
 interface HeadingProps {
   title: string;
-  description?: ReactNode;
+  tooltipText?: string;
   className?: string;
 }
 
-const Heading: FC<HeadingProps> = ({ title, description, className }) => {
+const Heading: FC<HeadingProps> = ({ title, tooltipText, className }) => {
   return (
     <div className={classNames(styles.heading, className)}>
       <h3 className={styles.title}>{title}</h3>
-      {description && description}
+      {!!tooltipText && <Tooltip placement="bottom" overlay={tooltipText} />}
     </div>
   );
 };

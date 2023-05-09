@@ -1,0 +1,20 @@
+.cardsList {
+  min-height: 114px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  p:first-child {
+    min-width: 160px;
+    max-width: 160px;
+  }
+}
+
+.label {
+  color: var(--secondary-text);
+  font: var(--font-text-7);
+  text-transform: uppercase;
+}

@@ -1,0 +1,116 @@
+$contentHeight: 582px;
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  display: flex;
+  padding: 32px;
+  gap: 32px;
+  height: $contentHeight;
+  width: 100%;
+
+  @media (max-width: 1240px) {
+    gap: 24px;
+  }
+
+  @media (max-width: 960px) {
+    @include flex-column;
+    padding: 24px;
+    height: 100%;
+  }
+
+  @media (max-width: 550px) {
+    padding: 16px;
+  }
+}
+
+.searchableList {
+  @include flex-column;
+  gap: 16px;
+  width: 100%;
+
+  @media (max-width: 1240px) {
+    width: 35%;
+  }
+
+  @media (max-width: 960px) {
+    width: unset;
+  }
+}
+
+.search {
+  @media (max-width: 1240px) {
+    @include flex-column;
+    align-items: flex-start !important;
+  }
+
+  @media (max-width: 960px) {
+    flex-direction: row;
+  }
+}
+
+.content {
+  @include flex-column;
+  gap: 24px;
+  width: 100%;
+
+  @media (max-width: 1240px) {
+    width: 65%;
+  }
+
+  @media (max-width: 960px) {
+    width: unset;
+    position: fixed;
+    bottom: 0;
+    background: var(--primary-background);
+    left: 0;
+    right: 0;
+    padding: 24px;
+  }
+
+  @media (max-width: 550px) {
+    padding: 16px;
+    gap: 16px;
+  }
+}
+
+.wrapperNftsList {
+  overflow: auto;
+
+  @media (max-width: 960px) {
+    padding-bottom: 510px;
+  }
+
+  @media (max-width: 550px) {
+    padding-bottom: 390px;
+  }
+}
+
+.nftsList {
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+
+  @media (max-width: 1240px) {
+    grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+  }
+
+  @media (max-width: 960px) {
+    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  }
+
+  @media (max-width: 550px) {
+    grid-template-columns: repeat(auto-fill, minmax(109px, 1fr));
+  }
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+
+//   & > div {
+//     display: flex;
+//     align-items: center;
+//   }
+}
