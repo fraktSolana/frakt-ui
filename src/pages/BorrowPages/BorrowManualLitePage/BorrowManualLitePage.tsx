@@ -288,6 +288,10 @@ export const BorrowManualLitePage: FC = () => {
     <AppLayout>
       {wallet.connected && !maxBorrowValueLoading && (
         <SuggestionPicker
+          style={{
+            width: 300,
+            backgroundColor: 'white',
+          }}
           value={borrowValue}
           percentValue={borrowPercentValue}
           onValueChange={onBorrowValueChange}

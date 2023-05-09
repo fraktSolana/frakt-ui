@@ -1,9 +1,11 @@
-import { FC } from 'react';
+import { FC, CSSProperties } from 'react';
 
 import { Slider } from '@frakt/components/Slider';
 import { Button } from '@frakt/components/Button';
 
 import styles from './SuggestionPicker.module.scss';
+import classNames from 'classnames';
+import NumericInput from '@frakt/components/NumericInput';
 
 interface SuggestionPickerProps {
   value: string;
@@ -13,6 +15,8 @@ interface SuggestionPickerProps {
   maxValue: number;
   onAfterChange?: (nextValue?: number) => void;
   isNotEnoughBalanceError?: boolean;
+  className?: string;
+  style?: CSSProperties;
 }
 
 export const SuggestionPicker: FC<SuggestionPickerProps> = ({
@@ -21,36 +25,42 @@ export const SuggestionPicker: FC<SuggestionPickerProps> = ({
   onValueChange,
   onPercentChange,
   maxValue,
-  isNotEnoughBalanceError = false,
   onAfterChange,
+  className,
+  style,
 }) => {
   return (
-    <div className={styles.root}>
-      <p>Max: {maxValue.toFixed(2)}</p>
-      <Button
-        onClick={() => {
-          onValueChange(maxValue.toFixed(2));
-          onAfterChange();
-        }}
-      >
-        Use max
-      </Button>
-      <input
-        type="number"
-        value={value}
-        onChange={({ target }) => onValueChange(target.value)}
-        onBlur={() => onAfterChange()}
-      />
-      <div className={styles.errors}>
-        {isNotEnoughBalanceError && <p>Not enough NFTs</p>}
-      </div>
+    <div className={classNames(styles.root, className)} style={style}>
       <Slider
         value={percentValue}
         setValue={onPercentChange}
         onAfterChange={onAfterChange}
         className={styles.slider}
-        withTooltip
       />
+      <div className={styles.inputWrapper}>
+        <Button
+          className={styles.maxBtn}
+          type="secondary"
+          onClick={() => {
+            onValueChange(maxValue.toFixed(2));
+            onAfterChange();
+          }}
+        >
+          Max: {maxValue.toFixed(2)}
+        </Button>
+
+        <NumericInput
+          onBlur={() => {
+            if (parseFloat(value) > maxValue) {
+              onValueChange(maxValue.toFixed(2));
+            }
+            onAfterChange();
+          }}
+          value={value}
+          onChange={(value) => onValueChange(value)}
+          positiveOnly
+        />
+      </div>
     </div>
   );
 };
