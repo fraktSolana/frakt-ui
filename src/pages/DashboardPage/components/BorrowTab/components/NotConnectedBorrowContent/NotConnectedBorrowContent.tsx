@@ -8,7 +8,7 @@ import { useNotConnectedBorrowContent } from './hooks';
 import CollectionsInfo from '../CollectionsInfo';
 import NFTsList from '../../../NFTsList';
 import { Search } from '../../../Search';
-import { NFTCard } from '../../../NFTCard';
+import { NFTCard } from '../NFTCard';
 
 import styles from './NotConnectedBorrowContent.module.scss';
 

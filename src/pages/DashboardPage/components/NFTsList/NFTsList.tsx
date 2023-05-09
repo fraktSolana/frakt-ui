@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import InfinityScroll from '@frakt/components/InfinityScroll';
 
 import { NFT } from '../../types';
-import { NFTCard } from '../NFTCard';
+import { NFTCard } from '../BorrowTab/components/NFTCard';
 
 import styles from './NFTsList.module.scss';
 

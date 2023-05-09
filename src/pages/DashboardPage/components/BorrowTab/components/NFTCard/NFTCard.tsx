@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import Button from '@frakt/components/Button';
 
-import { NFT } from '../../types';
+import { NFT } from '../../../../types';
 import styles from './NFTCard.module.scss';
 
 interface NFTCardProps extends NFT {
