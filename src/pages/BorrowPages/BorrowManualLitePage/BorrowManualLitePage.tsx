@@ -21,9 +21,8 @@ import { NftCard } from './components/NftCard';
 import styles from './BorrowManualLitePage.module.scss';
 import { Sidebar } from './components/Sidebar';
 import { CartOrder, calcTotalBorrowValue, useBorrow } from '../cartState';
-import { BulkForm } from './components/BulkForm';
-
 import { patchPairByBondOrders } from '../cartState/useCartState';
+import { SuggestionPicker } from './components/SuggestionPicker';
 
 export const BorrowManualLitePage: FC = () => {
   const wallet = useWallet();
@@ -235,12 +234,12 @@ export const BorrowManualLitePage: FC = () => {
   return (
     <AppLayout>
       {wallet.connected && !maxBorrowValueLoading && (
-        <BulkForm
-          borrowValue={borrowValue}
-          borrowPercentValue={borrowPercentValue}
-          onBorrowValueChange={onBorrowValueChange}
-          onBorrowPercentChange={onBorrowPercentChange}
-          maxBorrowValue={maxBorrowValue}
+        <SuggestionPicker
+          value={borrowValue}
+          percentValue={borrowPercentValue}
+          onValueChange={onBorrowValueChange}
+          onPercentChange={onBorrowPercentChange}
+          maxValue={maxBorrowValue}
           isNotEnoughBalanceError={isNotEnoughBalanceError}
           onAfterChange={() => {
             if (isSuggestionRequested) {
