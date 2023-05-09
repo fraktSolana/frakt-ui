@@ -8,9 +8,9 @@ import { useNotConnectedBorrowContent } from './hooks';
 import CollectionsInfo from '../CollectionsInfo';
 import NFTsList from '../../../NFTsList';
 import { Search } from '../../../Search';
-import NFTCard from '../../../NFTCard';
 
 import styles from './NotConnectedBorrowContent.module.scss';
+import NFTCard from '../../../NFTCard/NFTCard';
 
 const NotConnectedBorrowContent: FC = () => {
   const { isLoading, collections, isMobile, setSearch } =

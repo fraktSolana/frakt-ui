@@ -2,10 +2,11 @@ import { FC } from 'react';
 import classNames from 'classnames';
 
 import InfinityScroll from '@frakt/components/InfinityScroll';
-import NFTCard from '../NFTCard';
+
+import NFTCard from '../NFTCard/NFTCard';
+import { NFT } from '../../types';
 
 import styles from './NFTsList.module.scss';
-import { NFT } from '../../types';
 
 interface NFTsListProps {
   nfts: NFT[];
