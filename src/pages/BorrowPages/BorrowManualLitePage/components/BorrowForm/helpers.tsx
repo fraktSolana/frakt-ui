@@ -1,6 +1,6 @@
 import { uniq, maxBy } from 'lodash';
 import classNames from 'classnames';
-import { getMaxBorrowValueOptimized } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+import { getMaxBorrowValueOptimized } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 
 import { Market, Pair } from '@frakt/api/bonds';
 import { LoanType } from '@frakt/api/loans';
@@ -55,7 +55,7 @@ export const getBorrowValueRange: GetBorrowValueRange = ({
     if (loanType === LoanType.TIME_BASED) return maxBorrowValueTimeBased;
 
     const maxBorrowValue = getMaxBorrowValueOptimized({
-      pairs: bondsParams?.pairs.filter((p) =>
+      bondOffers: bondsParams?.pairs.filter((p) =>
         pairLoanDurationFilter({ pair: p, duration: bondsParams.duration }),
       ),
       collectionFloor: bondsParams?.market?.oracleFloor?.floor,

@@ -6,7 +6,7 @@ import {
   convertTakenOrderToOrderParams,
   useBorrow,
 } from '@frakt/pages/BorrowPages/cartState';
-import { getBestOrdersByBorrowValue } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+import { getBestOrdersByBorrowValue } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 import { pairLoanDurationFilter } from '@frakt/utils/bonds';
 import { calcDurationByMultiOrdersBond } from '@frakt/pages/BorrowPages/helpers';
 import { LoanDuration } from '@frakt/api/nft';
@@ -99,7 +99,7 @@ export const useBorrowForm = ({
       const { takenOrders } = getBestOrdersByBorrowValue({
         borrowValue: currentLoanValue,
         collectionFloor: market?.oracleFloor?.floor,
-        pairs: pairs.filter((p) =>
+        bondOffers: pairs.filter((p) =>
           pairLoanDurationFilter({
             pair: p,
             duration: selectedOption.value.duration,
