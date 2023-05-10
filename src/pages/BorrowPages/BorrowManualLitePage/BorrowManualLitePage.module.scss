@@ -54,10 +54,12 @@
   height: 24px;
   cursor: pointer;
   font: var(--font-btn-middle);
+  color: var(--black-color);
   background: unset;
   border-radius: 100px;
 }
 
 .tabActive {
+  color: #000;
   background: var(--light-green-color);
 }
