@@ -13,9 +13,6 @@ import { Sort } from '@frakt/components/Table';
 
 const FETCH_LIMIT = 15;
 
-type SortName = 'maxLoanValue' | 'name';
-type SortOrder = 'desc' | 'asc';
-
 export const useWalletNfts = ({
   duration = '7',
   queryData,
@@ -26,8 +23,6 @@ export const useWalletNfts = ({
   const wallet = useWallet();
 
   const [search, setSearch] = useState('');
-  const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
-  const [sortName, setSortName] = useState<SortName>('maxLoanValue');
 
   const fetchData = async ({ pageParam }: { pageParam: number }) => {
     const data = await fetchWalletBorrowNfts({
@@ -35,8 +30,8 @@ export const useWalletNfts = ({
       limit: FETCH_LIMIT,
       offset: pageParam * FETCH_LIMIT,
       search,
-      sortBy: queryData?.field as any,
-      sortOrder: queryData?.direction,
+      sortBy: 'maxLoanValue',
+      sortOrder: 'desc',
       duration,
       loanType: duration === '0' ? LoanType.PRICE_BASED : LoanType.BOND,
     });
@@ -50,8 +45,6 @@ export const useWalletNfts = ({
         'walletNfts',
         wallet?.publicKey?.toBase58(),
         search,
-        sortOrder,
-        sortName,
         duration,
         queryData,
       ],
@@ -75,10 +68,6 @@ export const useWalletNfts = ({
     hasNextPage,
     search,
     setSearch,
-    sortOrder,
-    setSortOrder,
-    sortName,
-    setSortName,
   };
 };
 

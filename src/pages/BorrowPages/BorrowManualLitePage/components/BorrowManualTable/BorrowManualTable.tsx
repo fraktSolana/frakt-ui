@@ -15,10 +15,8 @@ export interface BorrowNftData {
   nft: BorrowNft;
   selected: boolean;
   active: boolean;
-  loanValue?: number;
-  fee?: number;
-  yearlyInterest?: number;
-  liquidationPrice?: number;
+  bondLoanValue?: number;
+  bondFee?: number;
 }
 
 export interface BorrowManualTableProps {

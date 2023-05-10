@@ -20,7 +20,6 @@ import { useMaxBorrow, useWalletNfts } from './hooks';
 import { Sidebar } from './components/Sidebar';
 import { CartOrder, calcTotalBorrowValue, useBorrow } from '../cartState';
 import { patchPairByBondOrders } from '../cartState/useCartState';
-import { SuggestionPicker } from './components/SuggestionPicker';
 import { DURATION_TABS } from './constants';
 import { BorrowManualTable } from './components/BorrowManualTable';
 import styles from './BorrowManualLitePage.module.scss';
@@ -248,16 +247,6 @@ export const BorrowManualLitePage: FC = () => {
     wallet,
 
     maxBorrowValueLoading,
-    maxBorrowValue,
-    borrowValue,
-
-    borrowPercentValue,
-    onBorrowValueChange,
-    onBorrowPercentChange,
-
-    isSuggestionRequested,
-    fetchSuggestion,
-    setIsSuggestionRequested,
 
     durationTabs,
     duration,
@@ -300,23 +289,6 @@ export const BorrowManualLitePage: FC = () => {
               columnGap: 20,
             }}
           >
-            <SuggestionPicker
-              style={{
-                width: 300,
-                backgroundColor: 'white',
-              }}
-              value={borrowValue}
-              percentValue={borrowPercentValue}
-              onValueChange={onBorrowValueChange}
-              onPercentChange={onBorrowPercentChange}
-              maxValue={maxBorrowValue}
-              onAfterChange={() => {
-                if (isSuggestionRequested) {
-                  fetchSuggestion({ cancelRefetch: true });
-                }
-                setIsSuggestionRequested(true);
-              }}
-            />
             <Tabs
               tabs={durationTabs}
               value={duration}
@@ -346,10 +318,8 @@ export const BorrowManualLitePage: FC = () => {
                 selected:
                   currentNft?.mint === nft.mint ||
                   !!findOrderInCart({ nftMint: nft.mint }),
-                fee: 5 * 1e9,
-                loanValue: 10 * 1e9,
-                yearlyInterest: 15,
-                liquidationPrice: 9 * 1e9,
+                bondFee: 0, //TODO: Get from bond combinations
+                bondLoanValue: 0, //TODO: Get from bond combinations
               }))}
               duration={duration as LoanDuration}
               setQuerySearch={setSearch}

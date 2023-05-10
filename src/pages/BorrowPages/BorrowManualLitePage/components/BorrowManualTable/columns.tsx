@@ -10,6 +10,7 @@ import {
 
 import { NftInfoCell } from './BorrowManualTableCells';
 import { BorrowNftData } from './BorrowManualTable';
+import { calcPriceBasedUpfrontFee } from '@frakt/pages/BorrowPages/helpers';
 
 type GetTableColumns = (props: {
   duration: LoanDuration;
@@ -35,12 +36,12 @@ export const getTableColumns: GetTableColumns = ({ duration }) => {
         selected={selected}
       />
     ),
-    sorter: ({ nft: nftA }, { nft: nftB }) =>
-      nftB?.name?.localeCompare(nftA?.name),
+    // sorter: ({ nft: nftA }, { nft: nftB }) =>
+    //   nftB?.name?.localeCompare(nftA?.name),
     showSorterTooltip: false,
   };
 
-  const LOAN_VALUE_COLUMN: ColumnType<BorrowNftData> = {
+  const LOAN_VALUE_BONDS_COLUMN: ColumnType<BorrowNftData> = {
     key: 'maxLoanValue',
     dataIndex: 'maxLoanValue',
     title: (column) => (
@@ -51,9 +52,33 @@ export const getTableColumns: GetTableColumns = ({ duration }) => {
         hiddenSort
       />
     ),
-    sorter: ({ loanValue: loanValueA }, { loanValue: loanValueB }) =>
-      loanValueB - loanValueA,
-    render: (_, { loanValue }) => createSolValueJSX(loanValue),
+    // sorter: ({ loanValue: loanValueA }, { loanValue: loanValueB }) =>
+    //   loanValueB - loanValueA,
+    render: (_, { bondLoanValue }) => createSolValueJSX(bondLoanValue),
+    showSorterTooltip: false,
+  };
+
+  const LOAN_VALUE_PERPETUAL_COLUMN: ColumnType<BorrowNftData> = {
+    key: 'maxLoanValue',
+    dataIndex: 'maxLoanValue',
+    title: (column) => (
+      <HeaderCell
+        column={column}
+        label="Loan value"
+        value="maxLoanValue"
+        hiddenSort
+      />
+    ),
+    // sorter: ({ loanValue: loanValueA }, { loanValue: loanValueB }) =>
+    //   loanValueB - loanValueA,
+    render: (_, { nft }) => {
+      const { valuation, classicParams } = nft;
+      const maxBorrowValuePriceBased =
+        valuation * (classicParams?.priceBased?.ltvPercent / 100);
+
+      return createSolValueJSX(maxBorrowValuePriceBased);
+    },
+
     showSorterTooltip: false,
   };
 
@@ -68,7 +93,7 @@ export const getTableColumns: GetTableColumns = ({ duration }) => {
         hiddenSort
       />
     ),
-    render: (_, { fee }) => createSolValueJSX(fee),
+    render: (_, { bondFee }) => createSolValueJSX(bondFee),
   };
 
   const REPAY_VALUE_COLUMN: ColumnType<BorrowNftData> = {
@@ -82,7 +107,8 @@ export const getTableColumns: GetTableColumns = ({ duration }) => {
         hiddenSort
       />
     ),
-    render: (_, { loanValue, fee }) => createSolValueJSX(loanValue + fee),
+    render: (_, { bondLoanValue, bondFee }) =>
+      createSolValueJSX(bondLoanValue + bondFee),
   };
 
   const DURATION_COLUMN: ColumnType<BorrowNftData> = {
@@ -110,7 +136,10 @@ export const getTableColumns: GetTableColumns = ({ duration }) => {
         hiddenSort
       />
     ),
-    render: (_, { yearlyInterest }) => createPercentValueJSX(yearlyInterest),
+    render: (_, { nft }) => {
+      const { borrowAPRPercent } = nft.classicParams.priceBased;
+      return createPercentValueJSX(borrowAPRPercent);
+    },
   };
 
   const UPFRONT_FEE_COLUMN: ColumnType<BorrowNftData> = {
@@ -119,7 +148,17 @@ export const getTableColumns: GetTableColumns = ({ duration }) => {
     title: (column) => (
       <HeaderCell column={column} label="Upfront fee" value="fee" hiddenSort />
     ),
-    render: (_, { fee }) => createSolValueJSX(fee),
+    render: (_, { nft }) => {
+      const { valuation, classicParams } = nft;
+      const maxBorrowValuePriceBased =
+        valuation * (classicParams?.priceBased?.ltvPercent / 100);
+
+      return createSolValueJSX(
+        calcPriceBasedUpfrontFee({
+          loanValue: maxBorrowValuePriceBased,
+        }),
+      );
+    },
   };
 
   const LIQUIDATION_PRICE_COLUMN: ColumnType<BorrowNftData> = {
@@ -133,13 +172,27 @@ export const getTableColumns: GetTableColumns = ({ duration }) => {
         hiddenSort
       />
     ),
-    render: (_, { liquidationPrice }) => createSolValueJSX(liquidationPrice),
+    render: (_, { nft }) => {
+      const { valuation, classicParams } = nft;
+
+      const maxBorrowValuePriceBased =
+        valuation * (classicParams?.priceBased?.ltvPercent / 100);
+
+      const { collaterizationRate } = nft.classicParams.priceBased;
+
+      const liquidationPrice =
+        maxBorrowValuePriceBased +
+        maxBorrowValuePriceBased * (collaterizationRate / 100);
+
+      return createSolValueJSX(liquidationPrice);
+    },
   };
 
   const isPerpetual = duration === '0';
   return [
     NAME_COLUMN,
-    LOAN_VALUE_COLUMN,
+    !isPerpetual ? LOAN_VALUE_BONDS_COLUMN : null,
+    isPerpetual ? LOAN_VALUE_PERPETUAL_COLUMN : null,
     !isPerpetual ? INTEREST_COLUMN : null,
     !isPerpetual ? REPAY_VALUE_COLUMN : null,
     !isPerpetual ? DURATION_COLUMN : null,
