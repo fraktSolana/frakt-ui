@@ -1,15 +1,23 @@
 import { FC } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
 import { Tabs, useTabs } from '@frakt/components/Tabs';
 import LendTab from './components/LendTab';
 
 import { DASHBOARD_TABS, DashboardTabsNames } from './constants';
+import DailyActive from './components/DaliyActive';
+import TotalStats from './components/TotalStats';
 import BorrowTab from './components/BorrowTab';
+import { useFetchAllStats } from './hooks';
 
 import styles from './DashboardPage.module.scss';
 
 const DashboardPage: FC = () => {
+  const { publicKey: walletPublicKey } = useWallet();
+
+  const { data } = useFetchAllStats({ walletPublicKey });
+
   const {
     tabs: marketTabs,
     value: tabValue,
@@ -29,6 +37,10 @@ const DashboardPage: FC = () => {
           {tabValue === DashboardTabsNames.BORROW && <BorrowTab />}
           {tabValue === DashboardTabsNames.LEND && <LendTab />}
         </div>
+      </div>
+      <div className={styles.statsWrapper}>
+        <TotalStats data={data?.totalStats} />
+        <DailyActive data={data?.dailyActivity} />
       </div>
     </AppLayout>
   );

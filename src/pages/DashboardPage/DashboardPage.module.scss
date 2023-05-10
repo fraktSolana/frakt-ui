@@ -16,3 +16,10 @@
 .tab button:first-child {
   border-right: 1px solid var(--primary-border);
 }
+
+.statsWrapper {
+  display: flex;
+  align-items: center;
+  margin-top: 32px;
+  gap: 24px;
+}

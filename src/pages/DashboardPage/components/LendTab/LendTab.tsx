@@ -2,6 +2,8 @@ import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import NotConnectedLend from './NotConnectedLend';
+import ConnectedLend from './ConnectedLend';
+
 import styles from './LendTab.module.scss';
 
 const LendTab: FC = () => {
@@ -9,7 +11,7 @@ const LendTab: FC = () => {
 
   return (
     <div className={styles.wrapper}>
-      {/* {connected && <ConnectedBorrowContent />} */}
+      {connected && <ConnectedLend />}
       {!connected && <NotConnectedLend />}
     </div>
   );

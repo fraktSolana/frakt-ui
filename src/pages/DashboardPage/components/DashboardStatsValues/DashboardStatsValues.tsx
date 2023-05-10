@@ -1,30 +1,70 @@
 import { FC, PropsWithChildren } from 'react';
-
-import { Solana } from '@frakt/icons';
-import styles from './DashboardStatsValues.module.scss';
 import classNames from 'classnames';
+import { isNumber } from 'lodash';
+
+import { formatNumbersWithCommans } from '@frakt/utils';
+import { Solana } from '@frakt/icons';
+
+import styles from './DashboardStatsValues.module.scss';
+
+export enum VALUES_TYPES {
+  string = 'string',
+  percent = 'percent',
+  solPrice = 'solPrice',
+}
+
+const DIMENSTION_BY_VALUE_TYPE: Record<VALUES_TYPES, JSX.Element> = {
+  [VALUES_TYPES.string]: null,
+  [VALUES_TYPES.percent]: <>{'%'}</>,
+  [VALUES_TYPES.solPrice]: <Solana className={styles.icon} />,
+};
 
 interface DashboardStatsValuesProps {
   label: string;
-  value?: number;
+  value?: number | string | JSX.Element;
   className?: string;
-  type?: 'primary' | 'secondary';
+  valueType?: VALUES_TYPES;
+  reverse?: boolean;
+  toFixed?: number;
 }
 
 export const DashboardColumnValue: FC<
   PropsWithChildren<DashboardStatsValuesProps>
-> = ({ label, className, value, children, type = 'primary' }) => (
-  <div
-    className={classNames(styles.column, className, {
-      [styles.medium]: type === 'secondary',
-    })}
-  >
-    <p className={styles.label}>{label}</p>
-    {children && children}
-    {!children && (
+> = ({
+  label,
+  className,
+  value,
+  reverse,
+  valueType = VALUES_TYPES.solPrice,
+  toFixed = 2,
+}) => {
+  const formattedValue = formatValue(value, valueType, toFixed);
+
+  return (
+    <div
+      className={classNames(styles.column, className, {
+        [styles.reverse]: reverse,
+      })}
+    >
+      <p className={styles.label}>{label}</p>
       <p className={styles.value}>
-        {value?.toFixed(2) || '--'} <Solana className={styles.icon} />
+        {formattedValue} {DIMENSTION_BY_VALUE_TYPE[valueType]}
       </p>
-    )}
-  </div>
-);
+    </div>
+  );
+};
+
+const formatValue = (
+  value: number | string | JSX.Element,
+  type: VALUES_TYPES,
+  toFixed: number,
+) => {
+  if (type === VALUES_TYPES.solPrice && isNumber(value)) {
+    const roundedValue = value?.toFixed(toFixed);
+
+    const formatedNumbersWithCommans = formatNumbersWithCommans(roundedValue);
+    return formatedNumbersWithCommans;
+  }
+
+  return value;
+};

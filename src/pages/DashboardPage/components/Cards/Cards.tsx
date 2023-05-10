@@ -4,9 +4,10 @@ import classNames from 'classnames';
 
 import Button from '@frakt/components/Button';
 
-import { NFT } from '../../types';
-import styles from './Cards.module.scss';
 import { CardBackdrop } from './CardBackdrop';
+import { NFT } from '../../types';
+
+import styles from './Cards.module.scss';
 
 interface BorrowCardProps extends NFT {
   onClick?: () => void;
@@ -52,9 +53,9 @@ export default BorrowCard;
 export const LendCard = ({ image, activeLoans, amount, apr }) => (
   <CardBackdrop image={image}>
     <div className={styles.nftInfo}>
-      <p className={styles.value}>{amount} ◎</p>
+      <p className={styles.value}>{amount?.toFixed(0)} ◎</p>
       <p className={styles.value}>in {activeLoans} Loans</p>
     </div>
-    <div className={styles.badge}>+ {apr} ◎</div>
+    <div className={styles.badge}>{apr?.toFixed(0)} %</div>
   </CardBackdrop>
 );

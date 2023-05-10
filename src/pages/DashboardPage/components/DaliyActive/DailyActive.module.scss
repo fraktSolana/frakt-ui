@@ -1,0 +1,23 @@
+.content {
+  background: var(--primary-background);
+  border: 1px solid var(--secondary-text);
+  padding: 32px;
+  width: 100%;
+
+  @media screen and (max-width: 1290px) {
+    padding: 24px;
+  }
+}
+
+.title {
+  font: var(--font-h6);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.statsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+}

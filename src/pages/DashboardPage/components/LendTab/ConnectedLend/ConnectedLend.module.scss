@@ -1,0 +1,83 @@
+$contentHeight: 582px;
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  display: flex;
+  padding: 32px;
+  gap: 32px;
+  height: $contentHeight;
+  width: 100%;
+
+  @media (max-width: 1240px) {
+    gap: 24px;
+  }
+
+  @media (max-width: 960px) {
+    @include flex-column;
+    padding: 24px;
+    height: 100%;
+  }
+
+  @media (max-width: 550px) {
+    padding: 16px;
+  }
+}
+
+.searchableList {
+  @include flex-column;
+  gap: 16px;
+  width: 100%;
+
+  @media (max-width: 1240px) {
+    width: 35%;
+  }
+
+  @media (max-width: 960px) {
+    width: unset;
+  }
+}
+
+.content {
+  @include flex-column;
+  gap: 24px;
+  width: 100%;
+
+  @media (max-width: 1240px) {
+    width: 65%;
+  }
+
+  @media (max-width: 960px) {
+    width: unset;
+    position: fixed;
+    bottom: 0;
+    background: var(--primary-background);
+    left: 0;
+    right: 0;
+    padding: 24px;
+  }
+
+  @media (max-width: 550px) {
+    padding: 16px;
+    gap: 16px;
+  }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.button {
+  margin-top: 16px;
+  height: 48px;
+  width: 100%;
+}
+
+.chart {
+  height: 184px;
+  width: 184px;
+}
