@@ -26,6 +26,8 @@ interface SortViewProps<T> {
   };
   selectLoansParams?: SelectLoansParams;
   setQueryData: (nextSort: Sort) => void;
+  showSorting?: boolean;
+  showSearching?: boolean;
 }
 
 const SortView = <T extends unknown>({
@@ -35,6 +37,8 @@ const SortView = <T extends unknown>({
   sort,
   selectLoansParams,
   setQueryData,
+  showSorting = false,
+  showSearching = false,
 }: SortViewProps<T>) => {
   const { viewState, setViewState } = useTableView();
 
@@ -49,21 +53,23 @@ const SortView = <T extends unknown>({
 
   return (
     <div className={styles.sortWrapper}>
-      <div className={styles.searchWrapper}>
-        {selectLoansParams?.onChange && (
-          <Checkbox
-            className={styles.checkbox}
-            classNameInnerContent={styles.checkboxInnerContent}
-            onChange={selectLoansParams.onChange}
-            checked={selectLoansParams.selected}
+      {showSearching && (
+        <div className={styles.searchWrapper}>
+          {selectLoansParams?.onChange && (
+            <Checkbox
+              className={styles.checkbox}
+              classNameInnerContent={styles.checkboxInnerContent}
+              onChange={selectLoansParams.onChange}
+              checked={selectLoansParams.selected}
+            />
+          )}
+          <Search
+            onChange={search?.onChange}
+            className={styles.searchInput}
+            placeHolderText={search?.placeHolderText}
           />
-        )}
-        <Search
-          onChange={search?.onChange}
-          className={styles.searchInput}
-          placeHolderText={search?.placeHolderText}
-        />
-      </div>
+        </div>
+      )}
       <div className={styles.rowGap}>
         <div className={styles.switchButtons}>
           <Button
@@ -85,22 +91,24 @@ const SortView = <T extends unknown>({
             <TableView />
           </Button>
         </div>
-        <div ref={ref}>
-          <Button
-            className={styles.sortingButton}
-            type="tertiary"
-            onClick={toggleDropdown}
-          >
-            Sorting
-          </Button>
-          <SortDropdown
-            columns={columns}
-            setSort={setSort}
-            sort={sort}
-            visible={sortDropdownVisible}
-            setQueryData={setQueryData}
-          />
-        </div>
+        {showSorting && (
+          <div ref={ref}>
+            <Button
+              className={styles.sortingButton}
+              type="tertiary"
+              onClick={toggleDropdown}
+            >
+              Sorting
+            </Button>
+            <SortDropdown
+              columns={columns}
+              setSort={setSort}
+              sort={sort}
+              visible={sortDropdownVisible}
+              setQueryData={setQueryData}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

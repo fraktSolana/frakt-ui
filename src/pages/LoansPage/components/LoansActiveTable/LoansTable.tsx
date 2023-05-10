@@ -73,6 +73,7 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
       viewParams={{
         showCard: viewState === 'card',
         showSorting: true,
+        showSearching: true,
       }}
       selectLoansParams={{
         onChange: onChangeCheckbox,

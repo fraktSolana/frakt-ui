@@ -22,6 +22,7 @@ export interface ActiveRowParams {
 export interface ViewParams {
   showCard: boolean;
   showSorting: boolean;
+  showSearching: boolean;
 }
 
 export interface SelectLoansParams {

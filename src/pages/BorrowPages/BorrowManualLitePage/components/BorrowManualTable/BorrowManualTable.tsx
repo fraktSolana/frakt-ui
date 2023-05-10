@@ -67,7 +67,8 @@ export const BorrowManualTable: FC<BorrowManualTableProps> = ({
       className={styles.rootTable}
       viewParams={{
         showCard: viewState === 'card',
-        showSorting: true,
+        showSorting: false,
+        showSearching: true,
       }}
       setQueryData={setQueryData}
     />

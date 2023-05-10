@@ -68,6 +68,7 @@ export const BorrowManualTable: FC<BorrowManualTableProps> = ({
       viewParams={{
         showCard: viewState === 'card',
         showSorting: true,
+        showSearching: true,
       }}
       setQueryData={setQueryData}
     />
