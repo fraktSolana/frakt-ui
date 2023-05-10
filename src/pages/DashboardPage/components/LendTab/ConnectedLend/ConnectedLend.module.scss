@@ -1,4 +1,4 @@
-$contentHeight: 582px;
+$contentHeight: 575px;
 
 @mixin flex-column {
   display: flex;
@@ -27,57 +27,52 @@ $contentHeight: 582px;
   }
 }
 
-.searchableList {
+.lendContainer {
   @include flex-column;
+  justify-content: space-between;
   gap: 16px;
   width: 100%;
-
-  @media (max-width: 1240px) {
-    width: 35%;
-  }
-
-  @media (max-width: 960px) {
-    width: unset;
-  }
 }
 
-.content {
+.depositWrapper {
   @include flex-column;
   gap: 24px;
   width: 100%;
-
-  @media (max-width: 1240px) {
-    width: 65%;
-  }
-
-  @media (max-width: 960px) {
-    width: unset;
-    position: fixed;
-    bottom: 0;
-    background: var(--primary-background);
-    left: 0;
-    right: 0;
-    padding: 24px;
-  }
-
-  @media (max-width: 550px) {
-    padding: 16px;
-    gap: 16px;
-  }
 }
 
-.wrapper {
+.lendContent {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  margin: 0 auto;
+  max-width: 440px;
+  width: 100%;
 }
 
-.button {
-  margin-top: 16px;
-  height: 48px;
+.lendStats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.chartPieWrapper {
+  display: flex;
+  align-items: center;
+  gap: 24px;
   width: 100%;
 }
 
 .chart {
-  height: 184px;
-  width: 184px;
+  width: 184px !important;
+  height: 184px !important;
+}
+
+
+
+.navigationButton {
+  margin-top: 16px;
+  height: 48px;
+  width: 100%;
 }

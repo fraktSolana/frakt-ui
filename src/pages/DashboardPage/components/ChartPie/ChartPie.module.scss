@@ -11,8 +11,6 @@
   position: relative;
 }
 
-
-
 .innerContent {
   position: absolute;
   top: 50%;
@@ -33,6 +31,7 @@
 .label {
   color: var(--secondary-text);
   font: var(--font-text-7);
+  text-align: center;
   text-transform: uppercase;
 }
 

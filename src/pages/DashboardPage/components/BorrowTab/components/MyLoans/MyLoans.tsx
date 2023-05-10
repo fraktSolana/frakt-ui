@@ -44,13 +44,8 @@ const MyLoans: FC<{ loans: Loan[] }> = ({ loans }) => {
             <DashboardColumnValue
               label="Total borrowed"
               value={totalBorrowed}
-              type="secondary"
             />
-            <DashboardColumnValue
-              label="Total debt"
-              value={totalDebt}
-              type="secondary"
-            />
+            <DashboardColumnValue label="Total debt" value={totalDebt} />
           </div>
           <ChartValuesList data={loansInfo} colors={defaultsColors} />
         </div>

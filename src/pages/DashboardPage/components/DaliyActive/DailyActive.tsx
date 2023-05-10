@@ -17,6 +17,7 @@ const DailyActive: FC<DailyStatsProps> = ({ data }) => {
         <DashboardColumnValue
           label="Volume"
           value={data?.dailyVolume}
+          toFixed={0}
           reverse
         />
         <DashboardColumnValue

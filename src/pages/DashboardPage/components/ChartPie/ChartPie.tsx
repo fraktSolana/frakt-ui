@@ -3,7 +3,6 @@ import { Doughnut } from 'react-chartjs-2';
 
 import { defaultsColors } from '../BorrowTab/components/MyLoans/constants';
 import styles from './ChartPie.module.scss';
-import classNames from 'classnames';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
