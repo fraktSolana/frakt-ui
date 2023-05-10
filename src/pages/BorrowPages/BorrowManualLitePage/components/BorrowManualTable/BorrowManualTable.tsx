@@ -71,8 +71,8 @@ export const BorrowManualTable: FC<BorrowManualTableProps> = ({
       }}
       setQueryData={setQueryData}
       activeRowParams={{
-        className: styles.test,
-        cardClassName: styles.test2,
+        className: styles.activeRowClassName,
+        cardClassName: styles.activeCardClassName,
         field: 'nft.mint',
         value: activeNftMint,
       }}

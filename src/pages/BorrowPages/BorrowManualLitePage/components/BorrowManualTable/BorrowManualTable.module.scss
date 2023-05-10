@@ -81,3 +81,8 @@
     width: 11px;
   }
 }
+
+.activeRowClassName,
+.activeCardClassName {
+  background: var(--gray-table-hover);
+}

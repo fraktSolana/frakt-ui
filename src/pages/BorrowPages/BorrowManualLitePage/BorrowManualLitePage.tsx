@@ -12,7 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { LoanType } from '@frakt/api/loans';
 import { Tabs, useTabs } from '@frakt/components/Tabs';
-import { Loader } from '@frakt/components/Loader';
+// import { Loader } from '@frakt/components/Loader';
 import { useIntersection } from '@frakt/hooks/useIntersection';
 import { Sort } from '@frakt/components/Table';
 
@@ -39,8 +39,8 @@ export const useBorrowManualLitePage = () => {
   const onDurationTabClick = (value: string) => {
     onBorrowValueChange('0');
     setDuration(value);
-    clearCart();
     clearCurrentNftState();
+    clearCart();
   };
 
   const maxBorrowValue = useMemo(() => {
@@ -262,9 +262,9 @@ export const BorrowManualLitePage: FC = () => {
 
   const {
     nfts,
-    initialLoading,
+    // initialLoading,
     fetchNextPage,
-    isFetchingNextPage,
+    // isFetchingNextPage,
     setSearch,
     hasNextPage,
   } = useWalletNfts({
@@ -280,58 +280,57 @@ export const BorrowManualLitePage: FC = () => {
 
   return (
     <AppLayout>
-      <div className={styles.container}>
+      <div
+        className={classNames(styles.container, {
+          [styles.containerSidebarVisible]: !!currentNft,
+        })}
+      >
+        <div className={styles.header}>
+          <h1>Borrow SOL</h1>
+        </div>
+
         {wallet.connected && !maxBorrowValueLoading && (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              columnGap: 20,
-            }}
-          >
-            <Tabs
-              tabs={durationTabs}
-              value={duration}
-              setValue={onDurationTabClick}
-              className={styles.tabs}
-              additionalClassNames={{
-                tabClassName: styles.tab,
-                tabActiveClassName: styles.tabActive,
-              }}
-              type="unset"
-            />
+          <div className={styles.content}>
+            <div className={styles.tabsWrapper}>
+              <h3 className={styles.subtitle}>Duration</h3>
+              <Tabs
+                tabs={durationTabs}
+                value={duration}
+                setValue={onDurationTabClick}
+                className={styles.tabs}
+                additionalClassNames={{
+                  tabClassName: styles.tab,
+                  tabActiveClassName: styles.tabActive,
+                }}
+                type="unset"
+              />
+            </div>
+
+            {/* {!nfts?.length && initialLoading && <Loader />} */}
+
+            <div className={styles.tableWrapper}>
+              <BorrowManualTable
+                data={nfts.map((nft) => ({
+                  nft,
+                  active: currentNft?.mint === nft.mint,
+                  selected:
+                    currentNft?.mint === nft.mint ||
+                    !!findOrderInCart({ nftMint: nft.mint }),
+                  bondFee: 0, //TODO: Get from bond combinations
+                  bondLoanValue: 0, //TODO: Get from bond combinations
+                }))}
+                duration={duration as LoanDuration}
+                setQuerySearch={setSearch}
+                setQueryData={setQueryData}
+                onRowClick={(nft) => onNftClick(nft?.nft)}
+                activeNftMint={currentNft?.mint}
+              />
+              <div ref={ref} />
+            </div>
           </div>
         )}
 
         {!!currentNft && <Sidebar duration={duration as LoanDuration} />}
-        <div
-          className={classNames([
-            styles.content,
-            { [styles.contentSidebarVisible]: !!currentNft },
-          ])}
-        >
-          <>
-            <BorrowManualTable
-              data={nfts.map((nft) => ({
-                nft,
-                active: currentNft?.mint === nft.mint,
-                selected:
-                  currentNft?.mint === nft.mint ||
-                  !!findOrderInCart({ nftMint: nft.mint }),
-                bondFee: 0, //TODO: Get from bond combinations
-                bondLoanValue: 0, //TODO: Get from bond combinations
-              }))}
-              duration={duration as LoanDuration}
-              setQuerySearch={setSearch}
-              setQueryData={setQueryData}
-              onRowClick={(nft) => onNftClick(nft?.nft)}
-            />
-            {isFetchingNextPage && <Loader />}
-            <div ref={ref} />
-          </>
-
-          {!nfts?.length && initialLoading && <Loader />}
-        </div>
       </div>
     </AppLayout>
   );
