@@ -39,6 +39,7 @@ export const BorrowManualTable: FC<BorrowManualTableProps> = ({
   setQueryData,
   setQuerySearch,
   onRowClick,
+  activeNftMint,
 }) => {
   const { viewState } = useTableView();
 
@@ -69,6 +70,12 @@ export const BorrowManualTable: FC<BorrowManualTableProps> = ({
         showSearching: true,
       }}
       setQueryData={setQueryData}
+      activeRowParams={{
+        className: styles.test,
+        cardClassName: styles.test2,
+        field: 'nft.mint',
+        value: activeNftMint,
+      }}
     />
   );
 };

@@ -14,7 +14,7 @@ export type PartialSearchParams = Partial<SearchParams>;
 
 export interface ActiveRowParams {
   field?: string;
-  value?: string;
+  value?: any;
   className?: string;
   cardClassName?: string;
 }

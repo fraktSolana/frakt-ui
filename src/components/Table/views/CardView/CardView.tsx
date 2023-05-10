@@ -3,6 +3,7 @@ import classNames from 'classnames';
 
 import { ActiveRowParams } from '../../types';
 import styles from './CardView.module.scss';
+import { getCardOrRowClassName } from '../../helpers';
 
 interface CardViewProps<T> {
   columns: ColumnsType<T> | any;
@@ -25,9 +26,10 @@ const CardView = <T extends unknown>({
     <div className={classNames({ [styles.cardList]: data?.length }, className)}>
       {data?.map((dataRow) => (
         <div
-          className={classNames(styles.card, {
-            [activeRowParams?.cardClassName]: !!dataRow[activeRowParams?.field],
-          })}
+          className={classNames(
+            styles.card,
+            getCardOrRowClassName(dataRow, activeRowParams, true),
+          )}
           onClick={onRowClick ? () => onRowClick(dataRow) : null}
           key={dataRow[rowKeyField]}
         >
