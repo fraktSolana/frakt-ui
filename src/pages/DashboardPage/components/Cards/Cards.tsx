@@ -4,15 +4,16 @@ import classNames from 'classnames';
 
 import Button from '@frakt/components/Button';
 
-import { NFT } from '../../../../types';
-import styles from './NFTCard.module.scss';
+import { NFT } from '../../types';
+import styles from './Cards.module.scss';
+import { CardBackdrop } from './CardBackdrop';
 
-interface NFTCardProps extends NFT {
+interface BorrowCardProps extends NFT {
   onClick?: () => void;
   className?: string;
 }
 
-export const NFTCard: FC<NFTCardProps> = ({
+export const BorrowCard: FC<BorrowCardProps> = ({
   image,
   className,
   maxLoanValue: rawMaxLoanValue,
@@ -25,13 +26,7 @@ export const NFTCard: FC<NFTCardProps> = ({
   const maxLoanValue = (rawMaxLoanValue / 1e9)?.toFixed(0);
 
   return (
-    <div
-      onClick={onClick ? onClick : null}
-      className={classNames(styles.card, className, {
-        [styles.clicable]: onClick,
-      })}
-    >
-      <img src={image} className={styles.nftImage} />
+    <CardBackdrop image={image} className={className} onClick={onClick}>
       <div
         className={classNames(styles.nftInfo, {
           [styles.primary]: connected,
@@ -48,8 +43,18 @@ export const NFTCard: FC<NFTCardProps> = ({
         )}
       </div>
       {!connected && <div className={styles.badge}>+ {maxLoanValue} ◎</div>}
-    </div>
+    </CardBackdrop>
   );
 };
 
-export default NFTCard;
+export default BorrowCard;
+
+export const LendCard = ({ image, activeLoans, amount, apr }) => (
+  <CardBackdrop image={image}>
+    <div className={styles.nftInfo}>
+      <p className={styles.value}>{amount} ◎</p>
+      <p className={styles.value}>in {activeLoans} Loans</p>
+    </div>
+    <div className={styles.badge}>+ {apr} ◎</div>
+  </CardBackdrop>
+);

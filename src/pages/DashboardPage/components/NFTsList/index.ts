@@ -1,1 +1,1 @@
-export { default } from './NFTsList';
+export * from './NFTsList';

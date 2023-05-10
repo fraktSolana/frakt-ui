@@ -4,11 +4,11 @@ import classNames from 'classnames';
 import InfinityScroll from '@frakt/components/InfinityScroll';
 
 import { NFT } from '../../types';
-import { NFTCard } from '../BorrowTab/components/NFTCard';
+import { BorrowCard } from '../Cards';
 
 import styles from './NFTsList.module.scss';
 
-interface NFTsListProps {
+interface BorrowListProps {
   nfts: NFT[];
   onClick?: (nft: NFT) => void;
   fetchNextPage?: () => void;
@@ -16,7 +16,7 @@ interface NFTsListProps {
   className?: string;
 }
 
-const NFTsList: FC<NFTsListProps> = ({
+export const BorrowList: FC<BorrowListProps> = ({
   nfts,
   onClick,
   fetchNextPage,
@@ -31,10 +31,8 @@ const NFTsList: FC<NFTsListProps> = ({
       isLoading={isLoading}
     >
       {nfts.map((nft: NFT) => (
-        <NFTCard onClick={() => onClick(nft)} {...nft} />
+        <BorrowCard onClick={() => onClick(nft)} {...nft} />
       ))}
     </InfinityScroll>
   );
 };
-
-export default NFTsList;

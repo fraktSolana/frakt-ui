@@ -77,20 +77,13 @@ $contentHeight: 582px;
   }
 }
 
-.wrapperNftsList {
+.nftsList {
   overflow: auto;
 
-  @media (max-width: 960px) {
-    padding-bottom: 510px;
-  }
-
-  @media (max-width: 550px) {
-    padding-bottom: 390px;
-  }
-}
-
-.nftsList {
+  display: grid;
   grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+  align-items: stretch;
+  gap: 16px;
 
   @media (max-width: 1240px) {
     grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
@@ -102,15 +95,17 @@ $contentHeight: 582px;
 
   @media (max-width: 550px) {
     grid-template-columns: repeat(auto-fill, minmax(109px, 1fr));
+    gap: 8px;
   }
 }
 
-.description {
+.wrapper {
   display: flex;
   flex-direction: column;
+}
 
-//   & > div {
-//     display: flex;
-//     align-items: center;
-//   }
+.button {
+  margin-top: 16px;
+  height: 48px;
+  width: 100%;
 }

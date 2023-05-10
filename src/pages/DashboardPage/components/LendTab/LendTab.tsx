@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
-import styles from './LendTab.module.scss';
 import NotConnectedLend from './NotConnectedLend';
+import styles from './LendTab.module.scss';
 
 const LendTab: FC = () => {
   const { connected } = useWallet();

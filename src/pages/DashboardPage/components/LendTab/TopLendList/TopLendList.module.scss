@@ -1,0 +1,53 @@
+.cardsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 104px;
+  max-height: 104px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0 5px;
+
+  p:first-child {
+    min-width: 185px;
+    max-width: 185px;
+  }
+}
+
+.label {
+  color: var(--secondary-text);
+  font: var(--font-text-7);
+  text-transform: uppercase;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 160px;
+  max-width: 160px;
+}
+
+.cardImage {
+  height: 28px;
+  width: 28px;
+}
+
+.cardName {
+  font: var(--font-text-6);
+}
+
+.cardValue {
+  font: var(--font-text-4);
+  font-size: 14px;
+}
