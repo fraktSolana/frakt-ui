@@ -1,0 +1,61 @@
+@import '@frakt/scss/abstracts/mixins';
+
+.root {
+  margin-top: 50px; //TODO: Remove
+  margin-bottom: 50px; //TODO: Remove
+  height: 40px;
+  width: 100%;
+  @include flex(row, nowrap, space-between, center);
+  column-gap: 10px;
+}
+
+.inputWrapper {
+  background: var(--secondary-background);
+  border-bottom: 1px solid var(--black-color);
+  min-width: 200px;
+  position: relative;
+
+  input {
+    height: 40px;
+    color: var(--secondary-border);
+    &,
+    &:hover,
+    &:active,
+    &:focus,
+    &:not(.styles_ant-input):hover {
+      background: none;
+      border: none;
+      outline: none;
+    }
+  }
+}
+
+.maxBtn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  height: 26px;
+  min-width: 104px;
+  width: unset;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.errors {
+  height: 16px;
+  font: var(--font-text-6);
+  color: var(--red-error-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.slider {
+  width: 100%;
+}
+
+.input {
+  margin-bottom: 10px;
+}
