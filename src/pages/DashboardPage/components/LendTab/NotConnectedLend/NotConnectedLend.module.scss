@@ -67,7 +67,7 @@
     grid-template-columns: unset;
     display: flex;
     overflow: auto;
-    max-height: 234px;
+    min-height: 234px;
     gap: 16px;
 
     & > div {

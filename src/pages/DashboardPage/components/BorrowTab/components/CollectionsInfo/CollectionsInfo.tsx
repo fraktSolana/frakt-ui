@@ -4,7 +4,10 @@ import { useDispatch } from 'react-redux';
 import { commonActions } from '@frakt/state/common/actions';
 import Button from '@frakt/components/Button';
 
-import { DashboardColumnValue } from '../../../DashboardStatsValues';
+import {
+  DashboardColumnValue,
+  VALUES_TYPES,
+} from '../../../DashboardStatsValues';
 import Heading from '../../../Heading';
 
 import styles from './CollectionsInfo.module.scss';
@@ -19,7 +22,11 @@ const CollectionsInfo: FC = () => {
     <div className={styles.wrapper}>
       <Heading className={styles.title} title="Available to borrow" />
       <div className={styles.stats}>
-        <DashboardColumnValue label="Collections whitelisted" value={198} />
+        <DashboardColumnValue
+          label="Collections whitelisted"
+          valueType={VALUES_TYPES.string}
+          value={198}
+        />
         <DashboardColumnValue label="Total liquidity" value={198} />
       </div>
 

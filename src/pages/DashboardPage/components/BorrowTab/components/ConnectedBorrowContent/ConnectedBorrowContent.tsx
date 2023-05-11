@@ -3,11 +3,11 @@ import { FC } from 'react';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 
 import { useBorrowSingleBond, useConnectedBorrowContent } from './hooks';
-import { Search } from '../../../Search';
+import AvailableBorrow from '../AvailableBorrow';
 import { NFTsList } from '../../../NFTsList';
+import { Search } from '../../../Search';
 import MyLoans from '../MyLoans';
 
-import AvailableBorrow from '../AvailableBorrow';
 import styles from './ConnectedBorrowContent.module.scss';
 
 const ConnectedBorrowContent: FC = () => {

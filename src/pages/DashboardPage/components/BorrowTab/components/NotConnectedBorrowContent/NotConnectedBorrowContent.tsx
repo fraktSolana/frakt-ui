@@ -38,7 +38,7 @@ interface ContentViewProps {
 const MobileContentView = ({ collections, setSearch }: ContentViewProps) => (
   <div className={styles.mobileContainer}>
     <Search title="1 click loan" onChange={setSearch} />
-    <NFTsList nfts={collections} />
+    <NFTsList emptyMessageClassName={styles.emptyMessage} nfts={collections} />
     <CollectionsInfo />
   </div>
 );

@@ -33,6 +33,7 @@ export const options = {
 const HorizontalBar: FC<HorizontalBarProps> = ({ data: rawData, labels }) => {
   const data = {
     labels,
+    responsive: true,
     maintainAspectRatio: false,
     datasets: [
       {

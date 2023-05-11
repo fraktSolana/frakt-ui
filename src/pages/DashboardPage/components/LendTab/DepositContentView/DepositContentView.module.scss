@@ -1,7 +1,25 @@
 .chartBarWrapper {
   max-width: 335px;
-  min-height: 180px;
+  height: 180px;
   width: 100%;
+
+  canvas {
+    height: 180px !important;
+  }
+
+  @media ((max-width: 1240px) and (min-width: 960px)) {
+    max-width: unset;
+    min-height: unset;
+    height: 120px !important;
+
+    canvas {
+      height: 120px !important;
+    }
+  }
+
+  @media (max-width: 960px) {
+    max-width: unset;
+  }
 }
 
 .depositContainer {
@@ -12,16 +30,34 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  @media ((max-width: 1240px) and (min-width: 960px)) {
+    flex-direction: column;
+  }
+
+  @media (max-width: 960px) {
+    gap: 32px;
+  }
 }
 .depositInfoWrapper {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+
+  @media ((max-width: 1240px) and (min-width: 960px)) {
+    flex-direction: row;
+    height: unset;
+    width: 100%;
+  }
 }
 
 .navigationButton {
   margin-top: 16px;
   height: 48px;
   width: 100%;
+
+  @media (max-width: 960px) {
+    height: 40px;
+  }
 }

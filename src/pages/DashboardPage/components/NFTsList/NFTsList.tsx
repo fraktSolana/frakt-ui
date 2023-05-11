@@ -14,6 +14,7 @@ interface NFTsListProps {
   fetchNextPage?: () => void;
   isLoading?: boolean;
   className?: string;
+  emptyMessageClassName?: string;
 }
 
 export const NFTsList: FC<NFTsListProps> = ({
@@ -22,6 +23,7 @@ export const NFTsList: FC<NFTsListProps> = ({
   fetchNextPage,
   isLoading,
   className,
+  emptyMessageClassName,
 }) => {
   return (
     <InfinityScroll
@@ -29,6 +31,11 @@ export const NFTsList: FC<NFTsListProps> = ({
       next={fetchNextPage}
       wrapperClassName={classNames(styles.nftsList, className)}
       isLoading={isLoading}
+      customLoader={<p className={styles.loader}>loading your jpegs</p>}
+      emptyMessageClassName={classNames(
+        styles.emptyMessage,
+        emptyMessageClassName,
+      )}
     >
       {nfts.map((nft: NFT) => (
         <BorrowCard onClick={() => onClick(nft)} {...nft} />

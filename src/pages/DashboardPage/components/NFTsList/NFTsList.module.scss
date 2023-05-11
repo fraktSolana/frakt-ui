@@ -11,17 +11,42 @@
   @media (max-width: 960px) {
     grid-template-columns: unset;
     display: flex;
+    gap: 8px;
     overflow: auto;
-    max-height: 234px;
 
     & > div {
       min-width: 168px;
+      max-width: 168px;
     }
   }
 
   @media (max-width: 550px) {
     & > div {
       min-width: 109px;
+      max-width: 109px;
     }
+  }
+}
+
+.emptyMessage,
+.loader {
+  @media (max-width: 960px) {
+    height: 232px;
+  }
+
+  @media (max-width: 550px) {
+    height: 173px;
+  }
+}
+
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: var(--font-text-2);
+
+  &::after {
+    width: 16px;
+    content: '...';
   }
 }

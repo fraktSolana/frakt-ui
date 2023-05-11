@@ -1,5 +1,3 @@
-$contentHeight: 575px;
-
 @mixin flex-column {
   display: flex;
   flex-direction: column;
@@ -9,7 +7,6 @@ $contentHeight: 575px;
   display: flex;
   padding: 32px;
   gap: 32px;
-  height: $contentHeight;
   width: 100%;
 
   @media (max-width: 1240px) {
@@ -32,6 +29,10 @@ $contentHeight: 575px;
   justify-content: space-between;
   gap: 16px;
   width: 100%;
+
+  @media (max-width: 1240px) {
+    min-width: 260px;
+  }
 }
 
 .depositWrapper {
@@ -62,13 +63,22 @@ $contentHeight: 575px;
   align-items: center;
   gap: 24px;
   width: 100%;
+
+  @media ((max-width: 1240px) and (min-width: 960px)) {
+    flex-direction: column;
+  }
 }
 
 .chart {
   width: 184px !important;
   height: 184px !important;
 
-  @media (max-width: 1180px) {
+  @media (max-width: 1240px) {
+    width: 192px !important;
+    height: 192px !important;
+  }
+
+  @media (max-width: 960px) {
     width: 140px !important;
     height: 140px !important;
   }

@@ -72,3 +72,13 @@
     align-items: flex-start;
   }
 }
+
+.emptyMessage {
+  @media (max-width: 960px) {
+    height: 200.5px;
+  }
+
+  @media (max-width: 550px) {
+    height: 141.5px;
+  }
+}
