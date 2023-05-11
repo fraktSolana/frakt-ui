@@ -67,9 +67,12 @@ $contentHeight: 575px;
 .chart {
   width: 184px !important;
   height: 184px !important;
+
+  @media (max-width: 1180px) {
+    width: 140px !important;
+    height: 140px !important;
+  }
 }
-
-
 
 .navigationButton {
   margin-top: 16px;

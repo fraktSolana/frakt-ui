@@ -1,6 +1,7 @@
 import { UserStats } from '@frakt/api/user/types';
 import { LiquidityPool } from '@frakt/state/loans/types';
-import { sum, map } from 'lodash';
+import { calcWeightedAverage } from '@frakt/utils';
+import { sum, map, filter } from 'lodash';
 
 export const getDepositedUserPools = (pools: LiquidityPool[]) => {
   const userDepositedPools = pools.filter(
@@ -110,4 +111,21 @@ export const createChartPieData = (stats: UserStats, balance: number) => {
   ];
 
   return data;
+};
+
+export const calcWeightedAvaragePoolsApy = (pools: LiquidityPool[]) => {
+  const depositAmount = (pool: LiquidityPool) =>
+    pool?.userDeposit?.depositAmount;
+
+  const depositedPools = filter(pools, depositAmount);
+
+  const depositedAmountsNumbers = map(depositedPools, depositAmount);
+  const depositedAPRsNumbers = map(depositedPools, 'depositApr');
+
+  const weightedAvarageApy = calcWeightedAverage(
+    depositedAPRsNumbers,
+    depositedAmountsNumbers,
+  );
+
+  return weightedAvarageApy;
 };

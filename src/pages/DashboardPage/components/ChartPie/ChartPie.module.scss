@@ -50,11 +50,12 @@
   gap: 4px;
 }
 .listLabel {
-  font: var(--font-text-6);
+  font: var(--font-text-7);
   text-transform: uppercase;
 }
 .listValue {
   font: var(--font-text-8);
+  font-size: 14px;
 }
 
 .dot {

@@ -25,6 +25,7 @@ export const options = {
         stepSize: 25,
         max: 100,
       },
+      barPercentage: 0.1,
     },
   },
 };
@@ -32,8 +33,10 @@ export const options = {
 const HorizontalBar: FC<HorizontalBarProps> = ({ data: rawData, labels }) => {
   const data = {
     labels,
+    maintainAspectRatio: false,
     datasets: [
       {
+        barThickness: 20,
         data: rawData,
         backgroundColor: [
           '#1FAEFF',

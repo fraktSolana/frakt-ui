@@ -30,12 +30,10 @@
 .loansInfoWrapper {
   @include flex-column;
   align-items: center;
-  gap: 16px;
-  width: 100%;
+  max-width: 280px;
 
-  @media (max-width: 960px) {
-    max-width: 280px;
-  }
+  gap: 8px;
+  width: 100%;
 }
 
 .stats {
@@ -60,8 +58,8 @@
 }
 
 .chart {
-  height: 141px;
-  width: 141px;
+  height: 141px !important;
+  width: 141px !important;
 
   @media (max-width: 1140px) {
     height: 135px !important;

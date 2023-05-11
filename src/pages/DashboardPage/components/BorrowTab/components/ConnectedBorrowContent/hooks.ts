@@ -35,7 +35,7 @@ export const useConnectedBorrowContent = () => {
     nfts: parsedNfts,
     loans,
     setSearch: setSearchDebounced,
-    loading: initialLoading,
+    loading: initialLoading && !nfts?.length,
     fetchNextPage,
   };
 };

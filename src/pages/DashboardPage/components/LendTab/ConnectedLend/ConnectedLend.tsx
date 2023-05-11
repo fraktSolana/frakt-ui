@@ -1,22 +1,27 @@
 import { FC } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { useSelector } from 'react-redux';
 
+import { useSolanaBalance } from '@frakt/utils/accounts/useSolanaBalance';
 import { selectLiquidityPools } from '@frakt/state/loans/selectors';
+import { useFetchAllStats } from '@frakt/pages/DashboardPage/hooks';
 import { NavigationButton } from '@frakt/components/Button';
+
 import { PATHS } from '@frakt/constants';
 
 import { DashboardColumnValue } from '../../DashboardStatsValues';
 import { ChartValuesList } from '../../ChartPie/ChartValuesList';
 import DepositContentView from '../DepositContentView';
-import { createChartPieData, getLabelsAndDataByPools } from './helpers';
+import {
+  calcWeightedAvaragePoolsApy,
+  createChartPieData,
+  getLabelsAndDataByPools,
+} from './helpers';
 import { defaultsColors } from './constants';
 import { ChartPie } from '../../ChartPie';
 import Heading from '../../Heading';
 
 import styles from './ConnectedLend.module.scss';
-import { useFetchAllStats } from '@frakt/pages/DashboardPage/hooks';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { useSolanaBalance } from '@frakt/utils/accounts/useSolanaBalance';
 
 const ConnectedLend: FC = () => {
   const liquidityPools = useSelector(selectLiquidityPools);
@@ -27,7 +32,15 @@ const ConnectedLend: FC = () => {
 
   const chartPieData = createChartPieData(stats, balance);
 
-  const [data, labels] = getLabelsAndDataByPools(liquidityPools, balance);
+  const totalLendAmout =
+    stats?.bonds?.bondUserAmount + stats?.bonds?.userOffersAmount;
+
+  const [poolsChartData, poolsChartLabels] = getLabelsAndDataByPools(
+    liquidityPools,
+    balance,
+  );
+
+  const weightedAvarageApy = calcWeightedAvaragePoolsApy(liquidityPools);
 
   return (
     <div className={styles.container}>
@@ -35,7 +48,7 @@ const ConnectedLend: FC = () => {
         <Heading title="Lend" tooltipText="Lend" />
         <div className={styles.lendContent}>
           <div className={styles.lendStats}>
-            <DashboardColumnValue label="valume" value={800} />
+            <DashboardColumnValue label="volume" value={totalLendAmout} />
             <DashboardColumnValue label="pnl" value={80} />
           </div>
           <div className={styles.chartPieWrapper}>
@@ -58,21 +71,21 @@ const ConnectedLend: FC = () => {
       </div>
       <div className={styles.depositWrapper}>
         <DepositContentView
-          data={data}
-          labels={labels}
+          data={poolsChartData}
+          labels={poolsChartLabels}
           title="Strategies"
           tooltipText="Strategies"
           buttonText="Manage strategies"
-          apr={240}
+          apr={weightedAvarageApy}
           path={PATHS.STRATEGIES}
         />
         <DepositContentView
-          data={data}
-          labels={labels}
+          data={poolsChartData}
+          labels={poolsChartLabels}
           title="Pools"
           tooltipText="Pools"
           buttonText="Manage pools"
-          apr={240}
+          apr={weightedAvarageApy}
           path={PATHS.LEND}
         />
       </div>

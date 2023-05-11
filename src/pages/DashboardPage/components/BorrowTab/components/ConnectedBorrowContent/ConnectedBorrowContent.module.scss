@@ -7,7 +7,6 @@ $contentHeight: 575px;
 
 .container {
   display: flex;
-  padding: 32px;
   gap: 32px;
   height: $contentHeight;
   width: 100%;
@@ -18,16 +17,14 @@ $contentHeight: 575px;
 
   @media (max-width: 960px) {
     @include flex-column;
-    padding: 24px;
     height: 100%;
-  }
-
-  @media (max-width: 550px) {
-    padding: 16px;
   }
 }
 
 .searchableList {
+  padding-top: 32px;
+  padding-left: 32px;
+
   @include flex-column;
   gap: 16px;
   width: 100%;
@@ -37,7 +34,14 @@ $contentHeight: 575px;
   }
 
   @media (max-width: 960px) {
+    padding-top: 24px;
+    padding-left: 24px;
     width: unset;
+  }
+
+  @media (max-width: 550px) {
+    padding-top: 16px;
+    padding-left: 16px;
   }
 }
 
@@ -54,6 +58,8 @@ $contentHeight: 575px;
 
 .content {
   @include flex-column;
+  padding: 32px;
+  padding-left: 0;
   gap: 24px;
   width: 100%;
 
@@ -79,14 +85,6 @@ $contentHeight: 575px;
 
 .wrapperNftsList {
   overflow: auto;
-
-  @media (max-width: 960px) {
-    padding-bottom: 510px;
-  }
-
-  @media (max-width: 550px) {
-    padding-bottom: 390px;
-  }
 }
 
 .nftsList {
