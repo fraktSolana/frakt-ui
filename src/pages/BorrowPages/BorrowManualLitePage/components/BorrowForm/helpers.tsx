@@ -1,4 +1,4 @@
-import { uniq, maxBy } from 'lodash';
+import { uniq, maxBy, reduce } from 'lodash';
 import classNames from 'classnames';
 import { getMaxBorrowValueOptimized } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 
@@ -11,10 +11,11 @@ import {
   calcBondMultiOrdersFee,
   calcLtv,
   calcPriceBasedUpfrontFee,
-  calcTimeBasedFee,
-  calcTimeBasedRepayValue,
+  // calcPriceBasedUpfrontFee,
+  // calcTimeBasedFee,
+  // calcTimeBasedRepayValue,
 } from '@frakt/pages/BorrowPages/helpers';
-import { BondOrderParams } from '@frakt/pages/BorrowPages/cartState';
+import { BondOrderParams, CartOrder } from '@frakt/pages/BorrowPages/cartState';
 
 import { LoanDetailsField } from './types';
 import styles from './BorrowForm.module.scss';
@@ -165,15 +166,16 @@ export const generateLoanDetails: GenerateLoanDetails = ({
 }) => {
   const fields: Array<LoanDetailsField> = [];
 
-  const { valuation } = nft;
   fields.push({
-    label: 'Floor price',
+    label: 'Loan value',
     value: (
       <>
-        {(valuation / 1e9).toFixed(2)} <Solana />
+        {(loanValue / 1e9).toFixed(3)} <Solana />
       </>
     ),
   });
+
+  const { valuation } = nft;
 
   const ltv = calcLtv({
     loanValue,
@@ -184,6 +186,16 @@ export const generateLoanDetails: GenerateLoanDetails = ({
     label: 'LTV',
     value: <>{ltv.toFixed(0)}%</>,
   });
+
+  //? PriceBased yearly interest
+  if (loanType === LoanType.PRICE_BASED) {
+    const { borrowAPRPercent } = nft.classicParams.priceBased;
+
+    fields.push({
+      label: 'Yearly interest',
+      value: <>{borrowAPRPercent.toFixed(2)}%</>,
+    });
+  }
 
   //? PriceBased liquidation price
   if (loanType === LoanType.PRICE_BASED) {
@@ -216,141 +228,93 @@ export const generateLoanDetails: GenerateLoanDetails = ({
     });
   }
 
-  //? TimeBased fees (1d, 7d, 14d)
-  if (loanType === LoanType.TIME_BASED) {
-    const { returnPeriodDays } = nft.classicParams.timeBased;
-
-    const feeOn1d = calcTimeBasedFee({
-      nft,
-      loanValue,
-      duration: 1,
-    });
-
-    fields.push({
-      label: 'Fee on 1d',
-      value: (
-        <>
-          {(feeOn1d / 1e9).toFixed(3)} <Solana />
-        </>
-      ),
-    });
-
-    fields.push({
-      label: 'Fee on 7d',
-      value: (
-        <>
-          {((feeOn1d * 7) / 1e9).toFixed(3)} <Solana />
-        </>
-      ),
-    });
-
-    returnPeriodDays === 14 &&
-      fields.push({
-        label: 'Fee on 14d',
-        value: (
-          <>
-            {((feeOn1d * 14) / 1e9).toFixed(3)} <Solana />
-          </>
-        ),
-      });
-  }
-
-  //? PriceBased fees (1d, 7d, 30d, 1y)
-  if (loanType === LoanType.PRICE_BASED) {
-    const { borrowAPRPercent } = nft.classicParams.priceBased;
-
-    const feePerDay = (loanValue * (borrowAPRPercent * 0.01)) / 365;
-
-    fields.push({
-      label: 'Fee on 1d',
-      value: (
-        <>
-          {(feePerDay / 1e9).toFixed(3)} <Solana />
-        </>
-      ),
-    });
-    fields.push({
-      label: 'Fee on 7d',
-      value: (
-        <>
-          {((feePerDay * 7) / 1e9).toFixed(3)} <Solana />
-        </>
-      ),
-    });
-    fields.push({
-      label: 'Fee on 30d',
-      value: (
-        <>
-          {((feePerDay * 30) / 1e9).toFixed(3)} <Solana />
-        </>
-      ),
-    });
-    fields.push({
-      label: 'Fee on 1y',
-      tooltipText: 'The current yearly interest rate paid by borrowers',
-      value: (
-        <>
-          {((feePerDay * 365) / 1e9).toFixed(3)} <Solana />
-        </>
-      ),
-    });
-  }
-
-  //? Bond fee and repay value
+  //? Bond interest
   if (loanType === LoanType.BOND && bondOrderParams) {
     const fee = calcBondMultiOrdersFee(bondOrderParams);
 
     fields.push({
-      label: 'Fee',
+      label: 'Interest',
       value: (
         <>
           {(fee / 1e9).toFixed(3)} <Solana />
         </>
       ),
     });
+  }
 
-    const repayValue = loanValue + fee;
+  return fields;
+};
+
+type GenerateSummary = (props: {
+  orders: CartOrder[];
+  loanType: LoanType;
+}) => Array<LoanDetailsField>;
+export const generateSummary: GenerateSummary = ({ orders, loanType }) => {
+  const fields: Array<LoanDetailsField> = [];
+
+  const borrowValue = reduce(
+    orders,
+    (borrowValue, order) => order?.loanValue + borrowValue,
+    0,
+  );
+
+  fields.push({
+    label: 'Loans',
+    value: <>{orders?.length}</>,
+  });
+
+  fields.push({
+    label: 'Borrowing',
+    value: (
+      <>
+        {(borrowValue / 1e9).toFixed(3)} <Solana />
+      </>
+    ),
+  });
+
+  if (loanType === LoanType.BOND) {
+    const fees = reduce(
+      orders,
+      (fees, order) =>
+        fees +
+        (order?.bondOrderParams
+          ? calcBondMultiOrdersFee(order?.bondOrderParams)
+          : 0),
+      0,
+    );
+
+    const repayValue = borrowValue + fees;
+
     fields.push({
-      label: 'Repay value',
+      label: 'To repay',
       value: (
         <>
           {(repayValue / 1e9).toFixed(3)} <Solana />
         </>
       ),
     });
-  }
 
-  //? TimeBased holder discount
-  if (loanType === LoanType.TIME_BASED) {
-    const feeDiscountPercent = nft.classicParams.timeBased.feeDiscountPercent;
-    feeDiscountPercent &&
-      fields.push({
-        label: 'Holder discount',
-        value: <>{feeDiscountPercent.toFixed(0)}%</>,
-      });
-  }
-
-  //? TimeBased repay value
-  if (loanType === LoanType.TIME_BASED) {
-    const repayValue = calcTimeBasedRepayValue({
-      nft,
-      loanValue,
-    });
     fields.push({
-      label: 'Repay value',
+      label: 'Total interest',
       value: (
         <>
-          {(repayValue / 1e9).toFixed(3)} <Solana />
+          {(fees / 1e9).toFixed(3)} <Solana />
         </>
       ),
     });
   }
 
-  //? PriceBased upfront fee
   if (loanType === LoanType.PRICE_BASED) {
-    const upfrontFee = calcPriceBasedUpfrontFee({
-      loanValue,
-    });
+    const upfrontFee = reduce(
+      orders,
+      (upfrontFee, order) =>
+        upfrontFee +
+        calcPriceBasedUpfrontFee({
+          loanValue: order?.loanValue,
+        }),
+      0,
+    );
+
     fields.push({
       label: 'Upfront fee',
       value: (
@@ -359,6 +323,33 @@ export const generateLoanDetails: GenerateLoanDetails = ({
         </>
       ),
     });
+
+    const feesPerDay = reduce(
+      orders,
+      (feesPerDay, order) => {
+        const { borrowAPRPercent } = order.borrowNft.classicParams.priceBased;
+        const feePerDay = (order?.loanValue * (borrowAPRPercent * 0.01)) / 365;
+
+        return feesPerDay + feePerDay;
+      },
+      0,
+    );
+
+    [
+      ['Interest on 1D', 1],
+      ['Interest on 7D', 7],
+      ['Interest on 30D', 30],
+      ['Interest on 1Y', 365],
+    ].forEach(([label, daysAmount]: [string, number]) =>
+      fields.push({
+        label,
+        value: (
+          <>
+            {((feesPerDay * daysAmount) / 1e9).toFixed(3)} <Solana />
+          </>
+        ),
+      }),
+    );
   }
 
   return fields;

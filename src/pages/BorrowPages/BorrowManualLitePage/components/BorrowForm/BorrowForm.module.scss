@@ -5,6 +5,7 @@
 .borrowFormDetails {
   padding: 0 32px;
   flex-grow: 1;
+  margin-bottom: 24px;
 
   @media screen and (max-width: 960px) {
     padding-left: 24px;
@@ -15,6 +16,30 @@
     padding-left: 16px;
     padding-right: 16px;
   }
+}
+
+.borrowFormSummary {
+  margin: 0 32px;
+  padding: 16px;
+  flex-grow: 1;
+  border: 1px dashed var(--gray-color-2);
+
+  @media screen and (max-width: 960px) {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  @media screen and (max-width: 480px) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+.borrowFormSummaryTitle {
+  color: var(--primary-text);
+  font: var(--font-text-2);
+  font-size: 20px;
+  text-align: center;
 }
 
 .borrowFormDetailsTitle {
@@ -100,7 +125,7 @@
 }
 
 .loanDetails {
-  padding-top: 16px;
+  // padding-top: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
