@@ -1,14 +1,13 @@
 import { FC } from 'react';
-import classNames from 'classnames';
 
 import { NFT } from '@frakt/pages/DashboardPage/types';
 import { Loader } from '@frakt/components/Loader';
 
 import { useNotConnectedBorrowContent } from './hooks';
 import CollectionsInfo from '../CollectionsInfo';
-import { BorrowList } from '../../../NFTsList';
-import { Search } from '../../../Search';
+import { NFTsList } from '../../../NFTsList';
 import { BorrowCard } from '../../../Cards';
+import { Search } from '../../../Search';
 
 import styles from './NotConnectedBorrowContent.module.scss';
 
@@ -19,7 +18,7 @@ const NotConnectedBorrowContent: FC = () => {
   if (isLoading) return <Loader />;
 
   return (
-    <div className={classNames(styles.wrapper, { [styles.mobile]: isMobile })}>
+    <div className={styles.wrapper}>
       {isMobile ? (
         <MobileContentView collections={collections} setSearch={setSearch} />
       ) : (
@@ -38,9 +37,9 @@ interface ContentViewProps {
 
 const MobileContentView = ({ collections, setSearch }: ContentViewProps) => (
   <div className={styles.mobileContainer}>
-    <CollectionsInfo />
     <Search title="1 click loan" onChange={setSearch} />
-    <BorrowList className={styles.nftsList} nfts={collections} />
+    <NFTsList nfts={collections} />
+    <CollectionsInfo />
   </div>
 );
 

@@ -4,44 +4,27 @@
   justify-content: flex-end;
 
   @media (max-width: 960px) {
-    justify-content: center;
-    padding: 24px;
     gap: 32px;
-
-    position: fixed;
-    bottom: 0;
-    background: var(--primary-background);
-    z-index: 1;
-    left: 0;
-    right: 0;
-  }
-
-  @media (max-width: 550px) {
-    padding: 16px;
-    gap: 16px;
   }
 }
 
 .title {
-  display: none !important;
-
-  @media (max-width: 960px) {
-    display: flex !important;
+  @media (min-width: 960px) {
+    display: none !important;
   }
 }
 
 .stats {
   display: flex;
   align-items: center;
-  min-height: 120px;
   height: 100%;
 
   & > * {
     width: 100%;
   }
 
-  @media (max-width: 960px) {
-    min-height: unset;
+  @media (min-width: 960px) {
+    min-height: 120px;
   }
 }
 

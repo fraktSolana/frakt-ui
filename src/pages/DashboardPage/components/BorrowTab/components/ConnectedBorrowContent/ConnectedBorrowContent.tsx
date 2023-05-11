@@ -4,11 +4,11 @@ import { LoadingModal } from '@frakt/components/LoadingModal';
 
 import { useBorrowSingleBond, useConnectedBorrowContent } from './hooks';
 import { Search } from '../../../Search';
-import { BorrowList } from '../../../NFTsList';
+import { NFTsList } from '../../../NFTsList';
 import MyLoans from '../MyLoans';
 
-import styles from './ConnectedBorrowContent.module.scss';
 import AvailableBorrow from '../AvailableBorrow';
+import styles from './ConnectedBorrowContent.module.scss';
 
 const ConnectedBorrowContent: FC = () => {
   const { onSubmit, loadingModalVisible, closeLoadingModal } =
@@ -26,8 +26,8 @@ const ConnectedBorrowContent: FC = () => {
             onChange={setSearch}
             className={styles.search}
           />
-          <div className={styles.wrapperNftsList}>
-            <BorrowList
+          <div className={styles.nftsListWrapper}>
+            <NFTsList
               nfts={nfts}
               fetchNextPage={fetchNextPage}
               isLoading={loading}

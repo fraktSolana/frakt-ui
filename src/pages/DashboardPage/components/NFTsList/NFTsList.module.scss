@@ -4,8 +4,24 @@
   align-items: stretch;
   gap: 16px;
 
+  &::-webkit-scrollbar {
+    height: 0;
+  }
+
+  @media (max-width: 960px) {
+    grid-template-columns: unset;
+    display: flex;
+    overflow: auto;
+    max-height: 234px;
+
+    & > div {
+      min-width: 168px;
+    }
+  }
+
   @media (max-width: 550px) {
-    grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
-    gap: 8px;
+    & > div {
+      min-width: 109px;
+    }
   }
 }

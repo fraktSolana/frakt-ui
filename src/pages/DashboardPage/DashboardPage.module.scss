@@ -1,9 +1,19 @@
+$contentHeight: 575px;
+
 .content {
   border: 1px solid var(--primary-border);
 }
 
 .tabContent {
   background: var(--primary-background);
+
+  display: flex;
+  flex-direction: column;
+  height: $contentHeight;
+
+  @media (max-width: 960px) {
+    height: 100%;
+  }
 }
 
 .tab {
@@ -20,6 +30,12 @@
 .statsWrapper {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin-top: 32px;
   gap: 24px;
+
+  @media (max-width: 960px) {
+    flex-direction: column;
+    margin-top: 24px;
+  }
 }

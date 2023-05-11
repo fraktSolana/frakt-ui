@@ -1,5 +1,3 @@
-$contentHeight: 575px;
-
 @mixin flex-column {
   display: flex;
   flex-direction: column;
@@ -9,21 +7,18 @@ $contentHeight: 575px;
   display: flex;
   padding: 32px;
   gap: 32px;
-  height: $contentHeight;
   width: 100%;
+  overflow: auto;
 
   @media (max-width: 1240px) {
+    padding: 24px;
     gap: 24px;
   }
 
   @media (max-width: 960px) {
     @include flex-column;
-    padding: 24px;
-    height: 100%;
-  }
-
-  @media (max-width: 550px) {
     padding: 16px;
+    height: 100%;
   }
 }
 
@@ -32,23 +27,15 @@ $contentHeight: 575px;
   gap: 16px;
   width: 100%;
 
-  @media (max-width: 1240px) {
+  @media ((max-width: 1240px) and (min-width: 960px)) {
     width: 35%;
-  }
-
-  @media (max-width: 960px) {
-    width: unset;
   }
 }
 
 .search {
-  @media (max-width: 1240px) {
+  @media ((max-width: 1240px) and (min-width: 960px)) {
     @include flex-column;
     align-items: flex-start !important;
-  }
-
-  @media (max-width: 960px) {
-    flex-direction: row;
   }
 }
 
@@ -57,45 +44,41 @@ $contentHeight: 575px;
   gap: 24px;
   width: 100%;
 
-  @media (max-width: 1240px) {
-    width: 65%;
-  }
-
-  @media (max-width: 960px) {
-    width: unset;
-    position: fixed;
-    bottom: 0;
-    background: var(--primary-background);
-    left: 0;
-    right: 0;
-    padding: 24px;
-  }
-
   @media (max-width: 550px) {
-    padding: 16px;
     gap: 16px;
   }
 }
 
 .nftsList {
-  overflow: auto;
-
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
-  align-items: stretch;
   gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+  overflow: auto;
 
   @media (max-width: 1240px) {
     grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
   }
 
+  &::-webkit-scrollbar {
+    height: 0;
+  }
+
   @media (max-width: 960px) {
-    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+    grid-template-columns: unset;
+    display: flex;
+    overflow: auto;
+    max-height: 234px;
+    gap: 16px;
+
+    & > div {
+      min-width: 168px;
+    }
   }
 
   @media (max-width: 550px) {
-    grid-template-columns: repeat(auto-fill, minmax(109px, 1fr));
-    gap: 8px;
+    & > div {
+      min-width: 109px;
+    }
   }
 }
 

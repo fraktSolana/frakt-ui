@@ -8,7 +8,7 @@ import { BorrowCard } from '../Cards';
 
 import styles from './NFTsList.module.scss';
 
-interface BorrowListProps {
+interface NFTsListProps {
   nfts: NFT[];
   onClick?: (nft: NFT) => void;
   fetchNextPage?: () => void;
@@ -16,7 +16,7 @@ interface BorrowListProps {
   className?: string;
 }
 
-export const BorrowList: FC<BorrowListProps> = ({
+export const NFTsList: FC<NFTsListProps> = ({
   nfts,
   onClick,
   fetchNextPage,
