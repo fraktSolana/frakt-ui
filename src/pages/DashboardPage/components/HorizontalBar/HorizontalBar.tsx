@@ -50,7 +50,7 @@ const HorizontalBar: FC<HorizontalBarProps> = ({ data: rawData, labels }) => {
     ],
   };
 
-  return <Bar options={options} data={data} />;
+  return <Bar options={options as unknown} data={data} />;
 };
 
 export default HorizontalBar;
