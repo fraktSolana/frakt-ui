@@ -7,9 +7,9 @@ import { PATHS } from '@frakt/constants';
 import { useConnection } from '@frakt/hooks';
 import { calcPriceBasedMaxLoanValue } from '@frakt/pages/BorrowPages/cartState';
 import { useLoadingModalState } from '@frakt/components/LoadingModal';
-import { borrowBulk } from '@frakt/pages/BorrowPages/helpers';
 import { LoanType } from '@frakt/api/loans';
 import { BorrowNft, OrderParamsLite } from '@frakt/api/nft';
+import { LiteOrder, borrow } from './helpers';
 
 interface UseSidebarProps {
   loanType: LoanType;
@@ -49,7 +49,7 @@ export const useSidebar = ({
     try {
       setLoadingModalVisible(true);
 
-      const orders = cartNfts.map((nft) => {
+      const orders: LiteOrder[] = cartNfts.map((nft) => {
         const isBond = loanType === LoanType.BOND;
 
         return {
@@ -62,8 +62,8 @@ export const useSidebar = ({
         };
       });
 
-      const result = await borrowBulk({
-        orders: orders as any, //TODO AddMarkets here
+      const result = await borrow({
+        orders: orders, //TODO AddMarkets here
         wallet,
         connection,
       });

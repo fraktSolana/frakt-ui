@@ -1,5 +1,5 @@
 import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
-import { Market, Pair } from '../bonds';
+import { Market, Pair, WhitelistType } from '../bonds';
 import { LoanType } from '../loans';
 import { Dictionary } from 'ramda';
 
@@ -37,6 +37,15 @@ export interface BorrowNft {
 
   bondParams?: {
     marketPubkey: string;
+    whitelistEntry: {
+      publicKey: string;
+      fraktMarket: string;
+      whitelistType: WhitelistType;
+      whitelistedAddress: string;
+    };
+    fraktMarket: string;
+    oracleFloor: string;
+    durations: Array<number>; //? days
   };
 }
 

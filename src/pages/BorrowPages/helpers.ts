@@ -143,8 +143,13 @@ export const borrowBulk: BorrowBulk = async ({
   const bondTransactionsAndSignersChunks = await Promise.all(
     bondOrders.map((order) => {
       return makeCreateBondMultiOrdersTransaction({
+        marketPubkey: order.bondOrderParams.market.marketPubkey,
+        fraktMarketPubkey: order.bondOrderParams.market.fraktMarket.publicKey,
+        oracleFloorPubkey: order.bondOrderParams.market.oracleFloor?.publicKey,
+        whitelistEntryPubkey:
+          order.bondOrderParams.market.whitelistEntry?.publicKey,
+
         nftMint: order.borrowNft.mint,
-        market: order.bondOrderParams.market,
         bondOrderParams: order.bondOrderParams.orderParams,
         connection,
         wallet,
