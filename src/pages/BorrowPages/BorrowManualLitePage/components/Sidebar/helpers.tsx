@@ -1,10 +1,7 @@
-import { uniq, maxBy, reduce, Dictionary } from 'lodash';
+import { reduce, Dictionary } from 'lodash';
 import classNames from 'classnames';
-import { getMaxBorrowValueOptimized } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 
-import { Market, Pair } from '@frakt/api/bonds';
 import { LoanType } from '@frakt/api/loans';
-import { BOND_DECIMAL_DELTA, pairLoanDurationFilter } from '@frakt/utils/bonds';
 import { BorrowNft, OrderParamsLite } from '@frakt/api/nft';
 import { Solana } from '@frakt/icons';
 import {
@@ -13,8 +10,13 @@ import {
 } from '@frakt/pages/BorrowPages/helpers';
 import { calcPriceBasedMaxLoanValue } from '@frakt/pages/BorrowPages/cartState';
 
-import { LoanDetailsField } from './types';
-import styles from './BorrowForm.module.scss';
+import styles from './Sidebar.module.scss';
+
+interface LoanDetailsField {
+  label: string;
+  value: JSX.Element;
+  tooltipText?: string;
+}
 
 export interface SelectValue {
   label: string;
@@ -24,129 +26,6 @@ export interface SelectValue {
   };
   disabled?: boolean;
 }
-
-type GetBorrowValueRange = (props: {
-  nft: BorrowNft;
-  loanType: LoanType;
-  bondsParams?: {
-    pairs: Pair[];
-    market: Market;
-    duration: number; //? Days
-  };
-}) => [number, number];
-export const getBorrowValueRange: GetBorrowValueRange = ({
-  nft,
-  loanType,
-  bondsParams,
-}) => {
-  const { valuation, classicParams } = nft;
-
-  const maxBorrowValueTimeBased =
-    valuation * (classicParams?.timeBased?.ltvPercent / 100);
-  const maxBorrowValuePriceBased =
-    valuation * (classicParams?.priceBased?.ltvPercent / 100);
-  const minBorrowValue = valuation / 100;
-
-  const maxBorrowValue = (() => {
-    if (loanType === LoanType.PRICE_BASED) return maxBorrowValuePriceBased;
-    if (loanType === LoanType.TIME_BASED) return maxBorrowValueTimeBased;
-
-    const maxBorrowValue = getMaxBorrowValueOptimized({
-      bondOffers: bondsParams?.pairs.filter((p) =>
-        pairLoanDurationFilter({ pair: p, duration: bondsParams.duration }),
-      ),
-      collectionFloor: bondsParams?.market?.oracleFloor?.floor,
-    });
-
-    //? LoanType.BONDS
-    return maxBorrowValue;
-  })();
-
-  return [Math.min(minBorrowValue, maxBorrowValue), maxBorrowValue];
-};
-
-type GenerateSelectOptions = (props: {
-  nft: BorrowNft;
-  bondsParams?: {
-    pairs: Pair[];
-  };
-}) => SelectValue[];
-export const generateSelectOptions: GenerateSelectOptions = ({
-  nft,
-  bondsParams,
-}) => {
-  let options: SelectValue[] = [];
-
-  const nftHasLimit = nft?.classicParams?.isLimitExceeded;
-
-  const bondOptions = bondsParams?.pairs
-    ? uniq(
-        bondsParams?.pairs.map(
-          (pair) => pair?.validation?.durationFilter / (24 * 60 * 60),
-        ),
-      )
-        .sort((a, b) => a - b)
-        .map((period) => ({
-          label: `${period} days`,
-          value: {
-            type: LoanType.BOND,
-            duration: period,
-          },
-        }))
-    : [];
-
-  options = [...options, ...bondOptions];
-
-  if (nft?.classicParams?.priceBased) {
-    options = [
-      ...options,
-      {
-        label: `Perpetual ${nftHasLimit ? '- limit exceeded' : ''}`,
-        value: {
-          type: LoanType.PRICE_BASED,
-          duration: null,
-        },
-        disabled: nftHasLimit,
-      },
-    ];
-  }
-  return options;
-};
-
-type GetCheapestPairForBorrowValue = (params: {
-  borrowValue: number;
-  valuation: number;
-  pairs: Pair[];
-  duration: number;
-}) => Pair;
-export const getCheapestPairForBorrowValue: GetCheapestPairForBorrowValue = ({
-  borrowValue,
-  valuation,
-  pairs,
-  duration,
-}) => {
-  const suitablePairsByDuration = pairs.filter((p) =>
-    pairLoanDurationFilter({ pair: p, duration }),
-  );
-
-  const suitableBySettlementAndValidation = suitablePairsByDuration.filter(
-    (pair) => {
-      const borrowValueBonds = borrowValue / pair.currentSpotPrice;
-      const loanToValueLamports =
-        valuation * (pair.validation.loanToValueFilter * 0.01 * 0.01);
-
-      return (
-        // borrowValueBonds <= pair.edgeSettlement &&
-        loanToValueLamports >= borrowValueBonds * BOND_DECIMAL_DELTA
-      );
-    },
-  );
-
-  return maxBy(
-    suitableBySettlementAndValidation,
-    (pair) => pair.currentSpotPrice,
-  );
-};
 
 type GenerateLoanDetails = (props: {
   nft: BorrowNft;

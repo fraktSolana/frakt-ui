@@ -1,30 +1,38 @@
 import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useHistory } from 'react-router-dom';
+import { Dictionary } from 'lodash';
 
 import { PATHS } from '@frakt/constants';
 import { useConnection } from '@frakt/hooks';
 import { calcPriceBasedMaxLoanValue } from '@frakt/pages/BorrowPages/cartState';
 import { useLoadingModalState } from '@frakt/components/LoadingModal';
 import { borrowBulk } from '@frakt/pages/BorrowPages/helpers';
-import { useBorrowManualLitePage } from '../../BorrowManualLitePage';
 import { LoanType } from '@frakt/api/loans';
+import { BorrowNft, OrderParamsLite } from '@frakt/api/nft';
 
 interface UseSidebarProps {
   loanType: LoanType;
   totalBorrowValue: number;
   isBulk: boolean;
+  currentNft: BorrowNft;
+  onNftClick: (nft: BorrowNft) => void;
+  clearCart: () => void;
+  cartNfts: BorrowNft[];
+  orderParamsByMint: Dictionary<OrderParamsLite>;
 }
 
 export const useSidebar = ({
   loanType,
   totalBorrowValue,
   isBulk,
+  currentNft,
+  onNftClick,
+  clearCart,
+  cartNfts,
+  orderParamsByMint,
 }: UseSidebarProps) => {
   const [minimizedOnMobile, setMinimizedOnMobile] = useState<boolean>(false);
-
-  const { currentNft, onNftClick, clearCart, cartNfts, orderParamsByMint } =
-    useBorrowManualLitePage();
 
   const history = useHistory();
 

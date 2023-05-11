@@ -1,98 +1,231 @@
+import { useCallback, useMemo, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useQuery } from '@tanstack/react-query';
-import { create } from 'zustand';
-import { Dictionary } from 'lodash';
 import { web3 } from 'fbonds-core';
-import produce from 'immer';
+import { reduce } from 'lodash';
 
+import { LoanType } from '@frakt/api/loans';
 import {
   BorrowNft,
   LoanDuration,
   MaxBorrow,
-  OrderParamsLite,
   fetchMaxBorrowValuePro,
   fetchWalletBorrowNftsLite,
 } from '@frakt/api/nft';
-import { LoanType } from '@frakt/api/loans';
+import { useTabs } from '@frakt/components/Tabs';
 
-interface CartStateLite {
-  nfts: BorrowNft[];
-  orderParamsByMint: Dictionary<OrderParamsLite>; //? Collection by mint
-  addNft: (props: {
-    nft: BorrowNft;
-    orderParams?: OrderParamsLite;
-    loanType: LoanType;
-  }) => void;
-  removeNft: (props: { nftMint: string; loanType: LoanType }) => void;
-  findNftInCart: (props: { nftMint: string }) => BorrowNft | null;
-  getNftsCountByMarket: (props: { marketPubkey: string }) => number;
-  clearCart: () => void;
-}
+import { DURATION_TABS } from './constants';
+import { useCartStateLite } from './cartStateLite';
+import { calcPriceBasedMaxLoanValue } from '../cartState';
 
-export const useCartStateLite = create<CartStateLite>((set, get) => ({
-  nfts: [],
-  orderParamsByMint: {},
-  findNftInCart: ({ nftMint }) => {
-    return get().nfts.find(({ mint }) => mint === nftMint) ?? null;
-  },
-  getNftsCountByMarket: ({ marketPubkey }) => {
-    return (
-      get().nfts.filter(
-        ({ bondParams }) => bondParams?.marketPubkey === marketPubkey,
-      )?.length || 0
+export const useBorrowManualLitePage = () => {
+  const wallet = useWallet();
+  const { maxBorrow, isLoading: maxBorrowValueLoading } = useMaxBorrow({
+    walletPublicKey: wallet?.publicKey,
+  });
+
+  const {
+    tabs: durationTabs,
+    value: duration,
+    setValue: setDuration,
+  } = useTabs({ tabs: DURATION_TABS, defaultValue: DURATION_TABS[0].value });
+
+  const onDurationTabClick = (value: string) => {
+    onBorrowValueChange('0');
+    setDuration(value);
+    clearCart();
+  };
+
+  const maxBorrowValue = useMemo(() => {
+    return maxBorrow ? maxBorrow[duration] : 0;
+  }, [maxBorrow, duration]);
+
+  const {
+    addNft,
+    removeNft,
+    clearCart,
+    findNftInCart,
+    getNftsCountByMarket,
+    nfts: cartNfts,
+    orderParamsByMint,
+  } = useCartStateLite();
+
+  const { isLoading, nfts, orders } = useWalletNftsLite({
+    duration: duration as LoanDuration,
+  });
+
+  const [borrowValue, setBorrowValue] = useState<string>('');
+  const [borrowPercentValue, setBorrowPercentValue] = useState<number>(0);
+
+  const onBorrowPercentChange = useCallback(
+    (nextValue: number) => {
+      const depositValue =
+        ((nextValue * maxBorrowValue) / 100)?.toFixed(2) || '0';
+      setBorrowValue(depositValue);
+      setBorrowPercentValue(nextValue);
+    },
+    [maxBorrowValue],
+  );
+
+  const onBorrowValueChange = useCallback(
+    (nextValue: string) => {
+      setBorrowValue(nextValue);
+
+      const balancePercent = (parseFloat(nextValue) / maxBorrowValue) * 100;
+
+      if (balancePercent > 100) {
+        return setBorrowPercentValue(100);
+      }
+      if (balancePercent < 0) {
+        return setBorrowPercentValue(0);
+      }
+
+      return setBorrowPercentValue(balancePercent);
+    },
+    [maxBorrowValue],
+  );
+
+  const loanType = useMemo(() => {
+    return duration === '0' ? LoanType.PRICE_BASED : LoanType.BOND;
+  }, [duration]);
+
+  const onNftClick = useCallback(
+    (nft: BorrowNft) => {
+      const isNftSelected = !!findNftInCart({ nftMint: nft.mint });
+
+      if (isNftSelected) {
+        return removeNft({
+          nftMint: nft.mint,
+          loanType,
+        });
+      }
+
+      if (loanType === LoanType.PRICE_BASED) {
+        addNft({
+          nft,
+          loanType,
+          orderParams: null,
+        });
+      }
+
+      if (loanType === LoanType.BOND) {
+        const sameCollectionInCartCount = getNftsCountByMarket({
+          marketPubkey: nft.bondParams.marketPubkey,
+        });
+
+        const orderParams =
+          orders[nft.bondParams.marketPubkey]?.[sameCollectionInCartCount];
+
+        if (!orderParams || orderParams.loanValue <= 0) return;
+
+        addNft({
+          nft,
+          loanType,
+          orderParams:
+            orders[nft.bondParams.marketPubkey][sameCollectionInCartCount],
+        });
+      }
+    },
+    [loanType, addNft, findNftInCart, getNftsCountByMarket, orders, removeNft],
+  );
+
+  const currentNft = useMemo(() => {
+    return cartNfts.at(-1) ?? null;
+  }, [cartNfts]);
+
+  const getCurrentNftOrderParams = useCallback(() => {
+    return orderParamsByMint?.[currentNft?.mint] ?? null;
+  }, [currentNft, orderParamsByMint]);
+
+  const getBondFee = useCallback(
+    (nft: BorrowNft) => {
+      if (loanType === LoanType.PRICE_BASED) return null;
+
+      if (findNftInCart({ nftMint: nft.mint })) {
+        return orderParamsByMint[nft.mint].loanFee;
+      }
+
+      const marketPubkey = nft.bondParams.marketPubkey;
+
+      const sameCollectionAmount = getNftsCountByMarket({
+        marketPubkey: nft.bondParams.marketPubkey,
+      });
+
+      return orders[marketPubkey]?.[sameCollectionAmount]?.loanFee ?? 0;
+    },
+    [findNftInCart, getNftsCountByMarket, loanType, orderParamsByMint, orders],
+  );
+
+  const getBondLoanValue = useCallback(
+    (nft: BorrowNft) => {
+      if (loanType === LoanType.PRICE_BASED) return null;
+
+      if (findNftInCart({ nftMint: nft.mint })) {
+        return orderParamsByMint[nft.mint].loanValue;
+      }
+
+      const marketPubkey = nft.bondParams.marketPubkey;
+
+      const sameCollectionAmount = getNftsCountByMarket({
+        marketPubkey: nft.bondParams.marketPubkey,
+      });
+
+      return orders[marketPubkey]?.[sameCollectionAmount]?.loanValue ?? 0;
+    },
+    [findNftInCart, getNftsCountByMarket, loanType, orderParamsByMint, orders],
+  );
+
+  const totalBorrowValue = useMemo(() => {
+    if (!cartNfts.length) return 0;
+
+    return reduce(
+      cartNfts,
+      (borrowValue, nft) => {
+        return (
+          borrowValue +
+          (loanType === LoanType.BOND
+            ? orderParamsByMint[nft.mint].loanValue
+            : calcPriceBasedMaxLoanValue({ nft }))
+        );
+      },
+      0,
     );
-  },
-  addNft: ({ nft, orderParams, loanType }) => {
-    if (get().findNftInCart({ nftMint: nft.mint })) return;
+  }, [cartNfts, orderParamsByMint, loanType]);
 
-    set(
-      produce((state: CartStateLite) => {
-        state.nfts = [...state.nfts, nft];
-        if (loanType === LoanType.BOND) {
-          state.orderParamsByMint = {
-            ...state.orderParamsByMint,
-            [nft.mint]: orderParams,
-          };
-        }
-      }),
-    );
-  },
-  removeNft: ({ nftMint, loanType }) => {
-    set(
-      produce((state: CartStateLite) => {
-        const nftToRemove = state.findNftInCart({ nftMint });
+  return {
+    wallet,
+    maxBorrowValueLoading,
+    maxBorrowValue,
+    borrowValue,
 
-        if (!nftToRemove) return;
+    borrowPercentValue,
+    onBorrowValueChange,
+    onBorrowPercentChange,
 
-        state.nfts = state.nfts.filter(({ mint }) => mint !== nftMint);
+    durationTabs,
+    duration,
+    onDurationTabClick,
 
-        if (loanType === LoanType.BOND) {
-          const removableOrderParam = state.orderParamsByMint[nftMint];
+    nfts,
+    onNftClick,
+    findNftInCart,
+    orders,
+    currentNft,
+    getCurrentNftOrderParams,
+    loanType,
 
-          const firstLowerLoanValueNft =
-            state.nfts.find(({ mint }) => {
-              const loanValue = state.orderParamsByMint[mint].loanValue;
-              return loanValue < removableOrderParam.loanValue;
-            }) ?? null;
+    cartNfts,
+    orderParamsByMint,
 
-          if (firstLowerLoanValueNft) {
-            state.orderParamsByMint[firstLowerLoanValueNft.mint] =
-              removableOrderParam;
-          }
+    isBulk: nfts.length > 1,
+    totalBorrowValue,
+    clearCart,
+    getBondFee,
+    getBondLoanValue,
 
-          delete state.orderParamsByMint[nftMint];
-        }
-      }),
-    );
-  },
-  clearCart: () =>
-    set(
-      produce((state: CartStateLite) => {
-        state.nfts = [];
-        state.orderParamsByMint = {};
-      }),
-    ),
-}));
+    dataLoading: isLoading || maxBorrowValueLoading,
+  };
+};
 
 type UseMaxBorrow = (props: { walletPublicKey?: web3.PublicKey }) => {
   maxBorrow: MaxBorrow;
