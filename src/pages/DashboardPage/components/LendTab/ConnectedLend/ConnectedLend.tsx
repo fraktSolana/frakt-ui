@@ -6,7 +6,7 @@ import { useSolanaBalance } from '@frakt/utils/accounts/useSolanaBalance';
 import { selectLiquidityPools } from '@frakt/state/loans/selectors';
 import { useFetchAllStats } from '@frakt/pages/DashboardPage/hooks';
 import { NavigationButton } from '@frakt/components/Button';
-
+import { useTradePools } from '@frakt/utils/strategies';
 import { PATHS } from '@frakt/constants';
 
 import { DashboardColumnValue } from '../../DashboardStatsValues';
@@ -14,8 +14,10 @@ import { ChartValuesList } from '../../ChartPie/ChartValuesList';
 import DepositContentView from '../DepositContentView';
 import {
   calcWeightedAvaragePoolsApy,
+  calcWeightedAvarageStrategiesApy,
   createChartPieData,
   getLabelsAndDataByPools,
+  getLabelsAndDataByStrategies,
 } from './helpers';
 import { defaultsColors } from './constants';
 import { ChartPie } from '../../ChartPie';
@@ -27,10 +29,18 @@ const ConnectedLend: FC = () => {
   const liquidityPools = useSelector(selectLiquidityPools);
 
   const { publicKey: walletPublicKey } = useWallet();
+
+  const { tradePools, isLoading } = useTradePools({
+    walletPublicKey: walletPublicKey?.toBase58(),
+  });
+
   const { data: stats, loading } = useFetchAllStats({ walletPublicKey });
   const { balance } = useSolanaBalance();
 
   const chartPieData = createChartPieData(stats, balance);
+
+  const [strategiesChartData, strategiesChartLabels] =
+    getLabelsAndDataByStrategies(tradePools, balance);
 
   const totalLendAmout =
     stats?.bonds?.bondUserAmount + stats?.bonds?.userOffersAmount;
@@ -40,7 +50,9 @@ const ConnectedLend: FC = () => {
     balance,
   );
 
-  const weightedAvarageApy = calcWeightedAvaragePoolsApy(liquidityPools);
+  const weightedAvaragePoolsApy = calcWeightedAvaragePoolsApy(liquidityPools);
+  const weightedAvarageStrategiesApy =
+    calcWeightedAvarageStrategiesApy(tradePools);
 
   return (
     <div className={styles.container}>
@@ -71,12 +83,12 @@ const ConnectedLend: FC = () => {
       </div>
       <div className={styles.depositWrapper}>
         <DepositContentView
-          data={poolsChartData}
-          labels={poolsChartLabels}
+          data={strategiesChartData}
+          labels={strategiesChartLabels}
           title="Strategies"
           tooltipText="Strategies"
           buttonText="Manage strategies"
-          apr={weightedAvarageApy}
+          apr={weightedAvarageStrategiesApy}
           path={PATHS.STRATEGIES}
         />
         <DepositContentView
@@ -85,7 +97,7 @@ const ConnectedLend: FC = () => {
           title="Pools"
           tooltipText="Pools"
           buttonText="Manage pools"
-          apr={weightedAvarageApy}
+          apr={weightedAvaragePoolsApy}
           path={PATHS.LEND}
         />
       </div>

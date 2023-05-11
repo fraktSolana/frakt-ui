@@ -1,26 +1,43 @@
-import { UserStats } from '@frakt/api/user/types';
+import { TradePoolUser } from '@frakt/api/strategies';
+import { sum, map, filter, orderBy } from 'lodash';
+
 import { LiquidityPool } from '@frakt/state/loans/types';
 import { calcWeightedAverage } from '@frakt/utils';
-import { sum, map, filter } from 'lodash';
+import { UserStats } from '@frakt/api/user/types';
 
-export const getDepositedUserPools = (pools: LiquidityPool[]) => {
-  const userDepositedPools = pools.filter(
-    (pool) => !!pool?.userDeposit?.depositAmount,
-  );
-
-  const sortedUserPools = userDepositedPools.sort(
-    (poolA, poolB) =>
-      poolB?.userDeposit?.depositAmount - poolA?.userDeposit?.depositAmount,
-  );
-
-  return sortedUserPools;
-};
-
+//? common helpers
 const percentage = (partialValue: number, totalValue: number): number => {
   return (partialValue / totalValue) * 100;
 };
 
-export const getLabelsAndDataByPools = (
+const divideDataByBestAndOthers = (data = [], divideBy = 3) => {
+  const [poolsWithLargerDepositAmount, othersPools] = [
+    data.slice(0, divideBy),
+    data.slice(divideBy, data?.length),
+  ];
+
+  return [poolsWithLargerDepositAmount, othersPools];
+};
+
+const getChartDataBySpreadedAmouts = (data: number[]) => {
+  const totalAmount = sum(map(data)) || 0;
+
+  return data
+    .filter((pool) => pool)
+    .map((number) => percentage(number, totalAmount));
+};
+
+//? pools helpers
+const getDepositedUserPools = (pools: LiquidityPool[]) => {
+  const depositAmount = (pool) => pool?.userDeposit?.depositAmount;
+
+  const userDepositedPools = pools.filter(depositAmount);
+  const sortedUserPools = orderBy(userDepositedPools, depositAmount, 'desc');
+
+  return sortedUserPools;
+};
+
+const getLabelsAndDataByPools = (
   pools: LiquidityPool[],
   balance: number,
 ): [number[], string[]] => {
@@ -43,23 +60,14 @@ export const getLabelsAndDataByPools = (
   return [data, labels];
 };
 
-const divideDataByBestAndOthers = (data = [], divideBy = 3) => {
-  const [poolsWithLargerDepositAmount, othersPools] = [
-    data.slice(0, divideBy),
-    data.slice(divideBy, data?.length),
-  ];
-
-  return [poolsWithLargerDepositAmount, othersPools];
-};
-
 const createChartLabelsByPools = (
   bestPools: LiquidityPool[],
   othersPools: LiquidityPool[],
 ) => {
   const defaultWalletLabel = 'idle in wallet';
 
-  const labelsByBestPools = bestPools.map((pool) => pool?.name);
-  const labelsByOthersPools = othersPools?.length ? 'others' : null;
+  const labelsByBestPools = bestPools.map((pool: LiquidityPool) => pool?.name);
+  const labelsByOthersPools = othersPools?.length ? 'others' : '';
 
   return [...labelsByBestPools, labelsByOthersPools, defaultWalletLabel].filter(
     (pool) => pool,
@@ -77,22 +85,34 @@ const createChartDataByPools = (
   const userDepositsByBestPools = mapUserDepositByPools(bestPools);
   const userDepositsByOthersPools = sum(mapUserDepositByPools(othersPools));
 
-  const spreadedAmoutsData = [
+  const data = getChartDataBySpreadedAmouts([
     ...userDepositsByBestPools,
     userDepositsByOthersPools,
     balance,
-  ];
-
-  const totalAmount = sum(map(spreadedAmoutsData));
-
-  const data = spreadedAmoutsData
-    .filter((pool) => pool)
-    .map((number) => percentage(number, totalAmount));
+  ]);
 
   return data;
 };
 
-export const createChartPieData = (stats: UserStats, balance: number) => {
+export const calcWeightedAvaragePoolsApy = (pools: LiquidityPool[]) => {
+  const depositAmount = (pool: LiquidityPool) =>
+    pool?.userDeposit?.depositAmount;
+
+  const depositedPools = filter(pools, depositAmount);
+
+  const depositedAmountsNumbers = map(depositedPools, depositAmount);
+  const depositedAPRsNumbers = map(depositedPools, 'depositApr');
+
+  const weightedAvarageApy = calcWeightedAverage(
+    depositedAPRsNumbers,
+    depositedAmountsNumbers,
+  );
+
+  return weightedAvarageApy;
+};
+
+//? chart pie helpers
+const createChartPieData = (stats: UserStats, balance: number) => {
   const userBonds = stats?.bonds?.activeUserLoans || 0;
   const useOffers = stats?.bonds?.userOffers || 0;
 
@@ -113,19 +133,92 @@ export const createChartPieData = (stats: UserStats, balance: number) => {
   return data;
 };
 
-export const calcWeightedAvaragePoolsApy = (pools: LiquidityPool[]) => {
-  const depositAmount = (pool: LiquidityPool) =>
-    pool?.userDeposit?.depositAmount;
+//? strategies helpers
+const getDepositedUserStrategies = (
+  strategies: TradePoolUser[] = [],
+): TradePoolUser[] => {
+  const userDeposit = (strategy) => strategy?.wallet?.userDeposit;
 
-  const depositedPools = filter(pools, depositAmount);
+  const depositedStrategies = strategies?.filter(userDeposit);
+  const sortedStrategies = orderBy(depositedStrategies, userDeposit, 'desc');
 
-  const depositedAmountsNumbers = map(depositedPools, depositAmount);
-  const depositedAPRsNumbers = map(depositedPools, 'depositApr');
+  return sortedStrategies;
+};
 
-  const weightedAvarageApy = calcWeightedAverage(
-    depositedAPRsNumbers,
-    depositedAmountsNumbers,
+const getLabelsAndDataByStrategies = (
+  strategies: TradePoolUser[],
+  balance: number,
+): [number[], string[]] => {
+  const userStrategies = getDepositedUserStrategies(strategies);
+  const [strategiesWithLargerDepositAmount, othersPools] =
+    divideDataByBestAndOthers(userStrategies);
+
+  const labels = createChartLabelsByStrategies(
+    strategiesWithLargerDepositAmount,
+    othersPools,
   );
 
+  const data = createChartDataByStrategies(
+    strategiesWithLargerDepositAmount,
+    othersPools,
+    balance,
+  );
+
+  return [data, labels];
+};
+
+const createChartDataByStrategies = (
+  bestStrategies: TradePoolUser[],
+  othersStrategies: TradePoolUser[],
+  balance: number,
+) => {
+  const mapUserDepositByPools = (pools: TradePoolUser[]) =>
+    map(pools, ({ wallet }) => wallet?.userDeposit);
+
+  const depositsByBestStrategies = mapUserDepositByPools(bestStrategies);
+  const depositsByOthersStrategies = sum(
+    mapUserDepositByPools(othersStrategies),
+  );
+
+  const data = getChartDataBySpreadedAmouts([
+    ...depositsByBestStrategies,
+    depositsByOthersStrategies,
+    balance,
+  ]);
+
+  return data;
+};
+
+const createChartLabelsByStrategies = (
+  bestStrategies: TradePoolUser[],
+  othersStrategies: TradePoolUser[],
+) => {
+  const defaultWalletLabel = 'idle in wallet';
+
+  const labelsByBestStrategies = bestStrategies.map(
+    (pool: TradePoolUser) => pool?.name,
+  );
+  const labelsByOthersStrategies = othersStrategies?.length ? 'others' : '';
+
+  return [
+    ...labelsByBestStrategies,
+    labelsByOthersStrategies,
+    defaultWalletLabel,
+  ].filter((pool) => pool);
+};
+
+const calcWeightedAvarageStrategiesApy = (strategies: TradePoolUser[]) => {
+  const userStrategies = getDepositedUserStrategies(strategies);
+  const amount = map(userStrategies, ({ wallet }) => wallet.userDeposit / 1e9);
+  const APRs = map(userStrategies, ({ wallet }) => wallet.userYield);
+
+  const weightedAvarageApy = calcWeightedAverage(amount, APRs);
   return weightedAvarageApy;
+};
+
+export {
+  getLabelsAndDataByPools,
+  getLabelsAndDataByStrategies,
+  createChartPieData,
+  calcWeightedAvarageStrategiesApy,
 };

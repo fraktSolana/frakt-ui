@@ -32,7 +32,7 @@ const DepositContentView: FC<DepositContentViewProps> = ({
         <Heading title={title} tooltipText={tooltipText} />
         <DashboardColumnValue
           label="Deposit weightet apr"
-          value={apr?.toFixed(0)}
+          value={apr?.toFixed(2)}
           valueType={VALUES_TYPES.percent}
           reverse
         />
