@@ -4,27 +4,27 @@ import { useHistory } from 'react-router-dom';
 
 import { PATHS } from '@frakt/constants';
 import { useConnection } from '@frakt/hooks';
-import { CartOrder, useBorrow } from '@frakt/pages/BorrowPages/cartState';
+import { calcPriceBasedMaxLoanValue } from '@frakt/pages/BorrowPages/cartState';
 import { useLoadingModalState } from '@frakt/components/LoadingModal';
 import { borrowBulk } from '@frakt/pages/BorrowPages/helpers';
+import { useBorrowManualLitePage } from '../../BorrowManualLitePage';
+import { LoanType } from '@frakt/api/loans';
 
-export const useSidebar = () => {
-  const {
-    isLoading,
-    isBulk,
-    totalBorrowValue,
-    currentNft,
-    onRemoveNft,
-    onNextNftSelect,
-    currentBondOrderParams,
-    currentLoanType,
-    currentLoanValue,
-    clearCart,
-    clearCurrentNftState,
-    cartOrders,
-  } = useBorrow();
+interface UseSidebarProps {
+  loanType: LoanType;
+  totalBorrowValue: number;
+  isBulk: boolean;
+}
 
+export const useSidebar = ({
+  loanType,
+  totalBorrowValue,
+  isBulk,
+}: UseSidebarProps) => {
   const [minimizedOnMobile, setMinimizedOnMobile] = useState<boolean>(false);
+
+  const { currentNft, onNftClick, clearCart, cartNfts, orderParamsByMint } =
+    useBorrowManualLitePage();
 
   const history = useHistory();
 
@@ -39,21 +39,23 @@ export const useSidebar = () => {
 
   const onSubmit = async () => {
     try {
-      //TODO closeConfirmModal();
-
       setLoadingModalVisible(true);
 
-      const currentOrder: CartOrder = {
-        borrowNft: currentNft,
-        loanType: currentLoanType,
-        loanValue: currentLoanValue,
-        bondOrderParams: currentBondOrderParams,
-      };
+      const orders = cartNfts.map((nft) => {
+        const isBond = loanType === LoanType.BOND;
 
-      const orders: CartOrder[] = [currentOrder, ...cartOrders];
+        return {
+          borrowNft: nft,
+          loanType: loanType,
+          loanValue: isBond
+            ? orderParamsByMint[nft.mint].loanValue
+            : calcPriceBasedMaxLoanValue({ nft }),
+          bondOrderParams: isBond ? orderParamsByMint[nft.mint].orders : null,
+        };
+      });
 
       const result = await borrowBulk({
-        orders,
+        orders: orders as any, //TODO AddMarkets here
         wallet,
         connection,
       });
@@ -63,7 +65,6 @@ export const useSidebar = () => {
       }
 
       history.push(PATHS.BORROW_SUCCESS);
-      clearCurrentNftState();
       clearCart();
     } catch (error) {
       console.error(error);
@@ -73,16 +74,14 @@ export const useSidebar = () => {
   };
 
   return {
-    isLoading: currentNft?.bondParams?.marketPubkey && isLoading,
-    isBulk,
-    totalBorrowValue,
-    currentNft,
-    onRemoveNft,
-    onNextNftSelect,
     minimizedOnMobile,
     setMinimizedOnMobile,
     onSubmit,
     loadingModalVisible,
     setLoadingModalVisible,
+    currentNft,
+    onNftClick,
+    isBulk,
+    totalBorrowValue,
   };
 };

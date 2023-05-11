@@ -10,6 +10,7 @@ import {
   LoanDuration,
   MaxBorrow,
   Suggestion,
+  WalletNftsLite,
 } from './types';
 import { LoanType } from '../loans';
 
@@ -51,6 +52,27 @@ export const fetchWalletBorrowNfts: FetchWalletBorrowNfts = async ({
         ? patchBorrowValueWithProtocolFee(nft.maxLoanValue)
         : nft.maxLoanValue,
   }));
+};
+
+type FetchWalletBorrowNftsLite = (props: {
+  publicKey: web3.PublicKey;
+  duration?: LoanDuration | null;
+}) => Promise<WalletNftsLite>;
+
+export const fetchWalletBorrowNftsLite: FetchWalletBorrowNftsLite = async ({
+  publicKey,
+  duration = 7,
+}) => {
+  const { data } = await axios.get<WalletNftsLite>(
+    `https://${BACKEND_DOMAIN}/nft/meta-lite/${publicKey?.toBase58()}?duration=${duration}&$&isPrivate=${IS_PRIVATE_MARKETS}`,
+  );
+
+  return (
+    data ?? {
+      nfts: [],
+      orders: {},
+    }
+  );
 };
 
 type FetchBulkSuggestion = (props: {

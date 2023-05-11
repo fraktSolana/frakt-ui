@@ -7,7 +7,7 @@ import { LoanType } from '@frakt/api/loans';
 
 import { CartOrder } from './types';
 import { Order } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
-import { BondCartOrder } from '@frakt/api/nft';
+import { BondCartOrder, BorrowNft } from '@frakt/api/nft';
 import { map, sum } from 'lodash';
 
 type ConvertTakenOrdersToOrderParams = (params: {
@@ -107,4 +107,13 @@ export const patchBorrowValueWithProtocolFee: PatchBorrowValueWithProtocolFee =
 type CalcTotalBorrowValue = (props: { cartOrders: CartOrder[] }) => number;
 export const calcTotalBorrowValue: CalcTotalBorrowValue = ({ cartOrders }) => {
   return sum(map(cartOrders, ({ loanValue }) => loanValue));
+};
+
+type CalcPriceBasedMaxLoanValue = (props: { nft: BorrowNft }) => number;
+export const calcPriceBasedMaxLoanValue: CalcPriceBasedMaxLoanValue = ({
+  nft,
+}) => {
+  const { valuation, classicParams } = nft;
+
+  return valuation * (classicParams?.priceBased?.ltvPercent / 100) ?? 0;
 };

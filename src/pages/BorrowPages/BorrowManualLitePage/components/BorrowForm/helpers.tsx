@@ -1,21 +1,17 @@
-import { uniq, maxBy, reduce } from 'lodash';
+import { uniq, maxBy, reduce, Dictionary } from 'lodash';
 import classNames from 'classnames';
 import { getMaxBorrowValueOptimized } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 
 import { Market, Pair } from '@frakt/api/bonds';
 import { LoanType } from '@frakt/api/loans';
 import { BOND_DECIMAL_DELTA, pairLoanDurationFilter } from '@frakt/utils/bonds';
-import { BorrowNft } from '@frakt/api/nft';
+import { BorrowNft, OrderParamsLite } from '@frakt/api/nft';
 import { Solana } from '@frakt/icons';
 import {
-  calcBondMultiOrdersFee,
   calcLtv,
   calcPriceBasedUpfrontFee,
-  // calcPriceBasedUpfrontFee,
-  // calcTimeBasedFee,
-  // calcTimeBasedRepayValue,
 } from '@frakt/pages/BorrowPages/helpers';
-import { BondOrderParams, CartOrder } from '@frakt/pages/BorrowPages/cartState';
+import { calcPriceBasedMaxLoanValue } from '@frakt/pages/BorrowPages/cartState';
 
 import { LoanDetailsField } from './types';
 import styles from './BorrowForm.module.scss';
@@ -154,17 +150,22 @@ export const getCheapestPairForBorrowValue: GetCheapestPairForBorrowValue = ({
 
 type GenerateLoanDetails = (props: {
   nft: BorrowNft;
+  orderParamsLite?: OrderParamsLite;
   loanType: LoanType;
-  loanValue: number;
-  bondOrderParams?: BondOrderParams;
 }) => Array<LoanDetailsField>;
 export const generateLoanDetails: GenerateLoanDetails = ({
   nft,
+  orderParamsLite,
   loanType,
-  loanValue,
-  bondOrderParams,
 }) => {
   const fields: Array<LoanDetailsField> = [];
+
+  const { valuation } = nft;
+
+  const loanValue =
+    loanType === LoanType.BOND
+      ? orderParamsLite.loanValue
+      : calcPriceBasedMaxLoanValue({ nft }); //TODO
 
   fields.push({
     label: 'Loan value',
@@ -174,8 +175,6 @@ export const generateLoanDetails: GenerateLoanDetails = ({
       </>
     ),
   });
-
-  const { valuation } = nft;
 
   const ltv = calcLtv({
     loanValue,
@@ -229,8 +228,8 @@ export const generateLoanDetails: GenerateLoanDetails = ({
   }
 
   //? Bond interest
-  if (loanType === LoanType.BOND && bondOrderParams) {
-    const fee = calcBondMultiOrdersFee(bondOrderParams);
+  if (loanType === LoanType.BOND) {
+    const fee = orderParamsLite.loanFee;
 
     fields.push({
       label: 'Interest',
@@ -246,21 +245,33 @@ export const generateLoanDetails: GenerateLoanDetails = ({
 };
 
 type GenerateSummary = (props: {
-  orders: CartOrder[];
+  nfts: BorrowNft[];
+  orderParamsByMint: Dictionary<OrderParamsLite>;
   loanType: LoanType;
 }) => Array<LoanDetailsField>;
-export const generateSummary: GenerateSummary = ({ orders, loanType }) => {
+export const generateSummary: GenerateSummary = ({
+  nfts,
+  orderParamsByMint,
+  loanType,
+}) => {
   const fields: Array<LoanDetailsField> = [];
 
   const borrowValue = reduce(
-    orders,
-    (borrowValue, order) => order?.loanValue + borrowValue,
+    nfts,
+    (borrowValue, nft) => {
+      return (
+        borrowValue +
+        (loanType === LoanType.BOND
+          ? orderParamsByMint[nft.mint].loanValue
+          : calcPriceBasedMaxLoanValue({ nft }))
+      );
+    },
     0,
   );
 
   fields.push({
     label: 'Loans',
-    value: <>{orders?.length}</>,
+    value: <>{nfts?.length}</>,
   });
 
   fields.push({
@@ -274,12 +285,8 @@ export const generateSummary: GenerateSummary = ({ orders, loanType }) => {
 
   if (loanType === LoanType.BOND) {
     const fees = reduce(
-      orders,
-      (fees, order) =>
-        fees +
-        (order?.bondOrderParams
-          ? calcBondMultiOrdersFee(order?.bondOrderParams)
-          : 0),
+      nfts,
+      (fees, nft) => fees + (orderParamsByMint[nft.mint].loanFee ?? 0),
       0,
     );
 
@@ -306,11 +313,11 @@ export const generateSummary: GenerateSummary = ({ orders, loanType }) => {
 
   if (loanType === LoanType.PRICE_BASED) {
     const upfrontFee = reduce(
-      orders,
-      (upfrontFee, order) =>
+      nfts,
+      (upfrontFee, nft) =>
         upfrontFee +
         calcPriceBasedUpfrontFee({
-          loanValue: order?.loanValue,
+          loanValue: calcPriceBasedMaxLoanValue({ nft }),
         }),
       0,
     );
@@ -325,10 +332,12 @@ export const generateSummary: GenerateSummary = ({ orders, loanType }) => {
     });
 
     const feesPerDay = reduce(
-      orders,
-      (feesPerDay, order) => {
-        const { borrowAPRPercent } = order.borrowNft.classicParams.priceBased;
-        const feePerDay = (order?.loanValue * (borrowAPRPercent * 0.01)) / 365;
+      nfts,
+      (feesPerDay, nft) => {
+        const { borrowAPRPercent } = nft.classicParams.priceBased;
+        const feePerDay =
+          (calcPriceBasedMaxLoanValue({ nft }) * (borrowAPRPercent * 0.01)) /
+          365;
 
         return feesPerDay + feePerDay;
       },

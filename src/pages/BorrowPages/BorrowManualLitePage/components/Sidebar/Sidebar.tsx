@@ -3,32 +3,37 @@ import { FC } from 'react';
 import SidebarLayout from '@frakt/components/Sidebar';
 import CollapsedContent from '@frakt/components/Sidebar/components/CollapsedContent';
 import NftsCarousel from '@frakt/components/Sidebar/components/Slider';
-import { Loader } from '@frakt/components/Loader';
 import { LoadingModal } from '@frakt/components/LoadingModal';
-import { LoanDuration } from '@frakt/api/nft';
 
 import styles from './Sidebar.module.scss';
 import { BorrowForm } from '../BorrowForm';
 import { useSidebar } from './hooks';
+import { LoanType } from '@frakt/api/loans';
 
 interface SidebarProps {
-  duration?: LoanDuration;
+  loanType: LoanType;
+  totalBorrowValue: number;
+  isBulk: boolean;
 }
 
-export const Sidebar: FC<SidebarProps> = ({ duration = '7' }) => {
+export const Sidebar: FC<SidebarProps> = ({
+  loanType,
+  totalBorrowValue,
+  isBulk,
+}) => {
   const {
-    isLoading,
-    isBulk,
-    totalBorrowValue,
-    currentNft,
-    onRemoveNft,
-    onNextNftSelect,
     minimizedOnMobile,
     setMinimizedOnMobile,
     onSubmit,
     loadingModalVisible,
     setLoadingModalVisible,
-  } = useSidebar();
+    currentNft,
+    onNftClick,
+  } = useSidebar({
+    loanType,
+    totalBorrowValue,
+    isBulk,
+  });
 
   return (
     <>
@@ -43,19 +48,18 @@ export const Sidebar: FC<SidebarProps> = ({ duration = '7' }) => {
           title={`Borrow ${(totalBorrowValue / 1e9).toFixed(2)} SOL`}
         />
         <div className={styles.sidebar}>
-          {isLoading && <Loader size="large" />}
-          {!isLoading && !!currentNft && (
-            <>
-              <NftsCarousel
-                nfts={currentNft}
-                onDeselect={() => onRemoveNft(currentNft)}
-                onPrev={() => onNextNftSelect(true)}
-                onNext={() => onNextNftSelect()}
-                isBulkLoan={isBulk}
-              />
-              <BorrowForm onSubmit={onSubmit} duration={duration} />
-            </>
-          )}
+          <NftsCarousel
+            nfts={currentNft}
+            onDeselect={() => onNftClick(currentNft)}
+            // onPrev={() => onNextNftSelect(true)}
+            // onNext={() => onNextNftSelect()}
+            isBulkLoan={isBulk}
+          />
+          <BorrowForm
+            onSubmit={onSubmit}
+            loanType={loanType}
+            totalBorrowValue={totalBorrowValue}
+          />
         </div>
       </SidebarLayout>
       <LoadingModal

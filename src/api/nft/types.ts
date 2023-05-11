@@ -1,6 +1,7 @@
 import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 import { Market, Pair } from '../bonds';
 import { LoanType } from '../loans';
+import { Dictionary } from 'ramda';
 
 export interface BorrowNft {
   mint: string;
@@ -81,4 +82,16 @@ export interface MaxBorrow {
   '7': number;
   '14': number;
   all: number;
+}
+
+export interface OrderParamsLite {
+  loanValue: number;
+  loanFee: number;
+  orders: BondCartOrder[];
+}
+
+export interface WalletNftsLite {
+  nfts: Array<BorrowNft>;
+  //? Collection by marketPubkey
+  orders: Dictionary<Array<OrderParamsLite>>;
 }

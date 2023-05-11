@@ -2,34 +2,44 @@ import { FC } from 'react';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
 import Button from '@frakt/components/Button';
-import { useBorrow } from '@frakt/pages/BorrowPages/cartState';
 import Tooltip from '@frakt/components/Tooltip';
-import { LoanDuration } from '@frakt/api/nft';
+import { BorrowNft, OrderParamsLite } from '@frakt/api/nft';
 
 import styles from './BorrowForm.module.scss';
 import { generateLoanDetails, generateSummary } from './helpers';
-import { useBorrowForm } from './hooks';
+import { useBorrowManualLitePage } from '../../BorrowManualLitePage';
+import { LoanType } from '@frakt/api/loans';
+import { Dictionary } from 'lodash';
 
 interface BorrowFormProps {
   onSubmit: () => void;
-  duration?: LoanDuration;
+  loanType?: LoanType;
+  totalBorrowValue: number;
 }
 export const BorrowForm: FC<BorrowFormProps> = ({
   onSubmit,
-  duration = '7',
+  loanType,
+  totalBorrowValue,
 }) => {
-  const { totalBorrowValue } = useBorrowForm({
-    duration,
-  });
+  const { currentNft, cartNfts, orderParamsByMint, getCurrentNftOrderParams } =
+    useBorrowManualLitePage();
 
   return (
     <div className={styles.borrowForm}>
       <div className={styles.borrowFormDetails}>
-        <LoanDetails />
+        <LoanDetails
+          currentNft={currentNft}
+          orderParamsLite={getCurrentNftOrderParams()}
+          loanType={loanType}
+        />
       </div>
       <div className={styles.borrowFormSummary}>
         <p className={styles.borrowFormSummaryTitle}>Summary</p>
-        <Summary />
+        <Summary
+          nfts={cartNfts}
+          orderParamsByMint={orderParamsByMint}
+          loanType={loanType}
+        />
       </div>
       <div className={styles.borrowFormSubmitBtnWrapper}>
         <Button
@@ -44,28 +54,17 @@ export const BorrowForm: FC<BorrowFormProps> = ({
   );
 };
 
-const Summary: FC = () => {
-  const {
-    currentNft,
-    currentLoanType,
-    currentLoanValue,
-    currentBondOrderParams,
-    cartOrders,
-  } = useBorrow();
+interface SummaryProps {
+  nfts: BorrowNft[];
+  orderParamsByMint: Dictionary<OrderParamsLite>;
+  loanType: LoanType;
+}
 
-  if (!currentNft || !currentLoanType) return null;
-
+const Summary: FC<SummaryProps> = ({ nfts, orderParamsByMint, loanType }) => {
   const fields = generateSummary({
-    orders: [
-      ...cartOrders,
-      {
-        borrowNft: currentNft,
-        loanType: currentLoanType,
-        loanValue: currentLoanValue,
-        bondOrderParams: currentBondOrderParams,
-      },
-    ],
-    loanType: currentLoanType,
+    nfts,
+    orderParamsByMint,
+    loanType,
   });
 
   return (
@@ -87,21 +86,23 @@ const Summary: FC = () => {
   );
 };
 
-const LoanDetails: FC = () => {
-  const {
-    currentNft,
-    currentLoanType,
-    currentLoanValue,
-    currentBondOrderParams,
-  } = useBorrow();
+interface LoanDetailsProps {
+  currentNft: BorrowNft;
+  orderParamsLite?: OrderParamsLite;
+  loanType: LoanType;
+}
 
-  if (!currentNft || !currentLoanType) return null;
+const LoanDetails: FC<LoanDetailsProps> = ({
+  currentNft,
+  orderParamsLite,
+  loanType,
+}) => {
+  if (!currentNft) return null;
 
   const fields = generateLoanDetails({
     nft: currentNft,
-    loanType: currentLoanType,
-    loanValue: currentLoanValue,
-    bondOrderParams: currentBondOrderParams,
+    orderParamsLite,
+    loanType,
   });
 
   return (

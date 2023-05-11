@@ -1,15 +1,12 @@
-import { FC } from 'react';
+import { ChangeEvent, FC } from 'react';
 
-import Table, { PartialBreakpoints, Sort } from '@frakt/components/Table';
+import Table, { PartialBreakpoints } from '@frakt/components/Table';
 import { BorrowNft, LoanDuration } from '@frakt/api/nft';
-import {
-  useTable,
-  useSearch,
-  useTableView,
-} from '@frakt/components/Table/hooks';
+import { useTable, useTableView } from '@frakt/components/Table/hooks';
 
 import { getTableColumns } from './columns';
 import styles from './BorrowManualTable.module.scss';
+import { debounce } from 'lodash';
 
 export interface BorrowNftData {
   nft: BorrowNft;
@@ -25,8 +22,7 @@ export interface BorrowManualTableProps {
   className?: string;
   breakpoints?: PartialBreakpoints;
   duration: LoanDuration;
-  setQueryData: (nextValue: Sort) => void;
-  setQuerySearch: (nextValue: string) => void;
+  setSearch: (nextValue: string) => void;
   onRowClick: (nft: BorrowNftData) => void;
   activeNftMint?: string;
 }
@@ -36,40 +32,38 @@ export const BorrowManualTable: FC<BorrowManualTableProps> = ({
   loading,
   breakpoints,
   duration,
-  setQueryData,
-  setQuerySearch,
+  setSearch,
   onRowClick,
   activeNftMint,
 }) => {
   const { viewState } = useTableView();
 
-  const { filteredData, onChange } = useSearch({
-    data,
-    searchField: ['name'],
-    setQuerySearch,
-  });
-
   const COLUMNS = getTableColumns({ duration });
 
   const { table } = useTable({
-    data: filteredData,
+    data,
     columns: COLUMNS,
     onRowClick,
     loading,
   });
 
+  const debouncedSearch = debounce(
+    (event: ChangeEvent<HTMLInputElement>) =>
+      setSearch(event.target.value || ''),
+    300,
+  );
+
   return (
     <Table
       {...table}
       breakpoints={breakpoints}
-      search={{ onChange }}
+      search={{ onChange: debouncedSearch }}
       className={styles.rootTable}
       viewParams={{
         showCard: viewState === 'card',
         showSorting: false,
         showSearching: true,
       }}
-      setQueryData={setQueryData}
       activeRowParams={{
         className: styles.activeRowClassName,
         cardClassName: styles.activeCardClassName,
