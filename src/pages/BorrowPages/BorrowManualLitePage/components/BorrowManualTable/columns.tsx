@@ -33,6 +33,7 @@ export const getTableColumns: GetTableColumns = ({ duration }) => {
       <NftInfoCell
         nftName={nft.name}
         nftImage={nft.imageUrl}
+        nftFloor={nft.valuation}
         selected={selected}
       />
     ),

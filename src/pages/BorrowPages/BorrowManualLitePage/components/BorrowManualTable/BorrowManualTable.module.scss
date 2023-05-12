@@ -46,13 +46,43 @@
 .nftContent {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0;
 }
 .nftName {
   font: var(--font-text-6);
   width: 176px;
   @media (max-width: 768px) {
     width: 100%;
+  }
+}
+.nftFloor {
+  display: flex;
+  align-items: center;
+  font: var(--font-text-6);
+  width: 176px;
+  column-gap: 3px;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+
+  span:first-child {
+    color: var(--gray-color-2);
+    font: var(--font-text-7);
+    font-size: 10px;
+    text-transform: uppercase;
+  }
+  span:last-child {
+    display: flex;
+    align-items: center;
+    column-gap: 2px;
+    color: var(--black-color);
+    font: var(--font-text-4);
+    font-size: 12px;
+  }
+
+  svg {
+    width: 10px;
+    height: 10px;
   }
 }
 
