@@ -190,6 +190,16 @@ export const useBorrowManualLitePage = () => {
     );
   }, [cartNfts, orderParamsByMint, loanType]);
 
+  const [search, setSearch] = useState('');
+
+  const searchedNfts = useMemo(() => {
+    if (!search) return nfts;
+
+    return nfts.filter(({ name }) =>
+      name.toUpperCase().includes(search.toUpperCase()),
+    );
+  }, [nfts, search]);
+
   return {
     wallet,
     maxBorrowValueLoading,
@@ -204,7 +214,7 @@ export const useBorrowManualLitePage = () => {
     duration,
     onDurationTabClick,
 
-    nfts,
+    nfts: searchedNfts,
     onNftClick,
     findNftInCart,
     orders,
@@ -223,6 +233,7 @@ export const useBorrowManualLitePage = () => {
 
     dataLoading: isLoading || maxBorrowValueLoading,
     selectNextCurrentNft,
+    setSearch,
   };
 };
 

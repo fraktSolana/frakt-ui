@@ -38,9 +38,8 @@ export const BorrowManualLitePage: FC = () => {
     clearCart,
     orderParamsByMint,
     selectNextCurrentNft,
+    setSearch,
   } = useBorrowManualLitePage();
-
-  // const setSearch = () => {};
 
   return (
     <AppLayout>
@@ -89,7 +88,7 @@ export const BorrowManualLitePage: FC = () => {
                       bondLoanValue: getBondLoanValue(nft),
                     }))}
                     duration={duration as LoanDuration}
-                    setSearch={() => {}}
+                    setSearch={setSearch}
                     onRowClick={(nft) => onNftClick(nft?.nft)}
                     activeNftMint={currentNft?.mint}
                   />
