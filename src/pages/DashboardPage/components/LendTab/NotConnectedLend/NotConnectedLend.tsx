@@ -14,7 +14,8 @@ import styles from './NotConnectedLend.module.scss';
 import { useNotConnectedLend } from './hooks';
 
 const NotConnectedLend: FC = () => {
-  const { pools, strategies, allLiquidityPools } = useNotConnectedLend();
+  const { pools, strategies, allLiquidityPools, setSearch } =
+    useNotConnectedLend();
 
   return (
     <div className={styles.container}>
@@ -22,13 +23,13 @@ const NotConnectedLend: FC = () => {
         <Search
           title="Lend"
           tooltipText="Lend"
-          onChange={null}
+          onChange={setSearch}
           className={styles.search}
         />
         <div className={styles.nftsList}>
           {allLiquidityPools.map((pool: LiquidityPool) => (
             <LendCard
-              image={pool.imageUrl[0]}
+              image={pool.imageUrl?.[0]}
               activeLoans={pool.activeloansAmount}
               amount={pool.totalLiquidity}
               apr={pool.depositApr}

@@ -26,16 +26,14 @@ import Heading from '../../Heading';
 import styles from './ConnectedLend.module.scss';
 
 const ConnectedLend: FC = () => {
-  const liquidityPools = useSelector(selectLiquidityPools);
-
   const { publicKey: walletPublicKey } = useWallet();
 
-  const { tradePools, isLoading } = useTradePools({
+  const liquidityPools = useSelector(selectLiquidityPools);
+  const { data: stats } = useFetchAllStats({ walletPublicKey });
+  const { balance } = useSolanaBalance();
+  const { tradePools } = useTradePools({
     walletPublicKey: walletPublicKey?.toBase58(),
   });
-
-  const { data: stats, loading } = useFetchAllStats({ walletPublicKey });
-  const { balance } = useSolanaBalance();
 
   const chartPieData = createChartPieData(stats, balance);
 
@@ -44,7 +42,6 @@ const ConnectedLend: FC = () => {
 
   const totalLendAmout =
     stats?.bonds?.bondUserAmount + stats?.bonds?.userOffersAmount;
-
   const totalLend =
     stats?.bonds?.activeUserLoans + stats?.bonds?.userOffers || 0;
 

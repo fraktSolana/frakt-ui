@@ -21,13 +21,18 @@ export const BorrowCard: FC<BorrowCardProps> = ({
   duration,
   fee,
   onClick,
+  mint,
 }) => {
   const { connected } = useWallet();
 
   const maxLoanValue = (rawMaxLoanValue / 1e9)?.toFixed(0);
 
   return (
-    <CardBackdrop image={image} className={className} onClick={onClick}>
+    <CardBackdrop
+      image={image}
+      className={className}
+      onClick={mint ? onClick : null}
+    >
       <div
         className={classNames(styles.nftInfo, {
           [styles.primary]: connected,

@@ -33,6 +33,10 @@
   font: var(--font-text-7);
   text-align: center;
   text-transform: uppercase;
+
+  @media (max-width: 960px) {
+    font-size: 8px;
+  }
 }
 
 .list {

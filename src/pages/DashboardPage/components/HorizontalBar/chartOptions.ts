@@ -13,9 +13,11 @@ export const options = {
     x: {
       ticks: {
         beginAtZero: true,
-        steps: 10,
-        stepSize: 25,
+        stepSize: 50,
         max: 100,
+        callback: function (value) {
+          return ((value / this.max) * 100).toFixed(0) + '%';
+        },
       },
       barPercentage: 0.1,
     },
