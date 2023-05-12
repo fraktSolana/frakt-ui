@@ -61,6 +61,7 @@ export const Sidebar: FC<SidebarProps> = ({
         setVisible={() => setMinimizedOnMobile((prev) => !prev)}
         contentVisible={!minimizedOnMobile}
         isSidebarVisible={true}
+        className={styles.layout}
       >
         <CollapsedContent
           isVisible={!minimizedOnMobile}
