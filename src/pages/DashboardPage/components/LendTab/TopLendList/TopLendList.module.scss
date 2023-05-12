@@ -15,6 +15,11 @@
   p:first-child {
     min-width: 185px;
     max-width: 185px;
+
+    @media (max-width: 550px) {
+      min-width: 120px;
+      max-width: 120px;
+    }
   }
 }
 
@@ -36,6 +41,11 @@
   gap: 8px;
   min-width: 160px;
   max-width: 160px;
+
+  @media (max-width: 550px) {
+    min-width: 120px;
+    max-width: 120px;
+  }
 }
 
 .cardImage {

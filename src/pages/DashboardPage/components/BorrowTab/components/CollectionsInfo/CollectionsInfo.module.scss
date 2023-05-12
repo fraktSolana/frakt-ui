@@ -3,8 +3,20 @@
   flex-direction: column;
   justify-content: flex-end;
 
+  @media (min-width: 960px) {
+    min-height: 230px;
+    max-height: 230px;
+  }
+
   @media (max-width: 960px) {
     gap: 32px;
+  }
+}
+
+.wrapper.primary {
+  @media (min-width: 960px) {
+    min-height: unset;
+    max-height: unset;
   }
 }
 
@@ -29,10 +41,6 @@
 }
 
 .button {
-  height: 48px;
+  height: 40px;
   width: 100%;
-
-  @media (max-width: 960px) {
-    height: 40px;
-  }
 }

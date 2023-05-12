@@ -38,7 +38,7 @@ export const ChartPie = <T extends unknown>({
   return (
     <div className={styles.chartWrapper}>
       <Doughnut data={data} options={options} className={className} />
-      {!!value && (
+      {!!label && (
         <div className={styles.innerContent}>
           <p className={styles.value}>{value}</p>
           <p className={styles.label}>{label}</p>

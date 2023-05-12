@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 import { useWallet } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
 import { useHistory } from 'react-router-dom';
@@ -19,11 +21,27 @@ import {
 } from '@frakt/utils/transactions';
 
 import { filterPairs, getBondOrderParams, parseNFTs } from './helpers';
+import { useNotConnectedBorrowContent } from '../NotConnectedBorrowContent';
 
 export const useConnectedBorrowContent = () => {
+  const { publicKey } = useWallet();
+  const [isUserHasNFTs, setIsUserHasNFTs] = useState<boolean>(false);
+  const { collections, setSearch: setSearchCollections } =
+    useNotConnectedBorrowContent();
+
   const { nfts, fetchNextPage, initialLoading, setSearch } = useWalletNfts();
 
   const { loans } = useFetchAllLoans();
+
+  useEffect(() => {
+    if (nfts?.length) {
+      setIsUserHasNFTs(true);
+    }
+  }, [nfts, publicKey]);
+
+  useEffect(() => {
+    setIsUserHasNFTs(false);
+  }, [publicKey]);
 
   const setSearchDebounced = useDebounce((value: string) => {
     setSearch(value);
@@ -31,12 +49,15 @@ export const useConnectedBorrowContent = () => {
 
   const parsedNfts = parseNFTs(nfts);
 
+  const loading = initialLoading && !nfts?.length;
+
   return {
-    nfts: parsedNfts,
+    nfts: isUserHasNFTs && !loading ? parsedNfts : collections,
     loans,
-    setSearch: setSearchDebounced,
-    loading: initialLoading && !nfts?.length,
+    setSearch: isUserHasNFTs ? setSearchDebounced : setSearchCollections,
+    loading,
     fetchNextPage,
+    isUserHasNFTs,
   };
 };
 

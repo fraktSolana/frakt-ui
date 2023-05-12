@@ -8,13 +8,16 @@ import { NFTsList } from '../../../NFTsList';
 import { Search } from '../../../Search';
 import MyLoans from '../MyLoans';
 
+import CollectionsInfo from '../CollectionsInfo/CollectionsInfo';
+import Heading from '../../../Heading';
+
 import styles from './ConnectedBorrowContent.module.scss';
 
 const ConnectedBorrowContent: FC = () => {
   const { onSubmit, loadingModalVisible, closeLoadingModal } =
     useBorrowSingleBond();
 
-  const { setSearch, nfts, loans, loading, fetchNextPage } =
+  const { setSearch, nfts, loans, loading, fetchNextPage, isUserHasNFTs } =
     useConnectedBorrowContent();
 
   return (
@@ -28,7 +31,7 @@ const ConnectedBorrowContent: FC = () => {
           />
           <div className={styles.nftsListWrapper}>
             <NFTsList
-              nfts={nfts}
+              nfts={nfts as any}
               fetchNextPage={fetchNextPage}
               isLoading={loading}
               onClick={onSubmit}
@@ -37,7 +40,17 @@ const ConnectedBorrowContent: FC = () => {
           </div>
         </div>
         <div className={styles.content}>
-          <AvailableBorrow />
+          {isUserHasNFTs ? (
+            <AvailableBorrow />
+          ) : (
+            <div>
+              <Heading className={styles.title} title="Available to borrow" />
+              <CollectionsInfo hiddenButton />
+              <p className={styles.notNftsMessage}>
+                You don't have NFTs which we whitelisted
+              </p>
+            </div>
+          )}
           {!!loans?.length && <MyLoans loans={loans} />}
         </div>
       </div>

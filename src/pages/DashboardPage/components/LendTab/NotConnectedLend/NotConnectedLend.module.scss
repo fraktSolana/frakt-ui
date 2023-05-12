@@ -28,7 +28,7 @@
   width: 100%;
 
   @media ((max-width: 1240px) and (min-width: 960px)) {
-    width: 35%;
+    width: 60%;
   }
 }
 
@@ -51,8 +51,9 @@
 
 .nftsList {
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  align-items: stretch;
   gap: 16px;
-  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
   overflow: auto;
 
   @media (max-width: 1240px) {
@@ -66,18 +67,21 @@
   @media (max-width: 960px) {
     grid-template-columns: unset;
     display: flex;
-    overflow: auto;
-    min-height: 234px;
-    gap: 16px;
+    gap: 8px;
+    height: 200px;
 
     & > div {
       min-width: 168px;
+      max-width: 168px;
     }
   }
 
   @media (max-width: 550px) {
+    height: 164px;
+
     & > div {
-      min-width: 109px;
+      min-width: 115px;
+      max-width: 115px;
     }
   }
 }
@@ -89,6 +93,6 @@
 
 .button {
   margin-top: 16px;
-  height: 48px;
+  height: 40px;
   width: 100%;
 }

@@ -5,6 +5,7 @@
 
   canvas {
     height: 180px !important;
+    width: 100% !important;
   }
 
   @media ((max-width: 1240px) and (min-width: 960px)) {
@@ -19,6 +20,13 @@
 
   @media (max-width: 960px) {
     max-width: unset;
+  }
+
+  @media (max-width: 550px) {
+    height: 160px;
+    canvas {
+      height: 160px !important;
+    }
   }
 }
 
@@ -36,7 +44,13 @@
   }
 
   @media (max-width: 960px) {
-    gap: 32px;
+    gap: 24px;
+    align-items: unset;
+  }
+
+  @media (max-width: 550px) {
+    flex-direction: column;
+    gap: 16px;
   }
 }
 .depositInfoWrapper {
@@ -50,14 +64,20 @@
     height: unset;
     width: 100%;
   }
+
+  @media (max-width: 960px) {
+    height: unset;
+  }
+
+  @media (max-width: 550px) {
+    flex-direction: row;
+    height: unset;
+    width: 100%;
+  }
 }
 
 .navigationButton {
   margin-top: 16px;
-  height: 48px;
+  height: 40px;
   width: 100%;
-
-  @media (max-width: 960px) {
-    height: 40px;
-  }
 }

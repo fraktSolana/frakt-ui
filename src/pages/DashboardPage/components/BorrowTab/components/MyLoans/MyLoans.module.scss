@@ -45,12 +45,8 @@
 
 .button {
   margin-top: 16px;
-  height: 48px;
+  height: 40px;
   width: 100%;
-
-  @media (max-width: 960px) {
-    height: 40px;
-  }
 
   @media (max-width: 550px) {
     margin-top: 8px;

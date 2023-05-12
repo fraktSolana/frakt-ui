@@ -113,19 +113,19 @@ export const calcWeightedAvaragePoolsApy = (pools: LiquidityPool[]) => {
 
 //? chart pie helpers
 const createChartPieData = (stats: UserStats, balance: number) => {
-  const userBonds = stats?.bonds?.activeUserLoans || 0;
-  const useOffers = stats?.bonds?.userOffers || 0;
+  const userBondsAmount = stats?.bonds?.bondUserAmount || 0;
+  const useOffersAmount = stats?.bonds?.userOffersAmount || 0;
 
   const data = [
     {
       name: 'Bonds',
       key: 'bonds',
-      value: userBonds,
+      value: userBondsAmount,
     },
     {
       name: 'Offers',
       key: 'offers',
-      value: useOffers,
+      value: useOffersAmount,
     },
     { name: 'IDLE in wallet', key: 'balance', value: balance?.toFixed(2) },
   ];

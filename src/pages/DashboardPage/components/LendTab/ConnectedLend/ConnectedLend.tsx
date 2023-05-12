@@ -45,6 +45,9 @@ const ConnectedLend: FC = () => {
   const totalLendAmout =
     stats?.bonds?.bondUserAmount + stats?.bonds?.userOffersAmount;
 
+  const totalLend =
+    stats?.bonds?.activeUserLoans + stats?.bonds?.userOffers || 0;
+
   const [poolsChartData, poolsChartLabels] = getLabelsAndDataByPools(
     liquidityPools,
     balance,
@@ -67,7 +70,7 @@ const ConnectedLend: FC = () => {
             <ChartPie
               data={chartPieData}
               label="Offers and bonds"
-              value={500}
+              value={totalLend}
               className={styles.chart}
               colors={Object.values(defaultsColors)}
             />
