@@ -173,7 +173,7 @@ const createChartDataByStrategies = (
   balance: number,
 ) => {
   const mapUserDepositByPools = (pools: TradePoolUser[]) =>
-    map(pools, ({ wallet }) => wallet?.userDeposit);
+    map(pools, ({ wallet }) => wallet?.userDeposit / 1e9);
 
   const depositsByBestStrategies = mapUserDepositByPools(bestStrategies);
   const depositsByOthersStrategies = sum(

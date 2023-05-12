@@ -78,4 +78,8 @@
 
   height: 40px;
   width: 90%;
+
+  @media (max-width: 960px) {
+    padding: 0;
+  }
 }

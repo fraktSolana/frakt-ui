@@ -35,14 +35,14 @@ export const BorrowCard: FC<BorrowCardProps> = ({
     >
       <div
         className={classNames(styles.nftInfo, {
-          [styles.primary]: connected,
+          [styles.primary]: connected && !!mint,
         })}
       >
         <p className={styles.value}>{duration} days</p>
         <p className={styles.label}>
           Fee: <p className={styles.value}> {fee} ◎</p>
         </p>
-        {connected && (
+        {connected && !!mint && (
           <Button type="secondary" className={styles.button}>
             Get {maxLoanValue} ◎
           </Button>
