@@ -24,6 +24,7 @@ interface SidebarProps {
   clearCart: () => void;
   cartNfts: BorrowNft[];
   orderParamsByMint: Dictionary<OrderParamsLite>;
+  selectNextCurrentNft: (reverse?: boolean) => void;
 }
 
 export const Sidebar: FC<SidebarProps> = ({
@@ -35,6 +36,7 @@ export const Sidebar: FC<SidebarProps> = ({
   clearCart,
   cartNfts,
   orderParamsByMint,
+  selectNextCurrentNft,
 }) => {
   const {
     minimizedOnMobile,
@@ -69,8 +71,8 @@ export const Sidebar: FC<SidebarProps> = ({
           <NftsCarousel
             nfts={currentNft}
             onDeselect={() => onNftClick(currentNft)}
-            // onPrev={() => onNextNftSelect(true)}
-            // onNext={() => onNextNftSelect()}
+            onPrev={() => selectNextCurrentNft(true)}
+            onNext={() => selectNextCurrentNft()}
             isBulkLoan={isBulk}
           />
           <div className={styles.borrowForm}>
@@ -155,6 +157,8 @@ const LoanDetails: FC<LoanDetailsProps> = ({
   loanType,
 }) => {
   if (!currentNft) return null;
+
+  if (loanType === LoanType.BOND && !orderParamsLite) return null;
 
   const fields = generateLoanDetails({
     nft: currentNft,

@@ -34,6 +34,7 @@ export const BorrowManualLitePage: FC = () => {
     cartNfts,
     clearCart,
     orderParamsByMint,
+    selectNextCurrentNft,
   } = useBorrowManualLitePage();
 
   // const setSearch = () => {};
@@ -99,6 +100,7 @@ export const BorrowManualLitePage: FC = () => {
             clearCart={clearCart}
             cartNfts={cartNfts}
             orderParamsByMint={orderParamsByMint}
+            selectNextCurrentNft={selectNextCurrentNft}
           />
         )}
       </div>

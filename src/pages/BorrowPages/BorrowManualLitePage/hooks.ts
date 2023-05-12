@@ -48,6 +48,8 @@ export const useBorrowManualLitePage = () => {
     getNftsCountByMarket,
     nfts: cartNfts,
     orderParamsByMint,
+    selectNextCurrentNft,
+    currentNft,
   } = useCartStateLite();
 
   const { isLoading, nfts, orders } = useWalletNftsLite({
@@ -128,10 +130,6 @@ export const useBorrowManualLitePage = () => {
     },
     [loanType, addNft, findNftInCart, getNftsCountByMarket, orders, removeNft],
   );
-
-  const currentNft = useMemo(() => {
-    return cartNfts.at(-1) ?? null;
-  }, [cartNfts]);
 
   const getCurrentNftOrderParams = useCallback(() => {
     return orderParamsByMint?.[currentNft?.mint] ?? null;
@@ -217,13 +215,14 @@ export const useBorrowManualLitePage = () => {
     cartNfts,
     orderParamsByMint,
 
-    isBulk: nfts.length > 1,
+    isBulk: cartNfts.length > 1,
     totalBorrowValue,
     clearCart,
     getBondFee,
     getBondLoanValue,
 
     dataLoading: isLoading || maxBorrowValueLoading,
+    selectNextCurrentNft,
   };
 };
 
