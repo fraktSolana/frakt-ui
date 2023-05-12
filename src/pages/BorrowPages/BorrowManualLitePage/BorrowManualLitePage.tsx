@@ -6,6 +6,8 @@ import { AppLayout } from '@frakt/components/Layout/AppLayout';
 import { LoanDuration } from '@frakt/api/nft';
 import { Tabs } from '@frakt/components/Tabs';
 import { Loader } from '@frakt/components/Loader';
+import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
+import { Solana } from '@frakt/icons';
 
 import { Sidebar } from './components/Sidebar';
 import { BorrowManualTable } from './components/BorrowManualTable';
@@ -17,6 +19,7 @@ export const BorrowManualLitePage: FC = () => {
 
   const {
     wallet,
+    maxBorrowValue,
     maxBorrowValueLoading,
     durationTabs,
     duration,
@@ -46,50 +49,56 @@ export const BorrowManualLitePage: FC = () => {
           [styles.containerSidebarVisible]: !!currentNft,
         })}
       >
-        <div className={styles.header}>
-          <h1>Borrow SOL</h1>
-        </div>
+        <Header
+          collateralsAmount={nfts?.length}
+          availableToBorrow={maxBorrowValue}
+        />
 
-        {wallet.connected && !maxBorrowValueLoading && (
-          <div className={styles.content}>
-            <div className={styles.tabsWrapper}>
-              <h3 className={styles.subtitle}>Duration</h3>
-              <Tabs
-                tabs={durationTabs}
-                value={duration}
-                setValue={onDurationTabClick}
-                className={styles.tabs}
-                additionalClassNames={{
-                  tabClassName: styles.tab,
-                  tabActiveClassName: styles.tabActive,
-                }}
-                type="unset"
-              />
-            </div>
+        <div className={styles.content}>
+          {!wallet?.connected && (
+            <ConnectWalletSection text="Connect your wallet to see your nfts" />
+          )}
 
-            {!!dataLoading && <Loader />}
-
-            {!dataLoading && !!nfts && (
-              <div className={styles.tableWrapper}>
-                <BorrowManualTable
-                  data={nfts.map((nft) => ({
-                    nft,
-                    active: currentNft?.mint === nft.mint,
-                    selected: !!findNftInCart({ nftMint: nft.mint }),
-                    bondFee: getBondFee(nft),
-                    bondLoanValue: getBondLoanValue(nft),
-                  }))}
-                  duration={duration as LoanDuration}
-                  setSearch={() => {}}
-                  onRowClick={(nft) => onNftClick(nft?.nft)}
-                  activeNftMint={currentNft?.mint}
+          {wallet.connected && !maxBorrowValueLoading && (
+            <>
+              <div className={styles.tabsWrapper}>
+                <h3 className={styles.subtitle}>Duration</h3>
+                <Tabs
+                  tabs={durationTabs}
+                  value={duration}
+                  setValue={onDurationTabClick}
+                  className={styles.tabs}
+                  additionalClassNames={{
+                    tabClassName: styles.tab,
+                    tabActiveClassName: styles.tabActive,
+                  }}
+                  type="unset"
                 />
-                {/* <div ref={ref} /> */}
               </div>
-            )}
-          </div>
-        )}
 
+              {!!dataLoading && <Loader />}
+
+              {!dataLoading && !!nfts && (
+                <div className={styles.tableWrapper}>
+                  <BorrowManualTable
+                    data={nfts.map((nft) => ({
+                      nft,
+                      active: currentNft?.mint === nft.mint,
+                      selected: !!findNftInCart({ nftMint: nft.mint }),
+                      bondFee: getBondFee(nft),
+                      bondLoanValue: getBondLoanValue(nft),
+                    }))}
+                    duration={duration as LoanDuration}
+                    setSearch={() => {}}
+                    onRowClick={(nft) => onNftClick(nft?.nft)}
+                    activeNftMint={currentNft?.mint}
+                  />
+                  {/* <div ref={ref} /> */}
+                </div>
+              )}
+            </>
+          )}
+        </div>
         {!!currentNft && (
           <Sidebar
             loanType={loanType}
@@ -105,5 +114,37 @@ export const BorrowManualLitePage: FC = () => {
         )}
       </div>
     </AppLayout>
+  );
+};
+
+interface HeaderProps {
+  collateralsAmount?: number;
+  availableToBorrow?: number;
+}
+
+const Header: FC<HeaderProps> = ({ collateralsAmount, availableToBorrow }) => {
+  return (
+    <div className={styles.header}>
+      <h1>Borrow SOL</h1>
+
+      {(!!collateralsAmount || !!availableToBorrow) && (
+        <div className={styles.headerStatsWrapper}>
+          {!!collateralsAmount && (
+            <div className={styles.headerStats}>
+              <span>Amount of collaterals:</span>
+              <span>{collateralsAmount}</span>
+            </div>
+          )}
+          {!!availableToBorrow && (
+            <div className={styles.headerStats}>
+              <span>Amount of collaterals:</span>
+              <span>
+                {availableToBorrow.toFixed(2)} <Solana />
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
   );
 };
