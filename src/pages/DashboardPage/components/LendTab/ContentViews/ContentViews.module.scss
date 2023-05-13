@@ -8,7 +8,7 @@
     width: 100% !important;
   }
 
-  @media ((max-width: 1240px) and (min-width: 960px)) {
+  @media ((max-width: 1240px) and (min-width: 961px)) {
     max-width: unset;
     min-height: unset;
     height: 120px !important;
@@ -39,7 +39,7 @@
   align-items: center;
   justify-content: space-between;
 
-  @media ((max-width: 1240px) and (min-width: 960px)) {
+  @media ((max-width: 1240px) and (min-width: 961px)) {
     flex-direction: column;
   }
 
@@ -59,7 +59,7 @@
   justify-content: space-between;
   height: 100%;
 
-  @media ((max-width: 1240px) and (min-width: 960px)) {
+  @media ((max-width: 1240px) and (min-width: 961px)) {
     flex-direction: row;
     height: unset;
     width: 100%;

@@ -2,6 +2,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
 import { useQuery } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
+import { orderBy } from 'lodash';
 
 import { useFetchAllLoans } from '@frakt/pages/LoansPage/components/LoansActiveTab/hooks';
 import { useWalletNfts } from '@frakt/pages/BorrowPages/BorrowManualPage/hooks';
@@ -39,14 +40,20 @@ export const useConnectedBorrowContent = () => {
     setSearch(value);
   }, 300);
 
-  const parsedNfts = parseNFTs(nfts);
+  const parsedNFTs = parseNFTs(nfts);
+
+  const filteredNFTsByLoanValue = orderBy(
+    parsedNFTs,
+    ({ maxLoanValue }) => maxLoanValue,
+    'desc',
+  );
 
   const loading = initialLoading && !nfts?.length;
 
   const userHasNFTs = !!userNFTs?.length;
 
   return {
-    nfts: userHasNFTs && !loading ? parsedNfts : collections,
+    nfts: userHasNFTs && !loading ? filteredNFTsByLoanValue : collections,
     loans,
     setSearch: userHasNFTs ? setSearchDebounced : setSearchCollections,
     loading,

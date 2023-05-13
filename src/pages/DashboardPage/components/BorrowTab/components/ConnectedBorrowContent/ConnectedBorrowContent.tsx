@@ -60,7 +60,7 @@ const ConnectedBorrowContent: FC = () => {
               </p>
             </div>
           )}
-          {!!loans?.length && <MyLoans loans={loans} />}
+          {!!loans?.length && !loadingUserNFTs && <MyLoans loans={loans} />}
         </div>
       </div>
       <LoadingModal

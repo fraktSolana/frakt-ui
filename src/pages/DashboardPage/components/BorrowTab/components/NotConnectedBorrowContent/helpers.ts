@@ -8,6 +8,7 @@ export const parseMarketsPreview = (markets: MarketPreview[]): NFT[] => {
       image: market?.collectionImage,
       maxLoanValue: market?.bestOffer,
       duration: market?.duration[0],
+      activeBondsAmount: market?.activeBondsAmount,
       fee: 1,
     };
   });

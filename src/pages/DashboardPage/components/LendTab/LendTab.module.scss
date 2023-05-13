@@ -40,13 +40,13 @@
   gap: 16px;
   width: 100%;
 
-  @media ((max-width: 1240px) and (min-width: 960px)) {
+  @media ((max-width: 1240px) and (min-width: 961px)) {
     width: 60%;
   }
 }
 
 .search {
-  @media ((max-width: 1240px) and (min-width: 960px)) {
+  @media ((max-width: 1240px) and (min-width: 961px)) {
     @include flex-column;
     align-items: flex-start !important;
   }

@@ -7,4 +7,5 @@ export interface NFT {
   name?: string;
   mint?: string;
   marketPubkey?: string;
+  activeBondsAmount?: number;
 }

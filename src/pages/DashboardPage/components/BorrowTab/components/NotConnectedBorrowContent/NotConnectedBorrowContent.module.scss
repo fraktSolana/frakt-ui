@@ -22,6 +22,7 @@
 
 .title {
   font: var(--font-subtitle);
+  padding-left: 16px;
 
   @media (max-width: 1140px) {
     font-size: 24px;

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { orderBy } from 'lodash';
 
 import { useMarketsPreview } from '@frakt/pages/MarketsPage/hooks';
 import { useDebounce, useWindowSize } from '@frakt/hooks';
@@ -24,8 +25,14 @@ export const useNotConnectedBorrowContent = () => {
     return name.toUpperCase().includes(search.toUpperCase());
   });
 
+  const filteredCollectionsByAmount = orderBy(
+    filteredCollections,
+    ({ activeBondsAmount }) => activeBondsAmount,
+    'desc',
+  );
+
   return {
-    collections: filteredCollections,
+    collections: filteredCollectionsByAmount,
     setSearch: setSearchDebounced,
     isMobile,
     isLoading: isLoading && !collections?.length,

@@ -3,7 +3,8 @@
   flex-direction: column;
   justify-content: flex-end;
 
-  @media (min-width: 960px) {
+  @media (min-width: 961px) {
+    padding-left: 16px;
     min-height: 230px;
     max-height: 230px;
   }
@@ -14,14 +15,14 @@
 }
 
 .wrapper.primary {
-  @media (min-width: 960px) {
+  @media (min-width: 961px) {
     min-height: unset;
     max-height: unset;
   }
 }
 
 .title {
-  @media (min-width: 960px) {
+  @media (min-width: 961px) {
     display: none !important;
   }
 }
@@ -35,7 +36,7 @@
     width: 100%;
   }
 
-  @media (min-width: 960px) {
+  @media (min-width: 961px) {
     min-height: 120px;
   }
 }
