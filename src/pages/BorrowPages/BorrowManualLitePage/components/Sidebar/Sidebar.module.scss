@@ -172,6 +172,7 @@
     font: var(--font-text-6);
     font-size: 12px;
     max-width: 100px;
+    white-space: nowrap;
 
     @media (max-width: 960px) {
       font-size: 10px;
@@ -183,6 +184,7 @@
     color: var(--secondary-border);
     font: var(--font-text-8);
     text-align: end;
+    white-space: normal;
 
     &.redText {
       color: #ff6666;
