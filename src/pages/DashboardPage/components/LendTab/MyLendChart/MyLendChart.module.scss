@@ -1,31 +1,6 @@
-@mixin flex-column {
+.lendContainer {
   display: flex;
   flex-direction: column;
-}
-
-.container {
-  display: flex;
-  padding: 32px;
-  gap: 32px;
-  width: 100%;
-
-  @media (max-width: 1240px) {
-    gap: 24px;
-  }
-
-  @media (max-width: 960px) {
-    @include flex-column;
-    padding: 24px;
-    height: 100%;
-  }
-
-  @media (max-width: 550px) {
-    padding: 16px;
-  }
-}
-
-.lendContainer {
-  @include flex-column;
   justify-content: space-between;
   gap: 16px;
   width: 100%;
@@ -33,12 +8,6 @@
   @media (max-width: 1240px) {
     min-width: 260px;
   }
-}
-
-.depositWrapper {
-  @include flex-column;
-  gap: 24px;
-  width: 100%;
 }
 
 .lendContent {

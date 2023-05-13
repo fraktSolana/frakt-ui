@@ -5,7 +5,7 @@ import { DashboardColumnValue, VALUES_TYPES } from '../../DashboardStatsValues';
 import HorizontalBar from '../../HorizontalBar';
 import Heading from '../../Heading';
 
-import styles from './DepositContentView.module.scss';
+import styles from './ContentViews.module.scss';
 
 interface DepositContentViewProps {
   data: number[];
@@ -22,7 +22,7 @@ const defaultsColors = {
   'idle in wallet': '#FFC01F',
 };
 
-const DepositContentView: FC<DepositContentViewProps> = ({
+export const DepositContentView: FC<DepositContentViewProps> = ({
   data,
   labels,
   title,
@@ -55,5 +55,3 @@ const DepositContentView: FC<DepositContentViewProps> = ({
     </div>
   );
 };
-
-export default DepositContentView;
