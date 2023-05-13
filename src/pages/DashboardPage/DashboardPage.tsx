@@ -5,6 +5,7 @@ import { AppLayout } from '@frakt/components/Layout/AppLayout';
 import { Tabs, useTabs } from '@frakt/components/Tabs';
 import LendTab from './components/LendTab';
 
+import { useWalletNfts } from '../BorrowPages/BorrowManualPage/hooks';
 import { DASHBOARD_TABS, DashboardTabsNames } from './constants';
 import DailyActive from './components/DaliyActive';
 import TotalStats from './components/TotalStats';
@@ -16,7 +17,8 @@ import styles from './DashboardPage.module.scss';
 const DashboardPage: FC = () => {
   const { publicKey: walletPublicKey } = useWallet();
 
-  const { data } = useFetchAllStats({ walletPublicKey });
+  const { isSuccess } = useWalletNfts();
+  const { data } = useFetchAllStats({ walletPublicKey, enabled: isSuccess });
 
   const {
     tabs: marketTabs,

@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
+import { useFetchAllLoans } from '@frakt/pages/LoansPage/components/LoansActiveTab/hooks';
+import { useMaxBorrowValue } from '@frakt/pages/BorrowPages/BorrowRootPage/hooks';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import { Loader } from '@frakt/components/Loader';
 
@@ -15,20 +17,27 @@ import MyLoans from '../MyLoans';
 import styles from './ConnectedBorrowContent.module.scss';
 
 const ConnectedBorrowContent: FC = () => {
+  const { publicKey, connected } = useWallet();
+
+  const { loans, isLoading: isLoadingLoans } = useFetchAllLoans();
+  const { maxBorrowValue, isLoading: isLoadingMaxBorrow } = useMaxBorrowValue({
+    walletPublicKey: publicKey,
+  });
+
   const { onSubmit, loadingModalVisible, closeLoadingModal } =
     useBorrowSingleBond();
 
   const {
     setSearch,
     nfts,
-    loans,
-    loadingUserNFTs,
     loading,
     fetchNextPage,
     userHasNFTs,
+    loadingUserNFTs,
   } = useConnectedBorrowContent();
 
-  const { connected } = useWallet();
+  const showAvailableBorrow = connected && !!maxBorrowValue;
+
   return (
     <>
       <div className={styles.container}>
@@ -49,9 +58,11 @@ const ConnectedBorrowContent: FC = () => {
           </div>
         </div>
         <div className={styles.content}>
-          {!userHasNFTs && loadingUserNFTs && connected && <Loader />}
-          {userHasNFTs && connected && <AvailableBorrow />}
-          {!userHasNFTs && !loadingUserNFTs && (
+          {connected && (isLoadingLoans || isLoadingMaxBorrow) && <Loader />}
+          {showAvailableBorrow && (
+            <AvailableBorrow maxBorrowValue={maxBorrowValue} />
+          )}
+          {!maxBorrowValue && !isLoadingMaxBorrow && (
             <div>
               <Heading className={styles.title} title="Available to borrow" />
               <CollectionsInfo hiddenButton />

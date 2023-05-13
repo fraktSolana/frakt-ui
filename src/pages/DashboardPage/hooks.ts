@@ -1,7 +1,7 @@
 import { fetchAllUserStats, UserStats } from '@frakt/api/user';
 import { useQuery } from '@tanstack/react-query';
 
-export const useFetchAllStats = ({ walletPublicKey }) => {
+export const useFetchAllStats = ({ walletPublicKey, enabled }) => {
   const {
     data,
     isLoading,
@@ -16,6 +16,7 @@ export const useFetchAllStats = ({ walletPublicKey }) => {
     {
       staleTime: 60_000,
       refetchOnWindowFocus: false,
+      enabled,
     },
   );
 

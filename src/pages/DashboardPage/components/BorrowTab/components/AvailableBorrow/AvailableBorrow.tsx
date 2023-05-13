@@ -1,7 +1,5 @@
 import { FC } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
 
-import { useMaxBorrowValue } from '@frakt/pages/BorrowPages/BorrowRootPage/hooks';
 import { NavigationButton } from '@frakt/components/Button';
 import { PATHS } from '@frakt/constants';
 
@@ -13,10 +11,9 @@ import Heading from '../../../Heading';
 
 import styles from './AvailableBorrow.module.scss';
 
-const AvailableBorrow: FC = () => {
-  const { publicKey } = useWallet();
-  const { maxBorrowValue } = useMaxBorrowValue({ walletPublicKey: publicKey });
-
+const AvailableBorrow: FC<{ maxBorrowValue: number }> = ({
+  maxBorrowValue,
+}) => {
   return (
     <div className={styles.wrapper}>
       <Heading title="Borrow in bulk" />

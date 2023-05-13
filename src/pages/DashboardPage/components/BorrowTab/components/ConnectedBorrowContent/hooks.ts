@@ -25,16 +25,10 @@ import { useNotConnectedBorrowContent } from '../NotConnectedBorrowContent';
 import { filterPairs, getBondOrderParams, parseNFTs } from './helpers';
 
 export const useConnectedBorrowContent = () => {
-  const { collections, setSearch: setSearchCollections } =
-    useNotConnectedBorrowContent();
-
   const { nfts, fetchNextPage, initialLoading, setSearch } = useWalletNfts();
 
-  //! used for prevent bugs with changeable content when searching nfts
-  const { data: userNFTs, loading: loadingUserNFTs } =
-    useFetchWalletNFTsWithoutSearchParams();
-
-  const { loans } = useFetchAllLoans();
+  const { collections, setSearch: setSearchCollections } =
+    useNotConnectedBorrowContent();
 
   const setSearchDebounced = useDebounce((value: string) => {
     setSearch(value);
@@ -42,21 +36,22 @@ export const useConnectedBorrowContent = () => {
 
   const parsedNFTs = parseNFTs(nfts);
 
-  const filteredNFTsByLoanValue = orderBy(
+  const sortedNFTsByLoanValue = orderBy(
     parsedNFTs,
     ({ maxLoanValue }) => maxLoanValue,
     'desc',
   );
 
-  const loading = initialLoading && !nfts?.length;
+  //? used for prevent bugs with changeable content when searching nfts
+  const { data: userNFTs, loading: loadingUserNFTs } =
+    useFetchWalletNFTsWithoutSearchParams();
 
-  const userHasNFTs = !!userNFTs?.length;
+  const userHasNFTs = !!userNFTs?.length && !loadingUserNFTs;
 
   return {
-    nfts: userHasNFTs && !loading ? filteredNFTsByLoanValue : collections,
-    loans,
+    nfts: nfts?.length || userHasNFTs ? sortedNFTsByLoanValue : collections,
     setSearch: userHasNFTs ? setSearchDebounced : setSearchCollections,
-    loading,
+    loading: initialLoading,
     fetchNextPage,
     userHasNFTs,
     loadingUserNFTs,

@@ -29,26 +29,32 @@ export const useWalletNfts = () => {
     return { pageParam, data };
   };
 
-  const { data, hasNextPage, fetchNextPage, isLoading, isFetchingNextPage } =
-    useInfiniteQuery({
-      queryKey: [
-        'walletNfts',
-        wallet?.publicKey?.toBase58(),
-        search,
-        sortOrder,
-        sortName,
-      ],
-      queryFn: ({ pageParam = 0 }) => fetchData({ pageParam }),
-      getPreviousPageParam: (firstPage) => {
-        return firstPage.pageParam - 1 ?? undefined;
-      },
-      getNextPageParam: (lastPage) => {
-        return lastPage.data?.length ? lastPage.pageParam + 1 : undefined;
-      },
-      staleTime: 5 * 60 * 1000,
-      refetchOnWindowFocus: false,
-      enabled: wallet.connected,
-    });
+  const {
+    data,
+    hasNextPage,
+    fetchNextPage,
+    isLoading,
+    isFetchingNextPage,
+    isSuccess,
+  } = useInfiniteQuery({
+    queryKey: [
+      'walletNfts',
+      wallet?.publicKey?.toBase58(),
+      search,
+      sortOrder,
+      sortName,
+    ],
+    queryFn: ({ pageParam = 0 }) => fetchData({ pageParam }),
+    getPreviousPageParam: (firstPage) => {
+      return firstPage.pageParam - 1 ?? undefined;
+    },
+    getNextPageParam: (lastPage) => {
+      return lastPage.data?.length ? lastPage.pageParam + 1 : undefined;
+    },
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    enabled: wallet.connected,
+  });
 
   return {
     nfts: data?.pages?.map((page) => page.data).flat() || [],
@@ -62,5 +68,6 @@ export const useWalletNfts = () => {
     setSortOrder,
     sortName,
     setSortName,
+    isSuccess,
   };
 };
