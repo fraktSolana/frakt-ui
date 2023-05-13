@@ -20,6 +20,7 @@ interface UseSidebarProps {
   clearCart: () => void;
   cartNfts: BorrowNft[];
   orderParamsByMint: Dictionary<OrderParamsLite>;
+  resetCache: () => void;
 }
 
 export const useSidebar = ({
@@ -31,6 +32,7 @@ export const useSidebar = ({
   clearCart,
   cartNfts,
   orderParamsByMint,
+  resetCache,
 }: UseSidebarProps) => {
   const [minimizedOnMobile, setMinimizedOnMobile] = useState<boolean>(false);
 
@@ -73,6 +75,8 @@ export const useSidebar = ({
       }
 
       history.push(PATHS.BORROW_SUCCESS);
+
+      resetCache();
       clearCart();
     } catch (error) {
       console.error(error);

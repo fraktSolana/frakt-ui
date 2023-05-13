@@ -52,7 +52,7 @@ export const useBorrowManualLitePage = () => {
     currentNft,
   } = useCartStateLite();
 
-  const { isLoading, nfts, orders } = useWalletNftsLite({
+  const { isLoading, nfts, orders, resetCache } = useWalletNftsLite({
     duration: duration as LoanDuration,
   });
 
@@ -234,6 +234,7 @@ export const useBorrowManualLitePage = () => {
     dataLoading: isLoading || maxBorrowValueLoading,
     selectNextCurrentNft,
     setSearch,
+    resetCache,
   };
 };
 
@@ -268,7 +269,11 @@ export const useWalletNftsLite = ({
 }) => {
   const wallet = useWallet();
 
-  const { data, isLoading } = useQuery(
+  const {
+    data,
+    isLoading,
+    remove: resetCache,
+  } = useQuery(
     ['walletNftsLite', wallet?.publicKey?.toBase58(), duration],
     () =>
       fetchWalletBorrowNftsLite({
@@ -286,6 +291,7 @@ export const useWalletNftsLite = ({
     nfts: data?.nfts ?? [],
     orders: data?.orders ?? {},
     isLoading,
+    resetCache,
   };
 };
 

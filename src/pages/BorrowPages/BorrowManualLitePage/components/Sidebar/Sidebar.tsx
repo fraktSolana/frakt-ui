@@ -25,6 +25,7 @@ interface SidebarProps {
   cartNfts: BorrowNft[];
   orderParamsByMint: Dictionary<OrderParamsLite>;
   selectNextCurrentNft: (reverse?: boolean) => void;
+  resetCache: () => void;
 }
 
 export const Sidebar: FC<SidebarProps> = ({
@@ -37,6 +38,7 @@ export const Sidebar: FC<SidebarProps> = ({
   cartNfts,
   orderParamsByMint,
   selectNextCurrentNft,
+  resetCache,
 }) => {
   const {
     minimizedOnMobile,
@@ -53,6 +55,7 @@ export const Sidebar: FC<SidebarProps> = ({
     clearCart,
     cartNfts,
     orderParamsByMint,
+    resetCache,
   });
 
   return (
