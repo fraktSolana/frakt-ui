@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import classNames from 'classnames';
 
-// import { useIntersection } from '@frakt/hooks/useIntersection';
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
 import { LoanDuration } from '@frakt/api/nft';
 import { Tabs } from '@frakt/components/Tabs';
@@ -15,8 +14,6 @@ import { useBorrowManualLitePage } from './hooks';
 import styles from './BorrowManualLitePage.module.scss';
 
 export const BorrowManualLitePage: FC = () => {
-  // const { ref, inView } = useIntersection();
-
   const {
     wallet,
     maxBorrowValue,
@@ -40,6 +37,7 @@ export const BorrowManualLitePage: FC = () => {
     selectNextCurrentNft,
     setSearch,
     resetCache,
+    fetchMoreTrigger,
   } = useBorrowManualLitePage();
 
   return (
@@ -93,7 +91,7 @@ export const BorrowManualLitePage: FC = () => {
                     onRowClick={(nft) => onNftClick(nft?.nft)}
                     activeNftMint={currentNft?.mint}
                   />
-                  {/* <div ref={ref} /> */}
+                  <div ref={fetchMoreTrigger} />
                 </div>
               )}
             </>

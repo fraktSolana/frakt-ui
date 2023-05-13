@@ -1,4 +1,5 @@
 import { ChangeEvent, FC } from 'react';
+import { debounce } from 'lodash';
 
 import Table, { PartialBreakpoints } from '@frakt/components/Table';
 import { BorrowNft, LoanDuration } from '@frakt/api/nft';
@@ -6,7 +7,6 @@ import { useTable, useTableView } from '@frakt/components/Table/hooks';
 
 import { getTableColumns } from './columns';
 import styles from './BorrowManualTable.module.scss';
-import { debounce } from 'lodash';
 
 export interface BorrowNftData {
   nft: BorrowNft;
