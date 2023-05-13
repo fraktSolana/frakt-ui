@@ -64,6 +64,7 @@ export const BorrowManualTable: FC<BorrowManualTableProps> = ({
         showSorting: false,
         showSearching: true,
       }}
+      cardClassName={styles.cardClassName}
       activeRowParams={{
         className: styles.activeRowClassName,
         cardClassName: styles.activeCardClassName,

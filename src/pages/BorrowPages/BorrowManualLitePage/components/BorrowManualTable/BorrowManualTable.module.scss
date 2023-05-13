@@ -112,6 +112,10 @@
   }
 }
 
+.cardClassName {
+  cursor: pointer;
+}
+
 .activeRowClassName,
 .activeCardClassName {
   background: var(--gray-table-hover);
