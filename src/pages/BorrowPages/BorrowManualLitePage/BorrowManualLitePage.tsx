@@ -136,7 +136,7 @@ const Header: FC<HeaderProps> = ({ collateralsAmount, availableToBorrow }) => {
           )}
           {!!availableToBorrow && (
             <div className={styles.headerStats}>
-              <span>Amount of collaterals:</span>
+              <span>Amount to borrow:</span>
               <span>
                 {availableToBorrow.toFixed(2)} <Solana />
               </span>
