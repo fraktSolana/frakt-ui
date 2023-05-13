@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
 import { orderBy } from 'lodash';
 
-import { useFetchAllLoans } from '@frakt/pages/LoansPage/components/LoansActiveTab/hooks';
 import { useWalletNfts } from '@frakt/pages/BorrowPages/BorrowManualPage/hooks';
 import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
 import { fetchMarketPairs, fetchCertainMarket } from '@frakt/api/bonds';

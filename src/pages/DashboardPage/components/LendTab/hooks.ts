@@ -9,6 +9,7 @@ import {
   calcWeightedAvaragePoolsApy,
   calcWeightedAvarageStrategiesApy,
   getDepositedUserPools,
+  getDepositedUserStrategies,
   getLabelsAndDataByPools,
   getLabelsAndDataByStrategies,
   getTopLiquidityPools,
@@ -41,7 +42,7 @@ export const useLendTab = () => {
     walletPublicKey: publicKey?.toBase58(),
   });
 
-  const depositedStrategies = getDepositedUserPools(liquidityPools);
+  const depositedStrategies = getDepositedUserStrategies(tradePools);
   const topStrategies = getTopStrategies(tradePools);
   const strategies = parseStrategiesData(topStrategies);
 

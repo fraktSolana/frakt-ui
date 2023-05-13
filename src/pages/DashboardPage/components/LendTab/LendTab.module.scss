@@ -6,17 +6,21 @@
 .container {
   display: flex;
   padding: 32px;
+  padding-bottom: 0;
   gap: 32px;
   overflow: auto;
   width: 100%;
 
   @media (max-width: 1240px) {
+    padding: 24px;
+    padding-bottom: 0;
     gap: 24px;
   }
 
   @media (max-width: 960px) {
     @include flex-column;
-    padding: 24px;
+    padding: 16px;
+    padding-bottom: 0;
     height: 100%;
   }
 
@@ -27,6 +31,7 @@
 
 .content {
   @include flex-column;
+  justify-content: space-between;
   gap: 24px;
   width: 100%;
 
@@ -49,6 +54,19 @@
   @media ((max-width: 1240px) and (min-width: 961px)) {
     @include flex-column;
     align-items: flex-start !important;
+  }
+}
+
+.content,
+.nftsList {
+  padding-bottom: 32px;
+
+  @media (max-width: 1240px) {
+    padding-bottom: 24px;
+  }
+
+  @media (max-width: 960px) {
+    padding-bottom: 16px;
   }
 }
 

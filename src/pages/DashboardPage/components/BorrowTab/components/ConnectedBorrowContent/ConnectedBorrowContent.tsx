@@ -27,14 +27,8 @@ const ConnectedBorrowContent: FC = () => {
   const { onSubmit, loadingModalVisible, closeLoadingModal } =
     useBorrowSingleBond();
 
-  const {
-    setSearch,
-    nfts,
-    loading,
-    fetchNextPage,
-    userHasNFTs,
-    loadingUserNFTs,
-  } = useConnectedBorrowContent();
+  const { setSearch, nfts, loading, fetchNextPage, loadingUserNFTs } =
+    useConnectedBorrowContent();
 
   const showAvailableBorrow = connected && !!maxBorrowValue;
 
@@ -58,10 +52,10 @@ const ConnectedBorrowContent: FC = () => {
           </div>
         </div>
         <div className={styles.content}>
-          {connected && (isLoadingLoans || isLoadingMaxBorrow) && <Loader />}
           {showAvailableBorrow && (
             <AvailableBorrow maxBorrowValue={maxBorrowValue} />
           )}
+          {connected && (isLoadingLoans || isLoadingMaxBorrow) && <Loader />}
           {!maxBorrowValue && !isLoadingMaxBorrow && (
             <div>
               <Heading className={styles.title} title="Available to borrow" />

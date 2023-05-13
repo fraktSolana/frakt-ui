@@ -1,7 +1,15 @@
-import { fetchAllUserStats, UserStats } from '@frakt/api/user';
+import { web3 } from '@frakt-protocol/frakt-sdk';
 import { useQuery } from '@tanstack/react-query';
 
-export const useFetchAllStats = ({ walletPublicKey, enabled }) => {
+import { fetchAllUserStats, UserStats } from '@frakt/api/user';
+
+export const useFetchAllStats = ({
+  walletPublicKey,
+  enabled,
+}: {
+  walletPublicKey: web3.PublicKey;
+  enabled?: boolean;
+}) => {
   const {
     data,
     isLoading,
