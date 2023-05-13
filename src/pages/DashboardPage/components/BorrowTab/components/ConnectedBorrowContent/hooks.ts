@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-
 import { useWallet } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
+import { useQuery } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
 
 import { useFetchAllLoans } from '@frakt/pages/LoansPage/components/LoansActiveTab/hooks';
 import { useWalletNfts } from '@frakt/pages/BorrowPages/BorrowManualPage/hooks';
 import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
 import { fetchMarketPairs, fetchCertainMarket } from '@frakt/api/bonds';
+import { BorrowNft, fetchWalletBorrowNfts } from '@frakt/api/nft';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { useConnection, useDebounce } from '@frakt/hooks';
 import { captureSentryError } from '@frakt/utils/sentry';
@@ -20,28 +20,19 @@ import {
   signAndSendV0TransactionWithLookupTables,
 } from '@frakt/utils/transactions';
 
-import { filterPairs, getBondOrderParams, parseNFTs } from './helpers';
 import { useNotConnectedBorrowContent } from '../NotConnectedBorrowContent';
+import { filterPairs, getBondOrderParams, parseNFTs } from './helpers';
 
 export const useConnectedBorrowContent = () => {
-  const { publicKey } = useWallet();
-  const [isUserHasNFTs, setIsUserHasNFTs] = useState<boolean>(false);
   const { collections, setSearch: setSearchCollections } =
     useNotConnectedBorrowContent();
 
   const { nfts, fetchNextPage, initialLoading, setSearch } = useWalletNfts();
 
+  //! used for prevent bugs with changeable content when searching nfts
+  const { data: userNFTs } = useFetchWalletNFTsWithoutSearchParams();
+
   const { loans } = useFetchAllLoans();
-
-  useEffect(() => {
-    if (nfts?.length) {
-      setIsUserHasNFTs(true);
-    }
-  }, [nfts, publicKey]);
-
-  useEffect(() => {
-    setIsUserHasNFTs(false);
-  }, [publicKey]);
 
   const setSearchDebounced = useDebounce((value: string) => {
     setSearch(value);
@@ -51,14 +42,39 @@ export const useConnectedBorrowContent = () => {
 
   const loading = initialLoading && !nfts?.length;
 
+  const userHasNFTs = userNFTs?.length;
+
   return {
-    nfts: isUserHasNFTs && !loading ? parsedNfts : collections,
+    nfts: userHasNFTs && !loading ? parsedNfts : collections,
     loans,
-    setSearch: isUserHasNFTs ? setSearchDebounced : setSearchCollections,
+    setSearch: userHasNFTs ? setSearchDebounced : setSearchCollections,
     loading,
     fetchNextPage,
-    isUserHasNFTs,
+    userHasNFTs,
   };
+};
+
+const useFetchWalletNFTsWithoutSearchParams = () => {
+  const { publicKey: walletPublicKey } = useWallet();
+
+  const {
+    data,
+    isLoading,
+    isFetching,
+  }: {
+    data: BorrowNft[];
+    isLoading: boolean;
+    isFetching: boolean;
+  } = useQuery(
+    ['fetchWalletNFTsWithoutSearchParams', walletPublicKey],
+    () => fetchWalletBorrowNfts({ publicKey: walletPublicKey, limit: 5 }),
+    {
+      staleTime: 60_000,
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  return { data, loading: isLoading || isFetching };
 };
 
 export const useBorrowSingleBond = () => {

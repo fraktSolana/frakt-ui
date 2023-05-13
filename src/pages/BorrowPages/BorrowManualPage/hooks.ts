@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { fetchWalletBorrowNfts } from '@frakt/api/nft';

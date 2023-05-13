@@ -111,6 +111,7 @@ const parseLiquidityPoolsData = (pools: LiquidityPool[]): LendInfo[] => {
 };
 
 export {
+  getDepositedUserPools,
   getLabelsAndDataByPools,
   getTopLiquidityPools,
   parseLiquidityPoolsData,

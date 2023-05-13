@@ -1,15 +1,16 @@
 import { FC } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 import { LoadingModal } from '@frakt/components/LoadingModal';
+import { Loader } from '@frakt/components/Loader';
 
 import { useBorrowSingleBond, useConnectedBorrowContent } from './hooks';
+import CollectionsInfo from '../CollectionsInfo/CollectionsInfo';
 import AvailableBorrow from '../AvailableBorrow';
 import { NFTsList } from '../../../NFTsList';
 import { Search } from '../../../Search';
-import MyLoans from '../MyLoans';
-
-import CollectionsInfo from '../CollectionsInfo/CollectionsInfo';
 import Heading from '../../../Heading';
+import MyLoans from '../MyLoans';
 
 import styles from './ConnectedBorrowContent.module.scss';
 
@@ -17,9 +18,10 @@ const ConnectedBorrowContent: FC = () => {
   const { onSubmit, loadingModalVisible, closeLoadingModal } =
     useBorrowSingleBond();
 
-  const { setSearch, nfts, loans, loading, fetchNextPage, isUserHasNFTs } =
+  const { setSearch, nfts, loans, loading, fetchNextPage, userHasNFTs } =
     useConnectedBorrowContent();
 
+  const { connected } = useWallet();
   return (
     <>
       <div className={styles.container}>
@@ -31,7 +33,7 @@ const ConnectedBorrowContent: FC = () => {
           />
           <div className={styles.nftsListWrapper}>
             <NFTsList
-              nfts={nfts as any}
+              nfts={nfts}
               fetchNextPage={fetchNextPage}
               isLoading={loading}
               onClick={onSubmit}
@@ -40,9 +42,10 @@ const ConnectedBorrowContent: FC = () => {
           </div>
         </div>
         <div className={styles.content}>
-          {isUserHasNFTs ? (
-            <AvailableBorrow />
-          ) : (
+          {!userHasNFTs && connected && <Loader />}
+          {userHasNFTs && <AvailableBorrow />}
+
+          {!userHasNFTs && !connected && (
             <div>
               <Heading className={styles.title} title="Available to borrow" />
               <CollectionsInfo hiddenButton />

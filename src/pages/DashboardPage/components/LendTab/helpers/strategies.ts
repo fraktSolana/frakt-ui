@@ -12,7 +12,8 @@ import {
 const getDepositedUserStrategies = (
   strategies: TradePoolUser[] = [],
 ): TradePoolUser[] => {
-  const userDeposit = (strategy) => strategy?.wallet?.userDeposit;
+  const userDeposit = (strategy: TradePoolUser) =>
+    strategy?.wallet?.userDeposit;
 
   const depositedStrategies = strategies?.filter(userDeposit);
   const sortedStrategies = orderBy(depositedStrategies, userDeposit, 'desc');
@@ -109,6 +110,7 @@ const parseStrategiesData = (strategies: TradePoolUser[] = []): LendInfo[] => {
 };
 
 export {
+  getDepositedUserStrategies,
   getLabelsAndDataByStrategies,
   calcWeightedAvarageStrategiesApy,
   getTopStrategies,

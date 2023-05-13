@@ -8,6 +8,7 @@ import { useTradePools } from '@frakt/utils/strategies';
 import {
   calcWeightedAvaragePoolsApy,
   calcWeightedAvarageStrategiesApy,
+  getDepositedUserPools,
   getLabelsAndDataByPools,
   getLabelsAndDataByStrategies,
   getTopLiquidityPools,
@@ -17,6 +18,7 @@ import {
 } from './helpers';
 import { useDebounce } from '@frakt/hooks';
 import { useState } from 'react';
+import { LiquidityPool } from '@frakt/state/loans/types';
 
 export const useLendTab = () => {
   const { connected, publicKey } = useWallet();
@@ -24,6 +26,7 @@ export const useLendTab = () => {
 
   const liquidityPools = useSelector(selectLiquidityPools);
 
+  const depositedPools = getDepositedUserPools(liquidityPools);
   const topLiquidityPools = getTopLiquidityPools(liquidityPools);
   const pools = parseLiquidityPoolsData(topLiquidityPools);
 
@@ -38,6 +41,7 @@ export const useLendTab = () => {
     walletPublicKey: publicKey?.toBase58(),
   });
 
+  const depositedStrategies = getDepositedUserPools(liquidityPools);
   const topStrategies = getTopStrategies(tradePools);
   const strategies = parseStrategiesData(topStrategies);
 
@@ -48,8 +52,7 @@ export const useLendTab = () => {
     calcWeightedAvarageStrategiesApy(tradePools);
 
   //? lend data
-
-  const { pools: filteredPools, setSearch } = useFilteringPools();
+  const { pools: filteredPools, setSearch } = useFilteringPools(liquidityPools);
 
   return {
     poolsData: {
@@ -57,14 +60,14 @@ export const useLendTab = () => {
       poolsChartData,
       poolsChartLabels,
       apr: weightedAvaragePoolsApy,
-      isDepositedAndConnected: connected,
+      isDepositedAndConnected: !!depositedPools?.length,
     },
     strategiesData: {
       strategies,
       strategiesChartData,
       strategiesChartLabels,
       apr: weightedAvarageStrategiesApy,
-      isDepositedAndConnected: connected,
+      isDepositedAndConnected: !!depositedStrategies?.length,
     },
     lendData: {
       pools: filteredPools,
@@ -74,9 +77,7 @@ export const useLendTab = () => {
   };
 };
 
-export const useFilteringPools = () => {
-  const liquidityPools = useSelector(selectLiquidityPools);
-
+export const useFilteringPools = (liquidityPools: LiquidityPool[]) => {
   const [search, setSearch] = useState<string>('');
 
   const setSearchDebounced = useDebounce((value: string) => {
