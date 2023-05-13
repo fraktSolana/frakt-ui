@@ -1,10 +1,12 @@
 import { FC } from 'react';
-import MyLendChart from './MyLendChart';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 import { DepositContentView, LendListContentView } from './ContentViews';
 import { LiquidityPool } from '@frakt/state/loans/types';
 import { PATHS } from '@frakt/constants';
 
+import { useFetchAllStats } from '../../hooks';
+import MyLendChart from './MyLendChart';
 import { useLendTab } from './hooks';
 import { LendCard } from '../Cards';
 import { Search } from '../Search';
@@ -87,29 +89,37 @@ const DepositStrategiesView = ({
   </>
 );
 
-const LendView = ({ isDepositedAndConnected, pools, setSearch }) => (
-  <>
-    {isDepositedAndConnected ? (
-      <MyLendChart />
-    ) : (
-      <div className={styles.searchableList}>
-        <Search
-          title="Lend"
-          tooltipText="Lend"
-          onChange={setSearch}
-          className={styles.search}
-        />
-        <div className={styles.nftsList}>
-          {pools.map((pool: LiquidityPool) => (
-            <LendCard
-              image={pool.imageUrl?.[0]}
-              activeLoans={pool.activeloansAmount}
-              amount={pool.totalLiquidity}
-              apr={pool.depositApr}
-            />
-          ))}
+const LendView = ({ isDepositedAndConnected, pools, setSearch }) => {
+  const { publicKey: walletPublicKey } = useWallet();
+  const { data: stats } = useFetchAllStats({ walletPublicKey });
+
+  const userHasBondsOrOffers =
+    stats?.bonds?.activeUserLoans || stats?.bonds?.userOffers;
+
+  return (
+    <>
+      {isDepositedAndConnected && userHasBondsOrOffers ? (
+        <MyLendChart bonds={stats?.bonds} />
+      ) : (
+        <div className={styles.searchableList}>
+          <Search
+            title="Lend"
+            tooltipText="Lend"
+            onChange={setSearch}
+            className={styles.search}
+          />
+          <div className={styles.nftsList}>
+            {pools.map((pool: LiquidityPool) => (
+              <LendCard
+                image={pool.imageUrl?.[0]}
+                activeLoans={pool.activeloansAmount}
+                amount={pool.totalLiquidity}
+                apr={pool.depositApr}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-    )}
-  </>
-);
+      )}
+    </>
+  );
+};

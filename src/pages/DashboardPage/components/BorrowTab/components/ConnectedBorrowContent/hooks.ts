@@ -30,7 +30,8 @@ export const useConnectedBorrowContent = () => {
   const { nfts, fetchNextPage, initialLoading, setSearch } = useWalletNfts();
 
   //! used for prevent bugs with changeable content when searching nfts
-  const { data: userNFTs } = useFetchWalletNFTsWithoutSearchParams();
+  const { data: userNFTs, loading: loadingUserNFTs } =
+    useFetchWalletNFTsWithoutSearchParams();
 
   const { loans } = useFetchAllLoans();
 
@@ -42,7 +43,7 @@ export const useConnectedBorrowContent = () => {
 
   const loading = initialLoading && !nfts?.length;
 
-  const userHasNFTs = userNFTs?.length;
+  const userHasNFTs = !!userNFTs?.length;
 
   return {
     nfts: userHasNFTs && !loading ? parsedNfts : collections,
@@ -51,6 +52,7 @@ export const useConnectedBorrowContent = () => {
     loading,
     fetchNextPage,
     userHasNFTs,
+    loadingUserNFTs,
   };
 };
 

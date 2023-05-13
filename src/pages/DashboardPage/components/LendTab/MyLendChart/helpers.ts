@@ -1,8 +1,8 @@
-import { UserStats } from '@frakt/api/user';
+import { BondsUserStats } from '@frakt/api/user';
 
-export const createChartPieData = (stats: UserStats, balance: number) => {
-  const userBondsAmount = stats?.bonds?.bondUserAmount || 0;
-  const useOffersAmount = stats?.bonds?.userOffersAmount || 0;
+export const createChartPieData = (bonds: BondsUserStats, balance: number) => {
+  const userBondsAmount = bonds?.bondUserAmount || 0;
+  const useOffersAmount = bonds?.userOffersAmount || 0;
 
   const data = [
     {
@@ -21,11 +21,9 @@ export const createChartPieData = (stats: UserStats, balance: number) => {
   return data;
 };
 
-export const calcTotalLendAmounts = (stats: UserStats) => {
-  const totalLendAmout =
-    stats?.bonds?.bondUserAmount + stats?.bonds?.userOffersAmount || 0;
-  const totalLend =
-    stats?.bonds?.activeUserLoans + stats?.bonds?.userOffers || 0;
+export const calcTotalLendAmounts = (bonds: BondsUserStats) => {
+  const totalLendAmout = bonds?.bondUserAmount + bonds?.userOffersAmount || 0;
+  const totalLend = bonds?.activeUserLoans + bonds?.userOffers || 0;
 
   return {
     totalLendAmout,

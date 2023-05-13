@@ -18,8 +18,15 @@ const ConnectedBorrowContent: FC = () => {
   const { onSubmit, loadingModalVisible, closeLoadingModal } =
     useBorrowSingleBond();
 
-  const { setSearch, nfts, loans, loading, fetchNextPage, userHasNFTs } =
-    useConnectedBorrowContent();
+  const {
+    setSearch,
+    nfts,
+    loans,
+    loadingUserNFTs,
+    loading,
+    fetchNextPage,
+    userHasNFTs,
+  } = useConnectedBorrowContent();
 
   const { connected } = useWallet();
   return (
@@ -42,10 +49,9 @@ const ConnectedBorrowContent: FC = () => {
           </div>
         </div>
         <div className={styles.content}>
-          {!userHasNFTs && connected && <Loader />}
-          {userHasNFTs && <AvailableBorrow />}
-
-          {!userHasNFTs && !connected && (
+          {!userHasNFTs && loadingUserNFTs && connected && <Loader />}
+          {userHasNFTs && connected && <AvailableBorrow />}
+          {!userHasNFTs && !loadingUserNFTs && (
             <div>
               <Heading className={styles.title} title="Available to borrow" />
               <CollectionsInfo hiddenButton />

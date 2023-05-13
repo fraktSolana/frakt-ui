@@ -1,29 +1,25 @@
 import { FC } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
 
-import { useFetchAllStats } from '@frakt/pages/DashboardPage/hooks';
+import { NavigationButton } from '@frakt/components/Button';
+import { useSolanaBalance } from '@frakt/utils/accounts';
+import { BondsUserStats } from '@frakt/api/user';
+import { PATHS } from '@frakt/constants';
 
+import { calcTotalLendAmounts, createChartPieData } from './helpers';
 import { DashboardColumnValue } from '../../DashboardStatsValues';
+import { ChartValuesList } from '../../ChartPie/ChartValuesList';
+import { defaultsColors } from './constants';
 import { ChartPie } from '../../ChartPie';
 import Heading from '../../Heading';
 
 import styles from './MyLendChart.module.scss';
-import { calcTotalLendAmounts, createChartPieData } from './helpers';
-import { ChartValuesList } from '../../ChartPie/ChartValuesList';
-import { NavigationButton } from '@frakt/components/Button';
-import { defaultsColors } from './constants';
-import { PATHS } from '@frakt/constants';
-import { useSolanaBalance } from '@frakt/utils/accounts';
 
-const MyLendChart: FC = () => {
-  const { publicKey: walletPublicKey } = useWallet();
+const MyLendChart: FC<{ bonds: BondsUserStats }> = ({ bonds }) => {
   const { balance } = useSolanaBalance();
 
-  const { data: stats } = useFetchAllStats({ walletPublicKey });
+  const chartPieData = createChartPieData(bonds, balance);
 
-  const chartPieData = createChartPieData(stats, balance);
-
-  const { totalLendAmout, totalLend } = calcTotalLendAmounts(stats);
+  const { totalLendAmout, totalLend } = calcTotalLendAmounts(bonds);
 
   return (
     <div className={styles.lendContainer}>
