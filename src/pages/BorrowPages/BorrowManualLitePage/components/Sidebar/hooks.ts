@@ -65,7 +65,7 @@ export const useSidebar = ({
       });
 
       const result = await borrow({
-        orders: orders, //TODO AddMarkets here
+        orders: orders,
         wallet,
         connection,
       });
