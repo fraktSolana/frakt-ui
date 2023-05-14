@@ -61,6 +61,8 @@ export const LendCard = ({ image, activeLoans, amount, apr }) => (
       <p className={styles.value}>{amount?.toFixed(0)} ◎</p>
       <p className={styles.value}>in {activeLoans} Loans</p>
     </div>
-    <div className={styles.badge}>{apr?.toFixed(0)} %</div>
+    <div className={classNames(styles.badge, styles.lendBadge)}>
+      {apr?.toFixed(0)}% <span>APR</span>
+    </div>
   </CardBackdrop>
 );
