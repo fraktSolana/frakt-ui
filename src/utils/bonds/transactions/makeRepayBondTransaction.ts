@@ -26,14 +26,8 @@ export const makeRepayBondTransaction: MakeRepayBondTransaction = async ({
       args: {
         repayAccounts: loan.bondParams.activeTrades.map((trade) => ({
           bondTradeTransaction: new web3.PublicKey(trade.publicKey),
-          bondOfferOrUser: new web3.PublicKey(
-            trade.bondTradeTransactionType ==
-              BondTradeTransactionV2Type.Autocompound ||
-            trade.bondTradeTransactionType ==
-              BondTradeTransactionV2Type.AutoCompoundAndReceiveNft
-              ? trade.bondOffer
-              : trade.user,
-          ),
+          user: new web3.PublicKey(trade.user),
+          bondOffer: new web3.PublicKey(trade.bondOffer),
         })),
       },
       accounts: {
