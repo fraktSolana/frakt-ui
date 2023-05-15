@@ -1,8 +1,10 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useDispatch } from 'react-redux';
+import classNames from 'classnames';
 
 import { commonActions } from '@frakt/state/common/actions';
+import { CollectionsStats } from '@frakt/api/user';
 import Button from '@frakt/components/Button';
 
 import {
@@ -12,9 +14,11 @@ import {
 import Heading from '../../../Heading';
 
 import styles from './CollectionsInfo.module.scss';
-import classNames from 'classnames';
 
-const CollectionsInfo: FC<{ hiddenButton?: boolean }> = ({ hiddenButton }) => {
+const CollectionsInfo: FC<{
+  hiddenButton?: boolean;
+  collectionsStats: CollectionsStats;
+}> = ({ hiddenButton, collectionsStats }) => {
   const dispatch = useDispatch();
   const { connected } = useWallet();
 
@@ -30,9 +34,12 @@ const CollectionsInfo: FC<{ hiddenButton?: boolean }> = ({ hiddenButton }) => {
         <DashboardColumnValue
           label="Collections whitelisted"
           valueType={VALUES_TYPES.string}
-          value={198}
+          value={collectionsStats?.collections || '--'}
         />
-        <DashboardColumnValue label="Total liquidity" value={198} />
+        <DashboardColumnValue
+          label="Total liquidity"
+          value={collectionsStats?.totalLiquidity || '--'}
+        />
       </div>
       {!hiddenButton && (
         <Button

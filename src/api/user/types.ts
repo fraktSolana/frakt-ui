@@ -101,3 +101,13 @@ interface Rewards {
   user: string;
   reward: number;
 }
+
+export interface CollectionsStats {
+  totalLiquidity: number;
+  collections: number;
+}
+
+export interface AvailableToBorrowUser {
+  maxBorrow: number;
+  totalUserNfts: number;
+}

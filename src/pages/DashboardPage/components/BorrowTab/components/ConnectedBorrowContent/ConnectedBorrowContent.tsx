@@ -2,7 +2,6 @@ import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { useFetchAllLoans } from '@frakt/pages/LoansPage/components/LoansActiveTab/hooks';
-import { useMaxBorrowValue } from '@frakt/pages/BorrowPages/BorrowRootPage/hooks';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import { Loader } from '@frakt/components/Loader';
 
@@ -15,14 +14,20 @@ import Heading from '../../../Heading';
 import MyLoans from '../MyLoans';
 
 import styles from './ConnectedBorrowContent.module.scss';
+import {
+  useFetchAvailableToBorrowUser,
+  useFetchCollectionsStats,
+} from '@frakt/pages/DashboardPage/hooks';
 
 const ConnectedBorrowContent: FC = () => {
   const { publicKey, connected } = useWallet();
 
+  const { data: collectionsStats } = useFetchCollectionsStats();
   const { loans, isLoading: isLoadingLoans } = useFetchAllLoans();
-  const { maxBorrowValue, isLoading: isLoadingMaxBorrow } = useMaxBorrowValue({
-    walletPublicKey: publicKey,
-  });
+  const { data: availableBorrowData, isLoading: isLoadingAvailableBorrow } =
+    useFetchAvailableToBorrowUser({
+      walletPublicKey: publicKey,
+    });
 
   const { onSubmit, loadingModalVisible, closeLoadingModal } =
     useBorrowSingleBond();
@@ -30,7 +35,7 @@ const ConnectedBorrowContent: FC = () => {
   const { setSearch, nfts, loading, fetchNextPage, loadingUserNFTs } =
     useConnectedBorrowContent();
 
-  const showAvailableBorrow = connected && !!maxBorrowValue;
+  const showAvailableBorrow = connected && !!availableBorrowData?.maxBorrow;
 
   return (
     <>
@@ -53,13 +58,18 @@ const ConnectedBorrowContent: FC = () => {
         </div>
         <div className={styles.content}>
           {showAvailableBorrow && (
-            <AvailableBorrow maxBorrowValue={maxBorrowValue} />
+            <AvailableBorrow availableBorrowData={availableBorrowData} />
           )}
-          {connected && (isLoadingLoans || isLoadingMaxBorrow) && <Loader />}
-          {!maxBorrowValue && !isLoadingMaxBorrow && (
+          {connected && (isLoadingLoans || isLoadingAvailableBorrow) && (
+            <Loader />
+          )}
+          {!availableBorrowData?.maxBorrow && !isLoadingAvailableBorrow && (
             <div>
               <Heading className={styles.title} title="Available to borrow" />
-              <CollectionsInfo hiddenButton />
+              <CollectionsInfo
+                collectionsStats={collectionsStats}
+                hiddenButton
+              />
               <p className={styles.notNftsMessage}>
                 You don't have NFTs which we whitelisted
               </p>

@@ -8,6 +8,8 @@ import {
   NotificationsSettings,
   UserStats,
   UserRewards,
+  CollectionsStats,
+  AvailableToBorrowUser,
 } from './types';
 
 type FetchUser = (props: {
@@ -123,6 +125,30 @@ export const setUserNotificationsSettings: SetUserNotificationsSettings =
       settings,
     );
   };
+
+type FetchAvailableToBorrowUser = (props: {
+  publicKey: web3.PublicKey;
+}) => Promise<AvailableToBorrowUser>;
+export const fetchAvailableToBorrowUser: FetchAvailableToBorrowUser = async ({
+  publicKey,
+}) => {
+  const { data } = await axios.get<AvailableToBorrowUser>(
+    `https://${process.env.BACKEND_DOMAIN}/nft/available-to-borrow/${
+      publicKey?.toBase58() || ''
+    }`,
+  );
+
+  return data;
+};
+
+type FetchCollectionsStats = () => Promise<CollectionsStats>;
+export const fetchCollectionsStats: FetchCollectionsStats = async () => {
+  const { data } = await axios.get<CollectionsStats>(
+    `https://${process.env.BACKEND_DOMAIN}/stats/available-to-borrow`,
+  );
+
+  return data;
+};
 
 type FetchAllUserStats = (props: {
   publicKey: web3.PublicKey;

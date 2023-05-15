@@ -16,19 +16,19 @@ const TotalStats: FC<TotalStatsProps> = ({ data }) => {
       <div className={styles.statsWrapper}>
         <DashboardColumnValue
           label="Total value locked"
-          value={data?.loansTvl}
+          value={data?.loansTvl || '--'}
           toFixed={0}
           reverse
         />
         <DashboardColumnValue
           label="Loans volume all time"
-          value={data?.loansVolumeAllTime}
+          value={data?.loansVolumeAllTime || '--'}
           toFixed={0}
           reverse
         />
         <DashboardColumnValue
           label="Active loans"
-          value={data?.activeLoansCount}
+          value={data?.activeLoansCount || '--'}
           toFixed={0}
           reverse
         />

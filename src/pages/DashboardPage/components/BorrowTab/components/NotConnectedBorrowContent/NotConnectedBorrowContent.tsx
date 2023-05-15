@@ -1,6 +1,8 @@
 import { FC } from 'react';
 
+import { useFetchCollectionsStats } from '@frakt/pages/DashboardPage/hooks';
 import { NFT } from '@frakt/pages/DashboardPage/types';
+import { CollectionsStats } from '@frakt/api/user';
 import { Loader } from '@frakt/components/Loader';
 
 import { useNotConnectedBorrowContent } from './hooks';
@@ -12,6 +14,7 @@ import { Search } from '../../../Search';
 import styles from './NotConnectedBorrowContent.module.scss';
 
 const NotConnectedBorrowContent: FC = () => {
+  const { data: collectionsStats } = useFetchCollectionsStats();
   const { isLoading, collections, isMobile, setSearch } =
     useNotConnectedBorrowContent();
 
@@ -20,9 +23,17 @@ const NotConnectedBorrowContent: FC = () => {
   return (
     <div className={styles.wrapper}>
       {isMobile ? (
-        <MobileContentView collections={collections} setSearch={setSearch} />
+        <MobileContentView
+          collections={collections}
+          setSearch={setSearch}
+          collectionsStats={collectionsStats}
+        />
       ) : (
-        <DesktopContentView collections={collections} setSearch={setSearch} />
+        <DesktopContentView
+          collections={collections}
+          setSearch={setSearch}
+          collectionsStats={collectionsStats}
+        />
       )}
     </div>
   );
@@ -33,17 +44,26 @@ export default NotConnectedBorrowContent;
 interface ContentViewProps {
   collections: NFT[];
   setSearch: (value?: string) => void;
+  collectionsStats: CollectionsStats;
 }
 
-const MobileContentView = ({ collections, setSearch }: ContentViewProps) => (
+const MobileContentView = ({
+  collections,
+  setSearch,
+  collectionsStats,
+}: ContentViewProps) => (
   <div className={styles.mobileContainer}>
     <Search title="1 click loan" onChange={setSearch} />
     <NFTsList emptyMessageClassName={styles.emptyMessage} nfts={collections} />
-    <CollectionsInfo />
+    <CollectionsInfo collectionsStats={collectionsStats} />
   </div>
 );
 
-const DesktopContentView = ({ collections, setSearch }: ContentViewProps) => (
+const DesktopContentView = ({
+  collections,
+  setSearch,
+  collectionsStats,
+}: ContentViewProps) => (
   <div className={styles.gridContainer}>
     <Search
       className={styles.search}
@@ -51,7 +71,7 @@ const DesktopContentView = ({ collections, setSearch }: ContentViewProps) => (
       onChange={setSearch}
     />
     <div className={styles.title}>Available to borrow</div>
-    <CollectionsInfo />
+    <CollectionsInfo collectionsStats={collectionsStats} />
     {collections.map((nft) => (
       <BorrowCard key={nft.image} {...nft} />
     ))}

@@ -10,9 +10,10 @@ import {
 import Heading from '../../../Heading';
 
 import styles from './AvailableBorrow.module.scss';
+import { AvailableToBorrowUser } from '@frakt/api/user';
 
-const AvailableBorrow: FC<{ maxBorrowValue: number }> = ({
-  maxBorrowValue,
+const AvailableBorrow: FC<{ availableBorrowData: AvailableToBorrowUser }> = ({
+  availableBorrowData,
 }) => {
   return (
     <div className={styles.wrapper}>
@@ -20,14 +21,14 @@ const AvailableBorrow: FC<{ maxBorrowValue: number }> = ({
       <div className={styles.stats}>
         <DashboardColumnValue
           label="Borrow up to"
-          value={maxBorrowValue?.toFixed(2)}
+          value={availableBorrowData?.maxBorrow?.toFixed(2) || '--'}
         />
         <DashboardColumnValue
           label="From your"
           valueType={VALUES_TYPES.string}
           value={
             <span className={styles.value}>
-              567
+              {availableBorrowData?.totalUserNfts || '--'}
               <p className={styles.sub}>nfts</p>
             </span>
           }

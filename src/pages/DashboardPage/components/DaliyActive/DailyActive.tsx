@@ -16,27 +16,27 @@ const DailyActive: FC<DailyStatsProps> = ({ data }) => {
       <div className={styles.statsWrapper}>
         <DashboardColumnValue
           label="Volume"
-          value={data?.dailyVolume}
+          value={data?.dailyVolume || '--'}
           toFixed={0}
           reverse
         />
         <DashboardColumnValue
           label="Issued"
-          value={data?.issuedIn24Hours}
+          value={data?.issuedIn24Hours || '--'}
           valueType={VALUES_TYPES.string}
           toFixed={0}
           reverse
         />
         <DashboardColumnValue
           label="Paid back"
-          value={data?.paidBackIn24Hours}
+          value={data?.paidBackIn24Hours || '--'}
           valueType={VALUES_TYPES.string}
           toFixed={0}
           reverse
         />
         <DashboardColumnValue
           label="Graced"
-          value={data?.liquidatedIn24Hours}
+          value={data?.liquidatedIn24Hours || '--'}
           valueType={VALUES_TYPES.string}
           toFixed={0}
           reverse
