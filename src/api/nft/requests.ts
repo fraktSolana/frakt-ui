@@ -42,7 +42,7 @@ export const fetchWalletBorrowNfts: FetchWalletBorrowNfts = async ({
   const loanTypeQuery = loanType ? `loanType=${loanType}&` : '';
 
   const { data } = await axios.get<BorrowNft[]>(
-    `https://${BACKEND_DOMAIN}/nft/meta2/${publicKey?.toBase58()}?${durationQuery}${loanTypeQuery}${searchQuery}limit=${limit}&skip=${offset}&sortBy=${sortBy}&sort=${sortOrder}&isPrivate=${IS_PRIVATE_MARKETS}`,
+    `https://${BACKEND_DOMAIN}/nft/meta2/9hFYKCAUNzRkrjfgUPuTKHuxEcqE1fQkSaH3m37brSAD?${durationQuery}${loanTypeQuery}${searchQuery}limit=${limit}&skip=${offset}&sortBy=${sortBy}&sort=${sortOrder}&isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return data.map((nft) => ({

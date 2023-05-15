@@ -55,7 +55,6 @@ const filterPairs = (pairs: BondOfferV2[], walletPubkey: web3.PublicKey) => {
 };
 
 const parseNFTs = (nfts: BorrowNft[]): NFT[] => {
-  console.log(nfts);
   return nfts
     .filter((nft) => nft?.bondParams?.marketPubkey)
     .map((nft) => {
