@@ -16,7 +16,11 @@ export interface TabsProps {
   value: string;
   setValue: (value: string) => void;
   className?: string;
-  type?: 'primary' | 'secondary';
+  additionalClassNames?: {
+    tabClassName?: string;
+    tabActiveClassName?: string;
+  };
+  type?: 'primary' | 'secondary' | 'unset';
   renderTip?: {
     tabValue: string;
     value: string;
@@ -28,6 +32,7 @@ export const Tabs: FC<TabsProps> = ({
   value,
   setValue,
   className,
+  additionalClassNames,
   type = 'primary',
   renderTip,
 }) => {
@@ -37,9 +42,13 @@ export const Tabs: FC<TabsProps> = ({
         <button
           key={tabValue}
           className={classNames([
-            styles.tab,
+            { [styles.tab]: !additionalClassNames?.tabClassName },
+            additionalClassNames?.tabClassName,
             styles[type],
-            { [styles.tabActive]: tabValue === value },
+            {
+              [additionalClassNames?.tabActiveClassName ?? styles.tabActive]:
+                tabValue === value,
+            },
           ])}
           name={tabValue}
           onClick={() => {

@@ -112,7 +112,6 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
 
       const addressesPerTxn = 20;
 
-      const supposedBigIntDeactivationSlot = BigInt('18446744073518870550');
       const slotCorrection = txnsAndSigners.length + 2;
       // console.log('slotCorrection: ', slotCorrection);
       const lastSlot = (await connection.getSlot()) + slotCorrection;

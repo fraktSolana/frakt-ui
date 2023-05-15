@@ -13,8 +13,8 @@ interface SearchParams {
 export type PartialSearchParams = Partial<SearchParams>;
 
 export interface ActiveRowParams {
-  field: string;
-  value?: string;
+  field?: string;
+  value?: any;
   className?: string;
   cardClassName?: string;
 }
@@ -22,6 +22,7 @@ export interface ActiveRowParams {
 export interface ViewParams {
   showCard: boolean;
   showSorting: boolean;
+  showSearching: boolean;
 }
 
 export interface SelectLoansParams {

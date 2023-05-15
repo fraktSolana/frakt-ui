@@ -1,17 +1,11 @@
 import { web3 } from '@frakt-protocol/frakt-sdk';
 import {
-  BondingCurveType,
-  PairAuthorityType,
   MarketState,
   MarketTrustType,
   PairTokenType,
   PairValidationType,
-  PairState,
-  PairType,
   CollateralBoxType,
   FraktBondState,
-  BondFeatures,
-  AutocompoundDeposit,
   BondOfferV2,
   BondTradeTransactionV2,
 } from 'fbonds-core/lib/fbond-protocol/types';

@@ -73,6 +73,7 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
       viewParams={{
         showCard: viewState === 'card',
         showSorting: true,
+        showSearching: true,
       }}
       selectLoansParams={{
         onChange: onChangeCheckbox,
@@ -80,6 +81,7 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
       }}
       activeRowParams={{
         field: 'gracePeriod',
+        value: true,
         className: 'graceRowClassName',
         cardClassName: styles.graced,
       }}
