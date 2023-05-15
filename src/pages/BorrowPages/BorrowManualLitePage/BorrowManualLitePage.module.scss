@@ -31,10 +31,6 @@
     font: var(--font-text-2);
     font-size: 20px;
     line-height: 24px;
-
-    @media (max-width: 960px) {
-      margin-bottom: 18px;
-    }
   }
 }
 
@@ -42,6 +38,10 @@
   display: flex;
   align-items: center;
   gap: 16px;
+
+  @media (max-width: 960px) {
+    margin-bottom: 18px;
+  }
 }
 
 .headerStatsWrapper {
