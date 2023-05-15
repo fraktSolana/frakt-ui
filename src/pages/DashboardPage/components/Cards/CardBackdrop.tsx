@@ -1,6 +1,7 @@
 import { FC, PropsWithChildren } from 'react';
 import classNames from 'classnames';
 
+import ImageWithPreload from '@frakt/components/ImageWithPreload';
 import styles from './Cards.module.scss';
 
 interface CardBackdropProps {
@@ -21,7 +22,7 @@ export const CardBackdrop: FC<PropsWithChildren<CardBackdropProps>> = ({
       [styles.clicable]: onClick,
     })}
   >
-    <img src={image} className={styles.nftImage} />
+    <ImageWithPreload src={image} className={styles.nftImage} />
     {children}
   </div>
 );
