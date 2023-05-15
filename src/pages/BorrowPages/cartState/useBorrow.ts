@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { sum, map } from 'lodash';
+import { useCallback, useMemo } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 import { BorrowNft } from '@frakt/api/nft';
 import {
@@ -8,10 +8,9 @@ import {
   useMarketPairs,
 } from '@frakt/utils/bonds';
 
-import { useCurrentNft } from './useCurrentNft';
 import { useCartState } from './useCartState';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { patchPairWithProtocolFee } from './helpers';
+import { useCurrentNft } from './useCurrentNft';
+import { calcTotalBorrowValue, patchPairWithProtocolFee } from './helpers';
 
 export const useBorrow = () => {
   const {
@@ -112,27 +111,28 @@ export const useBorrow = () => {
     });
   };
 
-  const setCurrentNftFromOrder = (mint: string) => {
-    const cartOrder = cartOrders.find(
-      ({ borrowNft }) => borrowNft.mint === mint,
-    );
+  const setCurrentNftFromOrder = useCallback(
+    (mint: string) => {
+      const cartOrder = cartOrders.find(
+        ({ borrowNft }) => borrowNft.mint === mint,
+      );
 
-    removeOrder({ nftMint: cartOrder?.borrowNft?.mint });
+      removeOrder({ nftMint: cartOrder?.borrowNft?.mint });
 
-    setCurrentNftState({
-      nft: cartOrder.borrowNft,
-      loanType: cartOrder.loanType,
-      loanValue: cartOrder.loanValue,
-      bondOrderParams: cartOrder.bondOrderParams,
-    });
-  };
+      setCurrentNftState({
+        nft: cartOrder.borrowNft,
+        loanType: cartOrder.loanType,
+        loanValue: cartOrder.loanValue,
+        bondOrderParams: cartOrder.bondOrderParams,
+      });
+    },
+    [cartOrders, removeOrder, setCurrentNftState],
+  );
 
   const isBulk = cartOrders.length + Number(!!currentNft) > 1;
 
   const totalBorrowValue = useMemo(() => {
-    return (
-      sum(map(cartOrders, ({ loanValue }) => loanValue)) + currentLoanValue
-    );
+    return calcTotalBorrowValue({ cartOrders }) + currentLoanValue;
   }, [cartOrders, currentLoanValue]);
 
   return {
@@ -159,6 +159,7 @@ export const useBorrow = () => {
     clearCart,
     setCartState,
     clearCurrentNftState,
+    setCurrentNftState,
   };
 };
 

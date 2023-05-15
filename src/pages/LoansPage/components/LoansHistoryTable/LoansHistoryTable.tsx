@@ -39,7 +39,11 @@ export const LoansHistoryTable: FC<LoansHistoryTableProps> = ({
   return (
     <Table
       {...table}
-      viewParams={{ showCard: viewState === 'card', showSorting: true }}
+      viewParams={{
+        showCard: viewState === 'card',
+        showSorting: true,
+        showSearching: true,
+      }}
       breakpoints={breakpoints}
       search={{ onChange }}
       className={className}
