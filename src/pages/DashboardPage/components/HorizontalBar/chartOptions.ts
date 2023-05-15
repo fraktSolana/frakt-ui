@@ -1,15 +1,21 @@
+const USER_BALANCE_LABEL = 'idle in wallet';
+
 const tooltipOptions = {
-  usePointStyle: true,
+  displayColors: false,
   callbacks: {
     labelColor: function (context) {
       const userBalance = context?.dataset?.rawData;
       const targetValue = context?.raw;
       const solAmount = userBalance * (targetValue / 100);
 
-      context.formattedValue = `${solAmount?.toFixed(2)} SOL`;
+      if (context.label === USER_BALANCE_LABEL) {
+        context.formattedValue = `${userBalance?.toFixed(2)} SOL`;
+      } else {
+        context.formattedValue = `${solAmount?.toFixed(2)} SOL`;
+      }
 
       return {
-        borderRadius: 5,
+        borderRadius: 0,
       };
     },
   },
