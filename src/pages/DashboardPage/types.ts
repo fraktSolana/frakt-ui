@@ -8,4 +8,7 @@ export interface NFT {
   mint?: string;
   marketPubkey?: string;
   activeBondsAmount?: number;
+  fraktMarketPubkey?: string;
+  oracleFloorPubkey?: string;
+  whitelistEntryPubkey?: string;
 }

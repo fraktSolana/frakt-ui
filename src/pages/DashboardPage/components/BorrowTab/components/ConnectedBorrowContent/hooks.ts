@@ -1,4 +1,4 @@
-import { useWallet } from '@solana/wallet-adapter-react';
+import { WalletContextState, useWallet } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
 import { useQuery } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
@@ -7,7 +7,11 @@ import { orderBy } from 'lodash';
 import { useWalletNfts } from '@frakt/pages/BorrowPages/BorrowManualPage/hooks';
 import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
 import { fetchMarketPairs, fetchCertainMarket } from '@frakt/api/bonds';
-import { BorrowNft, fetchWalletBorrowNfts } from '@frakt/api/nft';
+import {
+  BorrowNft,
+  fetchWalletBorrowNfts,
+  BondCartOrder,
+} from '@frakt/api/nft';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { useConnection, useDebounce } from '@frakt/hooks';
 import { captureSentryError } from '@frakt/utils/sentry';
@@ -111,9 +115,8 @@ export const useBorrowSingleBond = () => {
       });
 
       const result = await borrowSingle({
-        mint: nft?.mint,
+        nft,
         bondOrderParams: bondOrderParams?.orderParams,
-        market,
         wallet,
         connection,
       });
@@ -148,19 +151,26 @@ const fetchMarketAndPairs = async (
 };
 
 const borrowSingle = async ({
-  mint,
+  nft,
   bondOrderParams,
-  market,
   connection,
   wallet,
+}: {
+  nft: NFT;
+  bondOrderParams: BondCartOrder[];
+  connection: web3.Connection;
+  wallet: WalletContextState;
 }) => {
   const {
     createLookupTableTxn,
     extendLookupTableTxns,
     createAndSellBondsIxsAndSigners,
   } = await makeCreateBondMultiOrdersTransaction({
-    nftMint: mint,
-    market,
+    nftMint: nft?.mint,
+    marketPubkey: nft?.marketPubkey,
+    fraktMarketPubkey: nft.fraktMarketPubkey,
+    oracleFloorPubkey: nft.oracleFloorPubkey,
+    whitelistEntryPubkey: nft.whitelistEntryPubkey,
     bondOrderParams: bondOrderParams,
     connection,
     wallet,
