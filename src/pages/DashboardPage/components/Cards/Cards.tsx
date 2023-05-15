@@ -25,7 +25,7 @@ export const BorrowCard: FC<BorrowCardProps> = ({
 }) => {
   const { connected } = useWallet();
 
-  const maxLoanValue = (rawMaxLoanValue / 1e9)?.toFixed(0);
+  const maxLoanValue = rawMaxLoanValue / 1e9 || 0;
 
   return (
     <CardBackdrop
@@ -44,11 +44,13 @@ export const BorrowCard: FC<BorrowCardProps> = ({
         </p>
         {connected && !!mint && (
           <Button type="secondary" className={styles.button}>
-            Get {maxLoanValue} ◎
+            Get {maxLoanValue?.toFixed(2)} ◎
           </Button>
         )}
       </div>
-      {!connected && <div className={styles.badge}>+ {maxLoanValue} ◎</div>}
+      {!connected && (
+        <div className={styles.badge}>+ {maxLoanValue?.toFixed(0)} ◎</div>
+      )}
     </CardBackdrop>
   );
 };

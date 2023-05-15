@@ -44,7 +44,7 @@ const DepositPoolsView = ({
           data={poolsChartData}
           labels={poolsChartLabels}
           title="Pools"
-          tooltipText="Pools"
+          tooltipText="Isolated low-risk lending pools with dynamic interest rate"
           buttonText="Manage pools"
           apr={apr}
           path={PATHS.LEND}
@@ -54,7 +54,7 @@ const DepositPoolsView = ({
       <LendListContentView
         data={pools}
         title="Pools"
-        tooltipText="Pools"
+        tooltipText="Isolated low-risk lending pools with dynamic interest rate"
         path={PATHS.LEND}
       />
     )}
@@ -74,7 +74,7 @@ const DepositStrategiesView = ({
         data={strategiesChartData}
         labels={strategiesChartLabels}
         title="Strategies"
-        tooltipText="Strategies"
+        tooltipText="Lending pools that are controlled by individuals who place and manage offers for you in an automated manner"
         buttonText="Manage strategies"
         apr={apr}
         path={PATHS.STRATEGIES}
@@ -83,7 +83,7 @@ const DepositStrategiesView = ({
       <LendListContentView
         data={strategies}
         title="Strategies"
-        tooltipText="Strategies"
+        tooltipText="Lending pools that are controlled by individuals who place and manage offers for you in an automated manner"
         path={PATHS.STRATEGIES}
       />
     )}
@@ -105,7 +105,7 @@ const LendView = ({ isDepositedAndConnected, pools, setSearch }) => {
         <div className={styles.searchableList}>
           <Search
             title="Lend"
-            tooltipText="Lend"
+            tooltipText="Place your loan offers for borrowers"
             onChange={setSearch}
             className={styles.search}
           />

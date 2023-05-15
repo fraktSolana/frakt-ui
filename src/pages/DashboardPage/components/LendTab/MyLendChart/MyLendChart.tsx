@@ -23,7 +23,10 @@ const MyLendChart: FC<{ bonds: BondsUserStats }> = ({ bonds }) => {
 
   return (
     <div className={styles.lendContainer}>
-      <Heading title="Lend" tooltipText="Lend" />
+      <Heading
+        title="Lend"
+        tooltipText="Place your loan offers for borrowers"
+      />
       <div className={styles.lendContent}>
         <div className={styles.lendStats}>
           <DashboardColumnValue label="volume" value={totalLendAmout} />
