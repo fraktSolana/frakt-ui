@@ -115,7 +115,10 @@ export const makeCreateBondTransaction: MakeCreateBondTransaction = async ({
 };
 
 type MakeCreateBondMultiOrdersTransaction = (params: {
-  market: Market;
+  marketPubkey: string;
+  fraktMarketPubkey: string;
+  oracleFloorPubkey: string;
+  whitelistEntryPubkey: string;
   // bondOrder: BondOrder;
   bondOrderParams: BondCartOrder[];
   nftMint: string;
@@ -129,7 +132,16 @@ type MakeCreateBondMultiOrdersTransaction = (params: {
 }>;
 
 export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTransaction =
-  async ({ market, bondOrderParams, nftMint, connection, wallet }) => {
+  async ({
+    marketPubkey,
+    fraktMarketPubkey,
+    oracleFloorPubkey,
+    whitelistEntryPubkey,
+    bondOrderParams,
+    nftMint,
+    connection,
+    wallet,
+  }) => {
     const amountToReturn =
       Math.trunc(
         bondOrderParams.reduce((sum, order) => sum + order.orderSize, 0),
@@ -192,14 +204,14 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
           fbond: bondPubkey,
           fbondTokenMint: bondTokenMint,
           collateralTokenMint: new web3.PublicKey(nftMint),
-          fraktMarket: new web3.PublicKey(market.fraktMarket.publicKey),
+          fraktMarket: new web3.PublicKey(fraktMarketPubkey),
           oracleFloor: new web3.PublicKey(
-            market.oracleFloor?.publicKey || PUBKEY_PLACEHOLDER,
+            oracleFloorPubkey || PUBKEY_PLACEHOLDER,
           ),
           whitelistEntry: new web3.PublicKey(
-            market.whitelistEntry?.publicKey || PUBKEY_PLACEHOLDER,
+            whitelistEntryPubkey || PUBKEY_PLACEHOLDER,
           ),
-          hadoMarket: new web3.PublicKey(market.marketPubkey),
+          hadoMarket: new web3.PublicKey(marketPubkey),
           userPubkey: wallet.publicKey,
           protocolFeeReceiver: new web3.PublicKey(
             BONDS_ADMIN_PUBKEY || PUBKEY_PLACEHOLDER,

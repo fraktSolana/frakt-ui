@@ -7,7 +7,6 @@ import { PATHS } from '@frakt/constants';
 import {
   showSolscanLinkNotification,
   signAndSendAllTransactions,
-  signAndSendAllTransactionsInSequence,
   signAndSendV0TransactionWithLookupTables,
 } from '@frakt/utils/transactions';
 import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
@@ -115,7 +114,6 @@ type BorrowSingle = (props: {
 const borrowSingle: BorrowSingle = async ({
   nft,
   bondOrderParams,
-  market,
   loanType,
   loanValue,
   connection,
@@ -174,7 +172,10 @@ const borrowSingle: BorrowSingle = async ({
     createAndSellBondsIxsAndSigners,
   } = await makeCreateBondMultiOrdersTransaction({
     nftMint: nft.mint,
-    market,
+    marketPubkey: nft.bondParams.marketPubkey,
+    fraktMarketPubkey: nft.bondParams.whitelistEntry.fraktMarket,
+    oracleFloorPubkey: nft.bondParams.oracleFloor,
+    whitelistEntryPubkey: nft.bondParams.whitelistEntry?.publicKey,
     bondOrderParams: bondOrderParams,
     connection,
     wallet,

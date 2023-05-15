@@ -1,0 +1,94 @@
+.chartBarWrapper {
+  max-width: 335px;
+  height: 176px;
+  width: 100%;
+
+  canvas {
+    height: 176px !important;
+    width: 100% !important;
+  }
+
+  @media ((max-width: 1240px) and (min-width: 961px)) {
+    max-width: unset;
+    min-height: unset;
+    height: 120px !important;
+
+    canvas {
+      height: 120px !important;
+    }
+  }
+
+  @media (max-width: 960px) {
+    max-width: unset;
+  }
+
+  @media (max-width: 550px) {
+    height: 160px;
+    canvas {
+      height: 160px !important;
+    }
+  }
+}
+
+.depositContainer {
+  display: flex;
+  flex-direction: column;
+}
+.depositContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @media ((max-width: 1240px) and (min-width: 961px)) {
+    flex-direction: column;
+  }
+
+  @media (max-width: 960px) {
+    gap: 24px;
+    align-items: unset;
+  }
+
+  @media (max-width: 550px) {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+.depositInfoWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+
+  @media ((max-width: 1240px) and (min-width: 961px)) {
+    flex-direction: row;
+    height: unset;
+    width: 100%;
+  }
+
+  @media (max-width: 960px) {
+    height: unset;
+  }
+
+  @media (max-width: 550px) {
+    flex-direction: row;
+    height: unset;
+    width: 100%;
+  }
+}
+
+.navigationButton {
+  margin-top: 16px;
+  height: 40px;
+  width: 100%;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.value {
+  @media (min-width: 551px) {
+    align-items: flex-start !important;
+  }
+}

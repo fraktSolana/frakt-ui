@@ -268,3 +268,6 @@ export const throwLogsError = (msg: any) => {
   // eslint-disable-next-line no-console
   console.warn(msg?.logs?.join('\n'));
 };
+
+export const formatNumbersWithCommans = (value: number | string): string =>
+  value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');

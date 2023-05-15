@@ -1,76 +1,49 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import cx from 'classnames';
 
-import { useFetchAllRaffleList } from '@frakt/hooks/useRaffleData';
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
-import { Loader } from '@frakt/components/Loader';
+import { Tabs, useTabs } from '@frakt/components/Tabs';
+import LendTab from './components/LendTab';
 
-import AvailableBorrow from './components/AvailableBorrow';
-import DailyActive from './components/DailyActive';
+import { useDashboardWalletNfts } from './components/BorrowTab/components/ConnectedBorrowContent/hooks';
+import { DASHBOARD_TABS, DashboardTabsNames } from './constants';
+import DailyActive from './components/DaliyActive';
 import TotalStats from './components/TotalStats';
-import LastLoans from './components/LastLoans';
-import GraceList from './components/GraceList';
-import MyDeposit from './components/MyDeposit';
-import { useWalletLoans } from '../LoansPage';
-import Lending from './components/Lending';
+import BorrowTab from './components/BorrowTab';
 import { useFetchAllStats } from './hooks';
-import Rewards from './components/Rewards';
-import MyLoans from './components/MyLoans';
 
 import styles from './DashboardPage.module.scss';
 
 const DashboardPage: FC = () => {
-  const { publicKey: walletPublicKey, connected } = useWallet();
+  const { publicKey: walletPublicKey } = useWallet();
 
-  const { data, loading } = useFetchAllStats({ walletPublicKey });
-  const { loans, isLoading } = useWalletLoans({ walletPublicKey });
+  const { isSuccess } = useDashboardWalletNfts();
+  const { data } = useFetchAllStats({ walletPublicKey, enabled: isSuccess });
 
-  const { data: graceList, loading: isLoadingGraceList } =
-    useFetchAllRaffleList();
+  const {
+    tabs: marketTabs,
+    value: tabValue,
+    setValue: setTabValue,
+  } = useTabs({ tabs: DASHBOARD_TABS, defaultValue: DASHBOARD_TABS[0].value });
 
   return (
     <AppLayout>
-      <div className={styles.header}>
-        <h1 className={styles.title}>{connected ? 'Dashboard' : 'Welcome'}</h1>
+      <div className={styles.content}>
+        <Tabs
+          className={styles.tab}
+          tabs={marketTabs}
+          value={tabValue}
+          setValue={setTabValue}
+        />
+        <div className={styles.tabContent}>
+          {tabValue === DashboardTabsNames.BORROW && <BorrowTab />}
+          {tabValue === DashboardTabsNames.LEND && <LendTab />}
+        </div>
       </div>
-      {!connected || !isLoading ? (
-        <>
-          <div className={styles.statsWrapper}>
-            <div className={styles.statsContainer}>
-              <div className={styles.row}>
-                <MyLoans userLoans={loans} />
-                <MyDeposit data={data?.bonds} />
-              </div>
-              <div className={cx(styles.row, styles.rowDirection)}>
-                <Rewards />
-                <AvailableBorrow />
-              </div>
-            </div>
-          </div>
-          <div className={styles.statsWrapper}>
-            <h2 className={styles.subtitle}>Protocol overview</h2>
-            <div className={styles.statsContainer}>
-              <div className={cx(styles.row, styles.rowDirection)}>
-                <TotalStats data={data?.totalStats} />
-                <DailyActive data={data?.dailyActivity} />
-              </div>
-              <div className={cx(styles.row, styles.rowDirection)}>
-                <Lending loading={loading} data={data?.lendingPools} />
-                <LastLoans loading={loading} data={data?.lastLoans} />
-              </div>
-              <div className={cx(styles.row, styles.rowDirection)}>
-                <GraceList
-                  isLoading={isLoadingGraceList}
-                  graceList={graceList}
-                />
-              </div>
-            </div>
-          </div>
-        </>
-      ) : (
-        <Loader />
-      )}
+      <div className={styles.statsWrapper}>
+        <TotalStats data={data?.totalStats} />
+        <DailyActive data={data?.dailyActivity} />
+      </div>
     </AppLayout>
   );
 };

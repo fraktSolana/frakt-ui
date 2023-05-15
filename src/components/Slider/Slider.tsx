@@ -15,6 +15,7 @@ interface SliderProps {
   max?: number;
   min?: number;
   disabled?: boolean;
+  onAfterChange?: (nextValue: number) => void;
 }
 
 export const Slider: FC<SliderProps> = ({
@@ -28,6 +29,7 @@ export const Slider: FC<SliderProps> = ({
   max,
   min,
   disabled,
+  onAfterChange,
 }) => {
   return (
     <div
@@ -42,7 +44,8 @@ export const Slider: FC<SliderProps> = ({
         defaultValue={defaultValue}
         value={value}
         onChange={setValue}
-        tooltipVisible={false}
+        onAfterChange={onAfterChange}
+        tooltip={{ open: false }}
         step={step}
         max={max}
         min={min}

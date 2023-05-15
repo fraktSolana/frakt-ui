@@ -34,7 +34,7 @@ export const createHighlitedPercentValueJSX = (value: number) => {
   );
 };
 
-export const createValueJSX = (value = '') => (
+export const createValueJSX = (value: string | number) => (
   <span className={styles.value}>{value || '--'}</span>
 );
 

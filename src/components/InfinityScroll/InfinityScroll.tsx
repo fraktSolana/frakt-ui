@@ -32,6 +32,7 @@ const InfinityScroll = ({
   children,
   infinityScrollProps,
   scrollableTargetId = 'app-content',
+  emptyMessageClassName,
   customLoader,
 }: InfinityScrollProps): JSX.Element => {
   if (isLoading) {
@@ -45,7 +46,7 @@ const InfinityScroll = ({
   }
 
   if (!children.length) {
-    return <EmptyList text={emptyMessage} />;
+    return <EmptyList className={emptyMessageClassName} text={emptyMessage} />;
   }
 
   return (
