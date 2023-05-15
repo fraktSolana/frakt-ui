@@ -8,9 +8,9 @@ import { Slider } from '@frakt/components/Slider';
 import { SOL_TOKEN } from '@frakt//utils';
 import { Loader } from '@frakt/components/Loader';
 
-import { BorrowHeader } from '../components/BorrowHeader';
 import styles from './BorrowRootPage.module.scss';
 import { useBorrowRootPage } from './hooks';
+import { Header } from '../BorrowManualLitePage';
 
 export const BorrowRootPage: FC = () => {
   const {
@@ -24,13 +24,15 @@ export const BorrowRootPage: FC = () => {
     isWalletConnected,
     goToBulkSuggestionPage,
     goToBorrowManualPage,
+    goToLiteBorrowing,
   } = useBorrowRootPage();
 
   return (
     <AppLayout>
-      <BorrowHeader
-        title="Borrow SOL"
-        subtitle="Choose how you want to borrow"
+      <Header
+        availableToBorrow={maxBorrowValue}
+        onChange={goToLiteBorrowing}
+        checked={true}
       />
 
       {!isWalletConnected && (
@@ -50,7 +52,6 @@ export const BorrowRootPage: FC = () => {
                 value={borrowValue}
                 onValueChange={onBorrowValueChange}
                 currentToken={SOL_TOKEN}
-                label="Available to borrow:"
                 lpBalance={parseFloat(maxBorrowValue?.toFixed(2))}
                 showMaxButton
                 error={isNotEnoughBalanceError}

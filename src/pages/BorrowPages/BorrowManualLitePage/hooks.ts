@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useQuery } from '@tanstack/react-query';
+import { useHistory } from 'react-router-dom';
 import { web3 } from 'fbonds-core';
 import { debounce, reduce } from 'lodash';
+
 import { useIntersection } from '@frakt/hooks/useIntersection';
 
 import { LoanType } from '@frakt/api/loans';
@@ -14,6 +16,7 @@ import {
   fetchWalletBorrowNftsLite,
 } from '@frakt/api/nft';
 import { useTabs } from '@frakt/components/Tabs';
+import { PATHS } from '@frakt/constants';
 
 import { DURATION_TABS } from './constants';
 import { useCartStateLite } from './cartStateLite';
@@ -21,9 +24,13 @@ import { calcPriceBasedMaxLoanValue } from '../cartState';
 
 export const useBorrowManualLitePage = () => {
   const wallet = useWallet();
+  const history = useHistory();
+
   const { maxBorrow, isLoading: maxBorrowValueLoading } = useMaxBorrow({
     walletPublicKey: wallet?.publicKey,
   });
+
+  const goToProBorrowing = () => history.push(PATHS.BORROW_ROOT);
 
   const {
     tabs: durationTabs,
@@ -239,6 +246,8 @@ export const useBorrowManualLitePage = () => {
     setSearch,
     resetCache,
     fetchMoreTrigger,
+
+    goToProBorrowing,
   };
 };
 

@@ -36,6 +36,8 @@ export interface BorrowNft {
   };
 
   bondParams?: {
+    duration: number;
+    fee: number;
     marketPubkey: string;
     whitelistEntry: {
       publicKey: string;

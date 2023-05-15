@@ -31,10 +31,16 @@
     font: var(--font-text-2);
     font-size: 20px;
     line-height: 24px;
+  }
+}
 
-    @media (max-width: 960px) {
-      margin-bottom: 18px;
-    }
+.headingWrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  @media (max-width: 960px) {
+    margin-bottom: 18px;
   }
 }
 
@@ -129,4 +135,42 @@
 .tabActive {
   color: #000;
   background: var(--light-green-color);
+}
+
+.toggleInner {
+  width: 56px;
+  height: 16px;
+  border-color: var(--secondary-border);
+}
+
+.rootToggle {
+  input:checked + .toggleInner:before,
+  input + .toggleInner:before {
+    border-color: var(--secondary-border);
+  }
+  input:checked + .toggleInner:before {
+    transform: translateX(32px);
+  }
+
+  input:checked + .toggleInner::after,
+  input + .toggleInner::after {
+    display: flex;
+    font: var(--font-text-9);
+    font-weight: 400;
+
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+  }
+
+  input:checked + .toggleInner::after {
+    content: 'Pro';
+    color: var(--button-text);
+    left: 8px;
+  }
+
+  input + .toggleInner::after {
+    content: 'Lite';
+    right: 8px;
+  }
 }

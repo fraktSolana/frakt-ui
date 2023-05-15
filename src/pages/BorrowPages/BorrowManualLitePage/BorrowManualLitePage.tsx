@@ -2,6 +2,7 @@ import { FC } from 'react';
 import classNames from 'classnames';
 
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
+import Toggle from '@frakt/components/Toggle';
 import { LoanDuration } from '@frakt/api/nft';
 import { Tabs } from '@frakt/components/Tabs';
 import { Loader } from '@frakt/components/Loader';
@@ -38,6 +39,7 @@ export const BorrowManualLitePage: FC = () => {
     setSearch,
     resetCache,
     fetchMoreTrigger,
+    goToProBorrowing,
   } = useBorrowManualLitePage();
 
   return (
@@ -50,6 +52,8 @@ export const BorrowManualLitePage: FC = () => {
         <Header
           collateralsAmount={nfts?.length}
           availableToBorrow={maxBorrowValue}
+          onChange={goToProBorrowing}
+          checked={false}
         />
 
         <div className={styles.content}>
@@ -119,12 +123,27 @@ export const BorrowManualLitePage: FC = () => {
 interface HeaderProps {
   collateralsAmount?: number;
   availableToBorrow?: number;
+  checked?: boolean;
+  onChange: () => void;
 }
 
-const Header: FC<HeaderProps> = ({ collateralsAmount, availableToBorrow }) => {
+export const Header: FC<HeaderProps> = ({
+  collateralsAmount,
+  availableToBorrow,
+  checked,
+  onChange,
+}) => {
   return (
     <div className={styles.header}>
-      <h1>Borrow SOL</h1>
+      <div className={styles.headingWrapper}>
+        <h1>Borrow SOL</h1>
+        <Toggle
+          className={styles.rootToggle}
+          innerClassName={styles.toggleInner}
+          defaultChecked={checked}
+          onChange={onChange}
+        />
+      </div>
 
       {(!!collateralsAmount || !!availableToBorrow) && (
         <div className={styles.headerStatsWrapper}>

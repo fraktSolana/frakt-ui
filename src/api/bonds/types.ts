@@ -83,6 +83,8 @@ export interface MarketPreview {
   bestOffer: number; //? lamports
   bestLTV: number;
   activeBondsAmount: number;
+  fee: number;
+  bestDuration: number;
 }
 
 export type Pair = BondOfferV2;
