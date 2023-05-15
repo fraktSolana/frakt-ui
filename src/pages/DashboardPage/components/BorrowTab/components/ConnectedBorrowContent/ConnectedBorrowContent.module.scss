@@ -78,6 +78,12 @@
   }
 }
 
+.nftsList img {
+  @media (min-width: 961px) {
+    height: 150px;
+  }
+}
+
 .notNftsMessage {
   font: var(--font-text-4);
   font-size: 24px;

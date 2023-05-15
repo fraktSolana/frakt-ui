@@ -8,10 +8,16 @@ import { fetchWalletBorrowNfts } from '@frakt/api/nft';
 
 const FETCH_LIMIT = 15;
 
+type SortName = 'maxLoanValue' | 'name';
+type SortOrder = 'desc' | 'asc';
+
 export const useDashboardWalletNfts = () => {
   const wallet = useWallet();
 
   const [search, setSearch] = useState('');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+  const [sortName, setSortName] = useState<SortName>('maxLoanValue');
+
   const { hiddenNFTsMint, hideNFT } = useHiddenNFTsMint();
 
   const fetchData = async ({ pageParam }: { pageParam: number }) => {
@@ -19,6 +25,8 @@ export const useDashboardWalletNfts = () => {
       publicKey: wallet.publicKey,
       limit: FETCH_LIMIT,
       offset: pageParam * FETCH_LIMIT,
+      sortBy: sortName,
+      sortOrder,
       search,
     });
 
@@ -58,6 +66,8 @@ export const useDashboardWalletNfts = () => {
     setSearch,
     isSuccess,
     hideNFT,
+    setSortOrder,
+    setSortName,
   };
 };
 
