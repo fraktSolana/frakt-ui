@@ -41,7 +41,7 @@ export const DepositContentView: FC<DepositContentViewProps> = ({
         <div className={styles.depositInfoWrapper}>
           <Heading title={title} tooltipText={tooltipText} />
           <DashboardColumnValue
-            label="Weightet apr"
+            label="Weighted apr"
             value={apr?.toFixed(2)}
             valueType={VALUES_TYPES.percent}
             className={styles.value}
