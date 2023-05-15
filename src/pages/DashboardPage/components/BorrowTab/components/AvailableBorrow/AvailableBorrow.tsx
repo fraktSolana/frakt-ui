@@ -35,7 +35,7 @@ const AvailableBorrow: FC<{ availableBorrowData: AvailableToBorrowUser }> = ({
         />
       </div>
       <NavigationButton
-        path={PATHS.BORROW_ROOT}
+        path={PATHS.BORROW_LITE}
         className={styles.button}
         type="secondary"
       >

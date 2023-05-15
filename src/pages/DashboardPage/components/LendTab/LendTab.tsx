@@ -1,10 +1,11 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
-import { DepositContentView, LendListContentView } from './ContentViews';
 import { LiquidityPool } from '@frakt/state/loans/types';
+import EmptyList from '@frakt/components/EmptyList';
 import { PATHS } from '@frakt/constants';
 
+import { DepositContentView, LendListContentView } from './ContentViews';
 import { useFetchAllStats } from '../../hooks';
 import MyLendChart from './MyLendChart';
 import { useLendTab } from './hooks';
@@ -108,16 +109,24 @@ const LendView = ({ isDepositedAndConnected, pools, setSearch }) => {
             onChange={setSearch}
             className={styles.search}
           />
-          <div className={styles.nftsList}>
-            {pools.map((pool: LiquidityPool) => (
-              <LendCard
-                image={pool.imageUrl?.[0]}
-                activeLoans={pool.activeloansAmount}
-                amount={pool.totalLiquidity}
-                apr={pool.depositApr}
-              />
-            ))}
-          </div>
+          {!pools?.length && (
+            <EmptyList
+              className={styles.emptyMessage}
+              text={'No items found'}
+            />
+          )}
+          {!!pools.length && (
+            <div className={styles.nftsList}>
+              {pools.map((pool: LiquidityPool) => (
+                <LendCard
+                  image={pool.imageUrl?.[0]}
+                  activeLoans={pool.activeloansAmount}
+                  amount={pool.totalLiquidity}
+                  apr={pool.depositApr}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
     </>
