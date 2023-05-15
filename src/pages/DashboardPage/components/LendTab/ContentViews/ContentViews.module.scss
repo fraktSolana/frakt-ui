@@ -86,3 +86,9 @@
   display: flex;
   flex-direction: column;
 }
+
+.value {
+  @media (min-width: 551px) {
+    align-items: flex-start !important;
+  }
+}
