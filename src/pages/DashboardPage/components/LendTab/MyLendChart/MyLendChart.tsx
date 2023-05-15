@@ -27,7 +27,7 @@ const MyLendChart: FC<{ bonds: BondsUserStats }> = ({ bonds }) => {
       <div className={styles.lendContent}>
         <div className={styles.lendStats}>
           <DashboardColumnValue label="volume" value={totalLendAmout} />
-          <DashboardColumnValue label="pnl" value={80} />
+          {/* <DashboardColumnValue label="pnl" value={80} /> */}
         </div>
         <div className={styles.chartPieWrapper}>
           <ChartPie
