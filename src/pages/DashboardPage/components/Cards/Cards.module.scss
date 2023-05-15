@@ -33,7 +33,7 @@
 }
 
 .nftImage {
-  object-fit: fill;
+  object-fit: cover;
   width: 100%;
 
   @media (max-width: 960px) {
