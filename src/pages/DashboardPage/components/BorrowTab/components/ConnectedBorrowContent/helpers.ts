@@ -65,9 +65,9 @@ const parseNFTs = (nfts: BorrowNft[]): NFT[] => {
         duration: nft.bondParams?.duration,
         marketPubkey: nft.bondParams?.marketPubkey,
         mint: nft.mint,
-        fee: nft.bondParams.fee,
-        fraktMarketPubkey: nft.bondParams.whitelistEntry.fraktMarket,
-        oracleFloorPubkey: nft.bondParams.oracleFloor,
+        fee: nft.bondParams?.fee,
+        fraktMarketPubkey: nft.bondParams?.fraktMarket,
+        oracleFloorPubkey: nft.bondParams?.oracleFloor,
         whitelistEntryPubkey: nft.bondParams.whitelistEntry?.publicKey,
       };
     });

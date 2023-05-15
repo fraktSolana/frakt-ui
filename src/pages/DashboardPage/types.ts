@@ -11,4 +11,5 @@ export interface NFT {
   fraktMarketPubkey?: string;
   oracleFloorPubkey?: string;
   whitelistEntryPubkey?: string;
+  bestOffer?: number;
 }

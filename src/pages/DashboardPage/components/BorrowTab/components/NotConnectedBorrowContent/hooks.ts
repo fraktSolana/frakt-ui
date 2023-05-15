@@ -27,7 +27,7 @@ export const useNotConnectedBorrowContent = () => {
 
   const filteredCollectionsByAmount = orderBy(
     filteredCollections,
-    ({ activeBondsAmount }) => activeBondsAmount,
+    ({ bestOffer }) => bestOffer,
     'desc',
   );
 

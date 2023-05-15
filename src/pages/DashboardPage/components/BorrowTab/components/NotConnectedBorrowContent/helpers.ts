@@ -9,6 +9,7 @@ export const parseMarketsPreview = (markets: MarketPreview[]): NFT[] => {
       maxLoanValue: market?.bestOffer,
       duration: market?.bestDuration,
       activeBondsAmount: market?.activeBondsAmount,
+      bestOffer: market?.bestOffer,
       fee: market?.fee,
     };
   });
