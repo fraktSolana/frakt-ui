@@ -1,3 +1,20 @@
+const tooltipOptions = {
+  usePointStyle: true,
+  callbacks: {
+    labelColor: function (context) {
+      const userBalance = context?.dataset?.rawData;
+      const targetValue = context?.raw;
+      const solAmount = userBalance * (targetValue / 100);
+
+      context.formattedValue = `${solAmount?.toFixed(2)} SOL`;
+
+      return {
+        borderRadius: 5,
+      };
+    },
+  },
+};
+
 export const options = {
   indexAxis: 'y' as const,
   responsive: true,
@@ -8,6 +25,7 @@ export const options = {
       render: 'percentage',
       showActualPercentages: true,
     },
+    tooltip: tooltipOptions,
   },
   scales: {
     x: {

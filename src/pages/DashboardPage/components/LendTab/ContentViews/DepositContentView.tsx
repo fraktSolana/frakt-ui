@@ -6,6 +6,7 @@ import HorizontalBar from '../../HorizontalBar';
 import Heading from '../../Heading';
 
 import styles from './ContentViews.module.scss';
+import { useSolanaBalance } from '@frakt/utils/accounts';
 
 interface DepositContentViewProps {
   data: number[];
@@ -31,6 +32,7 @@ export const DepositContentView: FC<DepositContentViewProps> = ({
   buttonText,
   path,
 }) => {
+  const { balance: userBalance } = useSolanaBalance();
   const colors = labels.map((color) => defaultsColors[color] || '#1FAEFF');
 
   return (
@@ -46,7 +48,12 @@ export const DepositContentView: FC<DepositContentViewProps> = ({
           />
         </div>
         <div className={styles.chartBarWrapper}>
-          <HorizontalBar data={data} labels={labels} colors={colors} />
+          <HorizontalBar
+            data={data}
+            labels={labels}
+            colors={colors}
+            userBalance={userBalance}
+          />
         </div>
       </div>
       <NavigationButton className={styles.navigationButton} path={path}>

@@ -27,12 +27,14 @@ interface HorizontalBarProps {
   data: number[];
   labels: string[];
   colors: string[];
+  userBalance?: number;
 }
 
 const HorizontalBar: FC<HorizontalBarProps> = ({
   labels,
   data: rawData,
   colors,
+  userBalance,
 }) => {
   const data = {
     labels,
@@ -40,6 +42,7 @@ const HorizontalBar: FC<HorizontalBarProps> = ({
       {
         barThickness: 20,
         data: rawData,
+        rawData: userBalance,
         backgroundColor: colors,
       },
     ],
