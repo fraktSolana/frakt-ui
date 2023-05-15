@@ -2,9 +2,11 @@ import { FC } from 'react';
 import cx from 'classnames';
 
 import styles from './Toggle.module.scss';
+import classNames from 'classnames';
 
 interface ToggleProps {
   className?: string;
+  innerClassName?: string;
   disabled?: boolean;
   value?: boolean;
   defaultChecked?: boolean;
@@ -14,6 +16,7 @@ interface ToggleProps {
 
 const Toggle: FC<ToggleProps> = ({
   className = '',
+  innerClassName = '',
   disabled = false,
   onChange = () => {},
   value,
@@ -40,7 +43,7 @@ const Toggle: FC<ToggleProps> = ({
           onChange(isControlled ? !value : event.target.checked);
         }}
       />
-      <span className={styles.slider} />
+      <span className={classNames(styles.slider, innerClassName)} />
       <span className={styles.label}>{label}</span>
     </label>
   );
