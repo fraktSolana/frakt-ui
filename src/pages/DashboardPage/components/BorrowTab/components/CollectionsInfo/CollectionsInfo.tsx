@@ -39,6 +39,7 @@ const CollectionsInfo: FC<{
         <DashboardColumnValue
           label="Total liquidity"
           value={collectionsStats?.totalLiquidity || '--'}
+          toFixed={0}
         />
       </div>
       {!hiddenButton && (
