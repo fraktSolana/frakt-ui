@@ -86,9 +86,10 @@ const createChartLabelsByStrategies = (
 const calcWeightedAvarageStrategiesApy = (strategies: TradePoolUser[]) => {
   const userStrategies = getDepositedUserStrategies(strategies);
   const amount = map(userStrategies, ({ wallet }) => wallet.userDeposit / 1e9);
-  const APRs = map(userStrategies, ({ wallet }) => wallet.userYield);
+  const APRs = map(userStrategies, 'depositYield');
 
-  const weightedAvarageApy = calcWeightedAverage(amount, APRs);
+  const weightedAvarageApy = calcWeightedAverage(APRs, amount);
+
   return weightedAvarageApy;
 };
 

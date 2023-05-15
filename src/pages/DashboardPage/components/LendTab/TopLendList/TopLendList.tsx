@@ -1,5 +1,6 @@
 import { FC } from 'react';
 
+import { formatNumbersWithCommans } from '@frakt/utils';
 import { Loader } from '@frakt/components/Loader';
 
 import { LendInfo } from '../types';
@@ -43,8 +44,12 @@ const LendCard: FC<LendInfo> = ({
         <img className={styles.cardImage} src={image} />
         <p className={styles.cardName}>{name}</p>
       </div>
-      <p className={styles.cardValue}>{totalLiquidity}</p>
-      <p className={styles.cardValue}>{depositYield} %</p>
+      <p className={styles.cardValue}>
+        {formatNumbersWithCommans(totalLiquidity)}
+      </p>
+      <p className={styles.cardValue}>
+        {formatNumbersWithCommans(depositYield)} %
+      </p>
     </div>
   );
 };

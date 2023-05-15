@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { TotalStats as TotalStatsInterface } from '@frakt/api/user';
 
-import { DashboardColumnValue } from '../DashboardStatsValues';
+import { DashboardColumnValue, VALUES_TYPES } from '../DashboardStatsValues';
 import styles from './TotalStats.module.scss';
 
 interface TotalStatsProps {
@@ -30,6 +30,7 @@ const TotalStats: FC<TotalStatsProps> = ({ data }) => {
           label="Active loans"
           value={data?.activeLoansCount || '--'}
           toFixed={0}
+          valueType={VALUES_TYPES.string}
           reverse
         />
       </div>

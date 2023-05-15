@@ -24,10 +24,6 @@
     padding-bottom: 0;
     height: 100%;
   }
-
-  @media (max-width: 550px) {
-    padding: 16px;
-  }
 }
 
 .content {
@@ -64,10 +60,6 @@
 
   @media (max-width: 1240px) {
     padding-bottom: 24px;
-  }
-
-  @media (max-width: 960px) {
-    padding-bottom: 0;
   }
 }
 
