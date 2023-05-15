@@ -117,14 +117,19 @@ export const useCartStateLite = create<CartStateLite>((set, get) => ({
         if (loanType === LoanType.BOND) {
           const removableOrderParam = state.orderParamsByMint[nftMint];
 
-          const firstLowerLoanValueNft =
-            state.nfts.find(({ mint }) => {
+          const firstLowerLoanValueNftSameCollection =
+            state.nfts.find(({ mint, bondParams }) => {
               const loanValue = state.orderParamsByMint[mint].loanValue;
-              return loanValue < removableOrderParam.loanValue;
+              const sameCollection =
+                bondParams?.marketPubkey ===
+                nftToRemove.bondParams?.marketPubkey;
+              return (
+                loanValue < removableOrderParam.loanValue && sameCollection
+              );
             }) ?? null;
 
-          if (firstLowerLoanValueNft) {
-            state.orderParamsByMint[firstLowerLoanValueNft.mint] =
+          if (firstLowerLoanValueNftSameCollection) {
+            state.orderParamsByMint[firstLowerLoanValueNftSameCollection.mint] =
               removableOrderParam;
           }
 
