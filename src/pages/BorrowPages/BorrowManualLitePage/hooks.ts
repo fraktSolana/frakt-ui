@@ -225,6 +225,7 @@ export const useBorrowManualLitePage = () => {
     onDurationTabClick,
 
     nfts: searchedNfts,
+    maxNfts: nfts?.length || 0,
     onNftClick,
     findNftInCart,
     orders,

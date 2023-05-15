@@ -23,6 +23,7 @@ export const BorrowManualLitePage: FC = () => {
     duration,
     onDurationTabClick,
     nfts,
+    maxNfts,
     findNftInCart,
     onNftClick,
     currentNft,
@@ -50,7 +51,7 @@ export const BorrowManualLitePage: FC = () => {
         })}
       >
         <Header
-          collateralsAmount={nfts?.length}
+          collateralsAmount={maxNfts}
           availableToBorrow={maxBorrowValue}
           onChange={goToProBorrowing}
           checked={false}
