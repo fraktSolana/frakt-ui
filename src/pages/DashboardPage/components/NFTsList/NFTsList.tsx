@@ -10,11 +10,12 @@ import styles from './NFTsList.module.scss';
 
 interface NFTsListProps {
   nfts: NFT[];
-  onClick?: (nft: NFT) => void;
+  onClick?: (nft: NFT, hideNFT?: (nftMint: string) => void) => void;
   fetchNextPage?: () => void;
   isLoading?: boolean;
   className?: string;
   emptyMessageClassName?: string;
+  hideNFT?: (nftMint: string) => void;
 }
 
 export const NFTsList: FC<NFTsListProps> = ({
@@ -24,6 +25,7 @@ export const NFTsList: FC<NFTsListProps> = ({
   isLoading,
   className,
   emptyMessageClassName,
+  hideNFT,
 }) => {
   return (
     <InfinityScroll
@@ -38,7 +40,7 @@ export const NFTsList: FC<NFTsListProps> = ({
       )}
     >
       {nfts.map((nft: NFT) => (
-        <BorrowCard onClick={() => onClick(nft)} {...nft} />
+        <BorrowCard onClick={() => onClick(nft, hideNFT)} {...nft} />
       ))}
     </InfinityScroll>
   );

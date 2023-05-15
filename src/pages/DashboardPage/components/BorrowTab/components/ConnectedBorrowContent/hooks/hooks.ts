@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
 import { orderBy } from 'lodash';
 
-import { useWalletNfts } from '@frakt/pages/BorrowPages/BorrowManualPage/hooks';
 import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
 import { fetchMarketPairs, fetchCertainMarket } from '@frakt/api/bonds';
 import {
@@ -24,11 +23,13 @@ import {
   signAndSendV0TransactionWithLookupTables,
 } from '@frakt/utils/transactions';
 
-import { useNotConnectedBorrowContent } from '../NotConnectedBorrowContent';
-import { filterPairs, getBondOrderParams, parseNFTs } from './helpers';
+import { useNotConnectedBorrowContent } from '../../NotConnectedBorrowContent';
+import { filterPairs, getBondOrderParams, parseNFTs } from '../helpers';
+import { useDashboardWalletNfts } from './useDashboardWalletNfts';
 
 export const useConnectedBorrowContent = () => {
-  const { nfts, fetchNextPage, initialLoading, setSearch } = useWalletNfts();
+  const { nfts, fetchNextPage, initialLoading, setSearch, hideNFT } =
+    useDashboardWalletNfts();
 
   const { collections, setSearch: setSearchCollections } =
     useNotConnectedBorrowContent();
@@ -56,8 +57,8 @@ export const useConnectedBorrowContent = () => {
     setSearch: userHasNFTs ? setSearchDebounced : setSearchCollections,
     loading: initialLoading,
     fetchNextPage,
-    userHasNFTs,
     loadingUserNFTs,
+    hideNFT,
   };
 };
 
@@ -97,7 +98,7 @@ export const useBorrowSingleBond = () => {
     close: closeLoadingModal,
   } = useLoadingModal();
 
-  const onSubmit = async (nft: NFT) => {
+  const onSubmit = async (nft: NFT, hideNFT: (nftMint: string) => void) => {
     try {
       openLoadingModal();
 
@@ -124,6 +125,7 @@ export const useBorrowSingleBond = () => {
       if (!result) {
         throw new Error('Borrow failed');
       }
+      hideNFT(nft?.mint);
       goToToBorrowSuccessPage();
     } catch (error) {
       console.log(error);

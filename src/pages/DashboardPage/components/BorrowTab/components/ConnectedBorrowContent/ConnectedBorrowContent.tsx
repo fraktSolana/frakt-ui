@@ -5,7 +5,7 @@ import { useFetchAllLoans } from '@frakt/pages/LoansPage/components/LoansActiveT
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import { Loader } from '@frakt/components/Loader';
 
-import { useBorrowSingleBond, useConnectedBorrowContent } from './hooks';
+import { useBorrowSingleBond, useConnectedBorrowContent } from './hooks/hooks';
 import CollectionsInfo from '../CollectionsInfo/CollectionsInfo';
 import AvailableBorrow from '../AvailableBorrow';
 import { NFTsList } from '../../../NFTsList';
@@ -32,7 +32,7 @@ const ConnectedBorrowContent: FC = () => {
   const { onSubmit, loadingModalVisible, closeLoadingModal } =
     useBorrowSingleBond();
 
-  const { setSearch, nfts, loading, fetchNextPage, loadingUserNFTs } =
+  const { setSearch, nfts, loading, fetchNextPage, loadingUserNFTs, hideNFT } =
     useConnectedBorrowContent();
 
   const showAvailableBorrow = connected && !!availableBorrowData?.maxBorrow;
@@ -53,6 +53,7 @@ const ConnectedBorrowContent: FC = () => {
               isLoading={loading}
               onClick={onSubmit}
               className={styles.nftsList}
+              hideNFT={hideNFT}
             />
           </div>
         </div>
