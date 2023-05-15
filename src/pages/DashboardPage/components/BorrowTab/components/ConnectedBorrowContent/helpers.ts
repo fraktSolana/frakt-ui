@@ -64,7 +64,7 @@ const parseNFTs = (nfts: BorrowNft[]): NFT[] => {
         duration: nft?.classicParams?.timeBased.returnPeriodDays,
         marketPubkey: nft?.bondParams?.marketPubkey,
         mint: nft?.mint,
-        fee: 1,
+        fee: nft?.bondParams?.fee,
       };
     });
 };

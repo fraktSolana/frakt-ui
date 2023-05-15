@@ -35,6 +35,7 @@ export interface BorrowNft {
   };
 
   bondParams?: {
+    fee: number;
     marketPubkey: string;
   };
 }
