@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
-import { LiquidityPool } from '@frakt/state/loans/types';
 import EmptyList from '@frakt/components/EmptyList';
+import { MarketPreview } from '@frakt/api/bonds';
 import { PATHS } from '@frakt/constants';
 
 import { DepositContentView, LendListContentView } from './ContentViews';
@@ -117,12 +117,13 @@ const LendView = ({ isDepositedAndConnected, pools, setSearch }) => {
           )}
           {!!pools.length && (
             <div className={styles.nftsList}>
-              {pools.map((pool: LiquidityPool) => (
+              {pools.map((market: MarketPreview) => (
                 <LendCard
-                  image={pool.imageUrl?.[0]}
-                  activeLoans={pool.activeloansAmount}
-                  amount={pool.totalLiquidity}
-                  apr={pool.depositApr}
+                  image={market?.collectionImage}
+                  activeLoans={market?.activeBondsAmount}
+                  amount={market?.offerTVL}
+                  apr={market?.apy}
+                  marketPubkey={market?.marketPubkey}
                 />
               ))}
             </div>

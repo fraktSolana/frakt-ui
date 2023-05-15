@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { orderBy } from 'lodash';
 
 import { selectLiquidityPools } from '@frakt/state/loans/selectors';
 import { useSolanaBalance } from '@frakt/utils/accounts';
@@ -18,8 +20,8 @@ import {
   parseStrategiesData,
 } from './helpers';
 import { useDebounce } from '@frakt/hooks';
-import { useState } from 'react';
-import { LiquidityPool } from '@frakt/state/loans/types';
+import { useMarketsPreview } from '@frakt/pages/MarketsPage/hooks';
+import { MarketPreview } from '@frakt/api/bonds';
 
 export const useLendTab = () => {
   const { connected, publicKey } = useWallet();
@@ -53,7 +55,9 @@ export const useLendTab = () => {
     calcWeightedAvarageStrategiesApy(tradePools);
 
   //? lend data
-  const { pools: filteredPools, setSearch } = useFilteringPools(liquidityPools);
+  const { marketsPreview } = useMarketsPreview();
+  const { markets: filteredMarkets, setSearch } =
+    useFilteringMarkets(marketsPreview);
 
   return {
     poolsData: {
@@ -71,26 +75,28 @@ export const useLendTab = () => {
       isDepositedAndConnected: !!depositedStrategies?.length,
     },
     lendData: {
-      pools: filteredPools,
+      pools: filteredMarkets,
       setSearch,
       isDepositedAndConnected: connected,
     },
   };
 };
 
-export const useFilteringPools = (liquidityPools: LiquidityPool[]) => {
+export const useFilteringMarkets = (marketsPreview: MarketPreview[]) => {
   const [search, setSearch] = useState<string>('');
 
   const setSearchDebounced = useDebounce((value: string) => {
     setSearch(value);
   }, 300);
 
-  const filteredPools = liquidityPools.filter(({ name }) => {
-    return name.toUpperCase().includes(search.toUpperCase());
+  const sortedMarkets = orderBy(marketsPreview, 'activeBondsAmount', 'desc');
+
+  const filteredMarkets = sortedMarkets.filter(({ collectionName }) => {
+    return collectionName.toUpperCase().includes(search.toUpperCase());
   });
 
   return {
-    pools: filteredPools,
+    markets: filteredMarkets,
     setSearch: setSearchDebounced,
   };
 };

@@ -66,10 +66,10 @@
 .emptyMessage,
 .nftsList {
   @media (max-width: 960px) {
-    height: 200px;
+    height: 224px;
   }
   @media (max-width: 550px) {
-    height: 164px;
+    height: 188px;
   }
 }
 
@@ -93,14 +93,14 @@
     display: flex;
     gap: 8px;
 
-    & > div {
+    & > a {
       min-width: 168px;
       max-width: 168px;
     }
   }
 
   @media (max-width: 550px) {
-    & > div {
+    & > a {
       min-width: 115px;
       max-width: 115px;
     }
