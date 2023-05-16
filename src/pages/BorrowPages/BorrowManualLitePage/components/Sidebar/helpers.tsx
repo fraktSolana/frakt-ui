@@ -15,7 +15,10 @@ import { makeProposeTransaction } from '@frakt/utils/loans';
 import { notify } from '@frakt/utils';
 import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from '@frakt/utils/transactions/helpers/signAndSendV0TransactionWithLookupTablesSeparateSignatures';
 import { captureSentryError } from '@frakt/utils/sentry';
-import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
+import {
+  MAX_ACCOUNTS_IN_FAST_TRACK,
+  makeCreateBondMultiOrdersTransaction,
+} from '@frakt/utils/bonds';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import {
   InstructionsAndSigners,
@@ -308,30 +311,20 @@ export const borrow: Borrow = async ({
     }),
   );
 
-  const maxAccountsInFastTrack = 33;
-  console.log(
-    'lengths: ',
-    bondTransactionsAndSignersChunks.map((txnAndSigners) =>
-      txnAndSigners.createAndSellBondsIxsAndSigners.lookupTablePublicKeys
-        .map((lookup) => lookup.addresses)
-        .flat()
-        .map((key) => key.toBase58()),
-    ),
-  );
   const fastTrackBorrows: InstructionsAndSigners[] =
     bondTransactionsAndSignersChunks
       .filter(
         (txnAndSigners) =>
           txnAndSigners.createAndSellBondsIxsAndSigners.lookupTablePublicKeys
             .map((lookup) => lookup.addresses)
-            .flat().length <= maxAccountsInFastTrack,
+            .flat().length <= MAX_ACCOUNTS_IN_FAST_TRACK,
       )
       .map((txnAndSigners) => txnAndSigners.createAndSellBondsIxsAndSigners);
   const lookupTableBorrows = bondTransactionsAndSignersChunks.filter(
     (txnAndSigners) =>
       txnAndSigners.createAndSellBondsIxsAndSigners.lookupTablePublicKeys
         .map((lookup) => lookup.addresses)
-        .flat().length > maxAccountsInFastTrack,
+        .flat().length > MAX_ACCOUNTS_IN_FAST_TRACK,
   );
 
   const firstChunk: TxnsAndSigners[] = [
