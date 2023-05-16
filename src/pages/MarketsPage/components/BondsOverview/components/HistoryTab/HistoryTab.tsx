@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useParams } from 'react-router-dom';
 
+import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
 import { RadioButton, RBOption } from '@frakt/components/RadioButton';
 import { useIntersection } from '@frakt/hooks/useIntersection';
 import EmptyList from '@frakt/components/EmptyList';
@@ -78,13 +79,22 @@ const HistoryTab: FC = () => {
 
         {isLoading && !bondsHistory.length && <Loader />}
 
-        <HistoryTable
-          className={styles.table}
-          data={bondsHistory}
-          breakpoints={{ scrollX: 744 }}
-        />
-        {isFetchingNextPage && <Loader />}
-        <div ref={ref} />
+        {!connected && showOwnerBonds ? (
+          <ConnectWalletSection
+            className={styles.emptyList}
+            text="Connect your wallet to see my history"
+          />
+        ) : (
+          <>
+            <HistoryTable
+              className={styles.table}
+              data={bondsHistory}
+              breakpoints={{ scrollX: 744 }}
+            />
+            {isFetchingNextPage && <Loader />}
+            <div ref={ref} />
+          </>
+        )}
       </div>
       {!historyExist &&
         (showMessageWhenConnectedAndShowOwner || !showOwnerBonds) && (
