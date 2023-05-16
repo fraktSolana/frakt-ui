@@ -308,8 +308,34 @@ export const borrow: Borrow = async ({
     }),
   );
 
+  const maxAccountsInFastTrack = 33;
+  console.log(
+    'lengths: ',
+    bondTransactionsAndSignersChunks.map((txnAndSigners) =>
+      txnAndSigners.createAndSellBondsIxsAndSigners.lookupTablePublicKeys
+        .map((lookup) => lookup.addresses)
+        .flat()
+        .map((key) => key.toBase58()),
+    ),
+  );
+  const fastTrackBorrows: InstructionsAndSigners[] =
+    bondTransactionsAndSignersChunks
+      .filter(
+        (txnAndSigners) =>
+          txnAndSigners.createAndSellBondsIxsAndSigners.lookupTablePublicKeys
+            .map((lookup) => lookup.addresses)
+            .flat().length <= maxAccountsInFastTrack,
+      )
+      .map((txnAndSigners) => txnAndSigners.createAndSellBondsIxsAndSigners);
+  const lookupTableBorrows = bondTransactionsAndSignersChunks.filter(
+    (txnAndSigners) =>
+      txnAndSigners.createAndSellBondsIxsAndSigners.lookupTablePublicKeys
+        .map((lookup) => lookup.addresses)
+        .flat().length > maxAccountsInFastTrack,
+  );
+
   const firstChunk: TxnsAndSigners[] = [
-    ...bondTransactionsAndSignersChunks
+    ...lookupTableBorrows
       .map((chunk) => ({
         transaction: chunk.createLookupTableTxn,
         signers: [],
@@ -318,7 +344,7 @@ export const borrow: Borrow = async ({
   ];
 
   const secondChunk: TxnsAndSigners[] = [
-    ...bondTransactionsAndSignersChunks
+    ...lookupTableBorrows
       .map((chunk) =>
         chunk.extendLookupTableTxns.map((transaction) => ({
           transaction,
@@ -329,16 +355,17 @@ export const borrow: Borrow = async ({
   ];
 
   const createAndSellBondsIxsAndSignersChunk: InstructionsAndSigners[] = [
-    ...bondTransactionsAndSignersChunks
+    ...lookupTableBorrows
       .map((chunk) => chunk.createAndSellBondsIxsAndSigners)
       .flat(),
   ];
 
   return await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
-    notBondTxns: notBondTransactionsAndSigners.flat(),
+    notBondTxns: [...notBondTransactionsAndSigners.flat()],
     createLookupTableTxns: firstChunk.map((txn) => txn.transaction),
     extendLookupTableTxns: secondChunk.map((txn) => txn.transaction),
     v0InstructionsAndSigners: createAndSellBondsIxsAndSignersChunk,
+    fastTrackInstructionsAndSigners: fastTrackBorrows,
     // lookupTablePublicKey: bondTransactionsAndSignersChunks,
     connection,
     wallet,

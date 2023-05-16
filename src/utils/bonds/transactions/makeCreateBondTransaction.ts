@@ -215,6 +215,7 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
             BONDS_ADMIN_PUBKEY || PUBKEY_PLACEHOLDER,
           ),
         },
+        addComputeUnits: true,
         args: {
           sellBondParamsAndAccounts,
           amountToDeposit: 1,

@@ -4,6 +4,10 @@ import { PUBKEY_PLACEHOLDER } from '..';
 export const FRAKT_MARKET_PROGRAM_PUBKEY = new web3.PublicKey(
   process.env.FRAKT_MARKET_PROGRAM_PUBKEY || PUBKEY_PLACEHOLDER,
 );
+
+export const STANDART_LOOKUP_TABLE = new web3.PublicKey(
+  process.env.LOOKUP_TABLE_PUBKEY || PUBKEY_PLACEHOLDER,
+);
 export const BONDS_PROGRAM_PUBKEY = new web3.PublicKey(
   process.env.BONDS_PROGRAM_PUBKEY || PUBKEY_PLACEHOLDER,
 );

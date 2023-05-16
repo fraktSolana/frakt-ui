@@ -188,6 +188,8 @@ export const borrowBulk: BorrowBulk = async ({
     createLookupTableTxns: firstChunk.map((txn) => txn.transaction),
     extendLookupTableTxns: secondChunk.map((txn) => txn.transaction),
     v0InstructionsAndSigners: createAndSellBondsIxsAndSignersChunk,
+    fastTrackInstructionsAndSigners: [],
+
     // lookupTablePublicKey: bondTransactionsAndSignersChunks,
     connection,
     wallet,
