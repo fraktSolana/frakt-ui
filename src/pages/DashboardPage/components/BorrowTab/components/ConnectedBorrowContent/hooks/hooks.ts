@@ -4,7 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
 import { orderBy } from 'lodash';
 
-import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
+import {
+  MAX_ACCOUNTS_IN_FAST_TRACK,
+  makeCreateBondMultiOrdersTransaction,
+} from '@frakt/utils/bonds';
 import { fetchMarketPairs, fetchCertainMarket } from '@frakt/api/bonds';
 import {
   BorrowNft,
@@ -178,10 +181,20 @@ const borrowSingle = async ({
     wallet,
   });
 
+  const ableToOptimize =
+    createAndSellBondsIxsAndSigners.lookupTablePublicKeys
+      .map((lookup) => lookup.addresses)
+      .flat().length <= MAX_ACCOUNTS_IN_FAST_TRACK;
+
   return await signAndSendV0TransactionWithLookupTables({
-    createLookupTableTxns: [createLookupTableTxn],
-    extendLookupTableTxns: extendLookupTableTxns,
-    v0InstructionsAndSigners: [createAndSellBondsIxsAndSigners],
+    createLookupTableTxns: ableToOptimize ? [] : [createLookupTableTxn],
+    extendLookupTableTxns: ableToOptimize ? [] : extendLookupTableTxns,
+    v0InstructionsAndSigners: ableToOptimize
+      ? []
+      : [createAndSellBondsIxsAndSigners],
+    fastTrackInstructionsAndSigners: ableToOptimize
+      ? [createAndSellBondsIxsAndSigners]
+      : [],
     connection,
     wallet,
     commitment: 'confirmed',
