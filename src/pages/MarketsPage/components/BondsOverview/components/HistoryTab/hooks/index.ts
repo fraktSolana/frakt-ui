@@ -29,7 +29,7 @@ export const useFetchBondsHistory = ({
       limit: LIMIT,
       sortBy: queryData?.sortBy,
       order: queryData?.order,
-      walletPubkey: showOwnerBonds && publicKey,
+      walletPubkey: publicKey,
       eventType,
       marketPubkey,
     });

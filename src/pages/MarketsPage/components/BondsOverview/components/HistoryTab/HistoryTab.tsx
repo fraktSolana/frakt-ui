@@ -3,7 +3,6 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useParams } from 'react-router-dom';
 
 import { RadioButton, RBOption } from '@frakt/components/RadioButton';
-import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
 import { useIntersection } from '@frakt/hooks/useIntersection';
 import EmptyList from '@frakt/components/EmptyList';
 import { Loader } from '@frakt/components/Loader';
@@ -22,7 +21,7 @@ const HistoryTab: FC = () => {
   const { ref, inView } = useIntersection();
   const { queryData } = useHistoryBondsSort();
 
-  const [showOwnerBonds, setShowOwnerBonds] = useState<boolean>(true);
+  const [showOwnerBonds, setShowOwnerBonds] = useState<boolean>(false);
   const [filterOption, setFilterOption] = useState<string>(options[0].value);
 
   const {
@@ -44,13 +43,16 @@ const HistoryTab: FC = () => {
     }
   }, [inView, fetchNextPage, hasNextPage]);
 
+  useEffect(() => {
+    setShowOwnerBonds(connected);
+  }, [connected]);
+
   const onChangeFilterOption = (nextOption: RBOption<string>) => {
     setFilterOption(nextOption.value);
   };
 
-  const showLoader = connected
-    ? !bondsHistory.length && isLoading
-    : !bondsHistory.length && isLoading && !showOwnerBonds;
+  const historyExist = !isLoading && !!bondsHistory.length;
+  const showMessageWhenConnectedAndShowOwner = connected && showOwnerBonds;
 
   return (
     <>
@@ -74,32 +76,23 @@ const HistoryTab: FC = () => {
           />
         </div>
 
-        {showLoader && <Loader />}
+        {isLoading && !bondsHistory.length && <Loader />}
 
-        {!connected && showOwnerBonds ? (
-          <ConnectWalletSection
-            className={styles.emptyList}
-            text="Connect your wallet to see my history"
-          />
-        ) : (
-          <>
-            <HistoryTable
-              className={styles.table}
-              data={bondsHistory}
-              breakpoints={{ scrollX: 744 }}
-            />
-            {isFetchingNextPage && <Loader />}
-            <div ref={ref} />
-          </>
-        )}
+        <HistoryTable
+          className={styles.table}
+          data={bondsHistory}
+          breakpoints={{ scrollX: 744 }}
+        />
+        {isFetchingNextPage && <Loader />}
+        <div ref={ref} />
       </div>
-
-      {!showOwnerBonds && !bondsHistory.length && !isLoading && (
-        <EmptyList className={styles.emptyList} text="No bonds at the moment" />
-      )}
-      {connected && showOwnerBonds && !bondsHistory.length && !isLoading && (
-        <EmptyList className={styles.emptyList} text="No bonds at the moment" />
-      )}
+      {!historyExist &&
+        (showMessageWhenConnectedAndShowOwner || !showOwnerBonds) && (
+          <EmptyList
+            className={styles.emptyList}
+            text="No bonds at the moment"
+          />
+        )}
     </>
   );
 };
