@@ -4,6 +4,7 @@ import { WalletContextState } from '@solana/wallet-adapter-react';
 import { BorrowNft } from '@frakt/api/nft';
 import {
   BASE_POINTS,
+  MAX_ACCOUNTS_IN_FAST_TRACK,
   makeCreateBondMultiOrdersTransaction,
 } from '@frakt/utils/bonds';
 import { CartOrder } from '@frakt/pages/BorrowPages/cartState';
@@ -157,8 +158,24 @@ export const borrowBulk: BorrowBulk = async ({
     }),
   );
 
+  const fastTrackBorrows: InstructionsAndSigners[] =
+    bondTransactionsAndSignersChunks
+      .filter(
+        (txnAndSigners) =>
+          txnAndSigners.createAndSellBondsIxsAndSigners.lookupTablePublicKeys
+            .map((lookup) => lookup.addresses)
+            .flat().length <= MAX_ACCOUNTS_IN_FAST_TRACK,
+      )
+      .map((txnAndSigners) => txnAndSigners.createAndSellBondsIxsAndSigners);
+  const lookupTableBorrows = bondTransactionsAndSignersChunks.filter(
+    (txnAndSigners) =>
+      txnAndSigners.createAndSellBondsIxsAndSigners.lookupTablePublicKeys
+        .map((lookup) => lookup.addresses)
+        .flat().length > MAX_ACCOUNTS_IN_FAST_TRACK,
+  );
+
   const firstChunk: TxnsAndSigners[] = [
-    ...bondTransactionsAndSignersChunks
+    ...lookupTableBorrows
       .map((chunk) => ({
         transaction: chunk.createLookupTableTxn,
         signers: [],
@@ -167,7 +184,7 @@ export const borrowBulk: BorrowBulk = async ({
   ];
 
   const secondChunk: TxnsAndSigners[] = [
-    ...bondTransactionsAndSignersChunks
+    ...lookupTableBorrows
       .map((chunk) =>
         chunk.extendLookupTableTxns.map((transaction) => ({
           transaction,
@@ -178,7 +195,7 @@ export const borrowBulk: BorrowBulk = async ({
   ];
 
   const createAndSellBondsIxsAndSignersChunk: InstructionsAndSigners[] = [
-    ...bondTransactionsAndSignersChunks
+    ...lookupTableBorrows
       .map((chunk) => chunk.createAndSellBondsIxsAndSigners)
       .flat(),
   ];
@@ -188,6 +205,8 @@ export const borrowBulk: BorrowBulk = async ({
     createLookupTableTxns: firstChunk.map((txn) => txn.transaction),
     extendLookupTableTxns: secondChunk.map((txn) => txn.transaction),
     v0InstructionsAndSigners: createAndSellBondsIxsAndSignersChunk,
+    fastTrackInstructionsAndSigners: fastTrackBorrows,
+
     // lookupTablePublicKey: bondTransactionsAndSignersChunks,
     connection,
     wallet,
