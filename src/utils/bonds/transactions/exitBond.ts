@@ -48,6 +48,7 @@ export const exitBond: ExitBond = async ({
     createLookupTableTxns: [createLookupTableTxn],
     extendLookupTableTxns: extendLookupTableTxns,
     v0InstructionsAndSigners: [exitAndSellBondsIxsAndSigners],
+    fastTrackInstructionsAndSigners: [],
     connection,
     wallet,
     commitment: 'confirmed',
