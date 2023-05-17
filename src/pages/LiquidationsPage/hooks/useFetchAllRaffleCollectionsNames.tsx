@@ -1,11 +1,9 @@
-import { LotteryTickets } from './../../api/raffle/types';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useQuery } from '@tanstack/react-query';
 
 import {
   CollectionsListItem,
   fetchAllRaffleCollections,
-  fetchUserTickets,
 } from '@frakt/api/raffle';
 
 interface RaffleCollections {
@@ -19,7 +17,7 @@ type useFetchAllRaffleCollections = () => {
   collectionsIsLoading: boolean;
 };
 
-export const useFetchAllRaffleCollections: useFetchAllRaffleCollections =
+export const useFetchAllRafflesCollectionsNames: useFetchAllRaffleCollections =
   () => {
     const { publicKey } = useWallet();
 
@@ -45,34 +43,3 @@ export const useFetchAllRaffleCollections: useFetchAllRaffleCollections =
 
     return { data, collectionsIsLoading };
   };
-
-type UseFetchUserTickets = () => {
-  lotteryTickets: LotteryTickets;
-  userTicketsIsLoading: boolean;
-};
-
-export const useFetchUserTickets: UseFetchUserTickets = () => {
-  const { publicKey } = useWallet();
-
-  const {
-    data: lotteryTickets,
-    isLoading,
-    isFetching,
-  }: {
-    data: LotteryTickets;
-    isLoading: boolean;
-    isFetching: boolean;
-  } = useQuery(
-    ['fetchUserTickets'],
-    () => fetchUserTickets(publicKey?.toBase58()),
-    {
-      enabled: !!publicKey,
-      staleTime: 10_000,
-      refetchOnWindowFocus: false,
-    },
-  );
-
-  const userTicketsIsLoading = isLoading || isFetching;
-
-  return { lotteryTickets, userTicketsIsLoading };
-};

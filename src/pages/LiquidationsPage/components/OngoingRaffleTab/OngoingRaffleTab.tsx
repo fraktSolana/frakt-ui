@@ -3,19 +3,20 @@ import { useWallet } from '@solana/wallet-adapter-react';
 
 import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
 import { useIntersection } from '@frakt/hooks/useIntersection';
-import {
-  useFetchAuctionsList,
-  useRaffleInfo,
-} from '@frakt/hooks/useRaffleData';
 import { Loader } from '@frakt/components/Loader';
 import EmptyList from '@frakt/components/EmptyList';
 
 import LiquidationRaffleCard from '../LiquidationRaffleCard';
 import { useRaffleSort } from '../Liquidations/hooks';
-import styles from './OngoingRaffleTab.module.scss';
-import { useFetchUserTickets } from '../../hooks';
 import RafflesList from '../RafflesList';
 import AuctionCard from '../AuctionCard';
+import {
+  useFetchUserTickets,
+  useFetchAuctionsList,
+  useFetchRafflesList,
+} from '../../hooks';
+
+import styles from './OngoingRaffleTab.module.scss';
 
 const OngoingRaffleTab: FC = () => {
   const { publicKey, connected } = useWallet();
@@ -31,7 +32,7 @@ const OngoingRaffleTab: FC = () => {
     fetchNextPage,
     isFetchingNextPage,
     isListEnded,
-  } = useRaffleInfo({
+  } = useFetchRafflesList({
     url: 'liquidation',
     id: 'ongoingRaffleList',
     queryData: userQueryData,
