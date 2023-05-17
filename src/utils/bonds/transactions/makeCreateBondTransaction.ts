@@ -19,6 +19,7 @@ import {
 import { isBondFeaturesAutomated, mergeBondOrderParamsByPair } from '../utils';
 import { chunk, uniqBy } from 'lodash';
 import { InstructionsAndSigners } from '@frakt/utils/transactions';
+import { createBondAndSellToOffers } from 'fbonds-core/lib/fbond-protocol/functions/fbond-factory';
 
 type MakeCreateBondTransaction = (params: {
   market: Market;
@@ -154,27 +155,27 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
           : orderParams,
     ).durationFilter;
 
-    const {
-      fbond: bondPubkey,
-      collateralBox: collateralBoxPubkey,
-      fbondTokenMint: bondTokenMint,
-      instructions: createBondIxns,
-      signers: createBondSigners,
-      addressesForLookupTable,
-    } = await fbondFactory.createBondWithSingleCollateralPnft({
-      accounts: {
-        tokenMint: new web3.PublicKey(nftMint),
-        userPubkey: wallet.publicKey,
-      },
-      args: {
-        amountToDeposit: 1,
-        amountToReturn: amountToReturn,
-        bondDuration: durationFilter,
-      },
-      connection,
-      programId: BONDS_PROGRAM_PUBKEY,
-      sendTxn: sendTxnPlaceHolder,
-    });
+    // const {
+    //   fbond: bondPubkey,
+    //   collateralBox: collateralBoxPubkey,
+    //   fbondTokenMint: bondTokenMint,
+    //   instructions: createBondIxns,
+    //   signers: createBondSigners,
+    //   addressesForLookupTable,
+    // } = await fbondFactory.createBondWithSingleCollateralPnft({
+    //   accounts: {
+    //     tokenMint: new web3.PublicKey(nftMint),
+    //     userPubkey: wallet.publicKey,
+    //   },
+    //   args: {
+    //     amountToDeposit: 1,
+    //     amountToReturn: amountToReturn,
+    //     bondDuration: durationFilter,
+    //   },
+    //   connection,
+    //   programId: BONDS_PROGRAM_PUBKEY,
+    //   sendTxn: sendTxnPlaceHolder,
+    // });
 
     const mergedPairsOrderParams = mergeBondOrderParamsByPair({
       bondOrderParams,
@@ -198,12 +199,9 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
     console.log('sellBondParamsAndAccounts: ', sellBondParamsAndAccounts);
 
     const sellingBondsIxsAndSignersWithLookupAccounts =
-      await validateAndSellToBondOffersV2({
+      await createBondAndSellToOffers({
         accounts: {
-          collateralBox: collateralBoxPubkey,
-          fbond: bondPubkey,
-          fbondTokenMint: bondTokenMint,
-          collateralTokenMint: new web3.PublicKey(nftMint),
+          tokenMint: new web3.PublicKey(nftMint),
           fraktMarket: new web3.PublicKey(fraktMarketPubkey),
           oracleFloor: new web3.PublicKey(
             oracleFloorPubkey || PUBKEY_PLACEHOLDER,
@@ -217,8 +215,12 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
             BONDS_ADMIN_PUBKEY || PUBKEY_PLACEHOLDER,
           ),
         },
+        addComputeUnits: true,
         args: {
           sellBondParamsAndAccounts,
+          amountToDeposit: 1,
+          amountToReturn: amountToReturn,
+          bondDuration: durationFilter,
         },
         connection,
         programId: BONDS_PROGRAM_PUBKEY,
@@ -229,7 +231,7 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
     console.log('INITIAL PASSED SLOT: ', slot);
     const combinedAddressesForLookupTable = uniqBy(
       [
-        ...addressesForLookupTable,
+        // ...addressesForLookupTable,
         ...sellingBondsIxsAndSignersWithLookupAccounts.addressesForLookupTable,
       ],
       (publicKey) => publicKey.toBase58(),
@@ -271,11 +273,11 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
       extendLookupTableTxns: restExtendTransactions,
       createAndSellBondsIxsAndSigners: {
         instructions: [
-          ...createBondIxns,
+          // ...createBondIxns,
           ...sellingBondsIxsAndSignersWithLookupAccounts.instructions,
         ],
         signers: [
-          ...createBondSigners,
+          // ...createBondSigners,
           ...sellingBondsIxsAndSignersWithLookupAccounts.signers,
         ],
         lookupTablePublicKeys: [
