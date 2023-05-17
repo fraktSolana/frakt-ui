@@ -89,7 +89,11 @@ export const useFilteringMarkets = (marketsPreview: MarketPreview[]) => {
     setSearch(value);
   }, 300);
 
-  const sortedMarkets = orderBy(marketsPreview, 'activeBondsAmount', 'desc');
+  const sortedMarkets = orderBy(
+    marketsPreview,
+    (market: MarketPreview) => parseFloat(market?.offerTVL),
+    'desc',
+  );
 
   const filteredMarkets = sortedMarkets.filter(({ collectionName }) => {
     return collectionName.toUpperCase().includes(search.toUpperCase());
