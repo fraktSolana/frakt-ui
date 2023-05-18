@@ -196,6 +196,13 @@
   text-decoration-line: underline;
 
   color: var(--gray-color-2);
+  transition: opacity var(--transition-1);
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.6;
+    transition: opacity var(--transition-1);
+  }
 
   @media screen and (max-width: 650px) {
     font-size: 24px;
@@ -203,5 +210,5 @@
 }
 
 .green {
-  color: var(--light-green-hover);
+  color: #7dcc19;
 }

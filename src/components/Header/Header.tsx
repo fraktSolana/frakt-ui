@@ -55,6 +55,10 @@ export const FraktlistingBtn: FC = () => {
 
 export const FraktlistingStatus: FC<{ data: LeaderBoard }> = ({ data }) => {
   const points = Math.trunc(data?.points).toLocaleString();
+
+  const goToFraktlisting = () => {
+    window.open(`${process.env.FRAKTLISTING_URL}`, '_blank');
+  };
   return (
     <div className={styles.fraktlistingStatus}>
       <div className={styles.rewards}>
@@ -62,7 +66,7 @@ export const FraktlistingStatus: FC<{ data: LeaderBoard }> = ({ data }) => {
         <span>Fraktlisting</span>
       </div>
       <div className={styles.statusWrapper}>
-        <div className={styles.place}>
+        <div className={styles.place} onClick={goToFraktlisting}>
           {data?.rank ? getNumberWithOrdinal(data?.rank) : '--'}
         </div>
         <div className={styles.pointsWrapper}>
@@ -74,7 +78,7 @@ export const FraktlistingStatus: FC<{ data: LeaderBoard }> = ({ data }) => {
               [styles.green]: data?.loyaltyBoost > 1,
             })}
           >
-            {data?.loyaltyBoost ? data?.loyaltyBoost : '--'} loyalty
+            {data?.loyaltyBoost ? `${data?.loyaltyBoost}x` : '--'} loyalty
           </div>
         </div>
       </div>
