@@ -71,7 +71,7 @@ export const useFetchRafflesList = (params: {
     networkMode: 'offlineFirst',
   });
 
-  const rafflesData = data?.pages?.map((page) => page.data).flat();
+  const rafflesData = data?.pages?.map((page) => page.data).flat() || [];
 
   return {
     data: rafflesData,

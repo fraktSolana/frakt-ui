@@ -1,7 +1,6 @@
 import { FC, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
-import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
 import { useIntersection } from '@frakt/hooks/useIntersection';
 import { Loader } from '@frakt/components/Loader';
 import EmptyList from '@frakt/components/EmptyList';
@@ -46,22 +45,16 @@ const OngoingRaffleTab: FC = () => {
 
   const { data: auctionList, loading, hideAuction } = useFetchAuctionsList();
 
-  if (!connected) {
-    return (
-      <ConnectWalletSection text="Connect your wallet to check liquidations raffle" />
-    );
-  }
-
   if (loading) return <Loader />;
 
-  const raffleListWithAuctions = [...auctionList, ...(raffleList || [])];
+  const unitedRafflesList = [...auctionList, ...raffleList];
 
   return (
     <RafflesList withRafflesInfo>
-      {raffleListWithAuctions?.length ? (
+      {unitedRafflesList?.length ? (
         <>
           <div className={styles.rafflesList}>
-            {raffleListWithAuctions.map((raffle: any) => {
+            {unitedRafflesList.map((raffle: any) => {
               if (!raffle?.buyPrice) {
                 return (
                   <LiquidationRaffleCard

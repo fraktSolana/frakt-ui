@@ -1,4 +1,7 @@
 import { FC } from 'react';
+import { commonActions } from '@frakt/state/common/actions';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useDispatch } from 'react-redux';
 import moment from 'moment';
 
 import { AuctionListItem } from '@frakt/api/raffle';
@@ -17,6 +20,9 @@ interface AuctionCardProps {
 }
 
 const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
+  const { connected } = useWallet();
+  const dispatch = useDispatch();
+
   const {
     onSubmit,
     closeLoadingModal,
@@ -25,6 +31,14 @@ const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
     timeToNextRound,
     nextPrice,
   } = useAuctionCard(auction, hideAuction);
+
+  const onHandleSubmit = () => {
+    if (connected) {
+      onSubmit();
+    } else {
+      dispatch(commonActions.setWalletModal({ isVisible: true }));
+    }
+  };
 
   return (
     <>
@@ -54,8 +68,12 @@ const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
           <StatsRaffleValues label="Next round price" value={nextPrice} />
           <StatsRaffleValues label="Buy price" value={buyPrice} />
         </div>
-        <Button onClick={onSubmit} type="secondary" className={styles.button}>
-          Liquidate
+        <Button
+          onClick={onHandleSubmit}
+          type="secondary"
+          className={styles.button}
+        >
+          {connected ? 'Liquidate' : 'Connect wallet'}
         </Button>
       </div>
       <LoadingModal
