@@ -153,6 +153,7 @@ export interface Bond {
   ownerPubkey?: string;
   marketPubkey: string;
   stats: BondStats;
+  eventSignature: string;
 }
 
 export interface FetchBondsRequestParams {

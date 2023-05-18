@@ -106,7 +106,8 @@ export const COLUMNS: ColumnsType<Bond> = [
       <HeaderCell sortColumns={column?.sortColumns} value="when" label="When" />
     ),
     sorter: ({ stats: statsA, stats: statsB }) => statsA.when - statsB.when,
-    render: (_, { stats }) => createliquidatingAtJSX(stats?.when),
+    render: (_, { stats, eventSignature }) =>
+      createliquidatingAtJSX(stats?.when, eventSignature),
     showSorterTooltip: false,
     defaultSortOrder: 'descend',
   },
