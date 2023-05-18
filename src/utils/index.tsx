@@ -271,3 +271,7 @@ export const throwLogsError = (msg: any) => {
 
 export const formatNumbersWithCommans = (value: number | string): string =>
   value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+export const getNumberWithOrdinal = (n: number): string => {
+  return n + (['st', 'nd', 'rd'][((((n + 90) % 100) - 10) % 10) - 1] || 'th');
+};
