@@ -42,23 +42,22 @@ export const Header: FC = () => {
 };
 
 export const FraktlistingBtn: FC = () => {
-  const goToFraktlisting = () => {
-    window.open(`${process.env.FRAKTLISTING_URL}`, '_blank');
-  };
   return (
-    <button className={styles.fraktlistingBtn} onClick={goToFraktlisting}>
+    <a
+      className={styles.fraktlistingBtn}
+      href={process.env.FRAKTLISTING_URL}
+      rel="noopener noreferrer"
+      target="_blank"
+    >
       <StarFill />
       <span>Get Fraktlisted!</span>
-    </button>
+    </a>
   );
 };
 
 export const FraktlistingStatus: FC<{ data: LeaderBoard }> = ({ data }) => {
   const points = Math.trunc(data?.points).toLocaleString();
 
-  const goToLeaderboard = () => {
-    window.open(`${process.env.LEADERBOARD_URL}`, '_blank');
-  };
   return (
     <div className={styles.fraktlistingStatus}>
       <div className={styles.rewards}>
@@ -66,9 +65,14 @@ export const FraktlistingStatus: FC<{ data: LeaderBoard }> = ({ data }) => {
         <span>Leaderboard</span>
       </div>
       <div className={styles.statusWrapper}>
-        <div className={styles.place} onClick={goToLeaderboard}>
+        <a
+          className={styles.place}
+          href={process.env.LEADERBOARD_URL}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
           {data?.rank ? getNumberWithOrdinal(data?.rank) : '--'}
-        </div>
+        </a>
         <div className={styles.pointsWrapper}>
           <div className={styles.points}>
             {data?.points ? points : '--'} pts
