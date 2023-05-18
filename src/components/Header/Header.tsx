@@ -56,8 +56,8 @@ export const FraktlistingBtn: FC = () => {
 export const FraktlistingStatus: FC<{ data: LeaderBoard }> = ({ data }) => {
   const points = Math.trunc(data?.points).toLocaleString();
 
-  const goToFraktlisting = () => {
-    window.open(`${process.env.FRAKTLISTING_URL}`, '_blank');
+  const goToLeaderboard = () => {
+    window.open(`${process.env.LEADERBOARD_URL}`, '_blank');
   };
   return (
     <div className={styles.fraktlistingStatus}>
@@ -66,7 +66,7 @@ export const FraktlistingStatus: FC<{ data: LeaderBoard }> = ({ data }) => {
         <span>Leaderboard</span>
       </div>
       <div className={styles.statusWrapper}>
-        <div className={styles.place} onClick={goToFraktlisting}>
+        <div className={styles.place} onClick={goToLeaderboard}>
           {data?.rank ? getNumberWithOrdinal(data?.rank) : '--'}
         </div>
         <div className={styles.pointsWrapper}>
