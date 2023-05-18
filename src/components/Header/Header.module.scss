@@ -10,6 +10,10 @@
   backdrop-filter: blur(12px);
   @include flex;
   padding: 8px 16px;
+
+  @media screen and (max-width: 390px) {
+    padding: 8px;
+  }
 }
 
 .widgetContainer {
@@ -19,7 +23,7 @@
   height: 100%;
 
   @media (max-width: 960px) {
-    gap: 12px;
+    gap: 8px;
   }
 }
 
@@ -47,6 +51,7 @@
 }
 
 .logoWrapper {
+  margin-right: 8px;
   @include flex(row, nowrap, flex-start, center);
 }
 
@@ -73,6 +78,11 @@
   display: none;
   @media screen and (max-width: 600px) {
     display: block;
+  }
+
+  @media screen and (max-width: 430px) {
+    width: 24px;
+    height: 24px;
   }
 }
 
@@ -161,7 +171,7 @@
 
 .points {
   font-family: var(--font-family-chakra);
-  font-weight: 400;
+  font-weight: 600;
   font-size: 14px;
   line-height: 18px;
   color: var(--black-color);
@@ -175,11 +185,17 @@
 }
 
 .loyalty {
+  display: flex;
+  align-items: center;
   font-family: var(--font-family-chakra);
   font-weight: 600;
   font-size: 14px;
   line-height: 18px;
   white-space: nowrap;
+
+  svg path {
+    fill: var(--black-color);
+  }
 
   @media screen and (max-width: 650px) {
     font-size: 10px;
@@ -193,9 +209,16 @@
   font-size: 32px;
   line-height: 42px;
 
-  text-decoration-line: underline;
+  text-decoration: underline;
 
-  color: var(--gray-color-2);
+  color: var(--black-color);
+  transition: opacity var(--transition-1);
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.6;
+    transition: opacity var(--transition-1);
+  }
 
   @media screen and (max-width: 650px) {
     font-size: 24px;
@@ -203,5 +226,9 @@
 }
 
 .green {
-  color: var(--light-green-hover);
+  color: #7dcc19;
+
+  svg path {
+    fill: #7dcc19;
+  }
 }
