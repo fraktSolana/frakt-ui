@@ -76,7 +76,7 @@ export const useFetchAllStats = ({
     {
       staleTime: 60_000,
       refetchOnWindowFocus: false,
-      enabled,
+      enabled: enabled || !walletPublicKey,
     },
   );
 
