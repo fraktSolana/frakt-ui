@@ -1,18 +1,19 @@
 import { FC } from 'react';
+import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { useWallet } from '@solana/wallet-adapter-react';
 
-import { selectWalletModalVisible } from '../../state/common/selectors';
 import ConnectButton from '@frakt/components/ConnectButton';
 import WalletContent from '@frakt/components/WalletContent';
 import ThemeSwitcher from '@frakt/components/ThemeSwitcher';
 import BurgerMenu from '@frakt/components/BurgerMenu';
 import { NotificationsButton } from '@frakt/components/NotificationsButton';
-import { Logo, LogoFull, StarFill } from '@frakt/icons';
-import styles from './Header.module.scss';
-import { LeaderBoard, useFetchUserIndividual } from './hooks';
 import { getNumberWithOrdinal } from '@frakt/utils';
-import classNames from 'classnames';
+import { LeaderBoard } from '@frakt/api/user';
+import { Logo, LogoFull, StarFill } from '@frakt/icons';
+import { selectWalletModalVisible } from '../../state/common/selectors';
+import { useFetchUserIndividual } from './hooks';
+import styles from './Header.module.scss';
 
 export const Header: FC = () => {
   const visible = useSelector(selectWalletModalVisible);
@@ -42,7 +43,7 @@ export const Header: FC = () => {
 
 export const FraktlistingBtn: FC = () => {
   const goToFraktlisting = () => {
-    window.open('https://fraktlisting.frakt.xyz/', '_blank');
+    window.open(`${process.env.FRAKTLISTING_URL}`, '_blank');
   };
   return (
     <button className={styles.fraktlistingBtn} onClick={goToFraktlisting}>
@@ -53,6 +54,7 @@ export const FraktlistingBtn: FC = () => {
 };
 
 export const FraktlistingStatus: FC<{ data: LeaderBoard }> = ({ data }) => {
+  const points = Math.trunc(data?.points).toLocaleString();
   return (
     <div className={styles.fraktlistingStatus}>
       <div className={styles.rewards}>
@@ -65,8 +67,7 @@ export const FraktlistingStatus: FC<{ data: LeaderBoard }> = ({ data }) => {
         </div>
         <div className={styles.pointsWrapper}>
           <div className={styles.points}>
-            {data?.points ? Math.trunc(data?.points).toLocaleString() : '--'}{' '}
-            pts
+            {data?.points ? points : '--'} pts
           </div>
           <div
             className={classNames(styles.loyalty, {
