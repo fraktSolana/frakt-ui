@@ -10,7 +10,7 @@ import BurgerMenu from '@frakt/components/BurgerMenu';
 import { NotificationsButton } from '@frakt/components/NotificationsButton';
 import { getNumberWithOrdinal } from '@frakt/utils';
 import { LeaderBoard } from '@frakt/api/user';
-import { Logo, LogoFull, StarFill } from '@frakt/icons';
+import { Logo, LogoFull, StarFill, Triangle } from '@frakt/icons';
 import { selectWalletModalVisible } from '../../state/common/selectors';
 import { useFetchUserIndividual } from './hooks';
 import styles from './Header.module.scss';
@@ -62,8 +62,8 @@ export const FraktlistingStatus: FC<{ data: LeaderBoard }> = ({ data }) => {
   return (
     <div className={styles.fraktlistingStatus}>
       <div className={styles.rewards}>
-        <span>Rewards S1</span>
-        <span>Fraktlisting</span>
+        <span>Season 1</span>
+        <span>Leaderboard</span>
       </div>
       <div className={styles.statusWrapper}>
         <div className={styles.place} onClick={goToFraktlisting}>
@@ -78,6 +78,11 @@ export const FraktlistingStatus: FC<{ data: LeaderBoard }> = ({ data }) => {
               [styles.green]: data?.loyaltyBoost > 1,
             })}
           >
+            <Triangle
+              className={classNames({
+                [styles.green]: data?.loyaltyBoost > 1,
+              })}
+            />
             {data?.loyaltyBoost ? `${data?.loyaltyBoost}x` : '--'} loyalty
           </div>
         </div>

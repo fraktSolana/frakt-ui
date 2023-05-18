@@ -161,7 +161,7 @@
 
 .points {
   font-family: var(--font-family-chakra);
-  font-weight: 400;
+  font-weight: 600;
   font-size: 14px;
   line-height: 18px;
   color: var(--black-color);
@@ -175,11 +175,17 @@
 }
 
 .loyalty {
+  display: flex;
+  align-items: center;
   font-family: var(--font-family-chakra);
   font-weight: 600;
   font-size: 14px;
   line-height: 18px;
   white-space: nowrap;
+
+  svg path {
+    fill: var(--black-color);
+  }
 
   @media screen and (max-width: 650px) {
     font-size: 10px;
@@ -195,7 +201,7 @@
 
   text-decoration-line: underline;
 
-  color: var(--gray-color-2);
+  color: var(--black-color);
   transition: opacity var(--transition-1);
   cursor: pointer;
 
@@ -211,4 +217,8 @@
 
 .green {
   color: #7dcc19;
+
+  svg path {
+    fill: #7dcc19;
+  }
 }
