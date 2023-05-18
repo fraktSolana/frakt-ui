@@ -1,8 +1,8 @@
-import { useMarket, useMarketPair } from './../../../../utils/bonds/hooks';
+import { BondOfferV2 } from 'fbonds-core/lib/fbond-protocol/types';
 import { commonActions } from './../../../../state/common/actions';
 import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { BN } from '@frakt-protocol/frakt-sdk';
+import { BN, web3 } from '@frakt-protocol/frakt-sdk';
 import { useDispatch } from 'react-redux';
 
 import { usePartialRepayModal } from '@frakt/components/PartialRepayModal';
@@ -14,14 +14,16 @@ import { throwLogsError } from '@frakt/utils';
 import { useConnection } from '@frakt/hooks';
 
 import { useHiddenLoansPubkeys, useSelectedLoans } from '../../loansState';
-import {
-  getMarketAndPairsByBond,
-  getMarketAndPairsByLoan,
-} from '@frakt/pages/MarketsPage/components/BondsOverview/components/BondsTable/helpers';
-import { getBestOrdersForRefinance } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
-import { BASE_POINTS, pairLoanDurationFilter } from '@frakt/utils/bonds';
+import { BASE_POINTS, BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
 import { getBestOrdersForExit } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
-import { convertTakenOrdersToOrderParams } from '@frakt/pages/BorrowPages/cartState';
+import {
+  convertTakenOrdersToOrderParams,
+  patchPairWithProtocolFee,
+} from '@frakt/pages/BorrowPages/cartState';
+import {
+  fetchCertainMarket,
+  fetchMarketPairs,
+} from '@frakt/api/bonds/requests';
 
 export const useLoanCard = (loan: Loan) => {
   const wallet = useWallet();
@@ -199,31 +201,35 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
     open: openLoadingModal,
     close: closeLoadingModal,
   } = useLoadingModal();
-  const { pairs, market } = getMarketAndPairsByLoan(loan);
-
-  const ltvBasePoints =
-    (loan.loanValue / market?.oracleFloor?.floor || 0) * BASE_POINTS;
-
-  const bestOrdersForRefinance = getBestOrdersForExit({
-    bondOffers: pairs?.length ? pairs : [],
-    loanToValueFilter: ltvBasePoints,
-    amountOfBonds: loan.repayValue / BASE_POINTS + 5000, //TODO: create method to get best orders for refinance or find way to calculate amountOfBonds as param for getBestOrdersForExit
-  });
 
   const onRefinance = async (): Promise<void> => {
     try {
       openLoadingModal();
 
-      const result = await refinanceLoan({
-        wallet,
-        connection,
-        loan,
-        market,
-        bondOrderParams: convertTakenOrdersToOrderParams({
-          pairs,
-          takenOrders: bestOrdersForRefinance.takenOrders,
-        }),
-      });
+      // const { market, pairs } = await fetchMarketAndPairs(
+      //   loan?.bondParams?.marketPubkey,
+      //   wallet.publicKey,
+      // );
+
+      // const ltvBasePoints =
+      //   (loan.loanValue / market?.oracleFloor?.floor || 0) * BASE_POINTS;
+
+      // const bestOrdersForRefinance = getBestOrdersForExit({
+      //   bondOffers: pairs?.length ? pairs : [],
+      //   loanToValueFilter: ltvBasePoints,
+      //   amountOfBonds: loan.repayValue / BASE_POINTS + 5000, //TODO: create method to get best orders for refinance or find way to calculate amountOfBonds as param for getBestOrdersForExit
+      // });
+
+      // const result = await refinanceLoan({
+      //   wallet,
+      //   connection,
+      //   loan,
+      //   market,
+      //   bondOrderParams: convertTakenOrdersToOrderParams({
+      //     pairs,
+      //     takenOrders: bestOrdersForRefinance.takenOrders,
+      //   }),
+      // });
     } catch (error) {
       throwLogsError(error);
     } finally {
@@ -231,5 +237,27 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
     }
   };
 
-  return { onRefinance };
+  return { onRefinance, loadingModalVisible };
+};
+
+const fetchMarketAndPairs = async (
+  marketPubkey: string,
+  walletPubkey: web3.PublicKey,
+) => {
+  const marketWeb3Pubkey = new web3.PublicKey(marketPubkey);
+  const [pairs, market] = await Promise.all([
+    await fetchMarketPairs({ marketPubkey: marketWeb3Pubkey }),
+    await fetchCertainMarket({ marketPubkey: marketWeb3Pubkey }),
+  ]);
+
+  const filteredPairs = filterPairs(pairs, walletPubkey);
+
+  return { pairs: filteredPairs, market };
+};
+
+const filterPairs = (pairs: BondOfferV2[], walletPubkey: web3.PublicKey) => {
+  return pairs
+    .filter(({ currentSpotPrice }) => currentSpotPrice <= BOND_DECIMAL_DELTA)
+    .map(patchPairWithProtocolFee)
+    .filter(({ assetReceiver }) => assetReceiver !== walletPubkey?.toBase58());
 };

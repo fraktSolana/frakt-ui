@@ -19,8 +19,10 @@ export const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
     onPayback,
     transactionsLeft,
   } = useLoanCard(loan);
-  const isLoanBond = loan.loanType === LoanType.BOND;
+
   const { onRefinance } = useLoanTransactions({ loan });
+  const isLoanBond = loan.loanType === LoanType.BOND;
+
   return (
     <>
       <div className={styles.buttonWrapper}>
