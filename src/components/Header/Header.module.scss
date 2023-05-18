@@ -10,6 +10,10 @@
   backdrop-filter: blur(12px);
   @include flex;
   padding: 8px 16px;
+
+  @media screen and (max-width: 390px) {
+    padding: 8px;
+  }
 }
 
 .widgetContainer {
@@ -19,7 +23,7 @@
   height: 100%;
 
   @media (max-width: 960px) {
-    gap: 12px;
+    gap: 8px;
   }
 }
 
@@ -47,6 +51,7 @@
 }
 
 .logoWrapper {
+  margin-right: 8px;
   @include flex(row, nowrap, flex-start, center);
 }
 
@@ -73,6 +78,11 @@
   display: none;
   @media screen and (max-width: 600px) {
     display: block;
+  }
+
+  @media screen and (max-width: 430px) {
+    width: 24px;
+    height: 24px;
   }
 }
 
