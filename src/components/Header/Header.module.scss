@@ -108,7 +108,7 @@
   font-size: 16px;
   line-height: 21px;
   user-select: none;
-  color: var(--black-color) !important;
+  color: var(--black-color);
 
   cursor: pointer;
   transition: border var(--transition-1);
@@ -209,9 +209,9 @@
   font-size: 32px;
   line-height: 42px;
 
-  text-decoration: underline !important;
+  text-decoration: underline;
 
-  color: var(--black-color) !important;
+  color: var(--black-color);
   transition: opacity var(--transition-1);
   cursor: pointer;
 

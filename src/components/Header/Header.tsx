@@ -44,13 +44,14 @@ export const Header: FC = () => {
 export const FraktlistingBtn: FC = () => {
   return (
     <a
-      className={styles.fraktlistingBtn}
       href={process.env.FRAKTLISTING_URL}
       rel="noopener noreferrer"
       target="_blank"
     >
-      <StarFill />
-      <span>Get Fraktlisted!</span>
+      <div className={styles.fraktlistingBtn}>
+        <StarFill />
+        <span>Get Fraktlisted!</span>
+      </div>
     </a>
   );
 };
@@ -66,12 +67,13 @@ export const FraktlistingStatus: FC<{ data: LeaderBoard }> = ({ data }) => {
       </div>
       <div className={styles.statusWrapper}>
         <a
-          className={styles.place}
           href={process.env.LEADERBOARD_URL}
           rel="noopener noreferrer"
           target="_blank"
         >
-          {data?.rank ? getNumberWithOrdinal(data?.rank) : '--'}
+          <div className={styles.place}>
+            {data?.rank ? getNumberWithOrdinal(data?.rank) : '--'}
+          </div>
         </a>
         <div className={styles.pointsWrapper}>
           <div className={styles.points}>
