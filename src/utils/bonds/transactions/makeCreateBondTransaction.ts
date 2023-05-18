@@ -17,8 +17,9 @@ import {
   PRECISION_CORRECTION_LAMPORTS,
 } from '../constants';
 import { isBondFeaturesAutomated, mergeBondOrderParamsByPair } from '../utils';
-import { chunk } from 'lodash';
+import { chunk, uniqBy } from 'lodash';
 import { InstructionsAndSigners } from '@frakt/utils/transactions';
+import { createBondAndSellToOffers } from 'fbonds-core/lib/fbond-protocol/functions/fbond-factory';
 
 type MakeCreateBondTransaction = (params: {
   market: Market;
@@ -115,7 +116,10 @@ export const makeCreateBondTransaction: MakeCreateBondTransaction = async ({
 };
 
 type MakeCreateBondMultiOrdersTransaction = (params: {
-  market: Market;
+  marketPubkey: string;
+  fraktMarketPubkey: string;
+  oracleFloorPubkey: string;
+  whitelistEntryPubkey: string;
   // bondOrder: BondOrder;
   bondOrderParams: BondCartOrder[];
   nftMint: string;
@@ -129,7 +133,16 @@ type MakeCreateBondMultiOrdersTransaction = (params: {
 }>;
 
 export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTransaction =
-  async ({ market, bondOrderParams, nftMint, connection, wallet }) => {
+  async ({
+    marketPubkey,
+    fraktMarketPubkey,
+    oracleFloorPubkey,
+    whitelistEntryPubkey,
+    bondOrderParams,
+    nftMint,
+    connection,
+    wallet,
+  }) => {
     const amountToReturn =
       Math.trunc(
         bondOrderParams.reduce((sum, order) => sum + order.orderSize, 0),
@@ -142,27 +155,27 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
           : orderParams,
     ).durationFilter;
 
-    const {
-      fbond: bondPubkey,
-      collateralBox: collateralBoxPubkey,
-      fbondTokenMint: bondTokenMint,
-      instructions: createBondIxns,
-      signers: createBondSigners,
-      addressesForLookupTable,
-    } = await fbondFactory.createBondWithSingleCollateralPnft({
-      accounts: {
-        tokenMint: new web3.PublicKey(nftMint),
-        userPubkey: wallet.publicKey,
-      },
-      args: {
-        amountToDeposit: 1,
-        amountToReturn: amountToReturn,
-        bondDuration: durationFilter,
-      },
-      connection,
-      programId: BONDS_PROGRAM_PUBKEY,
-      sendTxn: sendTxnPlaceHolder,
-    });
+    // const {
+    //   fbond: bondPubkey,
+    //   collateralBox: collateralBoxPubkey,
+    //   fbondTokenMint: bondTokenMint,
+    //   instructions: createBondIxns,
+    //   signers: createBondSigners,
+    //   addressesForLookupTable,
+    // } = await fbondFactory.createBondWithSingleCollateralPnft({
+    //   accounts: {
+    //     tokenMint: new web3.PublicKey(nftMint),
+    //     userPubkey: wallet.publicKey,
+    //   },
+    //   args: {
+    //     amountToDeposit: 1,
+    //     amountToReturn: amountToReturn,
+    //     bondDuration: durationFilter,
+    //   },
+    //   connection,
+    //   programId: BONDS_PROGRAM_PUBKEY,
+    //   sendTxn: sendTxnPlaceHolder,
+    // });
 
     const mergedPairsOrderParams = mergeBondOrderParamsByPair({
       bondOrderParams,
@@ -186,27 +199,28 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
     console.log('sellBondParamsAndAccounts: ', sellBondParamsAndAccounts);
 
     const sellingBondsIxsAndSignersWithLookupAccounts =
-      await validateAndSellToBondOffersV2({
+      await createBondAndSellToOffers({
         accounts: {
-          collateralBox: collateralBoxPubkey,
-          fbond: bondPubkey,
-          fbondTokenMint: bondTokenMint,
-          collateralTokenMint: new web3.PublicKey(nftMint),
-          fraktMarket: new web3.PublicKey(market.fraktMarket.publicKey),
+          tokenMint: new web3.PublicKey(nftMint),
+          fraktMarket: new web3.PublicKey(fraktMarketPubkey),
           oracleFloor: new web3.PublicKey(
-            market.oracleFloor?.publicKey || PUBKEY_PLACEHOLDER,
+            oracleFloorPubkey || PUBKEY_PLACEHOLDER,
           ),
           whitelistEntry: new web3.PublicKey(
-            market.whitelistEntry?.publicKey || PUBKEY_PLACEHOLDER,
+            whitelistEntryPubkey || PUBKEY_PLACEHOLDER,
           ),
-          hadoMarket: new web3.PublicKey(market.marketPubkey),
+          hadoMarket: new web3.PublicKey(marketPubkey),
           userPubkey: wallet.publicKey,
           protocolFeeReceiver: new web3.PublicKey(
             BONDS_ADMIN_PUBKEY || PUBKEY_PLACEHOLDER,
           ),
         },
+        addComputeUnits: true,
         args: {
           sellBondParamsAndAccounts,
+          amountToDeposit: 1,
+          amountToReturn: amountToReturn,
+          bondDuration: durationFilter,
         },
         connection,
         programId: BONDS_PROGRAM_PUBKEY,
@@ -215,10 +229,13 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
     const slot = await connection.getSlot();
 
     console.log('INITIAL PASSED SLOT: ', slot);
-    const combinedAddressesForLookupTable = [
-      ...addressesForLookupTable,
-      ...sellingBondsIxsAndSignersWithLookupAccounts.addressesForLookupTable,
-    ];
+    const combinedAddressesForLookupTable = uniqBy(
+      [
+        // ...addressesForLookupTable,
+        ...sellingBondsIxsAndSignersWithLookupAccounts.addressesForLookupTable,
+      ],
+      (publicKey) => publicKey.toBase58(),
+    );
     console.log(
       'combinedAddressesForLookupTable: ',
       combinedAddressesForLookupTable.length,
@@ -256,11 +273,11 @@ export const makeCreateBondMultiOrdersTransaction: MakeCreateBondMultiOrdersTran
       extendLookupTableTxns: restExtendTransactions,
       createAndSellBondsIxsAndSigners: {
         instructions: [
-          ...createBondIxns,
+          // ...createBondIxns,
           ...sellingBondsIxsAndSignersWithLookupAccounts.instructions,
         ],
         signers: [
-          ...createBondSigners,
+          // ...createBondSigners,
           ...sellingBondsIxsAndSignersWithLookupAccounts.signers,
         ],
         lookupTablePublicKeys: [

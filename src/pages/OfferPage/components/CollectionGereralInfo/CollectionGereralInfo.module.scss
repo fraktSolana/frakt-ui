@@ -1,0 +1,41 @@
+.floorWrapper {
+  display: flex;
+  gap: 16px;
+}
+
+.floorCard {
+  padding: 16px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  border: var(--border-slider-grey);
+}
+
+.floorCardTitle {
+  font: var(--font-text-6);
+  color: var(--gray-color-2);
+  text-transform: uppercase;
+}
+
+.cardCollection {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.collectionImage {
+  height: 24px;
+  width: 24px;
+}
+
+.floorCardValue {
+  font: var(--font-text-8);
+  color: var(--black-color);
+}
+
+.florPrice {
+  text-transform: uppercase;
+}

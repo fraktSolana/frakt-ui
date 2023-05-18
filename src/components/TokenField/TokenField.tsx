@@ -27,6 +27,7 @@ export interface TokenFieldProps {
   toolTipText?: string;
   labelRightNode?: ReactNode;
   onBlur?: () => void;
+  optional?: boolean;
 }
 
 const TokenField: FC<TokenFieldProps> = ({
@@ -48,6 +49,7 @@ const TokenField: FC<TokenFieldProps> = ({
   toolTipText,
   labelRightNode,
   onBlur,
+  optional,
 }) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
@@ -73,10 +75,13 @@ const TokenField: FC<TokenFieldProps> = ({
               !!labelRightNode && styles.labelSeparete,
             )}
           >
-            {label}
-            {toolTipText && (
-              <Tooltip placement="bottom" overlay={toolTipText} />
-            )}
+            <div className={styles.labelRow}>
+              {label}
+              {toolTipText && (
+                <Tooltip placement="bottom" overlay={toolTipText} />
+              )}
+            </div>
+            {labelRightNode}
             {!!lpBalance && (
               <span className={styles.balance}>
                 {lpBalance.toFixed(2)} {currentToken?.symbol}
@@ -101,6 +106,7 @@ const TokenField: FC<TokenFieldProps> = ({
           className={classNames([
             styles.valueInput,
             { [styles.valueInput_disabled]: disabled },
+            { [styles.valueInput_optional]: optional && !isFocused },
           ])}
         />
         {!!onUseMaxButtonClick && (

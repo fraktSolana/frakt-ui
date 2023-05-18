@@ -1,0 +1,22 @@
+.total {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border: 1px dashed var(--gray-color-2);
+}
+
+.blockTitle {
+  font: var(--font-subtitle);
+  color: var(--secondary-text);
+
+  @media screen and (max-width: 960px) {
+    font-size: 18px;
+  }
+}
+
+.blockSubtitle {
+  font: var(--font-text-6);
+  text-transform: uppercase;
+}

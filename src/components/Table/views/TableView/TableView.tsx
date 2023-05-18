@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { ColumnsType } from 'antd/es/table';
 
 import { ActiveRowParams, PartialBreakpoints } from '../../types';
-import { getRowClassName } from '../../helpers';
+import { getCardOrRowClassName } from '../../helpers';
 
 import styles from './TableView.module.scss';
 
@@ -33,7 +33,7 @@ const TableView = <T extends unknown>({
       className={classNames(className, {
         [styles.noDataTableMessage]: !data.length && !loading,
       })}
-      rowClassName={(record) => getRowClassName(record, activeRowParams)}
+      rowClassName={(record) => getCardOrRowClassName(record, activeRowParams)}
       columns={columns as ColumnsType}
       dataSource={data as any}
       pagination={false}

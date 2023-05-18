@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { web3 } from 'fbonds-core';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -24,6 +25,13 @@ import { PATHS } from '@frakt/constants';
 import { RBOption } from '../../components/RadioButton';
 import { makeModifyPairTransactions } from '@frakt/utils/bonds/transactions/makeModifyPairTransactions';
 import { parseMarketOrder } from '../MarketsPage/components/OrderBook/helpers';
+import { OfferTypes } from './types';
+import { MAX_LOAN_VALUE } from './constants';
+import {
+  calculateLTV,
+  calculateLtvByOfferType,
+  calculateMaxLoanValueByOfferType,
+} from './helpers';
 
 export const useOfferPage = () => {
   const history = useHistory();
@@ -33,17 +41,10 @@ export const useOfferPage = () => {
   }>();
 
   const { account } = useNativeAccount();
-  const { market, isLoading: marketLoading } = useMarket({
-    marketPubkey,
-  });
 
-  const { pair, isLoading: pairLoading } = useMarketPair({
-    pairPubkey,
-  });
-
-  const { refetch: refetchMarketPairs } = useMarketPairs({
-    marketPubkey,
-  });
+  const { market, isLoading: marketLoading } = useMarket({ marketPubkey });
+  const { pair, isLoading: pairLoading } = useMarketPair({ pairPubkey });
+  const { refetch: refetchMarketPairs } = useMarketPairs({ marketPubkey });
 
   const isEdit = !!pairPubkey;
   const initialPairValues = parseMarketOrder(pair);
@@ -60,6 +61,7 @@ export const useOfferPage = () => {
   const [duration, setDuration] = useState<number>(7);
   const [interest, setInterest] = useState<string>('0');
   const [offerSize, setOfferSize] = useState<string>('0');
+  const [offerType, setOfferType] = useState<OfferTypes>(OfferTypes.FIXED);
   const [maxLoanValue, setMaxLoanValue] = useState<string>('0');
   const [receiveNftFeature, setReceiveNftFeature] = useState<BondFeatures>(
     BondFeatures.ReceiveNftOnLiquidation,
@@ -81,20 +83,45 @@ export const useOfferPage = () => {
   useEffect(() => {
     if (isEdit && !isLoading) {
       const { duration, interest, size, ltv, rawData } = initialPairValues;
+      const offerType =
+        ltv === MAX_LOAN_VALUE ? OfferTypes.FIXED : OfferTypes.FLOOR;
+
       setDuration(duration || 0);
       setInterest((interest * 100)?.toFixed(2));
       setOfferSize((size || 0).toFixed(2));
       setLtv(ltv || 0);
       setAutocompoundFeature(rawData?.bondFeature);
       setReceiveNftFeature(rawData?.bondFeature);
+      setOfferType(offerType);
+      setMaxLoanValue((rawData?.maxReturnAmountFilter / 1e9)?.toFixed(2));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, isLoading, pair]);
+
+  useEffect(() => {
+    if (!isLoading && !isEmpty(market) && !isEdit) {
+      const marketFloor = (market?.oracleFloor?.floor / 1e9 || 0)?.toFixed(2);
+
+      const defaultMaxLoanValue =
+        offerType === OfferTypes.FIXED ? marketFloor : '0';
+
+      setMaxLoanValue(defaultMaxLoanValue);
+    }
+  }, [isLoading, market, offerType, isEdit]);
 
   const onLtvChange = useCallback((value: number) => setLtv(value), []);
   const onDurationChange = (nextOption: RBOption<number>) => {
     setDuration(nextOption.value);
   };
+
+  // useEffect(() => {
+  //   if (!isLoading && !isEmpty(market) && !isEdit) {
+  //     const marketFloor = market?.oracleFloor?.floor / 1e9;
+
+  //     const loanValue = getLoanToValueWithProtection(marketFloor, maxLoanValue);
+  //     setLtv(loanValue);
+  //   }
+  // }, [maxLoanValue, isLoading]);
 
   const onMaxLoanValueChange = (value: string) => {
     setMaxLoanValue(value);
@@ -102,6 +129,10 @@ export const useOfferPage = () => {
 
   const onInterestChange = (value: string) => {
     setInterest(value);
+  };
+
+  const onOfferTypeChange = (value: RBOption<OfferTypes>) => {
+    setOfferType(value.value);
   };
 
   const handleInterestOnBlur = (interest: string) => {
@@ -162,11 +193,17 @@ export const useOfferPage = () => {
       try {
         openLoadingModal();
 
+        const rawLtv = calculateLtvByOfferType(offerType, ltv);
+        const rawMaxLoanValue = calculateMaxLoanValueByOfferType(
+          offerType,
+          maxLoanValue,
+        );
+
         const { transaction, signers } = await makeCreatePairTransaction({
           marketPubkey: new web3.PublicKey(marketPubkey),
           maxDuration: duration,
-          maxLoanValue: parseFloat(maxLoanValue),
-          maxLTV: ltv,
+          maxLoanValue: rawMaxLoanValue,
+          maxLTV: rawLtv,
           solDeposit: parseFloat(offerSize),
           interest: parseFloat(interest),
           marketFloor: market.oracleFloor.floor,
@@ -211,14 +248,21 @@ export const useOfferPage = () => {
       try {
         openLoadingModal();
 
+        const rawLtv = calculateLtvByOfferType(offerType, ltv);
+        const rawMaxLoanValue = calculateMaxLoanValueByOfferType(
+          offerType,
+          maxLoanValue,
+        );
+
         const { transaction, signers } = await makeModifyPairTransactions({
           solDeposit: parseFloat(offerSize),
           interest: parseFloat(interest),
           marketFloor: market.oracleFloor.floor,
+          maxLoanValue: rawMaxLoanValue,
           pair,
           connection,
           maxDuration: duration,
-          maxLTV: ltv,
+          maxLTV: rawLtv,
           wallet,
         });
 
@@ -291,10 +335,12 @@ export const useOfferPage = () => {
     }
   };
 
+  const rawLTV = calculateLTV({ market, maxLoanValue, offerType, ltv });
+
   return {
     loadingModalVisible,
     closeLoadingModal,
-    ltv,
+    ltv: rawLTV,
     duration,
     offerSize,
     interest,
@@ -320,5 +366,7 @@ export const useOfferPage = () => {
     onChangeReceiveNftFeature,
     onMaxLoanValueChange,
     maxLoanValue,
+    onOfferTypeChange,
+    offerType,
   };
 };

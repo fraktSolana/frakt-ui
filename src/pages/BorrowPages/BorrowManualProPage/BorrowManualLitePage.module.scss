@@ -1,0 +1,63 @@
+@import '@frakt/scss/abstracts/mixins';
+
+.container {
+  background-color: var(--primary-background);
+}
+
+.content {
+  display: block;
+}
+.contentSidebarVisible {
+  padding-right: 343px;
+
+  @media (max-width: 960px) {
+    padding-right: 0;
+  }
+}
+
+.nftsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+  gap: 24px;
+  align-items: stretch;
+
+  @media (max-width: 960px) {
+    gap: 16px;
+    padding-right: 0;
+    grid-template-columns: repeat(auto-fill, minmax(163px, 2fr));
+    padding-bottom: 100px;
+  }
+}
+
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 32px;
+  font: var(--font-text-2);
+
+  &::after {
+    width: 16px;
+    content: '...';
+  }
+}
+
+.tabs {
+  display: flex;
+  column-gap: 8px;
+}
+
+.tab {
+  padding: 3px 20px;
+  outline: unset;
+  border: 1px solid var(--gray-color-2);
+  height: 24px;
+  cursor: pointer;
+  font: var(--font-btn-middle);
+  background: unset;
+  border-radius: 100px;
+}
+
+.tabActive {
+  background: var(--light-green-color);
+}

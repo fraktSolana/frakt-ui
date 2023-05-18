@@ -8,6 +8,7 @@ export const PATHS = {
   BORROW_BULK_SUGGESTION: '/borrow/bulk-suggestion',
   BORROW_BULK_OVERVIEW: '/borrow/bulk-overview',
   BORROW_MANUAL: '/borrow/manual',
+  BORROW_LITE: '/borrow/lite',
   BORROW_SUCCESS: '/borrow/success',
   LEND: '/lend',
   STRATEGIES: '/strategies',

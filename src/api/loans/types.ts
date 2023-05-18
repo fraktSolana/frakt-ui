@@ -1,4 +1,5 @@
 import { web3 } from '@frakt-protocol/frakt-sdk';
+import { BondTradeTransactionV2 } from 'fbonds-core/lib/fbond-protocol/types';
 
 export enum LoanType {
   TIME_BASED = 'timeBased',
@@ -63,6 +64,7 @@ export interface Loan {
     collateralOrSolReceiver: string;
     collateralTokenAccount: string;
     expiredAt: number; //? unix timestamp
+    activeTrades: BondTradeTransactionV2[];
   };
 }
 

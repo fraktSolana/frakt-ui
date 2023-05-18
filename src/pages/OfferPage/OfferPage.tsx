@@ -1,26 +1,34 @@
-import { FC } from 'react';
-import { QuestionCircleOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import Tooltip from '@frakt/components/Tooltip';
 
-import TokenField from '../../components/TokenField';
-import { AppLayout } from '../../components/Layout/AppLayout';
-import OrderBook from '../MarketsPage/components/OrderBook/OrderBook';
-import Button from '../../components/Button';
-import SizeField from './components/SizeField/SizeField';
-import { RadioButton } from '../../components/RadioButton';
+import { AppLayout } from '@frakt/components/Layout/AppLayout';
+import TokenField from '@frakt/components/TokenField';
+import Button from '@frakt/components/Button';
+import { SOL_TOKEN } from '@frakt/utils';
+
+import { colorByPercentOffers, getColorByPercent } from '@frakt/utils/bonds';
 import { SliderGradient } from './components/SliderGradient/SliderGradient';
+import CollectionGereralInfo from './components/CollectionGereralInfo';
+import OrderBook from '../MarketsPage/components/OrderBook/OrderBook';
+import RadioButtonField from './components/RadioButtonField';
+import SizeField from './components/SizeField/SizeField';
+import TotalOverview from './components/TotalOverview';
 import { Header } from './components/Header';
 import { useOfferPage } from './hooks';
-import { SOL_TOKEN } from '../../utils';
-import styles from './OfferPage.module.scss';
+import { OfferTypes } from './types';
 import {
   DURATION_OPTIONS,
   EARNER_INTEREST_OPTIONS,
+  MAX_LIMIT_INTEREST,
+  OFFER_TYPE_OPTIONS,
+  MAX_LIMIT_INTEREST_FOR_14_DAYS,
+  MAX_LIMIT_INTEREST_FOR_7_DAYS,
   RECEIVE_OPTIONS,
 } from './constants';
+
+import styles from './OfferPage.module.scss';
 
 export const OfferPage = () => {
   const {
@@ -50,8 +58,16 @@ export const OfferPage = () => {
     onChangeReceiveNftFeature,
     onMaxLoanValueChange,
     maxLoanValue,
+    onOfferTypeChange,
+    offerType,
   } = useOfferPage();
 
+  const maxLimitInterest =
+    duration === 7
+      ? MAX_LIMIT_INTEREST_FOR_7_DAYS
+      : MAX_LIMIT_INTEREST_FOR_14_DAYS;
+
+  const isMaxLimitInterest = parseFloat(interest) > maxLimitInterest;
   const apr = (parseFloat(interest) / duration) * 365;
 
   return (
@@ -64,53 +80,49 @@ export const OfferPage = () => {
         />
 
         <div className={styles.block}>
-          <div className={styles.floorWrapper}>
-            <div className={styles.floorCard}>
-              <h6 className={styles.floorCardTitle}>collection</h6>
-
-              <div className={styles.cardCollection}>
-                <img
-                  className={styles.collectionImage}
-                  src={market?.collectionImage}
-                  alt={market?.collectionName}
-                />
-                <span className={styles.floorCardValue}>
-                  {!isLoading ? market?.collectionName : '--'}
-                </span>
-              </div>
-            </div>
-            <div className={styles.floorCard}>
-              <h6 className={styles.floorCardTitle}>floor</h6>
-              <span
-                className={classNames(styles.floorCardValue, styles.florPrice)}
-              >
-                {!isLoading
-                  ? (market?.oracleFloor.floor / 1e9).toFixed(2) + ' sol'
-                  : '--'}
-              </span>
-            </div>
-          </div>
-          <SliderGradient value={ltv} setValue={onLtvChange} />
-
-          <TokenField
-            value={maxLoanValue}
-            onValueChange={onMaxLoanValueChange}
-            label="Max loan value"
-            currentToken={SOL_TOKEN}
-            toolTipText="Max loan value"
+          <CollectionGereralInfo market={market} loading={isLoading} />
+          <RadioButtonField
+            label="Offer type"
+            currentOption={{
+              label: offerType,
+              value: offerType,
+            }}
+            onOptionChange={onOfferTypeChange}
+            options={OFFER_TYPE_OPTIONS}
           />
 
-          <div className={styles.radio}>
-            <h6 className={styles.subtitle}>duration</h6>
-            <RadioButton
-              currentOption={{
-                label: `${duration} days`,
-                value: duration,
-              }}
-              onOptionChange={onDurationChange}
-              options={DURATION_OPTIONS}
+          {offerType === OfferTypes.FIXED && (
+            <TokenField
+              label="Loan Value"
+              value={maxLoanValue}
+              onValueChange={onMaxLoanValueChange}
+              labelRightNode={createLTVFieldRightLabel(ltv)}
+              currentToken={SOL_TOKEN}
             />
-          </div>
+          )}
+
+          {offerType === OfferTypes.FLOOR && (
+            <>
+              <SliderGradient value={ltv} setValue={onLtvChange} />
+              <TokenField
+                value={maxLoanValue}
+                onValueChange={onMaxLoanValueChange}
+                label="Max limit"
+                placeholder="0"
+                currentToken={SOL_TOKEN}
+              />
+            </>
+          )}
+
+          <RadioButtonField
+            label="Duration"
+            currentOption={{
+              label: `${duration} days`,
+              value: duration,
+            }}
+            onOptionChange={onDurationChange}
+            options={DURATION_OPTIONS}
+          />
           <div className={styles.fieldWrapper}>
             <SizeField
               value={offerSize}
@@ -123,73 +135,53 @@ export const OfferPage = () => {
           </div>
 
           <div className={styles.fieldWrapper}>
-            <TokenField
-              value={interest}
-              onValueChange={onInterestChange}
-              onBlur={() => handleInterestOnBlur(interest)}
-              label="Interest"
-              labelRightNode={
-                <div className={styles.labelRow}>
-                  APR: <span>{(apr || 0).toFixed(2)} %</span>
-                  <Tooltip
-                    placement="bottom"
-                    overlay={'Analyzed profit from repaying the loan'}
-                  >
-                    <QuestionCircleOutlined className={styles.questionIcon} />
-                  </Tooltip>
-                </div>
-              }
-              currentToken={{
-                ...SOL_TOKEN,
-                symbol: '%',
-                logoURI: null,
-                name: null,
+            <>
+              <TokenField
+                value={interest}
+                onValueChange={onInterestChange}
+                onBlur={() => handleInterestOnBlur(interest)}
+                label="Interest"
+                labelRightNode={createIntrestFieldRihtLabel(apr)}
+                error={isMaxLimitInterest}
+                currentToken={{
+                  ...SOL_TOKEN,
+                  symbol: '%',
+                  logoURI: null,
+                  name: null,
+                }}
+                toolTipText="Interest (in %) for the duration of this loan"
+              />
+              <div className={styles.errors}>
+                {isMaxLimitInterest && (
+                  <p>max interest rate is {maxLimitInterest}%</p>
+                )}
+              </div>
+            </>
+
+            <RadioButtonField
+              label="Repayments"
+              currentOption={{
+                label: autocompoundFeature,
+                value: autocompoundFeature,
               }}
-              tokensList={[
-                { ...SOL_TOKEN, symbol: '%', logoURI: null, name: null },
-              ]}
-              toolTipText="Interest (in %) for the duration of this loan"
+              disabled={isEdit}
+              onOptionChange={onChangeAutocompoundFeature}
+              options={EARNER_INTEREST_OPTIONS}
+              className={styles.radioWrapper}
+              tooltipText="Lenders have an option to place same offer right after repayment together with earned interest"
             />
-            <div className={classNames(styles.radio, styles.radioWrapper)}>
-              <div className={styles.radioTitle}>
-                <h6 className={styles.subtitle}>Repayments</h6>
-                <Tooltip
-                  placement="bottom"
-                  overlay="Lenders have an option to place same offer right after repayment together with earned interest"
-                >
-                  <QuestionCircleOutlined className={styles.questionIcon} />
-                </Tooltip>
-              </div>
-              <RadioButton
-                currentOption={{
-                  label: autocompoundFeature,
-                  value: autocompoundFeature,
-                }}
-                disabled={isEdit}
-                onOptionChange={onChangeAutocompoundFeature}
-                options={EARNER_INTEREST_OPTIONS}
-              />
-            </div>
-            <div className={classNames(styles.radio, styles.radioWrapper)}>
-              <div className={styles.radioTitle}>
-                <h6 className={styles.subtitle}>Defaults</h6>
-                <Tooltip
-                  placement="bottom"
-                  overlay="When funding full loans, lenders have the option to get defaulted NFTs instead of the SOL recovered from the liquidation"
-                >
-                  <QuestionCircleOutlined className={styles.questionIcon} />
-                </Tooltip>
-              </div>
-              <RadioButton
-                currentOption={{
-                  label: receiveNftFeature,
-                  value: receiveNftFeature,
-                }}
-                disabled={isEdit}
-                onOptionChange={onChangeReceiveNftFeature}
-                options={RECEIVE_OPTIONS}
-              />
-            </div>
+            <RadioButtonField
+              label="Defaults"
+              options={RECEIVE_OPTIONS}
+              currentOption={{
+                label: receiveNftFeature,
+                value: receiveNftFeature,
+              }}
+              disabled={isEdit}
+              onOptionChange={onChangeReceiveNftFeature}
+              className={styles.radioWrapper}
+              tooltipText="When funding full loans, lenders have the option to get defaulted NFTs instead of the SOL recovered from the liquidation"
+            />
           </div>
 
           <TotalOverview
@@ -208,6 +200,7 @@ export const OfferPage = () => {
                   Delete offer
                 </Button>
                 <Button
+                  disabled={isMaxLimitInterest}
                   onClick={onEditOffer}
                   className={styles.btn}
                   type="secondary"
@@ -218,7 +211,7 @@ export const OfferPage = () => {
             )}
             {!isEdit && (
               <Button
-                disabled={!isValid}
+                disabled={!isValid || isMaxLimitInterest}
                 onClick={isEdit ? onEditOffer : onCreateOffer}
                 className={styles.btn}
                 type="secondary"
@@ -249,25 +242,23 @@ export const OfferPage = () => {
   );
 };
 
-interface TotalOverviewProps {
-  size?: number;
-  interest?: number;
-  duration?: number;
-}
-
-const TotalOverview: FC<TotalOverviewProps> = ({
-  size = 0,
-  interest = 0,
-  duration = 7,
-}) => {
-  const estProfit = size * (interest / 1e2);
+const createLTVFieldRightLabel = (value = 0) => {
+  const colorLTV =
+    getColorByPercent(value, colorByPercentOffers) || colorByPercentOffers[100];
 
   return (
-    <div className={styles.total}>
-      <h5 className={styles.blockTitle}>
-        {(estProfit || 0).toFixed(2)} SOL in {duration} days
-      </h5>
-      <span className={styles.blockSubtitle}>estimated profit</span>
+    <div className={styles.labelRow}>
+      LTV: <span style={{ color: colorLTV }}>{(value || 0).toFixed(2)} %</span>
     </div>
   );
 };
+
+const createIntrestFieldRihtLabel = (value = 0) => (
+  <div className={styles.labelRow}>
+    APR: <span>{(value || 0).toFixed(2)} %</span>
+    <Tooltip
+      placement="bottom"
+      overlay="Analyzed profit from repaying the loan"
+    />
+  </div>
+);

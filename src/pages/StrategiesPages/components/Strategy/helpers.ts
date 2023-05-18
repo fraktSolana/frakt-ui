@@ -1,6 +1,6 @@
 import { TradePoolUser } from '@frakt/api/strategies';
 
-export const caclWidthrawValue = (tradePool: TradePoolUser) => {
+export const calcWithdrawValue = (tradePool: TradePoolUser) => {
   const userLiquidity = tradePool?.wallet?.userLiquidity;
 
   const availableToWithdraw = Math.min(

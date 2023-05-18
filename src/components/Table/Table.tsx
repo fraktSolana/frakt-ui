@@ -61,7 +61,7 @@ const Table = <T extends unknown>({
 
   return (
     <>
-      {viewParams?.showSorting && (
+      {(viewParams?.showSorting || viewParams?.showSearching) && (
         <SortView
           search={search}
           sort={sort}
@@ -69,6 +69,8 @@ const Table = <T extends unknown>({
           columns={columns}
           selectLoansParams={selectLoansParams}
           setQueryData={setQueryData}
+          showSorting={viewParams?.showSorting}
+          showSearching={viewParams?.showSearching}
         />
       )}
       {viewParams?.showCard ? (

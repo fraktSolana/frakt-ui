@@ -1,0 +1,13 @@
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.title {
+  font: var(--font-subtitle);
+
+  @media (max-width: 1140px) {
+    font-size: 24px;
+  }
+}

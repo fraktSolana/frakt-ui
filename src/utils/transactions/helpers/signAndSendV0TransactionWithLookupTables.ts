@@ -1,6 +1,7 @@
 import { web3 } from 'fbonds-core';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { TxnsAndSigners } from './signAndSendAllTransactionsInSequence';
+import { STANDART_LOOKUP_TABLE } from '@frakt/utils/bonds';
 
 export interface InstructionsAndSigners {
   instructions: web3.TransactionInstruction[];
@@ -17,6 +18,7 @@ type SignAndSendV0TransactionWithLookupTables = (props: {
   extendLookupTableTxns: web3.Transaction[];
 
   v0InstructionsAndSigners: InstructionsAndSigners[];
+  fastTrackInstructionsAndSigners: InstructionsAndSigners[];
 
   connection: web3.Connection;
   wallet: WalletContextState;
@@ -35,7 +37,7 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
     createLookupTableTxns,
     extendLookupTableTxns,
     v0InstructionsAndSigners,
-
+    fastTrackInstructionsAndSigners,
     connection,
     wallet,
     commitment = 'confirmed',
@@ -45,6 +47,33 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
     onError,
   }) => {
     try {
+      const { blockhash, lastValidBlockHeight } =
+        await connection.getLatestBlockhash();
+      const fastTrackV0Transactions = await Promise.all(
+        fastTrackInstructionsAndSigners.map(async (ixAndSigner) => {
+          console.log(
+            'STANDART_LOOKUP_TABLE: ',
+            STANDART_LOOKUP_TABLE.toBase58(),
+          );
+          const lookupTable = (
+            await connection.getAddressLookupTable(STANDART_LOOKUP_TABLE)
+          ).value;
+
+          const transactionsMessageV0 = new web3.VersionedTransaction(
+            new web3.TransactionMessage({
+              payerKey: wallet.publicKey,
+              recentBlockhash: blockhash,
+              instructions: ixAndSigner.instructions,
+            }).compileToV0Message([lookupTable]),
+          );
+          console.log('Goes here to txn v0? 2');
+
+          transactionsMessageV0.sign([...ixAndSigner.signers]);
+          console.log('Goes here to txn v0? 3');
+
+          return transactionsMessageV0;
+        }),
+      );
       const txnsAndSigners: TxnsAndSigners[][] = [
         createLookupTableTxns.map((transaction) => ({
           transaction,
@@ -62,9 +91,6 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
 
       onBeforeApprove?.();
 
-      const { blockhash, lastValidBlockHeight } =
-        await connection.getLatestBlockhash();
-
       const addressesPerTxn = 20;
 
       const supposedBigIntDeactivationSlot = BigInt('18446744073518870550');
@@ -74,6 +100,10 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
 
       const v0Transactions = await Promise.all(
         v0InstructionsAndSigners.map(async (ixAndSigner) => {
+          console.log(
+            'ixAndSigner.lookupTablePublicKeys: ',
+            ixAndSigner.lookupTablePublicKeys,
+          );
           const lookupTables: web3.AddressLookupTableAccount[] =
             ixAndSigner.lookupTablePublicKeys.map(
               (tableData) =>
@@ -173,6 +203,7 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
       ];
 
       const transactionsFlatArr = [
+        ...fastTrackV0Transactions,
         ...txnsAndSignersFiltered
           .flat()
           .map(({ transaction, signers = [] }) => {
@@ -193,15 +224,20 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
       ]);
 
       const txnsAndSignersWithV0Txns = [
-        ...txnsAndSigners,
+        [...fastTrackV0Transactions, ...txnsAndSigners],
         v0MainAndCloseTableTxns,
       ];
+      console.log('goes here to sending?');
+      console.log('txnsAndSignersWithV0Txns: ', txnsAndSignersWithV0Txns);
+      console.log('signedTransactions: ', signedTransactions);
 
       let currentTxIndex = 0;
       for (let i = 0; i < txnsAndSignersWithV0Txns.length; i++) {
+        if (txnsAndSignersWithV0Txns[i].length === 0) continue;
         for (let r = 0; r < txnsAndSignersWithV0Txns[i].length; r++) {
           console.log('currentTxIndex: ', currentTxIndex);
           const txn = signedTransactions[currentTxIndex];
+          if (!txn) continue;
           // lastSlot = await connection.getSlot();
           const tx = await connection.sendRawTransaction(txn.serialize(), {
             skipPreflight: false,
@@ -211,9 +247,8 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
           // console.log("MinContextSlot: ", txn.minNonceContextSlot)
         }
         if (txnsAndSignersWithV0Txns[i].length > 0)
-          await new Promise((r) => setTimeout(r, 7000));
+          await new Promise((r) => setTimeout(r, 8000));
       }
-      await new Promise((r) => setTimeout(r, 8000));
 
       // const signedTransactionsV0 = await wallet.signAllTransactions(
       //   v0Transactions,

@@ -101,3 +101,25 @@ interface Rewards {
   user: string;
   reward: number;
 }
+
+export interface CollectionsStats {
+  totalLiquidity: number;
+  collections: number;
+}
+
+export interface AvailableToBorrowUser {
+  maxBorrow: number;
+  totalUserNfts: number;
+}
+
+export interface LeaderBoard {
+  deposited: number;
+  interest: number;
+  lent: number;
+  loyaltyBoost: number;
+  pfpImage: string | null;
+  points: number;
+  rank: number;
+  teamName: string;
+  wallet: string;
+}

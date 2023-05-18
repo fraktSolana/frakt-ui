@@ -1,5 +1,6 @@
 import { ScaleLinear, select } from 'd3';
 import { Point } from '../types';
+import { getNumberWithOrdinal } from '@frakt/utils';
 
 type DrawPoints = (
   selection: ReturnType<typeof select>,
@@ -15,12 +16,6 @@ export const drawPoints: DrawPoints = (
   { points, xScale, yScale },
 ) => {
   const mouseover = (e: MouseEvent, d: Point) => {
-    const getNumberWithOrdinal = (n: number): string => {
-      return (
-        n + (['st', 'nd', 'rd'][((((n + 90) % 100) - 10) % 10) - 1] || 'th')
-      );
-    };
-
     const tooltip = select(`#chart`)
       .append('div')
       .classed('tooltipPoint', true)

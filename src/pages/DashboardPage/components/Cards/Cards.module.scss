@@ -1,0 +1,108 @@
+.card {
+  border: 1px solid var(--primary-border);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  pointer-events: none;
+}
+.card.clicable {
+  cursor: pointer;
+  pointer-events: unset;
+  &:hover {
+    border: 1px solid var(--secondary-border);
+  }
+}
+.card:hover .connectedBadge {
+  background-color: var(--light-green-hover);
+}
+
+.nftInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  position: relative;
+  flex-wrap: wrap;
+}
+.nftInfo.primary {
+  padding-top: 40px;
+
+  @media (max-width: 550px) {
+    padding-top: 30px;
+  }
+}
+
+.nftImage {
+  object-fit: cover;
+  width: 100%;
+
+  @media (max-width: 960px) {
+    height: 100%;
+  }
+}
+
+.value {
+  color: var(--primary-text);
+  font: var(--font-text-8);
+  font-size: 14px;
+
+  @media (max-width: 1140px) {
+    font-size: 12px;
+  }
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--secondary-text);
+  font: var(--font-text-6);
+  text-transform: uppercase;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  border: 1px solid var(--button-text);
+  border-top: 0;
+
+  color: var(--button-text);
+  background-color: var(--light-green-color);
+
+  font: var(--font-text-4);
+  font-size: 14px;
+
+  position: absolute;
+  top: 0;
+  left: 8px;
+
+  height: 34px;
+  width: 56px;
+
+  span {
+    font: var(--font-text-6);
+  }
+}
+
+.lendBadge {
+  height: 40px;
+}
+
+.button {
+  position: absolute;
+  font: var(--font-btn-middle);
+
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  height: 40px;
+  width: 90%;
+
+  @media (max-width: 960px) {
+    padding: 0;
+  }
+}
