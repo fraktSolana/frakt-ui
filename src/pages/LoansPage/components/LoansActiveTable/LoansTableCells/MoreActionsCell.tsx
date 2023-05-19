@@ -8,6 +8,7 @@ import { LoadingModal } from '@frakt/components/LoadingModal';
 
 import { useLoanCard, useLoanTransactions } from '../../LoanCard/hooks';
 import styles from '../LoansTable.module.scss';
+import RefinanceModal from '../../RefinanceModal';
 
 export const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
   const {
@@ -20,7 +21,13 @@ export const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
     transactionsLeft,
   } = useLoanCard(loan);
 
-  const { onRefinance } = useLoanTransactions({ loan });
+  const {
+    onRefinance,
+    refinanceModalVisible,
+    closeRefinanceModal,
+    openRefinanceModal,
+  } = useLoanTransactions({ loan });
+
   const isLoanBond = loan.loanType === LoanType.BOND;
 
   return (
@@ -37,12 +44,18 @@ export const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
           Repay
         </Button>
         {isLoanBond && (
-          <Button onClick={onRefinance} className={styles.repayButton}>
+          <Button onClick={openRefinanceModal} className={styles.repayButton}>
             Extend
           </Button>
         )}
         <Button className={styles.repayButton}>Sell</Button>
       </div>
+      <RefinanceModal
+        loan={loan}
+        visible={refinanceModalVisible}
+        onCancel={closeRefinanceModal}
+        onSubmit={onRefinance}
+      />
       <PartialRepayModal
         visible={partialRepayModalVisible}
         onCancel={closePartialRepayModal}

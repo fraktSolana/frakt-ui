@@ -202,6 +202,9 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
     close: closeLoadingModal,
   } = useLoadingModal();
 
+  const [refinanceModalVisible, setRefinanceModalVisible] =
+    useState<boolean>(false);
+
   const onRefinance = async (): Promise<void> => {
     try {
       openLoadingModal();
@@ -237,7 +240,13 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
     }
   };
 
-  return { onRefinance, loadingModalVisible };
+  return {
+    onRefinance,
+    loadingModalVisible,
+    refinanceModalVisible,
+    openRefinanceModal: () => setRefinanceModalVisible(true),
+    closeRefinanceModal: () => setRefinanceModalVisible(false),
+  };
 };
 
 const fetchMarketAndPairs = async (

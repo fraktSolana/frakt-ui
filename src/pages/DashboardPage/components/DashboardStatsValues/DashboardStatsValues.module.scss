@@ -21,6 +21,7 @@
 }
 
 .label {
+  color: var(--primary-text);
   font: var(--font-text-6);
   letter-spacing: -0.2px;
   text-align: center;
@@ -36,6 +37,7 @@
 }
 
 .value {
+  color: var(--primary-text);
   font: var(--font-subtitle);
 
   @media (max-width: 960px) {
