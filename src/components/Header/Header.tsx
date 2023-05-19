@@ -72,24 +72,18 @@ export const FraktlistingStatus: FC<{ data: LeaderBoard }> = ({ data }) => {
           target="_blank"
         >
           <div className={styles.place}>
-            {data?.rank ? getNumberWithOrdinal(data?.rank) : '--'}
+            {data?.rank ? getNumberWithOrdinal(data?.rank) : '00'}
+            {data?.rank && <Triangle />}
           </div>
         </a>
         <div className={styles.pointsWrapper}>
-          <div className={styles.points}>
-            {data?.points ? points : '--'} pts
-          </div>
+          <div className={styles.points}>{data?.points ? points : '0'} pts</div>
           <div
             className={classNames(styles.loyalty, {
               [styles.green]: data?.loyaltyBoost > 1,
             })}
           >
-            <Triangle
-              className={classNames({
-                [styles.green]: data?.loyaltyBoost > 1,
-              })}
-            />
-            {data?.loyaltyBoost ? `${data?.loyaltyBoost}x` : '--'} loyalty
+            {data?.loyaltyBoost ? `${data?.loyaltyBoost}x` : '0'} loyalty
           </div>
         </div>
       </div>
