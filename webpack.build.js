@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const Webpack = require('webpack');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 require('dotenv').config({ path: './.env' });
@@ -118,7 +119,16 @@ module.exports = {
       template: './public/index.html',
       favicon: './public/favicon.ico',
       filename: 'index.html',
-      manifest: './public/manifest.json',
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'public',
+          globOptions: {
+            ignore: ['**/*.html', '**/*.ico'],
+          },
+        },
+      ],
     }),
     new Webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
