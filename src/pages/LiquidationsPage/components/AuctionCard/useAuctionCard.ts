@@ -2,7 +2,11 @@ import { calculateAuctionPrice } from '@frakters/raffle-sdk/lib/raffle-core/help
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import moment from 'moment';
 
-import { buyAuction, buyAuctionBond } from '@frakt/utils/raffles';
+import {
+  LiquidateBondOnAuction,
+  buyAuction,
+  buyAuctionBond,
+} from '@frakt/utils/raffles';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { AuctionListItem } from '@frakt/api/raffle';
 
@@ -44,32 +48,17 @@ export const useAuctionCard = (
   });
 
   const onSubmit = async (): Promise<void> => {
+    const wallet = useWallet();
+    const { connection } = useConnection();
+
     openLoadingModal();
     try {
-      if (!auction?.bondPubKey) {
-        const result = await buyAuction({
-          connection,
-          wallet,
-          nftMint: auction?.nftMint,
-          raffleAddress: auction.auctionPubkey,
-        });
-
-        if (result) {
-          hideAuction(auction.auctionPubkey);
-        }
-      } else {
-        const result = await buyAuctionBond({
-          connection,
-          wallet,
-          nftMint: auction?.nftMint,
-          raffleAddress: auction.auctionPubkey,
-          fbond: auction.bondPubKey,
-        });
-
-        if (result) {
-          hideAuction(auction.auctionPubkey);
-        }
-      }
+      // const result = await LiquidateBondOnAuction({
+      //   connection,
+      //   wallet,
+      //   // repayAccounts,
+      //   // fbond,
+      // });
     } catch (error) {
       console.error(error);
     } finally {
@@ -89,4 +78,30 @@ export const useAuctionCard = (
     buyPrice,
     nextPrice,
   };
+};
+
+export const useBondAuction = () => {
+  const onSubmit = async () => {
+    try {
+      if (!auction?.bondPubKey) {
+        const result = await buyAuction({
+          connection,
+          wallet,
+          nftMint: auction?.nftMint,
+          raffleAddress: auction.auctionPubkey,
+        });
+      } else {
+        const result = await buyAuctionBond({
+          connection,
+          wallet,
+          nftMint: auction?.nftMint,
+          raffleAddress: auction.auctionPubkey,
+          fbond: auction.bondPubKey,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  return {};
 };

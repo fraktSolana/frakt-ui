@@ -1,7 +1,13 @@
-import { AuctionListItem, fetchAuctionsList } from '@frakt/api/raffle';
 import { useQuery } from '@tanstack/react-query';
 import { create } from 'zustand';
 import produce from 'immer';
+
+import {
+  AuctionListItem,
+  BondsAuctionsListItem,
+  fetchAuctionsBondsList,
+  fetchAuctionsList,
+} from '@frakt/api/raffle';
 
 export const useFetchAuctionsList = () => {
   const { hiddenAuctionsPubkeys, hideAuction } = useHiddenAuctionPubkeys();
@@ -26,6 +32,26 @@ export const useFetchAuctionsList = () => {
       ) || [],
     loading: isLoading || isFetching,
     hideAuction,
+  };
+};
+
+export const useFetchBondsAuctionsList = () => {
+  const {
+    data,
+    isLoading,
+    isFetching,
+  }: {
+    data: BondsAuctionsListItem[];
+    isLoading: boolean;
+    isFetching: boolean;
+  } = useQuery(['fetchBondsAuctionsList'], () => fetchAuctionsBondsList(), {
+    staleTime: 5000,
+    refetchOnWindowFocus: false,
+  });
+
+  return {
+    data: data || [],
+    loading: isLoading || isFetching,
   };
 };
 

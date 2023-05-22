@@ -13,6 +13,7 @@ import {
   useFetchUserTickets,
   useFetchAuctionsList,
   useFetchRafflesList,
+  useFetchBondsAuctionsList,
 } from '../../hooks';
 
 import styles from './OngoingRaffleTab.module.scss';
@@ -44,10 +45,16 @@ const OngoingRaffleTab: FC = () => {
   }, [inView, fetchNextPage, isFetchingNextPage, isListEnded]);
 
   const { data: auctionList, loading, hideAuction } = useFetchAuctionsList();
+  const { data: bondsAuctionList, loading: loadingBondsAuctions } =
+    useFetchBondsAuctionsList();
 
-  if (loading) return <Loader />;
+  if (loading || loadingBondsAuctions) return <Loader />;
 
-  const unitedRafflesList = [...auctionList, ...raffleList];
+  const unitedRafflesList = [
+    ...bondsAuctionList,
+    ...auctionList,
+    ...raffleList,
+  ];
 
   return (
     <RafflesList withRafflesInfo>
