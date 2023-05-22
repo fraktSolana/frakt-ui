@@ -58,8 +58,8 @@
     "zustand": "^4.1.4"
   },
   "scripts": {
-    "start": "cross-env webpack serve --config webpack.dev.js",
-    "bundle": "cross-env webpack build --config webpack.prod.js",
+    "start": "cross-env webpack serve --config webpack.serve.js",
+    "bundle": "cross-env webpack build --config webpack.build.js",
     "type-scss": "cross-env typed-scss-modules src --exportType default --nameFormat none",
     "build": "npm run type-scss && npm run bundle",
     "lint": "prettier-eslint --write $PWD/'**/*.{ts,tsx}'",
