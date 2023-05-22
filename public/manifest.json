@@ -3,9 +3,24 @@
   "name": "Frakt",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "icons/icon-48x48.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "icons/icon-128x128.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "icons/icon-144x144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "icons/icon-152x152.png",
+      "type": "image/png",
+      "sizes": "152x152"
     },
     {
       "src": "icons/icon-192x192.png",
@@ -13,9 +28,9 @@
       "sizes": "192x192"
     },
     {
-      "src": "icons/icon-512x512.png",
+      "src": "icons/icon-196x196.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "196x196"
     }
   ],
   "start_url": ".",
