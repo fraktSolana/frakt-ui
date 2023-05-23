@@ -52,7 +52,7 @@ const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
           <StatsRaffleValues
             className={styles.opacity}
             label="Floor price"
-            value={auction.floorPrice}
+            value={auction?.classicParams?.floorPrice}
           />
           <StatsRaffleValues label="Next round start">
             <div className={styles.wrapper}>

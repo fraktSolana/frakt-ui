@@ -1,14 +1,11 @@
-import { calculateAuctionPrice } from '@frakters/raffle-sdk/lib/raffle-core/helpers';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import moment from 'moment';
 
-import {
-  LiquidateBondOnAuction,
-  buyAuction,
-  buyAuctionBond,
-} from '@frakt/utils/raffles';
+import { liquidateBondOnAuction, buyAuction } from '@frakt/utils/raffles';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { AuctionListItem } from '@frakt/api/raffle';
+
+import { calcPriceAndTimeForClassicAuctions } from './helpers';
+import { web3 } from 'fbonds-core';
 
 export const useAuctionCard = (
   auction: AuctionListItem,
@@ -23,42 +20,60 @@ export const useAuctionCard = (
     close: closeLoadingModal,
   } = useLoadingModal();
 
-  const currentTime = moment().unix();
-
-  const rawTimeToNextRound =
-    auction?.denominator -
-    ((currentTime - auction.startedAt) % auction?.denominator);
-
-  const rawBuyPrice = calculateAuctionPrice({
-    now: currentTime,
-    startPrice: auction.startPrice,
-    startTime: auction.startedAt,
-    delta: auction.delta,
-    deltaType: auction.deltaType,
-    denominator: auction?.denominator,
-  });
-
-  const rawNextPrice = calculateAuctionPrice({
-    now: currentTime + rawTimeToNextRound + 1,
-    startPrice: auction.startPrice,
-    startTime: auction.startedAt,
-    delta: auction.delta,
-    deltaType: auction.deltaType,
-    denominator: auction?.denominator,
-  });
-
   const onSubmit = async (): Promise<void> => {
-    const wallet = useWallet();
-    const { connection } = useConnection();
-
     openLoadingModal();
     try {
-      // const result = await LiquidateBondOnAuction({
-      //   connection,
-      //   wallet,
-      //   // repayAccounts,
-      //   // fbond,
-      // });
+      if (!auction?.bondParams?.fbondPubkey) {
+        const result = await buyAuction({
+          connection,
+          wallet,
+          nftMint: auction?.nftMint,
+          raffleAddress: auction.classicParams?.auctionPubkey,
+        });
+
+        if (result) {
+          hideAuction(auction.nftMint);
+        }
+      } else {
+        const {
+          fbondPubkey,
+          collateralBoxType,
+          collateralBox,
+          collateralTokenMint,
+          collateralTokenAccount,
+          collateralOwner,
+          fraktMarket,
+          oracleFloor,
+          whitelistEntry,
+          repayAccounts,
+        } = auction.bondParams;
+        const result = await liquidateBondOnAuction({
+          connection,
+          wallet,
+          fbondPubkey: fbondPubkey,
+          collateralBoxType: collateralBoxType,
+          collateralBoxPubkey: collateralBox,
+          collateralTokenMint: collateralTokenMint,
+          collateralTokenAccount: collateralTokenAccount,
+          collateralOwner: collateralOwner,
+          fraktMarketPubkey: fraktMarket,
+          oracleFloorPubkey: oracleFloor,
+          whitelistEntryPubkey: whitelistEntry,
+          repayAccounts: repayAccounts.map(
+            ({ bondOffer, bondTradeTransaction }) => {
+              return {
+                bondOffer: new web3.PublicKey(bondOffer),
+                bondTradeTransaction: new web3.PublicKey(bondTradeTransaction),
+                user: wallet.publicKey,
+              };
+            },
+          ),
+        });
+
+        if (result) {
+          hideAuction(auction.nftMint);
+        }
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -66,42 +81,15 @@ export const useAuctionCard = (
     }
   };
 
-  const timeToNextRound = currentTime + rawTimeToNextRound;
-  const nextPrice = parseFloat((rawNextPrice / 1e9).toFixed(3));
-  const buyPrice = parseFloat((rawBuyPrice / 1e9).toFixed(3));
+  // const { timeToNextRound, buyPrice, nextPrice } =
+  //   calcPriceAndTimeForClassicAuctions(auction);
 
   return {
     onSubmit,
     closeLoadingModal,
     loadingModalVisible,
-    timeToNextRound,
-    buyPrice,
-    nextPrice,
+    timeToNextRound: 0,
+    buyPrice: 0,
+    nextPrice: 0,
   };
-};
-
-export const useBondAuction = () => {
-  const onSubmit = async () => {
-    try {
-      if (!auction?.bondPubKey) {
-        const result = await buyAuction({
-          connection,
-          wallet,
-          nftMint: auction?.nftMint,
-          raffleAddress: auction.auctionPubkey,
-        });
-      } else {
-        const result = await buyAuctionBond({
-          connection,
-          wallet,
-          nftMint: auction?.nftMint,
-          raffleAddress: auction.auctionPubkey,
-          fbond: auction.bondPubKey,
-        });
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  return {};
 };
