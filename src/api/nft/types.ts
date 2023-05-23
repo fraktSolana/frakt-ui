@@ -1,6 +1,7 @@
 import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
-import { Market, Pair } from '../bonds';
+import { Market, Pair, WhitelistType } from '../bonds';
 import { LoanType } from '../loans';
+import { Dictionary } from 'ramda';
 
 export interface BorrowNft {
   mint: string;
@@ -35,7 +36,18 @@ export interface BorrowNft {
   };
 
   bondParams?: {
+    duration: number;
+    fee: number;
     marketPubkey: string;
+    whitelistEntry: {
+      publicKey: string;
+      fraktMarket: string;
+      whitelistType: WhitelistType;
+      whitelistedAddress: string;
+    };
+    fraktMarket: string;
+    oracleFloor: string;
+    durations: Array<number>; //? days
   };
 }
 
@@ -73,3 +85,24 @@ export interface Suggestion {
 export type BulkSuggestion = {
   [key in BulkTypes]?: Suggestion;
 };
+
+export type LoanDuration = '7' | '14' | '0'; //? 0 for perpetual
+
+export interface MaxBorrow {
+  '0': number;
+  '7': number;
+  '14': number;
+  all: number;
+}
+
+export interface OrderParamsLite {
+  loanValue: number;
+  loanFee: number;
+  orders: BondCartOrder[];
+}
+
+export interface WalletNftsLite {
+  nfts: Array<BorrowNft>;
+  //? Collection by marketPubkey
+  orders: Dictionary<Array<OrderParamsLite>>;
+}

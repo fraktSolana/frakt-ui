@@ -27,8 +27,8 @@ export const useFetchBondsHistory = ({
     const data = await fetchBondsHistory({
       skip: LIMIT * pageParam,
       limit: LIMIT,
-      sortBy: queryData?.sortBy || 'when',
-      order: queryData?.order || 'asc',
+      sortBy: queryData?.sortBy,
+      order: queryData?.order,
       walletPubkey: showOwnerBonds && publicKey,
       eventType,
       marketPubkey,
@@ -55,6 +55,7 @@ export const useFetchBondsHistory = ({
       networkMode: 'offlineFirst',
       keepPreviousData: true,
       refetchOnWindowFocus: false,
+      enabled: !!queryData?.order,
     });
 
   const bondsData = data?.pages?.map((page) => page.data).flat() || [];
@@ -84,12 +85,12 @@ interface HistoryBondsSortState {
 
 export const useHistoryBondsSort = create<HistoryBondsSortState>((set) => ({
   queryData: null,
-  setSortQuery: ({ order = 'desc', column }) =>
+  setSortQuery: ({ order, column }) =>
     set((state) => ({
       ...state,
       queryData: {
         order: formatSortOrderToNormalValue(order),
-        sortBy: column.dataIndex?.toString() || 'nftName',
+        sortBy: column.dataIndex?.toString(),
       },
     })),
 }));

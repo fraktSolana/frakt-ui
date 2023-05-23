@@ -51,7 +51,7 @@ const BondsTab: FC = () => {
           />
         </div>
 
-        {!bonds.length && loading && <Loader />}
+        {connected && !bonds.length && loading && <Loader />}
 
         {!connected ? (
           <ConnectWalletSection

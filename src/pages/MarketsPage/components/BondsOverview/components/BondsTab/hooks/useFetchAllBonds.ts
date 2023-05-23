@@ -56,6 +56,7 @@ export const useFetchAllBonds = ({
       networkMode: 'offlineFirst',
       keepPreviousData: true,
       refetchOnWindowFocus: false,
+      enabled: !!queryData?.order,
     });
 
   const bondsData = data?.pages?.map((page) => page.data).flat() || [];

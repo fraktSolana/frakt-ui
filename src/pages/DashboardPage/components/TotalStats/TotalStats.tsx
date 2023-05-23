@@ -2,9 +2,8 @@ import { FC } from 'react';
 
 import { TotalStats as TotalStatsInterface } from '@frakt/api/user';
 
-import { DashboardStatsValues } from '../DashboardStatsValues';
+import { DashboardColumnValue, VALUES_TYPES } from '../DashboardStatsValues';
 import styles from './TotalStats.module.scss';
-import Block from '../Block';
 
 interface TotalStatsProps {
   data: TotalStatsInterface;
@@ -12,27 +11,30 @@ interface TotalStatsProps {
 
 const TotalStats: FC<TotalStatsProps> = ({ data }) => {
   return (
-    <Block className={styles.block}>
+    <div className={styles.block}>
       <h2 className={styles.title}>Total stats</h2>
       <div className={styles.statsWrapper}>
-        <DashboardStatsValues
+        <DashboardColumnValue
           label="Total value locked"
-          value={data?.loansTvl}
-          type="solana"
-          toFixed="0"
+          value={data?.loansTvl || '--'}
+          toFixed={0}
+          reverse
         />
-        <DashboardStatsValues
+        <DashboardColumnValue
           label="Loans volume all time"
-          value={data?.loansVolumeAllTime}
-          type="solana"
-          toFixed="0"
+          value={data?.loansVolumeAllTime || '--'}
+          toFixed={0}
+          reverse
         />
-        <DashboardStatsValues
+        <DashboardColumnValue
           label="Active loans"
-          value={data?.activeLoansCount}
+          value={data?.activeLoansCount || '--'}
+          toFixed={0}
+          valueType={VALUES_TYPES.string}
+          reverse
         />
       </div>
-    </Block>
+    </div>
   );
 };
 

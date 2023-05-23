@@ -1,14 +1,27 @@
+import { get } from 'lodash';
+
 import { ActiveRowParams } from './types';
 
-//TODO Rewrite this code!
-export const getRowClassName = (record: any, params: ActiveRowParams) => {
+export const getCardOrRowClassName = (
+  record: any,
+  params: ActiveRowParams,
+  isCard = false,
+) => {
   const DEFAULT_ROW_CLASSNAME = 'rowClassName';
-  const ACTIVE_ROW_CLASSNAME = 'activeRowClassName';
+  const DEFAULT_ACTIVE_ROW_CLASSNAME = 'activeRowClassName';
 
-  if (!params?.field) return DEFAULT_ROW_CLASSNAME;
-  const field = record[params.field];
+  if (!params?.field) return !isCard ? DEFAULT_ROW_CLASSNAME : null;
+
+  const fieldValue = get(record, params.field);
+
   const value = params.value;
 
-  if (!!field && !value) return params?.className;
-  return value && field === value && ACTIVE_ROW_CLASSNAME;
+  if (!!fieldValue && !!value && value === fieldValue) {
+    if (!params?.className) return DEFAULT_ACTIVE_ROW_CLASSNAME;
+
+    if (params?.className && !isCard) return params.className;
+    if (params?.cardClassName && isCard) return params.cardClassName;
+  }
+
+  return null;
 };

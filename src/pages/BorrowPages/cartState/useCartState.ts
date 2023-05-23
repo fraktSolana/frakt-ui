@@ -6,7 +6,7 @@ import { OrderType } from 'fbonds-core/lib/fbond-protocol/types';
 import {
   getCurrentOrderSize,
   getTopOrderSize,
-} from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+} from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 
 import { Pair } from '@frakt/api/bonds';
 import { BondCartOrder } from '@frakt/api/nft';
@@ -214,7 +214,7 @@ type PatchPairByBondOrders = (props: {
   bondOrders: BondCartOrder[];
   reverse?: boolean;
 }) => Pair;
-const patchPairByBondOrders: PatchPairByBondOrders = ({
+export const patchPairByBondOrders: PatchPairByBondOrders = ({
   pair,
   bondOrders,
   reverse,

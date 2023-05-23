@@ -19,3 +19,4 @@ export { useOnClickOutside } from './useOnClickOutside';
 export { useWindowSize } from './useWindowSize';
 export { useLocalStorage } from './useLocalStorage';
 export { useContainerWidth } from './useContainerWidth';
+export { useImagePreload } from './useImagePreload';

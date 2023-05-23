@@ -1,5 +1,5 @@
 import { web3 } from '@frakt-protocol/frakt-sdk';
-import { getTopOrderSize } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
+import { getTopOrderSize } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 import { Pair } from '@frakt/api/bonds';
 
 import { BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
@@ -23,8 +23,9 @@ export const parseMarketOrder = (pair: Pair): MarketOrder => {
       publicKey: pair?.publicKey || '',
       assetReceiver: pair?.assetReceiver || '',
       edgeSettlement: pair ? getTopOrderSize(pair) : 0,
-      authorityAdapter: pair?.authorityAdapterPublicKey || '',
+      authorityAdapter: '',
       bondFeature: pair?.validation?.bondFeatures,
+      maxReturnAmountFilter: pair?.validation?.maxReturnAmountFilter,
     },
   };
 };

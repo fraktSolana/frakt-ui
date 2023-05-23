@@ -5,11 +5,15 @@ import { web3 } from 'fbonds-core';
 
 import { PATHS } from '@frakt/constants';
 import {
+  InstructionsAndSigners,
   showSolscanLinkNotification,
   signAndSendAllTransactions,
-  signAndSendAllTransactionsInSequence,
+  signAndSendV0TransactionWithLookupTables,
 } from '@frakt/utils/transactions';
-import { makeCreateBondMultiOrdersTransaction } from '@frakt/utils/bonds';
+import {
+  makeCreateBondMultiOrdersTransaction,
+  MAX_ACCOUNTS_IN_FAST_TRACK,
+} from '@frakt/utils/bonds';
 import { useConnection } from '@frakt/hooks';
 import { useBorrow } from '@frakt/pages/BorrowPages/cartState';
 import { Market } from '@frakt/api/bonds';
@@ -114,7 +118,6 @@ type BorrowSingle = (props: {
 const borrowSingle: BorrowSingle = async ({
   nft,
   bondOrderParams,
-  market,
   loanType,
   loanValue,
   connection,
@@ -167,17 +170,34 @@ const borrowSingle: BorrowSingle = async ({
     });
   }
 
-  const { createBondTxnAndSigners, sellingBondsTxnsAndSigners } =
-    await makeCreateBondMultiOrdersTransaction({
-      nftMint: nft.mint,
-      market,
-      bondOrderParams: bondOrderParams,
-      connection,
-      wallet,
-    });
+  const {
+    createLookupTableTxn,
+    extendLookupTableTxns,
+    createAndSellBondsIxsAndSigners,
+  } = await makeCreateBondMultiOrdersTransaction({
+    nftMint: nft.mint,
+    marketPubkey: nft.bondParams.marketPubkey,
+    fraktMarketPubkey: nft.bondParams.whitelistEntry.fraktMarket,
+    oracleFloorPubkey: nft.bondParams.oracleFloor,
+    whitelistEntryPubkey: nft.bondParams.whitelistEntry?.publicKey,
+    bondOrderParams: bondOrderParams,
+    connection,
+    wallet,
+  });
+  const ableToOptimize =
+    createAndSellBondsIxsAndSigners.lookupTablePublicKeys
+      .map((lookup) => lookup.addresses)
+      .flat().length <= MAX_ACCOUNTS_IN_FAST_TRACK;
 
-  return await signAndSendAllTransactionsInSequence({
-    txnsAndSigners: [[createBondTxnAndSigners], sellingBondsTxnsAndSigners],
+  return await signAndSendV0TransactionWithLookupTables({
+    createLookupTableTxns: ableToOptimize ? [] : [createLookupTableTxn],
+    extendLookupTableTxns: ableToOptimize ? [] : extendLookupTableTxns,
+    v0InstructionsAndSigners: ableToOptimize
+      ? []
+      : [createAndSellBondsIxsAndSigners],
+    fastTrackInstructionsAndSigners: ableToOptimize
+      ? [createAndSellBondsIxsAndSigners]
+      : [],
     connection,
     wallet,
     commitment: 'confirmed',

@@ -4,6 +4,8 @@ import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
 import { management } from 'fbonds-core/lib/fbond-protocol/functions';
 import { BONDS_ADMIN_PUBKEY, BONDS_PROGRAM_PUBKEY } from '../constants';
+import { repayFbondToTradeTransactions } from 'fbonds-core/lib/fbond-protocol/functions/router';
+import { BondTradeTransactionV2Type } from 'fbonds-core/lib/fbond-protocol/types';
 
 type MakeRepayBondTransaction = (params: {
   loan: Loan;
@@ -20,41 +22,68 @@ export const makeRepayBondTransaction: MakeRepayBondTransaction = async ({
   connection,
 }) => {
   const { instructions: repayIxs, signers: repaySigners } =
-    await management.repayFBond({
-      accounts: {
-        adminPubkey: BONDS_ADMIN_PUBKEY,
-        fbond: new web3.PublicKey(loan.pubkey),
-        fbondsTokenMint: new web3.PublicKey(loan.bondParams.bondTokenMint),
-        bondCollateralOrSolReceiver: loan.bondParams.collateralOrSolReceiver
-          ? new web3.PublicKey(loan.bondParams.collateralOrSolReceiver)
-          : undefined,
-        userPubkey: wallet.publicKey,
+    await repayFbondToTradeTransactions({
+      args: {
+        repayAccounts: loan.bondParams.activeTrades.map((trade) => ({
+          bondTradeTransaction: new web3.PublicKey(trade.publicKey),
+          user: new web3.PublicKey(trade.user),
+          bondOffer: new web3.PublicKey(trade.bondOffer),
+        })),
       },
-      connection,
-      programId: BONDS_PROGRAM_PUBKEY,
-      sendTxn: sendTxnPlaceHolder,
-    });
-
-  const { instructions: getCollateralIxs, signers: getCollateralSigners } =
-    await management.getRepaidCollateralPnft({
+      addComputeUnits: true,
       accounts: {
-        collateralTokenMint: new web3.PublicKey(loan.nft.mint),
         fbond: new web3.PublicKey(loan.pubkey),
+        fbondTokenMint: new web3.PublicKey(loan.bondParams.bondTokenMint),
+        // bondCollateralOrSolReceiver: loan.bondParams.collateralOrSolReceiver
+        //   ? new web3.PublicKey(loan.bondParams.collateralOrSolReceiver)
+        //   : undefined,
+        userPubkey: wallet.publicKey,
+        collateralTokenMint: new web3.PublicKey(loan.nft.mint),
         collateralTokenAccount: new web3.PublicKey(
           loan.bondParams.collateralTokenAccount,
         ),
-        userPubkey: wallet.publicKey,
       },
-      args: {
-        nextBoxIndex: '0',
-      },
+
       connection,
       programId: BONDS_PROGRAM_PUBKEY,
       sendTxn: sendTxnPlaceHolder,
     });
+  // const { instructions: repayIxs, signers: repaySigners } =
+  //   await management.repayFBond({
+  //     accounts: {
+  //       adminPubkey: BONDS_ADMIN_PUBKEY,
+  //       fbond: new web3.PublicKey(loan.pubkey),
+  //       fbondsTokenMint: new web3.PublicKey(loan.bondParams.bondTokenMint),
+  //       bondCollateralOrSolReceiver: loan.bondParams.collateralOrSolReceiver
+  //         ? new web3.PublicKey(loan.bondParams.collateralOrSolReceiver)
+  //         : undefined,
+  //       userPubkey: wallet.publicKey,
+  //     },
+  //     connection,
+  //     programId: BONDS_PROGRAM_PUBKEY,
+  //     sendTxn: sendTxnPlaceHolder,
+  //   });
+
+  // const { instructions: getCollateralIxs, signers: getCollateralSigners } =
+  //   await management.getRepaidCollateralPnft({
+  //     accounts: {
+  // collateralTokenMint: new web3.PublicKey(loan.nft.mint),
+  // fbond: new web3.PublicKey(loan.pubkey),
+  // collateralTokenAccount: new web3.PublicKey(
+  //   loan.bondParams.collateralTokenAccount,
+  // ),
+  // userPubkey: wallet.publicKey,
+  //     },
+  //     args: {
+  //       nextBoxIndex: '0',
+  //     },
+  //     connection,
+  //     programId: BONDS_PROGRAM_PUBKEY,
+  //     sendTxn: sendTxnPlaceHolder,
+  //   });
 
   return {
-    transaction: new web3.Transaction().add(...repayIxs, ...getCollateralIxs),
-    signers: [repaySigners, getCollateralSigners].flat(),
+    transaction: new web3.Transaction().add(...repayIxs),
+    signers: [repaySigners].flat(),
   };
 };

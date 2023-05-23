@@ -16,6 +16,8 @@ export const useBorrowRootPage = () => {
     useMaxBorrowValue({ walletPublicKey: wallet?.publicKey });
   const { clearCart, clearCurrentNftState } = useBorrow();
 
+  const goToLiteBorrowing = () => history.push(PATHS.BORROW_LITE);
+
   const [borrowValue, setBorrowValue] = useState<string>('');
   const [borrowPercentValue, setBorrowPercentValue] = useState<number>(0);
 
@@ -70,6 +72,7 @@ export const useBorrowRootPage = () => {
     isWalletConnected: wallet.connected,
     goToBulkSuggestionPage,
     goToBorrowManualPage,
+    goToLiteBorrowing,
   };
 };
 

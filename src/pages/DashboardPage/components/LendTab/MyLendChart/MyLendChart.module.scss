@@ -1,0 +1,67 @@
+.lendContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+
+  padding-bottom: 32px;
+
+  @media (max-width: 1240px) {
+    padding-bottom: 24px;
+    min-width: 260px;
+  }
+
+  @media (max-width: 960px) {
+    padding-bottom: 16px;
+  }
+}
+
+.lendContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  margin: 0 auto;
+  max-width: 440px;
+  width: 100%;
+}
+
+.lendStats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.chartPieWrapper {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+
+  @media ((max-width: 1240px) and (min-width: 961px)) {
+    flex-direction: column;
+  }
+}
+
+.chart {
+  width: 184px !important;
+  height: 184px !important;
+
+  @media (max-width: 1240px) {
+    width: 192px !important;
+    height: 192px !important;
+  }
+
+  @media (max-width: 960px) {
+    width: 140px !important;
+    height: 140px !important;
+  }
+}
+
+.navigationButton {
+  margin-top: 16px;
+  height: 40px;
+  width: 100%;
+}

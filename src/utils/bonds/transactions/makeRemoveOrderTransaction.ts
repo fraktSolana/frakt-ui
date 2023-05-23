@@ -5,8 +5,7 @@ import { virtual as pairs } from 'fbonds-core/lib/fbond-protocol/functions/marke
 import { BONDS_PROGRAM_PUBKEY } from '../constants';
 
 type MakeRemoveOrderTransaction = (params: {
-  pairPubkey: web3.PublicKey;
-  authorityAdapter: web3.PublicKey;
+  bondOfferV2: web3.PublicKey;
   connection: web3.Connection;
   wallet: WalletContextState;
 }) => Promise<{
@@ -15,31 +14,14 @@ type MakeRemoveOrderTransaction = (params: {
 }>;
 
 export const makeRemoveOrderTransaction: MakeRemoveOrderTransaction = async ({
-  pairPubkey,
-  authorityAdapter,
+  bondOfferV2,
   connection,
   wallet,
 }) => {
-  // const { instructions: instructions1, signers: signers1 } =
-  //   await pairs.withdrawals.withdrawSolFromPair({
-  //     accounts: {
-  //       authorityAdapter,
-  //       pair: pairPubkey,
-  //       userPubkey: wallet.publicKey,
-  //     },
-  //     args: {
-  //       amountOfTokensToWithdraw: edgeSettlement,
-  //     },
-  //     programId: BONDS_PROGRAM_PUBKEY,
-  //     connection,
-  //     sendTxn: sendTxnPlaceHolder,
-  //   });
-
   const { instructions: instructions2, signers: signers2 } =
-    await pairs.mutations.closeVirtualPair({
+    await pairs.mutations.removeBondOfferV2({
       accounts: {
-        authorityAdapter,
-        pair: pairPubkey,
+        bondOfferV2: bondOfferV2,
         userPubkey: wallet.publicKey,
       },
       programId: BONDS_PROGRAM_PUBKEY,

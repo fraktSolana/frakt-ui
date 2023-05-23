@@ -7,11 +7,15 @@ import { NotifyType } from '@frakt/utils/solanaUtils';
 import {
   showSolscanLinkNotification,
   signAndSendAllTransactionsInSequence,
+  signAndSendV0TransactionWithLookupTables,
 } from '@frakt/utils/transactions';
 import { captureSentryError } from '@frakt/utils/sentry';
 import { BondCartOrder } from '@frakt/api/nft';
 
-import { makeExitBondMultiOrdersTransaction } from './makeExitBondTransaction';
+import {
+  makeExitBondMultiOrdersTransaction,
+  makeExitBondMultiOrdersTransactionV2,
+} from './makeExitBondTransaction';
 
 type ExitBond = (props: {
   bond: Bond;
@@ -28,17 +32,23 @@ export const exitBond: ExitBond = async ({
   connection,
   wallet,
 }): Promise<boolean> => {
-  const { unsetBondTxnAndSigners, sellingBondsTxnsAndSigners } =
-    await makeExitBondMultiOrdersTransaction({
-      bond,
-      market,
-      bondOrderParams: bondOrderParams,
-      connection,
-      wallet,
-    });
+  const {
+    createLookupTableTxn,
+    extendLookupTableTxns,
+    exitAndSellBondsIxsAndSigners,
+  } = await makeExitBondMultiOrdersTransactionV2({
+    bond,
+    market,
+    bondOrderParams: bondOrderParams,
+    connection,
+    wallet,
+  });
 
-  await signAndSendAllTransactionsInSequence({
-    txnsAndSigners: [unsetBondTxnAndSigners, sellingBondsTxnsAndSigners],
+  await signAndSendV0TransactionWithLookupTables({
+    createLookupTableTxns: [createLookupTableTxn],
+    extendLookupTableTxns: extendLookupTableTxns,
+    v0InstructionsAndSigners: [exitAndSellBondsIxsAndSigners],
+    fastTrackInstructionsAndSigners: [],
     connection,
     wallet,
     commitment: 'confirmed',
@@ -50,14 +60,13 @@ export const exitBond: ExitBond = async ({
     },
     onSuccess: () => {
       notify({
-        message: 'Exit successfull!',
+        message: 'Exited successfully!',
         type: NotifyType.SUCCESS,
       });
     },
     onError: (error) => {
       // eslint-disable-next-line no-console
       console.warn(error.logs?.join('\n'));
-
       const isNotConfirmed = showSolscanLinkNotification(error);
       if (!isNotConfirmed) {
         notify({
@@ -65,11 +74,10 @@ export const exitBond: ExitBond = async ({
           type: NotifyType.ERROR,
         });
       }
-
       captureSentryError({
         error,
         wallet,
-        transactionName: 'exit',
+        transactionName: 'borrowSingleBond',
       });
     },
   });

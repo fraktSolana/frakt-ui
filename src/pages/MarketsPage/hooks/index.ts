@@ -11,10 +11,7 @@ type UseMarketsPreview = (walletPubkey?: web3.PublicKey) => {
 export const useMarketsPreview: UseMarketsPreview = (walletPubkey) => {
   const { data, isLoading } = useQuery(
     ['marketsPreview', walletPubkey],
-    () =>
-      fetchMarketsPreview({
-        walletPubkey,
-      }),
+    () => fetchMarketsPreview({ walletPubkey }),
     {
       staleTime: 5000,
       refetchOnWindowFocus: false,

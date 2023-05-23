@@ -1,17 +1,13 @@
 import { web3 } from '@frakt-protocol/frakt-sdk';
 import {
-  BondingCurveType,
-  PairAuthorityType,
   MarketState,
   MarketTrustType,
   PairTokenType,
   PairValidationType,
-  PairState,
-  PairType,
   CollateralBoxType,
   FraktBondState,
-  BondFeatures,
-  AutocompoundDeposit,
+  BondOfferV2,
+  BondTradeTransactionV2,
 } from 'fbonds-core/lib/fbond-protocol/types';
 
 interface FMarket {
@@ -87,57 +83,11 @@ export interface MarketPreview {
   bestOffer: number; //? lamports
   bestLTV: number;
   activeBondsAmount: number;
+  fee: number;
+  bestDuration: number;
 }
 
-export interface Pair {
-  publicKey: string;
-  assetReceiver: string;
-  baseSpotPrice: number;
-  bidCap: number;
-  bidSettlement: number;
-  bondingCurve: {
-    delta: number;
-    bondingType: BondingCurveType;
-  };
-  buyOrdersQuantity: number;
-  concentrationIndex: number;
-  createdAt: string;
-  currentSpotPrice: number;
-  edgeSettlement: number;
-  fee: number;
-  feeTokenAccount: string;
-  feeVaultSeed: number;
-  fundsSolOrTokenBalance: number;
-  fundsSolVaultSeed: number;
-  fundsTokenAccount: string;
-  hadoMarket: string;
-  initialFundsSolOrTokenBalance: number;
-  isRemoved: boolean;
-  lastTransactedAt: number;
-  lpTokensInCirculation: number;
-  lpTokensMint: string;
-  mathCounter: number;
-  nftsSeed: number;
-  authorityAdapterPublicKey: string;
-  pairAuthorityAdapterProgram: string;
-  pairAuthorityType: PairAuthorityType;
-  pairState: PairState;
-  pairType: PairType;
-  sellOrdersCount: number;
-  solOrTokenFeeAmount: number;
-  updatedAt: string;
-  validation: {
-    bondFeatures: BondFeatures;
-    publicKey: string;
-    createdAt: string;
-    durationFilter: number;
-    isRemoved: boolean;
-    loanToValueFilter: number;
-    pair: string;
-    updatedAt: string;
-    user: string;
-  };
-}
+export type Pair = BondOfferV2;
 
 interface FBond {
   publicKey: string;
@@ -199,10 +149,11 @@ export interface BondStats {
 export interface Bond {
   fbond: FBond;
   collateralBox: CollateralBox;
-  autocompoundDeposits?: AutocompoundDeposit[];
+  autocompoundDeposits?: BondTradeTransactionV2[];
   ownerPubkey?: string;
   marketPubkey: string;
   stats: BondStats;
+  eventSignature: string;
 }
 
 export interface FetchBondsRequestParams {

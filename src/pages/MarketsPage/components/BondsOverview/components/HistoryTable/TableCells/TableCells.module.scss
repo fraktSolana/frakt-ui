@@ -42,6 +42,15 @@
   text-transform: capitalize;
 }
 
+.link,
+.link:hover {
+  color: var(--primary-text);
+  text-decoration: underline;
+}
+.link:hover {
+  opacity: 0.6;
+}
+
 .value {
   color: var(--primary-text);
   display: flex;

@@ -8,6 +8,9 @@ import {
   NotificationsSettings,
   UserStats,
   UserRewards,
+  CollectionsStats,
+  AvailableToBorrowUser,
+  LeaderBoard,
 } from './types';
 
 type FetchUser = (props: {
@@ -124,6 +127,30 @@ export const setUserNotificationsSettings: SetUserNotificationsSettings =
     );
   };
 
+type FetchAvailableToBorrowUser = (props: {
+  publicKey: web3.PublicKey;
+}) => Promise<AvailableToBorrowUser>;
+export const fetchAvailableToBorrowUser: FetchAvailableToBorrowUser = async ({
+  publicKey,
+}) => {
+  const { data } = await axios.get<AvailableToBorrowUser>(
+    `https://${process.env.BACKEND_DOMAIN}/nft/available-to-borrow/${
+      publicKey?.toBase58() || ''
+    }`,
+  );
+
+  return data;
+};
+
+type FetchCollectionsStats = () => Promise<CollectionsStats>;
+export const fetchCollectionsStats: FetchCollectionsStats = async () => {
+  const { data } = await axios.get<CollectionsStats>(
+    `https://${process.env.BACKEND_DOMAIN}/stats/available-to-borrow`,
+  );
+
+  return data;
+};
+
 type FetchAllUserStats = (props: {
   publicKey: web3.PublicKey;
 }) => Promise<UserStats>;
@@ -146,4 +173,20 @@ export const fetchUserRewards: FetchUserRewards = async ({ publicKey }) => {
   );
 
   return data;
+};
+
+export const fetchUserIndividual = async (
+  publicKey: string,
+): Promise<LeaderBoard> => {
+  const response = await fetch(
+    `https://${process.env.BACKEND_DOMAIN}/leaderboard?sort=asc&skip=0&limit=10&search=${publicKey}&sortBy=rank`,
+  );
+
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+
+  const data = await response.json();
+
+  return data?.[0];
 };

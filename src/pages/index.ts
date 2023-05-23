@@ -12,5 +12,6 @@ export {
   BorrowBulkSuggestionPage,
   BorrowBulkOverviewPage,
   BorrowSuccessPage,
+  BorrowManualLitePage,
 } from './BorrowPages';
 export { OfferPage } from './OfferPage';
