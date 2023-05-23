@@ -1,7 +1,6 @@
 import axios from 'axios';
 import {
   AuctionListItem,
-  BondsAuctionsListItem,
   CollectionsListItem,
   GraceListItem,
   LotteryTickets,
@@ -77,16 +76,6 @@ export const fetchUserTickets = async (
 export const fetchAuctionsList = async (): Promise<AuctionListItem[]> => {
   const { data } = await axios.get<AuctionListItem[]>(
     `https://${process.env.BACKEND_DOMAIN}/liquidation/auctions`,
-  );
-
-  return data ?? [];
-};
-
-export const fetchAuctionsBondsList = async (): Promise<
-  BondsAuctionsListItem[]
-> => {
-  const { data } = await axios.get<BondsAuctionsListItem[]>(
-    `https://${process.env.BACKEND_DOMAIN}/bonds/auctions`,
   );
 
   return data ?? [];

@@ -1,11 +1,9 @@
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+import { web3 } from 'fbonds-core';
 
 import { liquidateBondOnAuction, buyAuction } from '@frakt/utils/raffles';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { AuctionListItem } from '@frakt/api/raffle';
-
-import { calcPriceAndTimeForClassicAuctions } from './helpers';
-import { web3 } from 'fbonds-core';
 
 export const useAuctionCard = (
   auction: AuctionListItem,
@@ -81,15 +79,9 @@ export const useAuctionCard = (
     }
   };
 
-  // const { timeToNextRound, buyPrice, nextPrice } =
-  //   calcPriceAndTimeForClassicAuctions(auction);
-
   return {
     onSubmit,
     closeLoadingModal,
     loadingModalVisible,
-    timeToNextRound: 0,
-    buyPrice: 0,
-    nextPrice: 0,
   };
 };

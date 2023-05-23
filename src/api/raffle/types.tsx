@@ -56,28 +56,6 @@ export interface WonRaffleListItem {
   isAuction?: boolean;
 }
 
-export interface BondsAuctionsListItem {
-  fbond: web3.PublicKey;
-  collateralBox: web3.PublicKey;
-  collateralTokenMint: web3.PublicKey;
-  collateralTokenAccount: web3.PublicKey;
-  collateralOwner: web3.PublicKey;
-  fraktMarket: web3.PublicKey;
-  oracleFloor: web3.PublicKey;
-  whitelistEntry: web3.PublicKey;
-
-  nft: any;
-  floorPrice: number;
-  startAuctionTime: number;
-
-  repayAccounts: [
-    {
-      bondTradeTransaction: web3.PublicKey;
-      bondOffer: web3.PublicKey;
-    },
-  ];
-}
-
 export interface AuctionListItem {
   nftMint: string;
   nftName: string;
