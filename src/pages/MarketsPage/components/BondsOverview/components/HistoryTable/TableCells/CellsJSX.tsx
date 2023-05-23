@@ -23,10 +23,15 @@ export const createAutocompoundJSX = (status: FraktBondState) => (
   </span>
 );
 
-export const createliquidatingAtJSX = (value = 0) => (
-  <span className={styles.value}>
-    {moment(moment.unix(value)).fromNow(false)}
-  </span>
+export const createliquidatingAtJSX = (when = 0, signature: string) => (
+  <a
+    className={classNames(styles.value, styles.link)}
+    href={`${process.env.SOLANAFM_URL}/tx/${signature}`}
+    rel="noopener noreferrer"
+    target="_blank"
+  >
+    {moment(moment.unix(when)).fromNow(false)}
+  </a>
 );
 
 export const ReceiveCell = ({ stats }: { stats: BondStats }) => {
