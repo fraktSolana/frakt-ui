@@ -21,16 +21,18 @@ export const useAuctionCard = (
   const onSubmit = async (): Promise<void> => {
     openLoadingModal();
     try {
+      const { nftMint } = auction;
+
       if (!auction?.bondParams?.fbondPubkey) {
         const result = await buyAuction({
           connection,
           wallet,
-          nftMint: auction?.nftMint,
+          nftMint,
           raffleAddress: auction.classicParams?.auctionPubkey,
         });
 
         if (result) {
-          hideAuction(auction.nftMint);
+          hideAuction(nftMint);
         }
       } else {
         const {
@@ -45,6 +47,17 @@ export const useAuctionCard = (
           whitelistEntry,
           repayAccounts,
         } = auction.bondParams;
+
+        const convertedRepayAccounts = repayAccounts.map(
+          ({ bondOffer, bondTradeTransaction }) => {
+            return {
+              bondOffer: new web3.PublicKey(bondOffer),
+              bondTradeTransaction: new web3.PublicKey(bondTradeTransaction),
+              user: wallet.publicKey,
+            };
+          },
+        );
+
         const result = await liquidateBondOnAuction({
           connection,
           wallet,
@@ -57,19 +70,11 @@ export const useAuctionCard = (
           fraktMarketPubkey: fraktMarket,
           oracleFloorPubkey: oracleFloor,
           whitelistEntryPubkey: whitelistEntry,
-          repayAccounts: repayAccounts.map(
-            ({ bondOffer, bondTradeTransaction }) => {
-              return {
-                bondOffer: new web3.PublicKey(bondOffer),
-                bondTradeTransaction: new web3.PublicKey(bondTradeTransaction),
-                user: wallet.publicKey,
-              };
-            },
-          ),
+          repayAccounts: convertedRepayAccounts,
         });
 
         if (result) {
-          hideAuction(auction.nftMint);
+          hideAuction(nftMint);
         }
       }
     } catch (error) {

@@ -81,7 +81,7 @@ const AUCTIONS_LIST = [
       oracleFloor: '25uErXB4Rpx8RxFo4pNbtB4Hdd5bmDcZCANMLWbBLxpn',
       whitelistEntry: '5hahh3DNgScdRRhRHD5BXxgpKd1ZrkQrCXmuEMoYwVdx',
       floorPrice: 753327195,
-      startAuctionTime: 1685101951,
+      startAuctionTime: 1684922099,
       repayAccounts: [
         {
           bondTradeTransaction: '6VukUoTSZ5iBMTHnRmWTdn9zPZdoztXukY2eyLoc4Piw',

@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useDispatch } from 'react-redux';
 import moment from 'moment';
@@ -21,7 +21,7 @@ interface AuctionCardProps {
   hideAuction: (value: string) => void;
 }
 
-const DONOMINATIOR_PERCENT = 0.007;
+const DENOMINATIOR_PERCENT = 0.007;
 
 const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
   const { connected } = useWallet();
@@ -84,7 +84,7 @@ const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
           {isBondAuction ? (
             <PriceSubtraction
               initialPrice={floorPrice}
-              percentage={DONOMINATIOR_PERCENT}
+              percentage={DENOMINATIOR_PERCENT}
               startTime={moment.unix(auction?.bondParams?.startAuctionTime)}
               setIsAuctionPriceBelowThreshold={setIsAuctionPriceBelowThreshold}
             />
@@ -134,9 +134,7 @@ const PriceSubtraction: FC<PriceSubtractionProps> = ({
   const isBelowThreshold = checkPriceThreshold(parseFloat(initialPrice), price);
 
   useEffect(() => {
-    if (isBelowThreshold) {
-      setIsAuctionPriceBelowThreshold(true);
-    }
+    setIsAuctionPriceBelowThreshold(isBelowThreshold);
   }, [isBelowThreshold]);
 
   useEffect(() => {

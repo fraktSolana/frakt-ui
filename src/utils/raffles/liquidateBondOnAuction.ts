@@ -1,6 +1,5 @@
 import { liquidateBondOnAuction as txn } from 'fbonds-core/lib/fbond-protocol/functions/liquidation';
 import { RepayAccounts } from 'fbonds-core/lib/fbond-protocol/functions/router';
-
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
 
@@ -12,7 +11,7 @@ import {
   signAndConfirmTransaction,
 } from '../transactions';
 
-type BuyAuctionBond = (props: {
+type LiquidateBondOnAuction = (props: {
   connection: web3.Connection;
   wallet: WalletContextState;
   fbondPubkey: string;
@@ -27,7 +26,7 @@ type BuyAuctionBond = (props: {
   repayAccounts: RepayAccounts[];
 }) => Promise<boolean>;
 
-export const liquidateBondOnAuction: BuyAuctionBond = async ({
+export const liquidateBondOnAuction: LiquidateBondOnAuction = async ({
   connection,
   wallet,
   fbondPubkey,

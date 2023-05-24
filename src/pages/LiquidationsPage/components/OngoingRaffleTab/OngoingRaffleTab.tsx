@@ -1,6 +1,7 @@
 import { FC, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
+import { AuctionListItem, RaffleListItem } from '@frakt/api/raffle';
 import { useIntersection } from '@frakt/hooks/useIntersection';
 import { Loader } from '@frakt/components/Loader';
 import EmptyList from '@frakt/components/EmptyList';
@@ -16,7 +17,6 @@ import {
 } from '../../hooks';
 
 import styles from './OngoingRaffleTab.module.scss';
-import { AuctionListItem, RaffleListItem } from '@frakt/api/raffle';
 
 const OngoingRaffleTab: FC = () => {
   const { publicKey } = useWallet();
