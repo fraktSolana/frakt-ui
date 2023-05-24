@@ -27,6 +27,8 @@ type SignAndSendV0TransactionWithLookupTablesSeparateSignatures = (props: {
   wallet: WalletContextState;
 
   isLedger?: boolean;
+  skipTimeout?: boolean;
+
   commitment?: web3.Commitment;
   onBeforeApprove?: () => void;
   onAfterSend?: () => void;
@@ -47,7 +49,7 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
 
     connection,
     wallet,
-
+    skipTimeout,
     isLedger,
     commitment = 'confirmed',
     onBeforeApprove,
@@ -56,7 +58,7 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
     onError,
   }) => {
     try {
-      if (true) {
+      if (isLedger) {
         for (const txnAndSigners of notBondTxns) {
           await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
             notBondTxns: [txnAndSigners],
@@ -65,6 +67,7 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
             v0InstructionsAndSigners: [],
             fastTrackInstructionsAndSigners: [],
 
+            skipTimeout: true,
             // lookupTablePublicKey: bondTransactionsAndSignersChunks,
             connection,
             wallet,
@@ -88,6 +91,7 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
             v0InstructionsAndSigners: [],
             fastTrackInstructionsAndSigners: [],
 
+            skipTimeout: true,
             // lookupTablePublicKey: bondTransactionsAndSignersChunks,
             connection,
             wallet,
@@ -111,6 +115,7 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
             v0InstructionsAndSigners: [],
             fastTrackInstructionsAndSigners: [],
 
+            skipTimeout: true,
             // lookupTablePublicKey: bondTransactionsAndSignersChunks,
             connection,
             wallet,
@@ -129,6 +134,7 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
             v0InstructionsAndSigners: [txnAndSigners],
             fastTrackInstructionsAndSigners: [],
 
+            skipTimeout: true,
             // lookupTablePublicKey: bondTransactionsAndSignersChunks,
             connection,
             wallet,
@@ -138,7 +144,13 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
             onError,
           });
         }
-
+        console.log(
+          ' fastTrackInstructionsAndSigners length: ',
+          fastTrackInstructionsAndSigners.map((transaction) => ({
+            transaction,
+            signers: [],
+          })).length,
+        );
         for (const txnAndSigners of fastTrackInstructionsAndSigners) {
           await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
             notBondTxns: [],
@@ -146,14 +158,16 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
             extendLookupTableTxns: [],
             v0InstructionsAndSigners: [],
             fastTrackInstructionsAndSigners: [txnAndSigners],
-
             // lookupTablePublicKey: bondTransactionsAndSignersChunks,
+            isLedger: false,
+            skipTimeout: true,
+
             connection,
             wallet,
             commitment,
-            onAfterSend,
-            onSuccess,
-            onError,
+            onAfterSend: () => {},
+            onSuccess: () => {},
+            onError: () => {},
           });
         }
 
@@ -259,7 +273,8 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
           currentTxIndexLookupTable += 1;
           // console.log("MinContextSlot: ", txn.minNonceContextSlot)
         }
-        await new Promise((r) => setTimeout(r, 8000));
+        if (!!skipTimeout === false)
+          await new Promise((r) => setTimeout(r, 8000));
       }
 
       const addressesPerTxn = 20;
@@ -394,7 +409,8 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
           currentTxIndex += 1;
           // console.log("MinContextSlot: ", txn.minNonceContextSlot)
         }
-        await new Promise((r) => setTimeout(r, 7000));
+        if (!!skipTimeout === false)
+          await new Promise((r) => setTimeout(r, 7000));
       }
 
       // const signedTransactionsV0 = await wallet.signAllTransactions(
