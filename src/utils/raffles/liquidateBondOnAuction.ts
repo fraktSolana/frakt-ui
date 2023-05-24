@@ -52,7 +52,9 @@ export const liquidateBondOnAuction: BuyAuctionBond = async ({
         collateralTokenMint: new web3.PublicKey(collateralTokenMint),
         collateralTokenAccount: new web3.PublicKey(collateralTokenAccount),
         collateralOwner:
-          collateralOwner === 'ecrow' ? wallet.publicKey : wallet.publicKey, // ? if (type===ecrow) BONDS_PROGRAM_PUBKEY  if(type=== ecrowles) wallet.publicKey
+          collateralOwner === 'ecrow'
+            ? new web3.PublicKey(process.env.BONDS_PROGRAM_PUBKEY)
+            : wallet.publicKey,
         fraktMarket: new web3.PublicKey(fraktMarketPubkey),
         oracleFloor: new web3.PublicKey(oracleFloorPubkey),
         whitelistEntry: new web3.PublicKey(whitelistEntryPubkey),
