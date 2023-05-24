@@ -25,6 +25,8 @@ type SignAndSendV0TransactionWithLookupTablesSeparateSignatures = (props: {
 
   connection: web3.Connection;
   wallet: WalletContextState;
+
+  isLedger?: boolean;
   commitment?: web3.Commitment;
   onBeforeApprove?: () => void;
   onAfterSend?: () => void;
@@ -45,6 +47,8 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
 
     connection,
     wallet,
+
+    isLedger,
     commitment = 'confirmed',
     onBeforeApprove,
     onAfterSend,
@@ -52,6 +56,118 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
     onError,
   }) => {
     try {
+      if (true) {
+        for (const txnAndSigners of notBondTxns) {
+          await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+            notBondTxns: [txnAndSigners],
+            createLookupTableTxns: [],
+            extendLookupTableTxns: [],
+            v0InstructionsAndSigners: [],
+            fastTrackInstructionsAndSigners: [],
+
+            // lookupTablePublicKey: bondTransactionsAndSignersChunks,
+            connection,
+            wallet,
+            commitment,
+            onAfterSend,
+            onSuccess,
+            onError,
+          });
+        }
+
+        for (const txnAndSigners of createLookupTableTxns.map(
+          (transaction) => ({
+            transaction,
+            signers: [],
+          }),
+        )) {
+          await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+            notBondTxns: [txnAndSigners],
+            createLookupTableTxns: [],
+            extendLookupTableTxns: [],
+            v0InstructionsAndSigners: [],
+            fastTrackInstructionsAndSigners: [],
+
+            // lookupTablePublicKey: bondTransactionsAndSignersChunks,
+            connection,
+            wallet,
+            commitment,
+            onAfterSend,
+            onSuccess,
+            onError,
+          });
+        }
+
+        for (const txnAndSigners of extendLookupTableTxns.map(
+          (transaction) => ({
+            transaction,
+            signers: [],
+          }),
+        )) {
+          await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+            notBondTxns: [txnAndSigners],
+            createLookupTableTxns: [],
+            extendLookupTableTxns: [],
+            v0InstructionsAndSigners: [],
+            fastTrackInstructionsAndSigners: [],
+
+            // lookupTablePublicKey: bondTransactionsAndSignersChunks,
+            connection,
+            wallet,
+            commitment,
+            onAfterSend,
+            onSuccess,
+            onError,
+          });
+        }
+
+        for (const txnAndSigners of v0InstructionsAndSigners) {
+          await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+            notBondTxns: [],
+            createLookupTableTxns: [],
+            extendLookupTableTxns: [],
+            v0InstructionsAndSigners: [txnAndSigners],
+            fastTrackInstructionsAndSigners: [],
+
+            // lookupTablePublicKey: bondTransactionsAndSignersChunks,
+            connection,
+            wallet,
+            commitment,
+            onAfterSend,
+            onSuccess,
+            onError,
+          });
+        }
+
+        for (const txnAndSigners of fastTrackInstructionsAndSigners) {
+          await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+            notBondTxns: [],
+            createLookupTableTxns: [],
+            extendLookupTableTxns: [],
+            v0InstructionsAndSigners: [],
+            fastTrackInstructionsAndSigners: [txnAndSigners],
+
+            // lookupTablePublicKey: bondTransactionsAndSignersChunks,
+            connection,
+            wallet,
+            commitment,
+            onAfterSend,
+            onSuccess,
+            onError,
+          });
+        }
+
+        // const allTransactionsAndSigners: TxnsAndSigners[] = [
+        //   ...notBondTxns,
+        //   ...createLookupTableTxns.map(transaction => ({ transaction, signers: [] })),
+        //   ...extendLookupTableTxns.map(transaction => ({ transaction, signers: [] })),
+        //   ...v0InstructionsAndSigners.map(instructionAndSigners => ({ transaction: new web3.Transaction().add(...instructionAndSigners.instructions), signers: instructionAndSigners. })),
+
+        // ]
+
+        return true;
+      }
+
       const { blockhash, lastValidBlockHeight } =
         await connection.getLatestBlockhash();
       const fastTrackV0Transactions = await Promise.all(
