@@ -3,7 +3,7 @@ import { notification } from 'antd';
 import { Dictionary } from 'lodash';
 
 import { formatNumber, Notify, NotifyType } from './solanaUtils';
-import { FRKT_TOKEN_MINT_PUBLIC_KEY } from '../config';
+import { FRKT_TOKEN_MINT } from '../config';
 
 export const notify: Notify = ({
   message = '',
@@ -46,7 +46,7 @@ export const SOL_TOKEN: TokenInfo = {
 
 export const FRKT_TOKEN: TokenInfo = {
   chainId: 101,
-  address: FRKT_TOKEN_MINT_PUBLIC_KEY,
+  address: FRKT_TOKEN_MINT,
   name: 'FRAKT Token',
   decimals: 8,
   symbol: 'FRKT',
