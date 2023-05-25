@@ -130,6 +130,9 @@ module.exports = {
       zlib: require.resolve('browserify-zlib'),
       http: require.resolve('stream-http'),
       process: false,
+      https: require.resolve('https-browserify'),
+      zlib: require.resolve('browserify-zlib'),
+      http: require.resolve('stream-http'),
     },
   },
   plugins: [
