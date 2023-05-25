@@ -84,6 +84,15 @@
   }
 }
 
+.btnExit.positive {
+  border-color: var(--light-green-color);
+  background: var(--light-green-color-2);
+
+  &:hover {
+    background: var(--light-green-color-1);
+  }
+}
+
 .tooltip {
   width: 100%;
 }
