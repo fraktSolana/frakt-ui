@@ -3,11 +3,8 @@ import { web3 } from '@frakt-protocol/frakt-sdk';
 import { useQuery } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
 import { orderBy } from 'lodash';
+import { borrow } from 'fbonds-core/lib/fbond-protocol/functions/management';
 
-import {
-  MAX_ACCOUNTS_IN_FAST_TRACK,
-  makeCreateBondMultiOrdersTransaction,
-} from '@frakt/utils/bonds';
 import { fetchMarketPairs, fetchCertainMarket } from '@frakt/api/bonds';
 import {
   BorrowNft,
@@ -21,10 +18,7 @@ import { NFT } from '@frakt/pages/DashboardPage/types';
 import { notify, throwLogsError } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { PATHS } from '@frakt/constants';
-import {
-  showSolscanLinkNotification,
-  signAndSendV0TransactionWithLookupTables,
-} from '@frakt/utils/transactions';
+import { showSolscanLinkNotification } from '@frakt/utils/transactions';
 
 import { useNotConnectedBorrowContent } from '../../NotConnectedBorrowContent';
 import { filterPairs, getBondOrderParams, parseNFTs } from '../helpers';
@@ -131,6 +125,7 @@ export const useBorrowSingleBond = () => {
       hideNFT(nft?.mint);
       goToToBorrowSuccessPage();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.log(error);
     } finally {
       closeLoadingModal();
@@ -166,48 +161,30 @@ const borrowSingle = async ({
   connection: web3.Connection;
   wallet: WalletContextState;
 }) => {
-  const {
-    createLookupTableTxn,
-    extendLookupTableTxns,
-    createAndSellBondsIxsAndSigners,
-  } = await makeCreateBondMultiOrdersTransaction({
-    nftMint: nft?.mint,
-    marketPubkey: nft?.marketPubkey,
-    fraktMarketPubkey: nft.fraktMarketPubkey,
-    oracleFloorPubkey: nft.oracleFloorPubkey,
-    whitelistEntryPubkey: nft.whitelistEntryPubkey,
-    bondOrderParams: bondOrderParams,
+  const order = {
+    borrowNft: {
+      mint: nft.mint,
+      bondParams: {
+        marketPubkey: nft.marketPubkey,
+        whitelistEntry: {
+          publicKey: nft.whitelistEntryPubkey,
+          fraktMarket: nft.fraktMarketPubkey,
+        },
+        oracleFloor: nft.oracleFloorPubkey,
+      },
+    },
+    bondOrderParams,
+  };
+  return await borrow({
+    notBondTxns: [],
+    orders: [order],
     connection,
     wallet,
-  });
-
-  const ableToOptimize =
-    createAndSellBondsIxsAndSigners.lookupTablePublicKeys
-      .map((lookup) => lookup.addresses)
-      .flat().length <= MAX_ACCOUNTS_IN_FAST_TRACK;
-
-  return await signAndSendV0TransactionWithLookupTables({
-    createLookupTableTxns: ableToOptimize ? [] : [createLookupTableTxn],
-    extendLookupTableTxns: ableToOptimize ? [] : extendLookupTableTxns,
-    v0InstructionsAndSigners: ableToOptimize
-      ? []
-      : [createAndSellBondsIxsAndSigners],
-    fastTrackInstructionsAndSigners: ableToOptimize
-      ? [createAndSellBondsIxsAndSigners]
-      : [],
-    connection,
-    wallet,
-    commitment: 'confirmed',
+    isLedger: false,
     onAfterSend: () => {
       notify({
         message: 'Transactions sent!',
         type: NotifyType.INFO,
-      });
-    },
-    onSuccess: () => {
-      notify({
-        message: 'Borrowed successfully!',
-        type: NotifyType.SUCCESS,
       });
     },
     onError: (error) => {
@@ -223,6 +200,12 @@ const borrowSingle = async ({
         error,
         wallet,
         transactionName: 'borrowSingleBond',
+      });
+    },
+    onSuccess: () => {
+      notify({
+        message: 'Borrowed successfully!',
+        type: NotifyType.SUCCESS,
       });
     },
   });

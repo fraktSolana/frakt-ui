@@ -10,6 +10,7 @@ import { LoanType } from '@frakt/api/loans';
 import { BorrowNft, OrderParamsLite } from '@frakt/api/nft';
 import Tooltip from '@frakt/components/Tooltip';
 import Button from '@frakt/components/Button';
+import Checkbox from '@frakt/components/Checkbox';
 
 import styles from './Sidebar.module.scss';
 import { useSidebar } from './hooks';
@@ -46,6 +47,8 @@ export const Sidebar: FC<SidebarProps> = ({
     onSubmit,
     loadingModalVisible,
     setLoadingModalVisible,
+    isLedger,
+    setIsLedger,
   } = useSidebar({
     loanType,
     totalBorrowValue,
@@ -93,6 +96,13 @@ export const Sidebar: FC<SidebarProps> = ({
                 nfts={cartNfts}
                 orderParamsByMint={orderParamsByMint}
                 loanType={loanType}
+              />
+            </div>
+            <div className={styles.checkboxWrapper}>
+              <Checkbox
+                onChange={() => setIsLedger?.(!isLedger)}
+                label="I use ledger"
+                checked={isLedger}
               />
             </div>
             <div className={styles.borrowFormSubmitBtnWrapper}>

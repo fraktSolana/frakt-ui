@@ -25,6 +25,7 @@ export interface SizeFieldProps {
   amountMaxLength?: number;
   disabled?: boolean;
   lpBalance?: number;
+  availableMaxBalance?: string;
   toolTipText?: string;
 }
 
@@ -42,12 +43,16 @@ const SizeField: FC<SizeFieldProps> = ({
   placeholder = '0.0',
   disabled = false,
   lpBalance,
+  availableMaxBalance,
   toolTipText,
 }) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const onUseMaxButtonClick = () => {
-    lpBalance && onValueChange(String(lpBalance));
+    const maxValue = availableMaxBalance
+      ? availableMaxBalance
+      : String(lpBalance);
+    lpBalance && onValueChange(maxValue);
   };
 
   return (

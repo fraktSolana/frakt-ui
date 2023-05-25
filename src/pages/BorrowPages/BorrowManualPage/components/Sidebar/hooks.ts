@@ -2,18 +2,13 @@ import { useState } from 'react';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
 import { useHistory } from 'react-router-dom';
 import { web3 } from 'fbonds-core';
+import { borrow } from 'fbonds-core/lib/fbond-protocol/functions/management';
 
 import { PATHS } from '@frakt/constants';
 import {
-  InstructionsAndSigners,
   showSolscanLinkNotification,
   signAndSendAllTransactions,
-  signAndSendV0TransactionWithLookupTables,
 } from '@frakt/utils/transactions';
-import {
-  makeCreateBondMultiOrdersTransaction,
-  MAX_ACCOUNTS_IN_FAST_TRACK,
-} from '@frakt/utils/bonds';
 import { useConnection } from '@frakt/hooks';
 import { useBorrow } from '@frakt/pages/BorrowPages/cartState';
 import { Market } from '@frakt/api/bonds';
@@ -170,37 +165,17 @@ const borrowSingle: BorrowSingle = async ({
     });
   }
 
-  const {
-    createLookupTableTxn,
-    extendLookupTableTxns,
-    createAndSellBondsIxsAndSigners,
-  } = await makeCreateBondMultiOrdersTransaction({
-    nftMint: nft.mint,
-    marketPubkey: nft.bondParams.marketPubkey,
-    fraktMarketPubkey: nft.bondParams.whitelistEntry.fraktMarket,
-    oracleFloorPubkey: nft.bondParams.oracleFloor,
-    whitelistEntryPubkey: nft.bondParams.whitelistEntry?.publicKey,
-    bondOrderParams: bondOrderParams,
-    connection,
-    wallet,
-  });
-  const ableToOptimize =
-    createAndSellBondsIxsAndSigners.lookupTablePublicKeys
-      .map((lookup) => lookup.addresses)
-      .flat().length <= MAX_ACCOUNTS_IN_FAST_TRACK;
+  const order = {
+    borrowNft: nft,
+    bondOrderParams,
+  };
 
-  return await signAndSendV0TransactionWithLookupTables({
-    createLookupTableTxns: ableToOptimize ? [] : [createLookupTableTxn],
-    extendLookupTableTxns: ableToOptimize ? [] : extendLookupTableTxns,
-    v0InstructionsAndSigners: ableToOptimize
-      ? []
-      : [createAndSellBondsIxsAndSigners],
-    fastTrackInstructionsAndSigners: ableToOptimize
-      ? [createAndSellBondsIxsAndSigners]
-      : [],
+  await borrow({
+    notBondTxns: [],
+    orders: [order],
     connection,
     wallet,
-    commitment: 'confirmed',
+    isLedger: false,
     onAfterSend: () => {
       notify({
         message: 'Transactions sent!',
