@@ -21,7 +21,6 @@ import { OfferTypes } from './types';
 import {
   DURATION_OPTIONS,
   EARNER_INTEREST_OPTIONS,
-  MAX_LIMIT_INTEREST,
   OFFER_TYPE_OPTIONS,
   MAX_LIMIT_INTEREST_FOR_14_DAYS,
   MAX_LIMIT_INTEREST_FOR_7_DAYS,
@@ -42,7 +41,6 @@ export const OfferPage = () => {
     onDurationChange,
     onOfferSizeChange,
     onInterestChange,
-    handleInterestOnBlur,
     onCreateOffer,
     isValid,
     isEdit,
@@ -60,6 +58,7 @@ export const OfferPage = () => {
     maxLoanValue,
     onOfferTypeChange,
     offerType,
+    isOfferHasChanged,
   } = useOfferPage();
 
   const maxLimitInterest =
@@ -139,7 +138,6 @@ export const OfferPage = () => {
               <TokenField
                 value={interest}
                 onValueChange={onInterestChange}
-                onBlur={() => handleInterestOnBlur(interest)}
                 label="Interest"
                 labelRightNode={createIntrestFieldRihtLabel(apr)}
                 error={isMaxLimitInterest}
@@ -200,7 +198,7 @@ export const OfferPage = () => {
                   Delete offer
                 </Button>
                 <Button
-                  disabled={isMaxLimitInterest}
+                  disabled={isMaxLimitInterest || !isOfferHasChanged}
                   onClick={onEditOffer}
                   className={styles.btn}
                   type="secondary"
