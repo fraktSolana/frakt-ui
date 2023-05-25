@@ -1,6 +1,6 @@
 .layout {
   @media screen and (max-width: 960px) {
-    max-height: 550px !important; //? Не бейте меня, пожалуйста
+    max-height: 580px !important; //? Не бейте меня, пожалуйста
   }
 }
 
@@ -74,9 +74,18 @@
   }
 }
 
+.checkboxWrapper {
+  padding: 24px 32px 0;
+
+  @media screen and (max-width: 960px) {
+    padding: 16px;
+    padding-top: 0;
+  }
+}
+
 .borrowFormSubmitBtnWrapper {
   width: 100%;
-  padding: 32px;
+  padding: 24px 32px 32px;
 
   @media screen and (max-width: 960px) {
     padding: 16px;
