@@ -15,7 +15,10 @@ import { useConnection } from '@frakt/hooks';
 
 import { useHiddenLoansPubkeys, useSelectedLoans } from '../../loansState';
 import { BASE_POINTS, BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
-import { getBestOrdersForExit } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
+import {
+  getBestOrdersForExit,
+  getBestOrdersForRefinance,
+} from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 import {
   convertTakenOrdersToOrderParams,
   patchPairWithProtocolFee,
@@ -209,30 +212,30 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
     try {
       openLoadingModal();
 
-      // const { market, pairs } = await fetchMarketAndPairs(
-      //   loan?.bondParams?.marketPubkey,
-      //   wallet.publicKey,
-      // );
+      const { market, pairs } = await fetchMarketAndPairs(
+        // loan?.bondParams?.marketPubkey,
+        '6bUAJarFDjdQ7fFEe8DWf99FwNzdnM1Xr2HrrbGVkjA1',
+        wallet.publicKey,
+      );
+      const ltvBasePoints =
+        (loan.loanValue / market?.oracleFloor?.floor || 0) * BASE_POINTS;
 
-      // const ltvBasePoints =
-      //   (loan.loanValue / market?.oracleFloor?.floor || 0) * BASE_POINTS;
-
-      // const bestOrdersForRefinance = getBestOrdersForExit({
-      //   bondOffers: pairs?.length ? pairs : [],
-      //   loanToValueFilter: ltvBasePoints,
-      //   amountOfBonds: loan.repayValue / BASE_POINTS + 5000, //TODO: create method to get best orders for refinance or find way to calculate amountOfBonds as param for getBestOrdersForExit
-      // });
-
-      // const result = await refinanceLoan({
-      //   wallet,
-      //   connection,
-      //   loan,
-      //   market,
-      //   bondOrderParams: convertTakenOrdersToOrderParams({
-      //     pairs,
-      //     takenOrders: bestOrdersForRefinance.takenOrders,
-      //   }),
-      // });
+      const bestOrdersForRefinance = getBestOrdersForExit({
+        bondOffers: pairs?.length ? pairs : [],
+        loanToValueFilter: ltvBasePoints,
+        amountOfBonds: loan.repayValue / BASE_POINTS + 5000, //TODO: create method to get best orders for refinance or find way to calculate amountOfBonds as param for getBestOrdersForExit
+      });
+      console.log('BEST ORDERS FOR REFINANCE', bestOrdersForRefinance);
+      const result = await refinanceLoan({
+        wallet,
+        connection,
+        loan,
+        market,
+        bondOrderParams: convertTakenOrdersToOrderParams({
+          pairs,
+          takenOrders: bestOrdersForRefinance.takenOrders,
+        }),
+      });
     } catch (error) {
       throwLogsError(error);
     } finally {

@@ -13,6 +13,7 @@ import {
   signAndSendV0TransactionWithLookupTables,
 } from '../transactions';
 import { BondCartOrder } from '@frakt/api/nft';
+import { MAX_ACCOUNTS_IN_FAST_TRACK } from '@frakt/utils/bonds';
 // import { makeRefinanceLoanAndCreateLutTransactions } from './makeRefinanceLoanAndCreateLutTransactions';
 // import { createAndSendAllTxns } from '../transactions/helpers/v0/createAndSendV0Transaction';
 
@@ -31,91 +32,59 @@ export const refinanceLoan: RefinanceLoan = async ({
   market,
   bondOrderParams,
 }): Promise<boolean> => {
-  try {
-    const {
-      createLookupTableTxn,
-      extendLookupTableTxns,
-      refinanceIxsAndSigners,
-    } = await makeRefinanceLoanTransaction({
-      wallet,
-      connection,
-      bondOrderParams,
-      loan,
-      market,
-    });
-    // const {
-    //   refinanceBondTxnAndSigners,
-    //   createAndExtendLutTxnAndSigners,
-    //   lookupTablePubkey,
-    // } = await makeRefinanceLoanAndCreateLutTransactions({
-    //   wallet,
-    //   connection,
-    //   loan,
-    //   pair,
-    //   market,
-    // });
-    // const bondLookupTable = new web3.PublicKey(loan.bondParams?.lookupTable)
-    // await signAndConfirmTxnWithLookupTables({
-    //   transaction,
-    //   lookupTables,
-    //   signers,
-    //   connection,
-    //   wallet,
-    //   commitment: 'confirmed',
-    // });
-    return signAndSendV0TransactionWithLookupTables({
-      createLookupTableTxns: [createLookupTableTxn],
-      extendLookupTableTxns: extendLookupTableTxns,
-      v0InstructionsAndSigners: [refinanceIxsAndSigners],
-      connection,
-      wallet,
-      commitment: 'confirmed',
-      onAfterSend: () => {
-        notify({
-          message: 'Transactions sent!',
-          type: NotifyType.INFO,
-        });
-      },
-      onSuccess: () => {
-        notify({
-          message: 'Refinanced successfully!',
-          type: NotifyType.SUCCESS,
-        });
-      },
-      onError: (error) => {
-        // eslint-disable-next-line no-console
-        console.warn(error.logs?.join('\n'));
-        const isNotConfirmed = showSolscanLinkNotification(error);
-        if (!isNotConfirmed) {
-          notify({
-            message: 'The transaction just failed :( Give it another try',
-            type: NotifyType.ERROR,
-          });
-        }
-        captureSentryError({
-          error,
-          wallet,
-          transactionName: 'refinanceLoan',
-        });
-      },
-    });
-  } catch (error) {
-    const isNotConfirmed = showSolscanLinkNotification(error);
+  const {
+    createLookupTableTxn,
+    extendLookupTableTxns,
+    refinanceIxsAndSigners,
+  } = await makeRefinanceLoanTransaction({
+    wallet,
+    connection,
+    bondOrderParams,
+    loan,
+    market,
+  });
+  const ableToOptimize =
+    refinanceIxsAndSigners.lookupTablePublicKeys
+      .map((lookup) => lookup.addresses)
+      .flat().length <= MAX_ACCOUNTS_IN_FAST_TRACK;
 
-    if (!isNotConfirmed) {
+  return await signAndSendV0TransactionWithLookupTables({
+    createLookupTableTxns: ableToOptimize ? [] : [createLookupTableTxn],
+    extendLookupTableTxns: ableToOptimize ? [] : extendLookupTableTxns,
+    v0InstructionsAndSigners: ableToOptimize ? [] : [refinanceIxsAndSigners],
+    fastTrackInstructionsAndSigners: ableToOptimize
+      ? [refinanceIxsAndSigners]
+      : [],
+    connection,
+    wallet,
+    commitment: 'confirmed',
+    onAfterSend: () => {
       notify({
-        message: 'The transaction just failed :( Give it another try',
-        type: NotifyType.ERROR,
+        message: 'Transactions sent!',
+        type: NotifyType.INFO,
       });
-    }
-
-    captureSentryError({
-      error,
-      wallet,
-      transactionName: 'refinanceLoan',
-      params: { loan },
-    });
-
-    return false;
-  }
+    },
+    onSuccess: () => {
+      notify({
+        message: 'Borrowed successfully!',
+        type: NotifyType.SUCCESS,
+      });
+    },
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.warn(error.logs?.join('\n'));
+      const isNotConfirmed = showSolscanLinkNotification(error);
+      if (!isNotConfirmed) {
+        notify({
+          message: 'The transaction just failed :( Give it another try',
+          type: NotifyType.ERROR,
+        });
+      }
+      captureSentryError({
+        error,
+        wallet,
+        transactionName: 'borrowSingleBond',
+      });
+    },
+  });
 };

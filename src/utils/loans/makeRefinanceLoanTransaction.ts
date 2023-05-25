@@ -88,6 +88,11 @@ export const makeRefinanceLoanTransaction: MakeRefinanceLoanTransaction =
         amountToReturn,
         bondDuration: durationFilter,
         sellBondParamsAndAccounts: sellBondParamsAndAccounts,
+        repayAccounts: loan.bondParams.activeTrades.map((trade) => ({
+          bondTradeTransaction: new web3.PublicKey(trade.publicKey),
+          user: new web3.PublicKey(trade.user),
+          bondOffer: new web3.PublicKey(trade.bondOffer),
+        })),
       },
       accounts: {
         userPubkey: wallet?.publicKey,
