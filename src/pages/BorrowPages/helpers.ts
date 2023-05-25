@@ -116,13 +116,14 @@ type BorrowBulk = (props: {
   orders: CartOrder[];
   connection: web3.Connection;
   wallet: WalletContextState;
-  isSupportSignAllTxns?: boolean;
+  isLedger?: boolean;
 }) => Promise<boolean>;
 
 export const borrowBulk: BorrowBulk = async ({
   orders,
   connection,
   wallet,
+  isLedger = false,
 }): Promise<boolean> => {
   const notBondOrders = orders.filter(
     (order) => order.loanType !== LoanType.BOND,
@@ -206,7 +207,7 @@ export const borrowBulk: BorrowBulk = async ({
     extendLookupTableTxns: secondChunk.map((txn) => txn.transaction),
     v0InstructionsAndSigners: createAndSellBondsIxsAndSignersChunk,
     fastTrackInstructionsAndSigners: fastTrackBorrows,
-
+    isLedger,
     // lookupTablePublicKey: bondTransactionsAndSignersChunks,
     connection,
     wallet,

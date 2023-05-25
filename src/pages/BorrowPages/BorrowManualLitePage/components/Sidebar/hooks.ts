@@ -36,6 +36,8 @@ export const useSidebar = ({
 }: UseSidebarProps) => {
   const [minimizedOnMobile, setMinimizedOnMobile] = useState<boolean>(false);
 
+  const [isLedger, setIsLedger] = useState<boolean>(false);
+
   const history = useHistory();
 
   const connection = useConnection();
@@ -66,6 +68,7 @@ export const useSidebar = ({
 
       const result = await borrow({
         orders: orders,
+        isLedger,
         wallet,
         connection,
       });
@@ -95,5 +98,7 @@ export const useSidebar = ({
     onNftClick,
     isBulk,
     totalBorrowValue,
+    isLedger,
+    setIsLedger,
   };
 };

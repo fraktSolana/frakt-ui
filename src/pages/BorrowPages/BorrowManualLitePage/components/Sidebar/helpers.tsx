@@ -268,12 +268,14 @@ export interface LiteOrder {
 
 type Borrow = (props: {
   orders: LiteOrder[];
+  isLedger?: boolean;
   connection: web3.Connection;
   wallet: WalletContextState;
 }) => Promise<boolean>;
 
 export const borrow: Borrow = async ({
   orders,
+  isLedger = false,
   connection,
   wallet,
 }): Promise<boolean> => {
@@ -359,6 +361,7 @@ export const borrow: Borrow = async ({
     extendLookupTableTxns: secondChunk.map((txn) => txn.transaction),
     v0InstructionsAndSigners: createAndSellBondsIxsAndSignersChunk,
     fastTrackInstructionsAndSigners: fastTrackBorrows,
+    isLedger,
     // lookupTablePublicKey: bondTransactionsAndSignersChunks,
     connection,
     wallet,
