@@ -41,7 +41,7 @@ export const NotificationsButton: FC = () => {
 
   return (
     <>
-      <button
+      <div
         id={BUTTON_ID}
         className={classNames(styles.button, {
           [styles.buttonActive]: isVisible,
@@ -50,7 +50,7 @@ export const NotificationsButton: FC = () => {
         ref={buttonRef}
       >
         {hasUnread ? <BellWithBadge /> : <Bell />}
-      </button>
+      </div>
       <NotificationsSider ref={siderRef} />
     </>
   );

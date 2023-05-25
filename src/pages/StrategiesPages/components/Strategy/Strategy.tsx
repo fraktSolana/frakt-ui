@@ -139,7 +139,7 @@ const Strategy: FC<StrategyProps> = ({ tradePool, isAdmin }) => {
         poolPubkey={tradePool?.publicKey}
         visible={poolModalVisible}
         onCancel={() => setPoolModalVisible(null)}
-        depositAmount={withdrawValue}
+        depositAmount={Math.floor(withdrawValue * 100) / 100}
         utilizationRate={utilizationRate}
         depositYield={tradePool?.depositYield}
       />
