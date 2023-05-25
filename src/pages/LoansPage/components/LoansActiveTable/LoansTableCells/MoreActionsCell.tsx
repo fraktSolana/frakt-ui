@@ -23,9 +23,10 @@ export const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
 
   const {
     onRefinance,
-    refinanceModalVisible,
+    isRefinanceModalVisible,
     closeRefinanceModal,
     openRefinanceModal,
+    bestLoanParams,
   } = useLoanTransactions({ loan });
 
   const isLoanBond = loan.loanType === LoanType.BOND;
@@ -52,7 +53,8 @@ export const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
       </div>
       <RefinanceModal
         loan={loan}
-        visible={refinanceModalVisible}
+        bestLoanParams={bestLoanParams}
+        visible={isRefinanceModalVisible}
         onCancel={closeRefinanceModal}
         onSubmit={onRefinance}
       />

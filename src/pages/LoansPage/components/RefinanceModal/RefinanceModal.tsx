@@ -17,6 +17,7 @@ interface RefinanceModalProps {
   onCancel: () => void;
   onSubmit: () => void;
   loan: Loan;
+  bestLoanParams: any;
 }
 
 const RefinanceModal: FC<RefinanceModalProps> = ({
@@ -24,6 +25,7 @@ const RefinanceModal: FC<RefinanceModalProps> = ({
   onCancel,
   loan,
   onSubmit,
+  bestLoanParams,
 }) => {
   return (
     <Modal
@@ -62,8 +64,16 @@ const RefinanceModal: FC<RefinanceModalProps> = ({
         <div className={styles.loanInfoWrapper}>
           <h4 className={styles.title}>New loan</h4>
           <div className={styles.loanStats}>
-            <DashboardColumnValue label="Borrowed" value={13.78} reverse />
-            <DashboardColumnValue label="Debt" value={14.78} reverse />
+            <DashboardColumnValue
+              label="Borrowed"
+              value={bestLoanParams?.borrowed / 1e9}
+              reverse
+            />
+            <DashboardColumnValue
+              label="Debt"
+              value={bestLoanParams?.debt / 1e5}
+              reverse
+            />
             <DashboardColumnValue
               label="Duration"
               value={0}

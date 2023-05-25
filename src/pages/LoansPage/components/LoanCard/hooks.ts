@@ -1,6 +1,6 @@
 import { BondOfferV2 } from 'fbonds-core/lib/fbond-protocol/types';
 import { commonActions } from './../../../../state/common/actions';
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { BN, web3 } from '@frakt-protocol/frakt-sdk';
 import { useDispatch } from 'react-redux';
@@ -14,7 +14,12 @@ import { throwLogsError } from '@frakt/utils';
 import { useConnection } from '@frakt/hooks';
 
 import { useHiddenLoansPubkeys, useSelectedLoans } from '../../loansState';
-import { BASE_POINTS, BOND_DECIMAL_DELTA } from '@frakt/utils/bonds';
+import {
+  BASE_POINTS,
+  BOND_DECIMAL_DELTA,
+  useMarket,
+  useMarketPairs,
+} from '@frakt/utils/bonds';
 import {
   getBestOrdersForExit,
   getBestOrdersForRefinance,
@@ -27,6 +32,7 @@ import {
   fetchCertainMarket,
   fetchMarketPairs,
 } from '@frakt/api/bonds/requests';
+import { map, sum } from 'lodash';
 
 export const useLoanCard = (loan: Loan) => {
   const wallet = useWallet();
@@ -205,27 +211,33 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
     close: closeLoadingModal,
   } = useLoadingModal();
 
-  const [refinanceModalVisible, setRefinanceModalVisible] =
+  const [isRefinanceModalVisible, setRefinanceModalVisible] =
     useState<boolean>(false);
+
+  const { market, pairs } = useLoanData(loan);
+
+  const [bestOrders, setBestOrders] = useState(null);
+
+  useEffect(() => {
+    if (!pairs.length) return;
+
+    const loanToValueBasePoints =
+      (loan.loanValue / (market?.oracleFloor?.floor ?? 0)) * BASE_POINTS;
+
+    const bestOrdersForRefinance = getBestOrdersForExit({
+      bondOffers: pairs,
+      loanToValueFilter: loanToValueBasePoints,
+      amountOfBonds: loan.repayValue / BASE_POINTS,
+    });
+
+    setBestOrders(bestOrdersForRefinance);
+  }, [pairs, loan, market]);
 
   const onRefinance = async (): Promise<void> => {
     try {
       openLoadingModal();
 
-      const { market, pairs } = await fetchMarketAndPairs(
-        // loan?.bondParams?.marketPubkey, //TODO: uncomment when done
-        '6bUAJarFDjdQ7fFEe8DWf99FwNzdnM1Xr2HrrbGVkjA1',
-        wallet.publicKey,
-      );
-      const ltvBasePoints =
-        (loan.loanValue / market?.oracleFloor?.floor || 0) * BASE_POINTS;
-
-      const bestOrdersForRefinance = getBestOrdersForExit({
-        bondOffers: pairs?.length ? pairs : [],
-        loanToValueFilter: ltvBasePoints,
-        amountOfBonds: loan.repayValue / BASE_POINTS,
-      });
-      console.log('BEST ORDERS FOR REFINANCE', bestOrdersForRefinance);
+      console.log('BEST ORDERS FOR REFINANCE', bestOrders);
       const result = await refinanceLoan({
         wallet,
         connection,
@@ -233,7 +245,7 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
         market,
         bondOrderParams: convertTakenOrdersToOrderParams({
           pairs,
-          takenOrders: bestOrdersForRefinance.takenOrders,
+          takenOrders: bestOrders?.takenOrders || [],
         }),
       });
     } catch (error) {
@@ -246,30 +258,42 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
   return {
     onRefinance,
     loadingModalVisible,
-    refinanceModalVisible,
+    isRefinanceModalVisible,
+    bestLoanParams:
+      {
+        borrowed: bestOrders?.maxBorrowValue || 0,
+        debt: sum(
+          map(
+            bestOrders?.takenOrders,
+            ({ pricePerShare, orderSize }) =>
+              (orderSize / pricePerShare) * BASE_POINTS,
+          ),
+        ),
+      } || 0,
     openRefinanceModal: () => setRefinanceModalVisible(true),
     closeRefinanceModal: () => setRefinanceModalVisible(false),
   };
 };
 
-const fetchMarketAndPairs = async (
-  marketPubkey: string,
-  walletPubkey: web3.PublicKey,
-) => {
-  const marketWeb3Pubkey = new web3.PublicKey(marketPubkey);
-  const [pairs, market] = await Promise.all([
-    await fetchMarketPairs({ marketPubkey: marketWeb3Pubkey }),
-    await fetchCertainMarket({ marketPubkey: marketWeb3Pubkey }),
-  ]);
+const useLoanData = (loan: Loan) => {
+  //TODO: uncomment when done
+  // const marketPubkey = '6bUAJarFDjdQ7fFEe8DWf99FwNzdnM1Xr2HrrbGVkjA1';\
 
-  const filteredPairs = filterPairs(pairs, walletPubkey);
+  const marketPubkey = loan?.bondParams?.marketPubkey;
 
-  return { pairs: filteredPairs, market };
-};
+  const { market } = useMarket({ marketPubkey });
 
-const filterPairs = (pairs: BondOfferV2[], walletPubkey: web3.PublicKey) => {
-  return pairs
-    .filter(({ currentSpotPrice }) => currentSpotPrice <= BOND_DECIMAL_DELTA)
-    .map(patchPairWithProtocolFee)
-    .filter(({ assetReceiver }) => assetReceiver !== walletPubkey?.toBase58());
+  const { pairs: rawPairs, isLoading: isLoadingPairs } = useMarketPairs({
+    marketPubkey,
+  });
+
+  const pairs = useMemo(() => {
+    return isLoadingPairs ? [] : rawPairs;
+  }, [isLoadingPairs]);
+
+  return {
+    market,
+    pairs,
+    isLoadingPairs,
+  };
 };
