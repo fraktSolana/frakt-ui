@@ -8,6 +8,8 @@ export const DEFAULT_MAX_LOAN_VALUE_FOR_FLOOR_TYPE_OFFER = 1000;
 
 export const MAX_LIMIT_INTEREST = 5;
 
+export const FEE_FOR_CREATE_OFFER_TRANSACTION = 0.005;
+
 export const riskMarks: { [key: string]: string | JSX.Element } = {
   10: '10%',
   25: '25%',
