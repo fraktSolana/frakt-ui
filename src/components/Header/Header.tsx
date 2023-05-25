@@ -10,7 +10,7 @@ import BurgerMenu from '@frakt/components/BurgerMenu';
 import { NotificationsButton } from '@frakt/components/NotificationsButton';
 import { getNumberWithOrdinal } from '@frakt/utils';
 import { LeaderBoard } from '@frakt/api/user';
-import { Logo, LogoFull, StarFill } from '@frakt/icons';
+import { Logo, LogoFull, StarFill, Triangle } from '@frakt/icons';
 import { selectWalletModalVisible } from '../../state/common/selectors';
 import { useFetchUserIndividual } from './hooks';
 import styles from './Header.module.scss';
@@ -42,39 +42,48 @@ export const Header: FC = () => {
 };
 
 export const FraktlistingBtn: FC = () => {
-  const goToFraktlisting = () => {
-    window.open(`${process.env.FRAKTLISTING_URL}`, '_blank');
-  };
   return (
-    <button className={styles.fraktlistingBtn} onClick={goToFraktlisting}>
-      <StarFill />
-      <span>Get Fraktlisted!</span>
-    </button>
+    <a
+      href={process.env.FRAKTLISTING_URL}
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <div className={styles.fraktlistingBtn}>
+        <StarFill />
+        <span>Get Fraktlisted!</span>
+      </div>
+    </a>
   );
 };
 
 export const FraktlistingStatus: FC<{ data: LeaderBoard }> = ({ data }) => {
   const points = Math.trunc(data?.points).toLocaleString();
+
   return (
     <div className={styles.fraktlistingStatus}>
       <div className={styles.rewards}>
-        <span>Rewards S1</span>
-        <span>Fraktlisting</span>
+        <span>Season 1</span>
+        <span>Leaderboard</span>
       </div>
       <div className={styles.statusWrapper}>
-        <div className={styles.place}>
-          {data?.rank ? getNumberWithOrdinal(data?.rank) : '--'}
-        </div>
-        <div className={styles.pointsWrapper}>
-          <div className={styles.points}>
-            {data?.points ? points : '--'} pts
+        <a
+          href={process.env.LEADERBOARD_URL}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <div className={styles.place}>
+            {data?.rank ? getNumberWithOrdinal(data?.rank) : '00'}
+            {data?.rank && <Triangle />}
           </div>
+        </a>
+        <div className={styles.pointsWrapper}>
+          <div className={styles.points}>{data?.points ? points : '0'} pts</div>
           <div
             className={classNames(styles.loyalty, {
               [styles.green]: data?.loyaltyBoost > 1,
             })}
           >
-            {data?.loyaltyBoost ? data?.loyaltyBoost : '--'} loyalty
+            {data?.loyaltyBoost ? `${data?.loyaltyBoost}x` : '0'} loyalty
           </div>
         </div>
       </div>

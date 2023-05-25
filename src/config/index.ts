@@ -1,37 +1,44 @@
-import { Connection } from '@solana/web3.js';
-
-export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
-
-export const getRightEndpoint = async () => {
-  if (IS_DEVELOPMENT) return process.env.DEVELOPMENT_RPC_ENDPOINT;
-
-  try {
-    const primaryConnection = new Connection(
-      process.env.ADBLOCKED_RPC_ENDPOINT,
-    );
-    await primaryConnection.getLatestBlockhash();
-    return process.env.ADBLOCKED_RPC_ENDPOINT;
-  } catch (err) {
-    console.error('Helios RPC doesnt work, use secondary RPC instead');
-    try {
-      const secondaryConnection = new Connection(process.env.RPC_ENDPOINT);
-      await secondaryConnection.getLatestBlockhash();
-      return process.env.RPC_ENDPOINT;
-    } catch (err) {
-      console.error('Quicknode RPC doesnt work, use public RPC instead');
-      return process.env.PUBLIC_RPC_ENDPOINT;
-    }
-  }
-};
-
-export const ENDPOINT = IS_DEVELOPMENT
-  ? process.env.DEVELOPMENT_RPC_ENDPOINT
-  : process.env.RPC_ENDPOINT;
-
-export const FRKT_TOKEN_MINT_PUBLIC_KEY =
-  'ErGB9xa24Szxbk1M28u2Tx8rKPqzL6BroNkkzk5rG4zj';
+import {
+  LedgerWalletAdapter,
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+  SlopeWalletAdapter,
+  GlowWalletAdapter,
+  CoinbaseWalletAdapter,
+  TorusWalletAdapter,
+  MathWalletAdapter,
+  SolletWalletAdapter,
+  ExodusWalletAdapter,
+  BackpackWalletAdapter,
+} from '@solana/wallet-adapter-wallets';
+import { SentreWalletAdapter } from '@sentre/connector';
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 
 export const IS_PRIVATE_MARKETS =
   process.env.IS_PRIVATE_MARKETS !== undefined
     ? process.env.IS_PRIVATE_MARKETS
     : false;
+
+export const ENDPOINTS = [
+  process.env.RPC_LOCALHOST,
+  process.env.RPC_HELIOS,
+  process.env.RPC_QUICKNODE,
+  process.env.RPC_PUBLIC,
+].filter(Boolean);
+
+export const WALLETS = [
+  new PhantomWalletAdapter(),
+  new SolflareWalletAdapter(),
+  new SlopeWalletAdapter(),
+  new GlowWalletAdapter(),
+  new LedgerWalletAdapter(),
+  new CoinbaseWalletAdapter(),
+  new TorusWalletAdapter(),
+  new MathWalletAdapter(),
+  new ExodusWalletAdapter(),
+  new SentreWalletAdapter(),
+  new BackpackWalletAdapter(),
+  new SolletWalletAdapter({ network: WalletAdapterNetwork.Mainnet }),
+];
+
+export const FRKT_TOKEN_MINT = process.env.FRKT_TOKEN_MINT;

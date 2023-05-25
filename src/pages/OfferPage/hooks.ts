@@ -26,7 +26,7 @@ import { RBOption } from '../../components/RadioButton';
 import { makeModifyPairTransactions } from '@frakt/utils/bonds/transactions/makeModifyPairTransactions';
 import { parseMarketOrder } from '../MarketsPage/components/OrderBook/helpers';
 import { OfferTypes } from './types';
-import { MAX_LOAN_VALUE } from './constants';
+import { MAX_LOAN_VALUE, FEE_FOR_CREATE_OFFER_TRANSACTION } from './constants';
 import {
   calculateLTV,
   calculateLtvByOfferType,
@@ -58,9 +58,11 @@ export const useOfferPage = () => {
   const connection = useConnection();
 
   const [ltv, setLtv] = useState<number>(10);
-  const [duration, setDuration] = useState<number>(7);
+  const [duration, setDuration] = useState<number>(14);
   const [interest, setInterest] = useState<string>('0');
   const [offerSize, setOfferSize] = useState<string>('0');
+  const [notChangebleUserSize, setNotChangebleUserSize] = useState<string>('0');
+
   const [offerType, setOfferType] = useState<OfferTypes>(OfferTypes.FIXED);
   const [maxLoanValue, setMaxLoanValue] = useState<string>('0');
   const [receiveNftFeature, setReceiveNftFeature] = useState<BondFeatures>(
@@ -94,6 +96,8 @@ export const useOfferPage = () => {
       setReceiveNftFeature(rawData?.bondFeature);
       setOfferType(offerType);
       setMaxLoanValue((rawData?.maxReturnAmountFilter / 1e9)?.toFixed(2));
+
+      setNotChangebleUserSize((size || 0).toFixed(2));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, isLoading, pair]);
@@ -199,12 +203,15 @@ export const useOfferPage = () => {
           maxLoanValue,
         );
 
+        const solDepositWithTransactionFee =
+          parseFloat(offerSize) - FEE_FOR_CREATE_OFFER_TRANSACTION;
+
         const { transaction, signers } = await makeCreatePairTransaction({
           marketPubkey: new web3.PublicKey(marketPubkey),
           maxDuration: duration,
           maxLoanValue: rawMaxLoanValue,
           maxLTV: rawLtv,
-          solDeposit: parseFloat(offerSize),
+          solDeposit: solDepositWithTransactionFee,
           interest: parseFloat(interest),
           marketFloor: market.oracleFloor.floor,
           bondFeature: findNeededBondFeature(),
@@ -368,5 +375,6 @@ export const useOfferPage = () => {
     maxLoanValue,
     onOfferTypeChange,
     offerType,
+    notChangebleUserSize,
   };
 };

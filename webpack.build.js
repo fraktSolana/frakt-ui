@@ -1,28 +1,27 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const Webpack = require('webpack');
-const ReactRefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
-const ReactRefreshTypeScript = require('react-refresh-typescript');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 require('dotenv').config({ path: './.env' });
 require('dotenv').config({ path: './.env.local' });
 
 module.exports = {
-  mode: 'development',
+  output: {
+    publicPath: 'auto',
+    path: path.resolve(__dirname, 'build'),
+    filename: '[name]-[contenthash].js',
+  },
+  mode: 'production',
   entry: {
     index: './src/index.tsx',
   },
-  devServer: {
-    static: './public',
-    port: 3000,
-    historyApiFallback: true,
-    hot: true,
-    client: {
-      overlay: true,
-    },
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000,
   },
-  devtool: 'source-map',
   module: {
     rules: [
       {
@@ -31,12 +30,6 @@ module.exports = {
         use: [
           {
             loader: require.resolve('ts-loader'),
-            options: {
-              getCustomTransformers: () => ({
-                before: [ReactRefreshTypeScript()].filter(Boolean),
-              }),
-              transpileOnly: true,
-            },
           },
         ],
       },
@@ -52,9 +45,7 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              modules: {
-                localIdentName: '[name]__[local]--[hash:base64:5]',
-              },
+              modules: true,
             },
           },
           {
@@ -101,9 +92,6 @@ module.exports = {
         use: [
           {
             loader: 'svg-url-loader',
-            options: {
-              limit: 10000,
-            },
           },
         ],
       },
@@ -111,9 +99,6 @@ module.exports = {
         test: /.mjs$/,
         include: /node_modules/,
         type: 'javascript/auto',
-        resolve: {
-          fullySpecified: false,
-        },
       },
     ],
   },
@@ -127,24 +112,31 @@ module.exports = {
       crypto: require.resolve('crypto-browserify'),
       stream: require.resolve('stream-browserify'),
       process: false,
+      https: require.resolve('https-browserify'),
+      zlib: require.resolve('browserify-zlib'),
+      http: require.resolve('stream-http'),
     },
   },
   plugins: [
-    new ReactRefreshPlugin(),
     new HTMLWebpackPlugin({
       template: './public/index.html',
       favicon: './public/favicon.ico',
       filename: 'index.html',
-      manifest: './public/manifest.json',
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'public',
+          globOptions: {
+            ignore: ['**/*.html', '**/*.ico'],
+          },
+        },
+      ],
     }),
     new Webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
     }),
-    new Webpack.ProvidePlugin({
-      process: 'process/browser',
-    }),
-    new Webpack.DefinePlugin({
-      'process.env': JSON.stringify(process.env),
-    }),
+    new Webpack.ProvidePlugin({ process: 'process/browser' }),
+    new Webpack.DefinePlugin({ 'process.env': JSON.stringify(process.env) }),
   ],
 };

@@ -10,6 +10,10 @@
   backdrop-filter: blur(12px);
   @include flex;
   padding: 8px 16px;
+
+  @media screen and (max-width: 390px) {
+    padding: 8px 12px;
+  }
 }
 
 .widgetContainer {
@@ -19,7 +23,7 @@
   height: 100%;
 
   @media (max-width: 960px) {
-    gap: 12px;
+    gap: 8px;
   }
 }
 
@@ -47,6 +51,7 @@
 }
 
 .logoWrapper {
+  margin-right: 8px;
   @include flex(row, nowrap, flex-start, center);
 }
 
@@ -73,6 +78,11 @@
   display: none;
   @media screen and (max-width: 600px) {
     display: block;
+  }
+
+  @media screen and (max-width: 430px) {
+    width: 24px;
+    height: 24px;
   }
 }
 
@@ -107,14 +117,20 @@
     border-color: var(--secondary-border);
   }
 
+  span {
+    white-space: nowrap;
+  }
+
   svg path {
     fill: var(--black-color);
   }
 
   @media screen and (max-width: 650px) {
-    padding: 6px 8px;
+    padding: 8px 7px 8px 5px;
     margin: 0;
     font-size: 10px;
+    gap: 2px;
+    line-height: 0px;
 
     svg {
       width: 16px;
@@ -126,12 +142,14 @@
 .fraktlistingStatus {
   display: flex;
   align-items: center;
+  flex-wrap: nowrap;
   gap: 16px;
 }
 
 .statusWrapper {
   display: flex;
   align-items: center;
+  flex-wrap: nowrap;
   gap: 8px;
   @media screen and (max-width: 650px) {
     gap: 4px;
@@ -157,11 +175,12 @@
 .pointsWrapper {
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
 }
 
 .points {
   font-family: var(--font-family-chakra);
-  font-weight: 400;
+  font-weight: 600;
   font-size: 14px;
   line-height: 18px;
   color: var(--black-color);
@@ -175,6 +194,8 @@
 }
 
 .loyalty {
+  display: flex;
+  align-items: center;
   font-family: var(--font-family-chakra);
   font-weight: 600;
   font-size: 14px;
@@ -188,20 +209,42 @@
 }
 
 .place {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
   font-family: var(--font-family-chakra);
   font-weight: 600;
   font-size: 32px;
   line-height: 42px;
 
-  text-decoration-line: underline;
+  text-decoration: underline;
 
-  color: var(--gray-color-2);
+  color: var(--black-color);
+  transition: opacity var(--transition-1);
+  cursor: pointer;
+
+  svg path {
+    fill: var(--black-color);
+  }
+
+  &:hover {
+    opacity: 0.6;
+    transition: opacity var(--transition-1);
+  }
 
   @media screen and (max-width: 650px) {
     font-size: 24px;
   }
+
+  @media screen and (max-width: 450px) {
+    font-size: 16px;
+  }
+
+  @media screen and (max-width: 380px) {
+    font-size: 12px;
+  }
 }
 
 .green {
-  color: var(--light-green-hover);
+  color: #7dcc19;
 }

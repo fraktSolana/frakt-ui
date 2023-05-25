@@ -59,6 +59,7 @@ export { TableView } from './TableView';
 export { Ticket } from './Ticket';
 export { Timer } from './Timer';
 export { Trash } from './Trash';
+export { Triangle } from './Triangle';
 export { Twitter, TwitterDark } from './Twitter';
 export { UploadImg } from './UploadImg';
 

@@ -21,7 +21,6 @@ import { OfferTypes } from './types';
 import {
   DURATION_OPTIONS,
   EARNER_INTEREST_OPTIONS,
-  MAX_LIMIT_INTEREST,
   OFFER_TYPE_OPTIONS,
   MAX_LIMIT_INTEREST_FOR_14_DAYS,
   MAX_LIMIT_INTEREST_FOR_7_DAYS,
@@ -60,6 +59,7 @@ export const OfferPage = () => {
     maxLoanValue,
     onOfferTypeChange,
     offerType,
+    notChangebleUserSize,
   } = useOfferPage();
 
   const maxLimitInterest =
@@ -69,6 +69,14 @@ export const OfferPage = () => {
 
   const isMaxLimitInterest = parseFloat(interest) > maxLimitInterest;
   const apr = (parseFloat(interest) / duration) * 365;
+
+  const availableMaxBalance = (
+    parseFloat(notChangebleUserSize) +
+    walletSolBalance / 1e9
+  ).toFixed(3);
+
+  const notEnoughDepositError =
+    parseFloat(availableMaxBalance) < parseFloat(offerSize);
 
   return (
     <AppLayout>
@@ -130,8 +138,12 @@ export const OfferPage = () => {
               label="SIZE"
               currentToken={SOL_TOKEN}
               lpBalance={parseFloat((walletSolBalance / 1e9).toFixed(3))}
+              availableMaxBalance={availableMaxBalance}
               toolTipText="Amount of SOL you want to lend for a specific collection at the chosen LTV & APY"
             />
+            <div className={styles.errors}>
+              {notEnoughDepositError && <p>not enough SOL </p>}
+            </div>
           </div>
 
           <div className={styles.fieldWrapper}>
