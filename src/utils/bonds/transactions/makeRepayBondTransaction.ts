@@ -32,6 +32,7 @@ export const makeRepayBondTransaction: MakeRepayBondTransaction = async ({
       },
       addComputeUnits: true,
       accounts: {
+        admin: new web3.PublicKey(BONDS_ADMIN_PUBKEY),
         fbond: new web3.PublicKey(loan.pubkey),
         fbondTokenMint: new web3.PublicKey(loan.bondParams.bondTokenMint),
         // bondCollateralOrSolReceiver: loan.bondParams.collateralOrSolReceiver
