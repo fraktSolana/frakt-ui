@@ -61,6 +61,8 @@ export const useOfferPage = () => {
   const [duration, setDuration] = useState<number>(7);
   const [interest, setInterest] = useState<string>('0');
   const [offerSize, setOfferSize] = useState<string>('0');
+  const [notChangebleUserSize, setNotChangebleUserSize] = useState<string>('0');
+
   const [offerType, setOfferType] = useState<OfferTypes>(OfferTypes.FIXED);
   const [maxLoanValue, setMaxLoanValue] = useState<string>('0');
   const [receiveNftFeature, setReceiveNftFeature] = useState<BondFeatures>(
@@ -94,6 +96,8 @@ export const useOfferPage = () => {
       setReceiveNftFeature(rawData?.bondFeature);
       setOfferType(offerType);
       setMaxLoanValue((rawData?.maxReturnAmountFilter / 1e9)?.toFixed(2));
+
+      setNotChangebleUserSize((size || 0).toFixed(2));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, isLoading, pair]);
@@ -371,5 +375,6 @@ export const useOfferPage = () => {
     maxLoanValue,
     onOfferTypeChange,
     offerType,
+    notChangebleUserSize,
   };
 };
