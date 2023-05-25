@@ -75,7 +75,7 @@ export const fetchUserTickets = async (
 
 export const fetchAuctionsList = async (): Promise<AuctionListItem[]> => {
   const { data } = await axios.get<AuctionListItem[]>(
-    `https://${process.env.BACKEND_DOMAIN}/liquidation/auctions`,
+    `https://${process.env.BACKEND_DOMAIN}/liquidation/auctions2`,
   );
 
   return data ?? [];

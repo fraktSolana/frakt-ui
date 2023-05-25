@@ -82,6 +82,7 @@ export interface AuctionListItem {
     repayAccounts: {
       bondTradeTransaction: string;
       bondOffer: string;
+      user: string;
     }[];
     fbondPubkey: string;
     collateralBox: string;

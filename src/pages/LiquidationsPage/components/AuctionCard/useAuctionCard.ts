@@ -49,11 +49,11 @@ export const useAuctionCard = (
         } = auction.bondParams;
 
         const convertedRepayAccounts = repayAccounts.map(
-          ({ bondOffer, bondTradeTransaction }) => {
+          ({ bondOffer, bondTradeTransaction, user }) => {
             return {
               bondOffer: new web3.PublicKey(bondOffer),
               bondTradeTransaction: new web3.PublicKey(bondTradeTransaction),
-              user: wallet.publicKey,
+              user: new web3.PublicKey(user),
             };
           },
         );
