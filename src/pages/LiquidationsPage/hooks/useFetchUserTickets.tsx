@@ -19,7 +19,7 @@ export const useFetchUserTickets: UseFetchUserTickets = () => {
     isLoading: boolean;
     isFetching: boolean;
   } = useQuery(
-    ['fetchUserTickets'],
+    ['fetchUserTickets', publicKey],
     () => fetchUserTickets(publicKey?.toBase58()),
     {
       enabled: !!publicKey,

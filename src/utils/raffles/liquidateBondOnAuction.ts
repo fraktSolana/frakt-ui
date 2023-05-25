@@ -15,14 +15,14 @@ type LiquidateBondOnAuction = (props: {
   connection: web3.Connection;
   wallet: WalletContextState;
   fbondPubkey: string;
-  collateralBoxPubkey: string;
+  collateralBox: string;
   collateralBoxType: string;
   collateralTokenMint: string;
   collateralTokenAccount: string;
   collateralOwner: string;
-  fraktMarketPubkey: string;
-  oracleFloorPubkey: string;
-  whitelistEntryPubkey: string;
+  fraktMarket: string;
+  oracleFloor: string;
+  whitelistEntry: string;
   repayAccounts: RepayAccounts[];
 }) => Promise<boolean>;
 
@@ -30,13 +30,13 @@ export const liquidateBondOnAuction: LiquidateBondOnAuction = async ({
   connection,
   wallet,
   fbondPubkey,
-  collateralBoxPubkey,
+  collateralBox,
   collateralTokenMint,
   collateralTokenAccount,
   collateralOwner,
-  fraktMarketPubkey,
-  oracleFloorPubkey,
-  whitelistEntryPubkey,
+  fraktMarket,
+  oracleFloor,
+  whitelistEntry,
   repayAccounts,
 }): Promise<boolean> => {
   try {
@@ -47,16 +47,16 @@ export const liquidateBondOnAuction: LiquidateBondOnAuction = async ({
       accounts: {
         userPubkey: wallet.publicKey,
         fbond: new web3.PublicKey(fbondPubkey),
-        collateralBox: new web3.PublicKey(collateralBoxPubkey),
+        collateralBox: new web3.PublicKey(collateralBox),
         collateralTokenMint: new web3.PublicKey(collateralTokenMint),
         collateralTokenAccount: new web3.PublicKey(collateralTokenAccount),
         collateralOwner:
-          collateralOwner === 'ecrow'
-            ? new web3.PublicKey(process.env.BONDS_PROGRAM_PUBKEY)
-            : wallet.publicKey,
-        fraktMarket: new web3.PublicKey(fraktMarketPubkey),
-        oracleFloor: new web3.PublicKey(oracleFloorPubkey),
-        whitelistEntry: new web3.PublicKey(whitelistEntryPubkey),
+          collateralOwner === 'escrowless'
+            ? wallet.publicKey
+            : new web3.PublicKey(process.env.BONDS_PROGRAM_PUBKEY),
+        fraktMarket: new web3.PublicKey(fraktMarket),
+        oracleFloor: new web3.PublicKey(oracleFloor),
+        whitelistEntry: new web3.PublicKey(whitelistEntry),
       },
       sendTxn: sendTxnPlaceHolder,
     });

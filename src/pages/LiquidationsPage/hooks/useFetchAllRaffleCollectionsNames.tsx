@@ -12,12 +12,12 @@ interface RaffleCollections {
   raffleCollections: CollectionsListItem[];
 }
 
-type useFetchAllRaffleCollections = () => {
+type useFetchAllRaffleCollectionsNames = () => {
   data: RaffleCollections;
   collectionsIsLoading: boolean;
 };
 
-export const useFetchAllRafflesCollectionsNames: useFetchAllRaffleCollections =
+export const useFetchAllRafflesCollectionsNames: useFetchAllRaffleCollectionsNames =
   () => {
     const { publicKey } = useWallet();
 
