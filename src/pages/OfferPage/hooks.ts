@@ -58,7 +58,7 @@ export const useOfferPage = () => {
   const connection = useConnection();
 
   const [ltv, setLtv] = useState<number>(10);
-  const [duration, setDuration] = useState<number>(7);
+  const [duration, setDuration] = useState<number>(14);
   const [interest, setInterest] = useState<string>('0');
   const [offerSize, setOfferSize] = useState<string>('0');
   const [notChangebleUserSize, setNotChangebleUserSize] = useState<string>('0');
