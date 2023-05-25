@@ -22,8 +22,7 @@ export const useBorrowBulkOverviewPage = () => {
     clearCurrentNftState,
   } = useBorrow();
 
-  const [isSupportSignAllTxns, setIsSupportSignAllTxns] =
-    useState<boolean>(true);
+  const [isLedger, setIsLedger] = useState<boolean>(false);
 
   const {
     visible: loadingModalVisible,
@@ -53,6 +52,7 @@ export const useBorrowBulkOverviewPage = () => {
       const result = await borrowBulk({
         orders: cartOrders,
         wallet,
+        isLedger,
         connection,
       });
 
@@ -91,8 +91,8 @@ export const useBorrowBulkOverviewPage = () => {
     closeConfirmModal,
     loadingModalVisible,
     onBulkEdit,
-    isSupportSignAllTxns,
-    setIsSupportSignAllTxns,
+    isLedger,
+    setIsLedger,
     setLoadingModalVisible,
     loadingModalTextStatus,
   };
