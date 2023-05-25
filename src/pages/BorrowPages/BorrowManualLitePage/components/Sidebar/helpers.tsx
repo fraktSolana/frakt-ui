@@ -13,18 +13,10 @@ import {
 import { calcPriceBasedMaxLoanValue } from '@frakt/pages/BorrowPages/cartState';
 import { makeProposeTransaction } from '@frakt/utils/loans';
 import { notify } from '@frakt/utils';
-import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from '@frakt/utils/transactions/helpers/signAndSendV0TransactionWithLookupTablesSeparateSignatures';
 import { captureSentryError } from '@frakt/utils/sentry';
-import {
-  MAX_ACCOUNTS_IN_FAST_TRACK,
-  makeCreateBondMultiOrdersTransaction,
-} from '@frakt/utils/bonds';
+import { borrow as borrowBonds } from 'fbonds-core/lib/fbond-protocol/functions/management';
 import { NotifyType } from '@frakt/utils/solanaUtils';
-import {
-  InstructionsAndSigners,
-  showSolscanLinkNotification,
-  TxnsAndSigners,
-} from '@frakt/utils/transactions';
+import { showSolscanLinkNotification } from '@frakt/utils/transactions';
 
 import styles from './Sidebar.module.scss';
 
@@ -268,12 +260,14 @@ export interface LiteOrder {
 
 type Borrow = (props: {
   orders: LiteOrder[];
+  isLedger?: boolean;
   connection: web3.Connection;
   wallet: WalletContextState;
 }) => Promise<boolean>;
 
 export const borrow: Borrow = async ({
   orders,
+  isLedger = false,
   connection,
   wallet,
 }): Promise<boolean> => {
@@ -294,75 +288,12 @@ export const borrow: Borrow = async ({
   );
   const bondOrders = orders.filter((order) => order.loanType === LoanType.BOND);
 
-  const bondTransactionsAndSignersChunks = await Promise.all(
-    bondOrders.map((order) => {
-      return makeCreateBondMultiOrdersTransaction({
-        marketPubkey: order.borrowNft.bondParams.marketPubkey,
-        fraktMarketPubkey:
-          order.borrowNft.bondParams.whitelistEntry.fraktMarket,
-        oracleFloorPubkey: order.borrowNft.bondParams.oracleFloor,
-        whitelistEntryPubkey:
-          order.borrowNft.bondParams.whitelistEntry?.publicKey,
-        nftMint: order.borrowNft.mint,
-        bondOrderParams: order.bondOrderParams,
-        connection,
-        wallet,
-      });
-    }),
-  );
-
-  const fastTrackBorrows: InstructionsAndSigners[] =
-    bondTransactionsAndSignersChunks
-      .filter(
-        (txnAndSigners) =>
-          txnAndSigners.createAndSellBondsIxsAndSigners.lookupTablePublicKeys
-            .map((lookup) => lookup.addresses)
-            .flat().length <= MAX_ACCOUNTS_IN_FAST_TRACK,
-      )
-      .map((txnAndSigners) => txnAndSigners.createAndSellBondsIxsAndSigners);
-  const lookupTableBorrows = bondTransactionsAndSignersChunks.filter(
-    (txnAndSigners) =>
-      txnAndSigners.createAndSellBondsIxsAndSigners.lookupTablePublicKeys
-        .map((lookup) => lookup.addresses)
-        .flat().length > MAX_ACCOUNTS_IN_FAST_TRACK,
-  );
-
-  const firstChunk: TxnsAndSigners[] = [
-    ...lookupTableBorrows
-      .map((chunk) => ({
-        transaction: chunk.createLookupTableTxn,
-        signers: [],
-      }))
-      .flat(),
-  ];
-
-  const secondChunk: TxnsAndSigners[] = [
-    ...lookupTableBorrows
-      .map((chunk) =>
-        chunk.extendLookupTableTxns.map((transaction) => ({
-          transaction,
-          signers: [],
-        })),
-      )
-      .flat(),
-  ];
-
-  const createAndSellBondsIxsAndSignersChunk: InstructionsAndSigners[] = [
-    ...lookupTableBorrows
-      .map((chunk) => chunk.createAndSellBondsIxsAndSigners)
-      .flat(),
-  ];
-
-  return await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+  return await borrowBonds({
     notBondTxns: [...notBondTransactionsAndSigners.flat()],
-    createLookupTableTxns: firstChunk.map((txn) => txn.transaction),
-    extendLookupTableTxns: secondChunk.map((txn) => txn.transaction),
-    v0InstructionsAndSigners: createAndSellBondsIxsAndSignersChunk,
-    fastTrackInstructionsAndSigners: fastTrackBorrows,
-    // lookupTablePublicKey: bondTransactionsAndSignersChunks,
+    orders: bondOrders,
+    isLedger,
     connection,
     wallet,
-    commitment: 'confirmed',
     onAfterSend: () => {
       notify({
         message: 'Transactions sent!',

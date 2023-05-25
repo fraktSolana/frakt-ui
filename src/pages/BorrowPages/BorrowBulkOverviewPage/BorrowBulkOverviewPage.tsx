@@ -23,8 +23,8 @@ export const BorrowBulkOverviewPage: FC = () => {
     openConfirmModal,
     closeConfirmModal,
     onBulkEdit,
-    isSupportSignAllTxns,
-    setIsSupportSignAllTxns,
+    isLedger,
+    setIsLedger,
     loadingModalVisible,
     setLoadingModalVisible,
     loadingModalTextStatus,
@@ -37,8 +37,8 @@ export const BorrowBulkOverviewPage: FC = () => {
         pairs={cartPairs}
         onChangeAssets={() => onBulkEdit()}
         onBorrow={openConfirmModal}
-        isSupportSignAllTxns={isSupportSignAllTxns}
-        setIsSupportSignAllTxns={setIsSupportSignAllTxns}
+        isLedger={isLedger}
+        setIsLedger={setIsLedger}
       />
 
       <div
