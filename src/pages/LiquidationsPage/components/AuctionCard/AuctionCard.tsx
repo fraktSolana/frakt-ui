@@ -68,7 +68,11 @@ const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
             label="Floor price"
             value={floorPrice}
           />
-          {!isBondAuction && (
+          {isBondAuction ? (
+            <StatsRaffleValues label="Next round start">
+              Every 1 sec
+            </StatsRaffleValues>
+          ) : (
             <StatsRaffleValues label="Next round start">
               <div className={styles.wrapper}>
                 <Timer />
@@ -91,7 +95,11 @@ const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
           ) : (
             <StatsRaffleValues label="Buy price" value={buyPrice} />
           )}
-          {!isBondAuction && (
+          {isBondAuction ? (
+            <StatsRaffleValues label="Price decrease">
+              -{DENOMINATIOR_PERCENT} %
+            </StatsRaffleValues>
+          ) : (
             <StatsRaffleValues label="Next round price" value={nextPrice} />
           )}
         </div>
