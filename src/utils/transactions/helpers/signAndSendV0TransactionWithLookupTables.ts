@@ -74,7 +74,6 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
           return transactionsMessageV0;
         }),
       );
-      console.log('ARE WE HERE');
       const txnsAndSigners: TxnsAndSigners[][] = [
         createLookupTableTxns.map((transaction) => ({
           transaction,
@@ -93,19 +92,16 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
       onBeforeApprove?.();
 
       const addressesPerTxn = 20;
-      console.log('ARE WE HERE222');
       const supposedBigIntDeactivationSlot = BigInt('18446744073518870550');
       const slotCorrection = txnsAndSigners.length + 2;
       console.log('slotCorrection: ', slotCorrection);
       const lastSlot = (await connection.getSlot()) + slotCorrection;
-      console.log('ARE WE HERE3333');
       const v0Transactions = await Promise.all(
         v0InstructionsAndSigners.map(async (ixAndSigner) => {
           console.log(
             'ixAndSigner.lookupTablePublicKeys: ',
             ixAndSigner.lookupTablePublicKeys,
           );
-          console.log('ARE WE HERE44444');
           const lookupTables: web3.AddressLookupTableAccount[] =
             ixAndSigner.lookupTablePublicKeys.map(
               (tableData) =>
@@ -246,6 +242,7 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
             preflightCommitment: 'processed',
           });
           currentTxIndex += 1;
+          await new Promise((r) => setTimeout(r, 8000));
           // console.log("MinContextSlot: ", txn.minNonceContextSlot)
         }
         if (txnsAndSignersWithV0Txns[i].length > 0)
