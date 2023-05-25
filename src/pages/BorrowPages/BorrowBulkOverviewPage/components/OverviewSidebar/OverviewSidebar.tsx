@@ -16,8 +16,8 @@ interface OverviewSidebarProps {
   pairs: Pair[];
   onChangeAssets: () => void;
   onBorrow: () => void;
-  isSupportSignAllTxns: boolean;
-  setIsSupportSignAllTxns?: (value: boolean) => void;
+  isLedger: boolean;
+  setIsLedger?: (value: boolean) => void;
 }
 
 export const OverviewSidebar: FC<OverviewSidebarProps> = ({
@@ -25,8 +25,8 @@ export const OverviewSidebar: FC<OverviewSidebarProps> = ({
   pairs,
   onChangeAssets,
   onBorrow,
-  isSupportSignAllTxns,
-  setIsSupportSignAllTxns,
+  isLedger,
+  setIsLedger,
 }) => {
   const { totalBorrowValue } = useBorrow();
 
@@ -70,9 +70,9 @@ export const OverviewSidebar: FC<OverviewSidebarProps> = ({
         })}
       >
         <Checkbox
-          onChange={() => setIsSupportSignAllTxns(!isSupportSignAllTxns)}
+          onChange={() => setIsLedger(!isLedger)}
           label="I use ledger"
-          checked={!isSupportSignAllTxns}
+          checked={isLedger}
         />
       </div>
 
