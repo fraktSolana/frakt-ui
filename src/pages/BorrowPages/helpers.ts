@@ -1,20 +1,12 @@
 import { web3 } from 'fbonds-core';
 import { WalletContextState } from '@solana/wallet-adapter-react';
+import { borrow } from 'fbonds-core/lib/fbond-protocol/functions/management';
 
 import { BorrowNft } from '@frakt/api/nft';
-import {
-  BASE_POINTS,
-  MAX_ACCOUNTS_IN_FAST_TRACK,
-  makeCreateBondMultiOrdersTransaction,
-} from '@frakt/utils/bonds';
+import { BASE_POINTS } from '@frakt/utils/bonds';
 import { CartOrder } from '@frakt/pages/BorrowPages/cartState';
-import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from '@frakt/utils/transactions/helpers/signAndSendV0TransactionWithLookupTablesSeparateSignatures';
 import { captureSentryError } from '@frakt/utils/sentry';
-import {
-  InstructionsAndSigners,
-  showSolscanLinkNotification,
-  TxnsAndSigners,
-} from '@frakt/utils/transactions';
+import { showSolscanLinkNotification } from '@frakt/utils/transactions';
 import { LoanType } from '@frakt/api/loans';
 import { notify } from '@frakt/utils';
 import { makeProposeTransaction } from '@frakt/utils/loans';
@@ -140,78 +132,20 @@ export const borrowBulk: BorrowBulk = async ({
       });
     }),
   );
-  const bondOrders = orders.filter((order) => order.loanType === LoanType.BOND);
 
-  const bondTransactionsAndSignersChunks = await Promise.all(
-    bondOrders.map((order) => {
-      return makeCreateBondMultiOrdersTransaction({
-        marketPubkey: order.bondOrderParams.market.marketPubkey,
-        fraktMarketPubkey: order.bondOrderParams.market.fraktMarket.publicKey,
-        oracleFloorPubkey: order.bondOrderParams.market.oracleFloor?.publicKey,
-        whitelistEntryPubkey:
-          order.bondOrderParams.market.whitelistEntry?.publicKey,
+  const bondOrders = orders
+    .filter((order) => order.loanType === LoanType.BOND)
+    .map((order) => ({
+      borrowNft: order.borrowNft,
+      bondOrderParams: order.bondOrderParams.orderParams,
+    }));
 
-        nftMint: order.borrowNft.mint,
-        bondOrderParams: order.bondOrderParams.orderParams,
-        connection,
-        wallet,
-      });
-    }),
-  );
-
-  const fastTrackBorrows: InstructionsAndSigners[] =
-    bondTransactionsAndSignersChunks
-      .filter(
-        (txnAndSigners) =>
-          txnAndSigners.createAndSellBondsIxsAndSigners.lookupTablePublicKeys
-            .map((lookup) => lookup.addresses)
-            .flat().length <= MAX_ACCOUNTS_IN_FAST_TRACK,
-      )
-      .map((txnAndSigners) => txnAndSigners.createAndSellBondsIxsAndSigners);
-  const lookupTableBorrows = bondTransactionsAndSignersChunks.filter(
-    (txnAndSigners) =>
-      txnAndSigners.createAndSellBondsIxsAndSigners.lookupTablePublicKeys
-        .map((lookup) => lookup.addresses)
-        .flat().length > MAX_ACCOUNTS_IN_FAST_TRACK,
-  );
-
-  const firstChunk: TxnsAndSigners[] = [
-    ...lookupTableBorrows
-      .map((chunk) => ({
-        transaction: chunk.createLookupTableTxn,
-        signers: [],
-      }))
-      .flat(),
-  ];
-
-  const secondChunk: TxnsAndSigners[] = [
-    ...lookupTableBorrows
-      .map((chunk) =>
-        chunk.extendLookupTableTxns.map((transaction) => ({
-          transaction,
-          signers: [],
-        })),
-      )
-      .flat(),
-  ];
-
-  const createAndSellBondsIxsAndSignersChunk: InstructionsAndSigners[] = [
-    ...lookupTableBorrows
-      .map((chunk) => chunk.createAndSellBondsIxsAndSigners)
-      .flat(),
-  ];
-
-  return await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+  return borrow({
     notBondTxns: notBondTransactionsAndSigners.flat(),
-    createLookupTableTxns: firstChunk.map((txn) => txn.transaction),
-    extendLookupTableTxns: secondChunk.map((txn) => txn.transaction),
-    v0InstructionsAndSigners: createAndSellBondsIxsAndSignersChunk,
-    fastTrackInstructionsAndSigners: fastTrackBorrows,
+    orders: bondOrders,
     isLedger,
-    // lookupTablePublicKey: bondTransactionsAndSignersChunks,
     connection,
     wallet,
-    commitment: 'confirmed',
     onAfterSend: () => {
       notify({
         message: 'Transactions sent!',
