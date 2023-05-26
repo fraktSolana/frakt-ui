@@ -1,8 +1,4 @@
-import {
-  WalletContextState,
-  useConnection,
-  useWallet,
-} from '@solana/wallet-adapter-react';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
 
 import { liquidateBondOnAuction, buyAuction } from '@frakt/utils/raffles';
@@ -26,20 +22,33 @@ export const useAuctionCard = (
     openLoadingModal();
     try {
       const { nftMint } = auction;
-      const isBondAuction = auction?.bondParams?.fbondPubkey;
+      const isBondAuctions = auction?.bondParams?.fbondPubkey;
 
-      if (!isBondAuction) {
+      if (!isBondAuctions) {
         const raffleAddress = auction.classicParams?.auctionPubkey;
-        await handleAuction(
+        const result = await buyAuction({
           connection,
           wallet,
           nftMint,
           raffleAddress,
-          buyAuction,
-        );
+        });
+
+        if (result) {
+          hideAuction(nftMint);
+        }
       } else {
-        const { fbondPubkey, repayAccounts, ...auctionParams } =
-          auction.bondParams;
+        const {
+          fbondPubkey,
+          collateralBoxType,
+          collateralBox,
+          collateralTokenMint,
+          collateralTokenAccount,
+          collateralOwner,
+          fraktMarket,
+          oracleFloor,
+          whitelistEntry,
+          repayAccounts,
+        } = auction.bondParams;
 
         const convertedRepayAccounts = repayAccounts.map(
           ({ bondOffer, bondTradeTransaction, user }) => {
@@ -51,18 +60,24 @@ export const useAuctionCard = (
           },
         );
 
-        await handleAuction(
+        const result = await liquidateBondOnAuction({
           connection,
           wallet,
-          nftMint,
-          null,
-          liquidateBondOnAuction,
-          {
-            fbondPubkey,
-            repayAccounts: convertedRepayAccounts,
-            ...auctionParams,
-          },
-        );
+          fbondPubkey,
+          collateralBoxType,
+          collateralBox,
+          collateralTokenMint,
+          collateralTokenAccount,
+          collateralOwner,
+          fraktMarket,
+          oracleFloor,
+          whitelistEntry,
+          repayAccounts: convertedRepayAccounts,
+        });
+
+        if (result) {
+          hideAuction(nftMint);
+        }
       }
     } catch (error) {
       console.error(error);
@@ -71,25 +86,10 @@ export const useAuctionCard = (
     }
   };
 
-  const handleAuction = async (
-    connection: web3.Connection,
-    wallet: WalletContextState,
-    nftMint: string,
-    raffleAddress: string | null,
-    auctionFunction: (...args: any) => Promise<boolean>,
-    ...args: any
-  ) => {
-    const result = await auctionFunction({
-      connection,
-      wallet,
-      nftMint,
-      raffleAddress,
-      ...args[0],
-    });
-
-    if (result) {
-      hideAuction(nftMint);
-    }
+  return {
+    onSubmit,
+    closeLoadingModal,
+    loadingModalVisible,
   };
 
   return { onSubmit, closeLoadingModal, loadingModalVisible };
