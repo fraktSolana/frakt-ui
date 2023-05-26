@@ -19,15 +19,15 @@ interface ExitCellProps {
 
 export const ExitCell: FC<ExitCellProps> = ({ bond, bonds, hideBond }) => {
   const { market, pairs } = getMarketAndPairsByBond(bond);
-  const { isExitAvailable } = bond?.stats;
+  const { isExitAvailable, pnlProfit } = bond?.stats;
 
-  const { bestOrdersAndBorrowValue, redeemAvailable } = useBondActions({
+  const { bestOrdersAndBorrowValue } = useBondActions({
     bond,
     market,
     pairs,
   });
 
-  const { onExit, onRedeem } = useBondsTransactions({
+  const { onExit } = useBondsTransactions({
     bonds,
     hideBond,
     market,
@@ -38,7 +38,9 @@ export const ExitCell: FC<ExitCellProps> = ({ bond, bonds, hideBond }) => {
     <div className={styles.btnWrapper}>
       {isOwner && (
         <Button
-          className={classNames(styles.btn, styles.btnExit)}
+          className={classNames(styles.btn, styles.btnExit, {
+            [styles.positive]: pnlProfit > 0,
+          })}
           disabled={!isExitAvailable}
           type="primary"
           // onClick={() => setExitModalVisible(true)}
