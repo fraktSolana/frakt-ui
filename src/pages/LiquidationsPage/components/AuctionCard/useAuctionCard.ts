@@ -1,8 +1,11 @@
-import { calculateAuctionPrice } from '@frakters/raffle-sdk/lib/raffle-core/helpers';
-import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import moment from 'moment';
+import {
+  WalletContextState,
+  useConnection,
+  useWallet,
+} from '@solana/wallet-adapter-react';
+import { web3 } from 'fbonds-core';
 
-import { buyAuction, buyAuctionBond } from '@frakt/utils/raffles';
+import { liquidateBondOnAuction, buyAuction } from '@frakt/utils/raffles';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { AuctionListItem } from '@frakt/api/raffle';
 
@@ -19,56 +22,47 @@ export const useAuctionCard = (
     close: closeLoadingModal,
   } = useLoadingModal();
 
-  const currentTime = moment().unix();
-
-  const rawTimeToNextRound =
-    auction?.denominator -
-    ((currentTime - auction.startedAt) % auction?.denominator);
-
-  const rawBuyPrice = calculateAuctionPrice({
-    now: currentTime,
-    startPrice: auction.startPrice,
-    startTime: auction.startedAt,
-    delta: auction.delta,
-    deltaType: auction.deltaType,
-    denominator: auction?.denominator,
-  });
-
-  const rawNextPrice = calculateAuctionPrice({
-    now: currentTime + rawTimeToNextRound + 1,
-    startPrice: auction.startPrice,
-    startTime: auction.startedAt,
-    delta: auction.delta,
-    deltaType: auction.deltaType,
-    denominator: auction?.denominator,
-  });
-
   const onSubmit = async (): Promise<void> => {
     openLoadingModal();
     try {
-      if (!auction?.bondPubKey) {
-        const result = await buyAuction({
+      const { nftMint } = auction;
+      const isBondAuction = auction?.bondParams?.fbondPubkey;
+
+      if (!isBondAuction) {
+        const raffleAddress = auction.classicParams?.auctionPubkey;
+        await handleAuction(
           connection,
           wallet,
-          nftMint: auction?.nftMint,
-          raffleAddress: auction.auctionPubkey,
-        });
-
-        if (result) {
-          hideAuction(auction.auctionPubkey);
-        }
+          nftMint,
+          raffleAddress,
+          buyAuction,
+        );
       } else {
-        const result = await buyAuctionBond({
+        const { fbondPubkey, repayAccounts, ...auctionParams } =
+          auction.bondParams;
+
+        const convertedRepayAccounts = repayAccounts.map(
+          ({ bondOffer, bondTradeTransaction, user }) => {
+            return {
+              bondOffer: new web3.PublicKey(bondOffer),
+              bondTradeTransaction: new web3.PublicKey(bondTradeTransaction),
+              user: new web3.PublicKey(user),
+            };
+          },
+        );
+
+        await handleAuction(
           connection,
           wallet,
-          nftMint: auction?.nftMint,
-          raffleAddress: auction.auctionPubkey,
-          fbond: auction.bondPubKey,
-        });
-
-        if (result) {
-          hideAuction(auction.auctionPubkey);
-        }
+          nftMint,
+          null,
+          liquidateBondOnAuction,
+          {
+            fbondPubkey,
+            repayAccounts: convertedRepayAccounts,
+            ...auctionParams,
+          },
+        );
       }
     } catch (error) {
       console.error(error);
@@ -77,16 +71,26 @@ export const useAuctionCard = (
     }
   };
 
-  const timeToNextRound = currentTime + rawTimeToNextRound;
-  const nextPrice = parseFloat((rawNextPrice / 1e9).toFixed(3));
-  const buyPrice = parseFloat((rawBuyPrice / 1e9).toFixed(3));
+  const handleAuction = async (
+    connection: web3.Connection,
+    wallet: WalletContextState,
+    nftMint: string,
+    raffleAddress: string | null,
+    auctionFunction: (...args: any) => Promise<boolean>,
+    ...args: any
+  ) => {
+    const result = await auctionFunction({
+      connection,
+      wallet,
+      nftMint,
+      raffleAddress,
+      ...args[0],
+    });
 
-  return {
-    onSubmit,
-    closeLoadingModal,
-    loadingModalVisible,
-    timeToNextRound,
-    buyPrice,
-    nextPrice,
+    if (result) {
+      hideAuction(nftMint);
+    }
   };
+
+  return { onSubmit, closeLoadingModal, loadingModalVisible };
 };

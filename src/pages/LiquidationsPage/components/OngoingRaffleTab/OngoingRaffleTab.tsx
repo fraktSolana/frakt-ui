@@ -1,24 +1,25 @@
 import { FC, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
-import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
+import { AuctionListItem, RaffleListItem } from '@frakt/api/raffle';
 import { useIntersection } from '@frakt/hooks/useIntersection';
-import {
-  useFetchAuctionsList,
-  useRaffleInfo,
-} from '@frakt/hooks/useRaffleData';
 import { Loader } from '@frakt/components/Loader';
 import EmptyList from '@frakt/components/EmptyList';
 
 import LiquidationRaffleCard from '../LiquidationRaffleCard';
 import { useRaffleSort } from '../Liquidations/hooks';
-import styles from './OngoingRaffleTab.module.scss';
-import { useFetchUserTickets } from '../../hooks';
 import RafflesList from '../RafflesList';
 import AuctionCard from '../AuctionCard';
+import {
+  useFetchUserTickets,
+  useFetchAuctionsList,
+  useFetchRafflesList,
+} from '../../hooks';
+
+import styles from './OngoingRaffleTab.module.scss';
 
 const OngoingRaffleTab: FC = () => {
-  const { publicKey, connected } = useWallet();
+  const { publicKey } = useWallet();
 
   const { lotteryTickets } = useFetchUserTickets();
   const { ref, inView } = useIntersection();
@@ -31,7 +32,7 @@ const OngoingRaffleTab: FC = () => {
     fetchNextPage,
     isFetchingNextPage,
     isListEnded,
-  } = useRaffleInfo({
+  } = useFetchRafflesList({
     url: 'liquidation',
     id: 'ongoingRaffleList',
     queryData: userQueryData,
@@ -43,41 +44,37 @@ const OngoingRaffleTab: FC = () => {
     }
   }, [inView, fetchNextPage, isFetchingNextPage, isListEnded]);
 
-  const { data: auctionList, loading, hideAuction } = useFetchAuctionsList();
-
-  if (!connected) {
-    return (
-      <ConnectWalletSection text="Connect your wallet to check liquidations raffle" />
-    );
-  }
+  const { data: auctionsList, loading, hideAuction } = useFetchAuctionsList();
 
   if (loading) return <Loader />;
 
-  const raffleListWithAuctions = [...auctionList, ...(raffleList || [])];
+  const createAuctionsList = () => {
+    return auctionsList.map((auction: AuctionListItem) => (
+      <AuctionCard
+        key={auction.nftMint}
+        auction={auction}
+        hideAuction={hideAuction}
+      />
+    ));
+  };
+
+  const createRafflesList = () => {
+    return raffleList.map((raffle: RaffleListItem) => (
+      <LiquidationRaffleCard
+        key={raffle.rafflePubKey}
+        raffle={raffle}
+        disabled={lotteryTickets?.currentTickets < 1}
+      />
+    ));
+  };
 
   return (
     <RafflesList withRafflesInfo>
-      {raffleListWithAuctions?.length ? (
+      {!!auctionsList?.length || !!raffleList?.length ? (
         <>
           <div className={styles.rafflesList}>
-            {raffleListWithAuctions.map((raffle: any) => {
-              if (!raffle?.buyPrice) {
-                return (
-                  <LiquidationRaffleCard
-                    key={raffle.rafflePubKey}
-                    raffle={raffle}
-                    disabled={lotteryTickets?.currentTickets < 1}
-                  />
-                );
-              }
-              return (
-                <AuctionCard
-                  key={raffle.rafflePubKey}
-                  hideAuction={hideAuction}
-                  auction={raffle}
-                />
-              );
-            })}
+            {createAuctionsList()}
+            {createRafflesList()}
             {!!isFetchingNextPage && <Loader />}
             <div ref={ref} />
           </div>

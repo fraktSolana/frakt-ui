@@ -1,13 +1,15 @@
 import { FC, useMemo } from 'react';
 
-import { useFetchAllRaffleCollections } from '../../hooks';
 import { Tabs, useTabs } from '@frakt/components/Tabs';
+
+import { useFetchAllRafflesCollectionsNames } from '../../hooks';
 import UpcomingRaffleTab from '../UpcomingRaffleTab';
 import OngoingRaffleTab from '../OngoingRaffleTab';
-import styles from './Liquidations.module.scss';
 import { RafflesTabsNames } from '../../model';
 import WonRaffleTab from '../WonRaffleTab';
 import { RAFFLES_TABS } from '.';
+
+import styles from './Liquidations.module.scss';
 
 const Liquidations: FC = () => {
   const {
@@ -19,7 +21,7 @@ const Liquidations: FC = () => {
     defaultValue: RAFFLES_TABS[0].value,
   });
 
-  const { data } = useFetchAllRaffleCollections();
+  const { data } = useFetchAllRafflesCollectionsNames();
 
   const renderTip = useMemo(() => {
     const totalRaffles = data?.raffleCollections?.length;
