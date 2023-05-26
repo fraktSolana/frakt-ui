@@ -63,6 +63,8 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
       showConfetti();
     } catch (error) {
       throwLogsError(error);
+    } finally {
+      setRefinanceModalVisible(false);
     }
   };
 

@@ -47,7 +47,7 @@ export const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
             Extend
           </Button>
         )}
-        <Button className={styles.repayButton}>Sell</Button>
+        {/* <Button className={styles.repayButton}>Sell</Button> */}
       </div>
       <RefinanceModal
         loan={loan}
