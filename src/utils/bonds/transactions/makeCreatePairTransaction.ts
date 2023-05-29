@@ -70,6 +70,7 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
   );
   const maxReturnAmountFilter = maxLoanValueLamports || standartMaxLoanValue;
   console.log({ maxReturnAmountFilter, marketFloor, maxLTVRaw });
+
   const {
     instructions: instructions1,
     signers: signers1,
