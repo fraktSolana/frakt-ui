@@ -242,7 +242,7 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
             preflightCommitment: 'processed',
           });
           currentTxIndex += 1;
-          await new Promise((r) => setTimeout(r, 1000));
+          await new Promise((r) => setTimeout(r, 8000));
           // console.log("MinContextSlot: ", txn.minNonceContextSlot)
         }
         if (txnsAndSignersWithV0Txns[i].length > 0)
