@@ -81,7 +81,7 @@ const RefinanceModal: FC<RefinanceModalProps> = ({
             'Difference you will pay',
             formatValue(difference, 1e9),
             true,
-            difference < 0 && styles.negative,
+            difference > 0 && styles.negative,
           )}
         </div>
         <Button onClick={onSubmit} type="secondary" className={styles.button}>
