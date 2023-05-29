@@ -85,11 +85,16 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
   };
 
   const borrowed = get(bestOrders, 'maxBorrowValue', 0);
-  const debt = sumBy(
-    bestOrders?.takenOrders,
-    ({ pricePerShare, orderSize }) => (orderSize / pricePerShare) * BASE_POINTS,
+  // const debt = sumBy(
+  //   bestOrders?.takenOrders,
+  //   ({ pricePerShare, orderSize }) => (orderSize / pricePerShare) * BASE_POINTS,
+  // );
+  const fee = bestOrders?.takenOrders.reduce(
+    (feeSum, orderParam) =>
+      feeSum + orderParam.orderSize * (BASE_POINTS - orderParam.pricePerShare),
+    0,
   );
-
+  const debt = (borrowed + fee) / BASE_POINTS;
   return {
     onRefinance,
     isRefinanceModalVisible,
