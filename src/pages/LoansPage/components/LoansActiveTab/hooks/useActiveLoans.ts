@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useDispatch } from 'react-redux';
 import { sum, map } from 'lodash';
@@ -26,6 +27,8 @@ export const useActiveLoans = () => {
     open: openLoadingModal,
   } = useLoadingModal();
 
+  const [isLedger, setIsLedger] = useState<boolean>(false);
+
   const showConfetti = () =>
     dispatch(commonActions.setConfetti({ isVisible: true }));
 
@@ -37,6 +40,7 @@ export const useActiveLoans = () => {
         connection,
         wallet,
         loans: selection,
+        isLedger,
       });
 
       if (result) {
@@ -54,6 +58,8 @@ export const useActiveLoans = () => {
 
   return {
     onBulkRepay,
+    isLedger,
+    setIsLedger,
     loadingModalVisible,
     closeLoadingModal,
     totalBorrowed: sum(map(selection, ({ repayValue }) => repayValue / 1e9)),
