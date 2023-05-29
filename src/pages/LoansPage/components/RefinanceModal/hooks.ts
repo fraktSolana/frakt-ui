@@ -6,6 +6,7 @@ import { sumBy, get } from 'lodash';
 
 import { convertTakenOrdersToOrderParams } from '@frakt/pages/BorrowPages/cartState';
 import { BASE_POINTS, useMarket, useMarketPairs } from '@frakt/utils/bonds';
+import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { commonActions } from '@frakt/state/common/actions';
 import { refinanceLoan } from '@frakt/utils/loans';
 import { throwLogsError } from '@frakt/utils';
@@ -20,6 +21,12 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
   const showConfetti = (): void => {
     dispatch(commonActions.setConfetti({ isVisible: true }));
   };
+
+  const {
+    visible: loadingModalVisible,
+    open: openLoadingModal,
+    close: closeLoadingModal,
+  } = useLoadingModal();
 
   const [isRefinanceModalVisible, setRefinanceModalVisible] =
     useState<boolean>(false);
@@ -45,6 +52,7 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
 
   const onRefinance = async (): Promise<void> => {
     try {
+      openLoadingModal();
       console.log('BEST ORDERS FOR REFINANCE', bestOrders);
       const result = await refinanceLoan({
         wallet,
@@ -64,6 +72,7 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
     } catch (error) {
       throwLogsError(error);
     } finally {
+      closeLoadingModal();
       setRefinanceModalVisible(false);
     }
   };
@@ -77,6 +86,7 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
   return {
     onRefinance,
     isRefinanceModalVisible,
+    loadingModalVisible,
     bestLoanParams: { borrowed, debt },
     openRefinanceModal: () => setRefinanceModalVisible(true),
     closeRefinanceModal: () => setRefinanceModalVisible(false),

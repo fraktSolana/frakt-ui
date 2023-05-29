@@ -30,7 +30,7 @@ const RefinanceModal: FC<RefinanceModalProps> = ({
   onSubmit,
   bestLoanParams,
 }) => {
-  const difference = loan?.loanValue - bestLoanParams?.borrowed;
+  const difference = loan?.repayValue - bestLoanParams?.borrowed;
 
   return (
     <Modal
