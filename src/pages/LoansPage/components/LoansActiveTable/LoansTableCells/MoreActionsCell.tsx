@@ -10,6 +10,7 @@ import { useLoanCard } from '../../LoanCard/hooks';
 import RefinanceModal from '../../RefinanceModal';
 
 import styles from '../LoansTable.module.scss';
+import { LoadingModal } from '@frakt/components/LoadingModal';
 
 export const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
   const {
@@ -25,6 +26,7 @@ export const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
     closeRefinanceModal,
     openRefinanceModal,
     bestLoanParams,
+    loadingModalVisible,
   } = useLoanTransactions({ loan });
 
   const isLoanBond = loan.loanType === LoanType.BOND;
@@ -62,6 +64,7 @@ export const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
         onPartialPayback={onPartialPayback}
         loan={loan}
       />
+      <LoadingModal visible={loadingModalVisible} />
     </>
   );
 };
