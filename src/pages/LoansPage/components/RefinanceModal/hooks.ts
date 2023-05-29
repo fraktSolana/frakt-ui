@@ -8,7 +8,10 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useDispatch } from 'react-redux';
 import { sumBy, get } from 'lodash';
 
-import { convertTakenOrdersToOrderParams } from '@frakt/pages/BorrowPages/cartState';
+import {
+  convertTakenOrdersToOrderParams,
+  patchPairWithProtocolFee,
+} from '@frakt/pages/BorrowPages/cartState';
 import { BASE_POINTS, useMarket, useMarketPairs } from '@frakt/utils/bonds';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { commonActions } from '@frakt/state/common/actions';
@@ -112,7 +115,7 @@ const useLoanData = (loan: Loan) => {
 
   return {
     market,
-    pairs,
+    pairs: pairs.map(patchPairWithProtocolFee),
     isLoadingPairs,
   };
 };
