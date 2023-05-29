@@ -48,6 +48,7 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
     const loanToValueBasePoints =
       (loan.loanValue / (market?.oracleFloor?.floor ?? 0)) * BASE_POINTS;
 
+    console.log(loan.repayValue);
     const bestOrdersForRefinance = getBestOrdersByBorrowValue({
       bondOffers: pairs,
       collectionFloor: market?.oracleFloor?.floor,

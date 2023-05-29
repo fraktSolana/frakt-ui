@@ -69,7 +69,7 @@ export const makeRefinanceLoanTransaction: MakeRefinanceLoanTransaction =
           ),
           0,
         ),
-        amountToSell: orderParam.orderSize,
+        amountToSell: Math.floor(orderParam.orderSize),
         bondOfferV2: new web3.PublicKey(orderParam.pairPubkey),
         assetReceiver: new web3.PublicKey(orderParam.assetReceiver),
       }),
