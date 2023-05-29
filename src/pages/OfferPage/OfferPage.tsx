@@ -41,7 +41,6 @@ export const OfferPage = () => {
     onDurationChange,
     onOfferSizeChange,
     onInterestChange,
-    handleInterestOnBlur,
     onCreateOffer,
     isValid,
     isEdit,
@@ -59,6 +58,7 @@ export const OfferPage = () => {
     maxLoanValue,
     onOfferTypeChange,
     offerType,
+    isOfferHasChanged,
     notChangebleUserSize,
   } = useOfferPage();
 
@@ -151,7 +151,6 @@ export const OfferPage = () => {
               <TokenField
                 value={interest}
                 onValueChange={onInterestChange}
-                onBlur={() => handleInterestOnBlur(interest)}
                 label="Interest"
                 labelRightNode={createIntrestFieldRihtLabel(apr)}
                 error={isMaxLimitInterest}
@@ -212,7 +211,7 @@ export const OfferPage = () => {
                   Delete offer
                 </Button>
                 <Button
-                  disabled={isMaxLimitInterest}
+                  disabled={isMaxLimitInterest || !isOfferHasChanged}
                   onClick={onEditOffer}
                   className={styles.btn}
                   type="secondary"

@@ -10,6 +10,8 @@ import {
   showSolscanLinkNotification,
   signAndConfirmTransaction,
 } from '../transactions';
+import { InstructionsAndSigners } from 'fbonds-core/lib/fbond-protocol/types';
+import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from 'fbonds-core/lib/fbond-protocol/utils';
 
 type LiquidateBondOnAuction = (props: {
   connection: web3.Connection;
@@ -39,57 +41,72 @@ export const liquidateBondOnAuction: LiquidateBondOnAuction = async ({
   whitelistEntry,
   repayAccounts,
 }): Promise<boolean> => {
-  try {
-    const { instructions, signers } = await txn({
-      programId: new web3.PublicKey(process.env.BONDS_PROGRAM_PUBKEY),
-      connection,
-      args: { repayAccounts },
-      accounts: {
-        userPubkey: wallet.publicKey,
-        fbond: new web3.PublicKey(fbondPubkey),
-        collateralBox: new web3.PublicKey(collateralBox),
-        collateralTokenMint: new web3.PublicKey(collateralTokenMint),
-        collateralTokenAccount: new web3.PublicKey(collateralTokenAccount),
-        collateralOwner: new web3.PublicKey(collateralOwner),
-        fraktMarket: new web3.PublicKey(fraktMarket),
-        oracleFloor: new web3.PublicKey(oracleFloor),
-        whitelistEntry: new web3.PublicKey(whitelistEntry),
-        admin: new web3.PublicKey(process.env.BONDS_ADMIN_PUBKEY),
-      },
-      sendTxn: sendTxnPlaceHolder,
-    });
+  const { instructions, signers } = await txn({
+    programId: new web3.PublicKey(process.env.BONDS_PROGRAM_PUBKEY),
+    connection,
+    args: { repayAccounts },
+    addComputeUnits: true,
+    accounts: {
+      userPubkey: wallet.publicKey,
+      fbond: new web3.PublicKey(fbondPubkey),
+      collateralBox: new web3.PublicKey(collateralBox),
+      collateralTokenMint: new web3.PublicKey(collateralTokenMint),
+      collateralTokenAccount: new web3.PublicKey(collateralTokenAccount),
+      collateralOwner: new web3.PublicKey(collateralOwner),
+      fraktMarket: new web3.PublicKey(fraktMarket),
+      oracleFloor: new web3.PublicKey(oracleFloor),
+      whitelistEntry: new web3.PublicKey(whitelistEntry),
+      admin: new web3.PublicKey(process.env.BONDS_ADMIN_PUBKEY),
+    },
+    sendTxn: sendTxnPlaceHolder,
+  });
 
-    const transaction = new web3.Transaction().add(...instructions);
+  const intstructionsAndSigners: InstructionsAndSigners = {
+    instructions,
+    signers,
+    lookupTablePublicKeys: [],
+  };
+  return signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+    notBondTxns: [],
+    createLookupTableTxns: [],
+    extendLookupTableTxns: [],
+    v0InstructionsAndSigners: [],
+    fastTrackInstructionsAndSigners: [intstructionsAndSigners],
 
-    await signAndConfirmTransaction({
-      transaction,
-      connection,
-      signers,
-      wallet,
-    });
-
-    notify({
-      message: 'Transaction successful!',
-      type: NotifyType.SUCCESS,
-    });
-
-    return true;
-  } catch (error) {
-    const isNotConfirmed = showSolscanLinkNotification(error);
-
-    if (!isNotConfirmed) {
+    isLedger: false,
+    // lookupTablePublicKey: bondTransactionsAndSignersChunks,
+    connection,
+    wallet,
+    commitment: 'confirmed',
+    onAfterSend: () => {
       notify({
-        message: 'Transaction failed',
-        type: NotifyType.ERROR,
+        message: 'Transactions sent!',
+        type: NotifyType.INFO,
       });
-    }
+    },
+    onSuccess: () => {
+      notify({
+        message: 'Liquidated successfully!',
+        type: NotifyType.SUCCESS,
+      });
+    },
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.warn(error.logs?.join('\n'));
 
-    captureSentryError({
-      error,
-      wallet,
-      transactionName: 'liquidateBondOnAuction',
-    });
+      const isNotConfirmed = showSolscanLinkNotification(error);
+      if (!isNotConfirmed) {
+        notify({
+          message: 'The transaction just failed :( Give it another try',
+          type: NotifyType.ERROR,
+        });
+      }
 
-    return false;
-  }
+      captureSentryError({
+        error,
+        wallet,
+        transactionName: 'liquidateBondOnAuction',
+      });
+    },
+  });
 };
