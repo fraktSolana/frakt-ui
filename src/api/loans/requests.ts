@@ -12,7 +12,7 @@ type FetchWalletLoans = (props: {
 
 export const fetchWalletLoans: FetchWalletLoans = async ({ publicKey }) => {
   const { data } = await axios.get<Loan[]>(
-    `https://${BACKEND_DOMAIN}/loan/all/${publicKey?.toBase58()}`,
+    `https://${BACKEND_DOMAIN}/loan/all/${publicKey?.toBase58()}?isPrivate=true`,
   );
 
   return (data ?? []).map((loan) => ({

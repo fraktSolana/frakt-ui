@@ -1,5 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
-import { getBestOrdersForExit } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
+import {
+  getBestOrdersByBorrowValue,
+  getBestOrdersForExit,
+  getBestOrdersForRefinance,
+} from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useDispatch } from 'react-redux';
 import { sumBy, get } from 'lodash';
@@ -34,10 +38,10 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
     const loanToValueBasePoints =
       (loan.loanValue / (market?.oracleFloor?.floor ?? 0)) * BASE_POINTS;
 
-    const bestOrdersForRefinance = getBestOrdersForExit({
+    const bestOrdersForRefinance = getBestOrdersByBorrowValue({
       bondOffers: pairs,
-      loanToValueFilter: loanToValueBasePoints,
-      amountOfBonds: loan.repayValue / BASE_POINTS,
+      collectionFloor: market?.oracleFloor?.floor,
+      borrowValue: loan.loanValue,
     });
 
     setBestOrders(bestOrdersForRefinance);
