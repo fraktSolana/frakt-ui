@@ -48,7 +48,7 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
     const bestOrdersForRefinance = getBestOrdersByBorrowValue({
       bondOffers: pairs,
       collectionFloor: market?.oracleFloor?.floor,
-      borrowValue: loan.loanValue,
+      borrowValue: loan.repayValue,
     });
 
     setBestOrders(bestOrdersForRefinance);
