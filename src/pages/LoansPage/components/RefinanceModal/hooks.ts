@@ -110,12 +110,12 @@ const useLoanData = (loan: Loan) => {
   });
 
   const pairs = useMemo(() => {
-    return isLoadingPairs ? [] : rawPairs;
+    return isLoadingPairs ? [] : rawPairs.map(patchPairWithProtocolFee);
   }, [isLoadingPairs]);
 
   return {
     market,
-    pairs: pairs.map(patchPairWithProtocolFee),
+    pairs,
     isLoadingPairs,
   };
 };
