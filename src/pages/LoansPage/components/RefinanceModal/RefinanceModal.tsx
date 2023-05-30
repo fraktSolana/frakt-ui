@@ -14,7 +14,7 @@ import styles from './RefinanceModal.module.scss';
 
 interface RefinanceModalProps {
   visible: boolean;
-  onCancel: () => void;
+  onCancel: (event?: any) => void;
   onSubmit: () => void;
   loan: Loan;
   bestLoanParams: {
@@ -84,7 +84,12 @@ const RefinanceModal: FC<RefinanceModalProps> = ({
             difference > 0 && styles.negative,
           )}
         </div>
-        <Button onClick={onSubmit} type="secondary" className={styles.button}>
+        <Button
+          onClick={onSubmit}
+          type="secondary"
+          className={styles.button}
+          disabled={!bestLoanParams?.debt}
+        >
           Extend
         </Button>
       </div>

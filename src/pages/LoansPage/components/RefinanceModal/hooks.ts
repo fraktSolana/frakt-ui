@@ -102,7 +102,10 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
     loadingModalVisible,
     bestLoanParams: { borrowed, debt },
     openRefinanceModal: () => setRefinanceModalVisible(true),
-    closeRefinanceModal: () => setRefinanceModalVisible(false),
+    closeRefinanceModal: (event: Event) => {
+      setRefinanceModalVisible(false);
+      event.stopPropagation();
+    },
   };
 };
 
