@@ -1,6 +1,5 @@
 import {
   LedgerWalletAdapter,
-  PhantomWalletAdapter,
   SolflareWalletAdapter,
   SlopeWalletAdapter,
   GlowWalletAdapter,
@@ -9,7 +8,7 @@ import {
   MathWalletAdapter,
   SolletWalletAdapter,
   ExodusWalletAdapter,
-  BackpackWalletAdapter,
+  UnsafeBurnerWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
 import { SentreWalletAdapter } from '@sentre/connector';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
@@ -27,7 +26,6 @@ export const ENDPOINTS = [
 ].filter(Boolean);
 
 export const WALLETS = [
-  new PhantomWalletAdapter(),
   new SolflareWalletAdapter(),
   new SlopeWalletAdapter(),
   new GlowWalletAdapter(),
@@ -37,8 +35,8 @@ export const WALLETS = [
   new MathWalletAdapter(),
   new ExodusWalletAdapter(),
   new SentreWalletAdapter(),
-  new BackpackWalletAdapter(),
   new SolletWalletAdapter({ network: WalletAdapterNetwork.Mainnet }),
+  new UnsafeBurnerWalletAdapter(),
 ];
 
 export const FRKT_TOKEN_MINT = process.env.FRKT_TOKEN_MINT;
