@@ -41,7 +41,7 @@ export const claimNftByLender: ClaimNftByLender = async ({
         collateralTokenAccount: new web3.PublicKey(
           collateralBox.collateralTokenAccount,
         ),
-        collateralOwner: wallet.publicKey,
+        collateralOwner: new web3.PublicKey(fbond.fbondIssuer),
         bondTradeTransactionV2: new web3.PublicKey(
           autocompoundDeposits[0].publicKey,
         ),
