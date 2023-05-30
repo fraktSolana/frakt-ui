@@ -1,9 +1,13 @@
 import { FC } from 'react';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import classNames from 'classnames';
+import moment from 'moment';
 
 import { convertTakenOrdersToOrderParams } from '@frakt/pages/BorrowPages/cartState';
 import { useBondsTransactions } from '@frakt/hooks/useBondTransactions';
+import { claimNftByLender, isReceiveNftFeature } from '@frakt/utils/bonds';
 import Button from '@frakt/components/Button';
+import { throwLogsError } from '@frakt/utils';
 import { Bond } from '@frakt/api/bonds';
 
 import { getMarketAndPairsByBond } from '../helpers';
@@ -18,9 +22,11 @@ interface ExitCellProps {
 }
 
 export const ExitCell: FC<ExitCellProps> = ({ bond, bonds, hideBond }) => {
+  const wallet = useWallet();
+  const { connection } = useConnection();
+
   const { market, pairs } = getMarketAndPairsByBond(bond);
   const { isExitAvailable, pnlProfit } = bond?.stats;
-
   const { bestOrdersAndBorrowValue } = useBondActions({
     bond,
     market,
@@ -34,9 +40,27 @@ export const ExitCell: FC<ExitCellProps> = ({ bond, bonds, hideBond }) => {
   });
   const isOwner = !!bond?.ownerPubkey;
 
+  const onClaim = async () => {
+    try {
+      const result = await claimNftByLender({
+        wallet,
+        connection,
+        bond,
+      });
+
+      if (result) {
+        hideBond(bond?.fbond?.publicKey);
+      }
+    } catch (error) {
+      throwLogsError(error);
+    }
+  };
+
+  const isAvailableToClaim = checkIsAvailableToClaimNft(bond);
+
   return (
     <div className={styles.btnWrapper}>
-      {isOwner && (
+      {isOwner && !isAvailableToClaim && (
         <Button
           className={classNames(styles.btn, styles.btnExit, {
             [styles.positive]: pnlProfit > 0,
@@ -57,16 +81,34 @@ export const ExitCell: FC<ExitCellProps> = ({ bond, bonds, hideBond }) => {
           Exit
         </Button>
       )}
-      {/* {redeemAvailable && (
-        <Button
-          className={styles.btn}
-          disabled={!redeemAvailable}
-          type="secondary"
-          onClick={() => onRedeem(bond)}
-        >
+      {isAvailableToClaim && (
+        <Button onClick={onClaim} className={styles.btn} type="secondary">
           Claim
         </Button>
-      )} */}
+      )}
     </div>
   );
+};
+
+const checkIsAvailableToClaimNft = (bond: Bond): boolean => {
+  const { autocompoundDeposits, fbond } = bond;
+  const bondFeature = autocompoundDeposits[0].bondTradeTransactionType;
+
+  if (autocompoundDeposits?.length > 1) {
+    return false;
+  }
+
+  if (!isReceiveNftFeature(bondFeature)) {
+    return false;
+  }
+
+  if (moment(fbond.liquidatingAt).add(12, 'hours').isAfter(moment())) {
+    return false;
+  }
+
+  if (fbond.fraktBondState !== 'active') {
+    return false;
+  }
+
+  return true;
 };

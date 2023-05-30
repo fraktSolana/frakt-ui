@@ -1,9 +1,17 @@
+import classNames from 'classnames';
+
 import { Loan, LoanType } from '@frakt/api/loans';
 import { useCountdown } from '@frakt/hooks';
 
 import styles from '../LoansTable.module.scss';
 
-export const DurationCell = ({ loan }: { loan: Loan }) => {
+export const DurationCell = ({
+  loan,
+  className,
+}: {
+  loan: Loan;
+  className?: string;
+}) => {
   const { loanType } = loan;
 
   if (loanType === LoanType.PRICE_BASED)
@@ -13,7 +21,7 @@ export const DurationCell = ({ loan }: { loan: Loan }) => {
   const { timeLeft } = useCountdown(expiredAt);
 
   return (
-    <div className={styles.value}>
+    <div className={classNames(styles.value, className)}>
       {!!loan?.gracePeriod && <p className={styles.badgeOnGrace}>On grace</p>}
       {timeLeft.days}d<p>:</p>
       {timeLeft.hours}h<p>:</p>

@@ -1,14 +1,15 @@
 import { FC, useEffect } from 'react';
 
 import { useIntersection } from '@frakt/hooks/useIntersection';
-import { useRaffleInfo } from '@frakt/hooks/useRaffleData';
 import EmptyList from '@frakt/components/EmptyList';
 import { Loader } from '@frakt/components/Loader';
 
 import { useRaffleSort } from '../Liquidations/hooks';
-import styles from './UpcomingRaffleTab.module.scss';
+import { useFetchRafflesList } from '../../hooks';
 import RafflesList from '../RafflesList';
 import GraceCard from '../GraceCard';
+
+import styles from './UpcomingRaffleTab.module.scss';
 
 const UpcomingRaffleTab: FC = () => {
   const { queryData } = useRaffleSort();
@@ -20,7 +21,7 @@ const UpcomingRaffleTab: FC = () => {
     fetchNextPage,
     isFetchingNextPage,
     isListEnded,
-  } = useRaffleInfo({
+  } = useFetchRafflesList({
     url: 'liquidation/grace-list',
     id: 'graceList',
     queryData,

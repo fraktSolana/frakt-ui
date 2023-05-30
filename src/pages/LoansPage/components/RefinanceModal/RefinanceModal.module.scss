@@ -1,0 +1,151 @@
+.modal {
+  :global {
+    z-index: 2;
+
+    .ant-modal-body {
+      padding: 0 !important;
+      margin: -1px;
+    }
+
+    @media (max-width: 960px) {
+      position: fixed;
+      top: unset !important;
+      left: 0;
+      right: 0;
+      bottom: 0 !important;
+      margin: 0 !important;
+      max-width: 100vw !important;
+      width: unset !important;
+    }
+  }
+}
+
+.modal::before {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border: 1px solid var(--primary-text);
+  background-color: var(--primary-text);
+  top: 4px;
+  left: 4px;
+
+  @media (max-width: 960px) {
+    display: none;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 24px;
+
+  @media (max-width: 550px) {
+    padding: 16px;
+    gap: 16px;
+  }
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.label {
+  color: var(--primary-text);
+  font: var(--font-text-6);
+  letter-spacing: -0.2px;
+  text-align: center;
+  text-transform: uppercase;
+
+  @media (max-width: 960px) {
+    font-size: 12px;
+  }
+
+  @media (max-width: 550px) {
+    font-size: 10px;
+  }
+}
+
+.value,
+.duration {
+  color: var(--primary-text);
+  font: var(--font-subtitle);
+
+  @media (max-width: 960px) {
+    font-size: 24px;
+  }
+
+  @media (max-width: 550px) {
+    font-size: 18px;
+  }
+}
+
+.duration {
+  width: 100px;
+  display: flex;
+  justify-content: center;
+
+  @media (max-width: 960px) {
+    width: 75px;
+  }
+
+  @media (max-width: 550px) {
+    width: 60px;
+  }
+}
+
+.loanInfoWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+}
+.prevLoan * {
+  color: var(--secondary-text);
+}
+
+.loanStats {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 16px;
+  width: 100%;
+}
+
+.title {
+  font: var(--font-subtitle);
+
+  @media (max-width: 960px) {
+    font-size: 24px;
+  }
+}
+
+.loanDifferenceWrapper {
+  border: 1px dotted var(--primary-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  width: 100%;
+
+  span {
+    color: var(--light-green-hover);
+  }
+
+  .negative {
+    span {
+      color: #cd1939;
+    }
+  }
+}
+
+.button {
+  height: 48px;
+  width: 100%;
+}

@@ -4,6 +4,7 @@ export * from './makeCreateBondTransaction';
 export * from './makeRepayBondTransaction';
 export * from './makeRedeemBondTransaction';
 export * from './makeExitBondTransaction';
+export * from './claimNftByLender';
 export * from './redeemAllBonds';
 export * from './redeemBond';
 export * from './exitBond';

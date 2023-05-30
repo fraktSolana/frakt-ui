@@ -1,4 +1,3 @@
-import { commonActions } from './../../../../state/common/actions';
 import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { BN } from '@frakt-protocol/frakt-sdk';
@@ -8,6 +7,7 @@ import { usePartialRepayModal } from '@frakt/components/PartialRepayModal';
 import { stakeCardinal, unstakeCardinal } from '@frakt/utils/stake';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { Loan, RewardState, LoanType } from '@frakt/api/loans';
+import { commonActions } from '@frakt/state/common/actions';
 import { paybackLoan } from '@frakt/utils/loans';
 import { throwLogsError } from '@frakt/utils';
 import { useConnection } from '@frakt/hooks';

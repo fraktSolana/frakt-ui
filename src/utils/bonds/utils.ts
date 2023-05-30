@@ -145,3 +145,8 @@ export const isLiquidatedBondFeature = (bondFeature: BondFeatures) =>
   bondFeature === BondFeatures.None ||
   bondFeature === BondFeatures.Autocompound ||
   bondFeature === BondFeatures.AutoreceiveSol;
+
+export const isReceiveNftFeature = (bondFeature: string) =>
+  bondFeature === BondFeatures.AutoCompoundAndReceiveNft ||
+  bondFeature === BondFeatures.AutoReceiveAndReceiveNft ||
+  bondFeature === BondFeatures.ReceiveNftOnLiquidation;

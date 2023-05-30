@@ -3,6 +3,7 @@ import { web3 } from 'fbonds-core';
 
 import { patchBorrowValueWithProtocolFee } from '@frakt/pages/BorrowPages/cartState';
 import { FetchLoansHistoryParams, Loan, LoansHistory, LoanType } from './types';
+import { IS_PRIVATE_MARKETS } from '@frakt/config';
 
 const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN;
 
@@ -12,7 +13,7 @@ type FetchWalletLoans = (props: {
 
 export const fetchWalletLoans: FetchWalletLoans = async ({ publicKey }) => {
   const { data } = await axios.get<Loan[]>(
-    `https://${BACKEND_DOMAIN}/loan/all/${publicKey?.toBase58()}`,
+    `https://${BACKEND_DOMAIN}/loan/all/${publicKey?.toBase58()}?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   return (data ?? []).map((loan) => ({

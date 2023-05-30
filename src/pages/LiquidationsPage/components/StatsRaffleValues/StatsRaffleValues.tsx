@@ -7,7 +7,7 @@ import { Solana } from '@frakt/icons';
 interface StatsRaffleValuesProps {
   className?: string;
   label: string;
-  value?: number;
+  value?: number | string;
   icon?: boolean;
   children?: ReactNode;
 }
@@ -34,7 +34,9 @@ export const GeneralCardInfo: FC<GeneralCardInfoProps> = ({
   </div>
 );
 
-export const SolAmount: FC<{ solAmount: number }> = ({ solAmount }) => {
+export const SolAmount: FC<{ solAmount: number | string }> = ({
+  solAmount,
+}) => {
   return (
     <div className={styles.row}>
       <Solana />

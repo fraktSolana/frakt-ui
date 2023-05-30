@@ -144,6 +144,8 @@ export const borrowBulk: BorrowBulk = async ({
     notBondTxns: notBondTransactionsAndSigners.flat(),
     orders: bondOrders,
     isLedger,
+    skipPreflight: false,
+
     connection,
     wallet,
     onAfterSend: () => {

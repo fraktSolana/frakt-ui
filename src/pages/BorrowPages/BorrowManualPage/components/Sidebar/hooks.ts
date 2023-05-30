@@ -176,6 +176,8 @@ const borrowSingle: BorrowSingle = async ({
     connection,
     wallet,
     isLedger: false,
+    skipPreflight: false,
+
     onAfterSend: () => {
       notify({
         message: 'Transactions sent!',
