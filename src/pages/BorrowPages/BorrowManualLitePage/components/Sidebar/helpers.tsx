@@ -292,6 +292,7 @@ export const borrow: Borrow = async ({
     notBondTxns: [...notBondTransactionsAndSigners.flat()],
     orders: bondOrders,
     isLedger,
+    skipPreflight: false,
     connection,
     wallet,
     onAfterSend: () => {

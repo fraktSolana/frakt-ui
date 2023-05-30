@@ -239,8 +239,7 @@ export const useOfferPage = () => {
           maxLoanValue,
         );
 
-        const solDepositWithTransactionFee =
-          parseFloat(offerSize) - FEE_FOR_CREATE_OFFER_TRANSACTION;
+        const solDepositWithTransactionFee = parseFloat(offerSize);
 
         const { transaction, signers } = await makeCreatePairTransaction({
           marketPubkey: new web3.PublicKey(marketPubkey),

@@ -92,12 +92,10 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
       onBeforeApprove?.();
 
       const addressesPerTxn = 20;
-
       const supposedBigIntDeactivationSlot = BigInt('18446744073518870550');
       const slotCorrection = txnsAndSigners.length + 2;
       console.log('slotCorrection: ', slotCorrection);
       const lastSlot = (await connection.getSlot()) + slotCorrection;
-
       const v0Transactions = await Promise.all(
         v0InstructionsAndSigners.map(async (ixAndSigner) => {
           console.log(
@@ -244,6 +242,7 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
             preflightCommitment: 'processed',
           });
           currentTxIndex += 1;
+          await new Promise((r) => setTimeout(r, 4000));
           // console.log("MinContextSlot: ", txn.minNonceContextSlot)
         }
         if (txnsAndSignersWithV0Txns[i].length > 0)

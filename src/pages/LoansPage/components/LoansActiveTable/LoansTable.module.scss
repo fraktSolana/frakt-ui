@@ -60,17 +60,16 @@
 .buttonWrapper {
   display: flex;
   gap: 8px;
-  justify-content: flex-end;
   width: 100%;
 }
+.buttonWrapper.cardView button {
+  flex-grow: 1;
+}
+
 .repayButton {
   display: flex;
-  flex-grow: 1;
   height: 26px;
   width: 60px;
-}
-.repayButton.cardView {
-  width: 100%;
 }
 
 .moreActionsButton {

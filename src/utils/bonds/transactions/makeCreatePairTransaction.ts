@@ -57,7 +57,7 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
 
   const spotPrice = BOND_DECIMAL_DELTA - interest * 100;
 
-  const bidCapMultiplier = isBondFeaturesAutomated(bondFeature) ? 10 : 1; // multiplying by 10, so autocompound
+  const bidCapMultiplier = isBondFeaturesAutomated(bondFeature) ? 100 : 1; // multiplying by 10, so autocompound
   const amountOfTokensInOrder = Math.floor(solDepositLamports / spotPrice);
 
   const bidCap = amountOfTokensInOrder * bidCapMultiplier;
@@ -70,6 +70,7 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
   );
   const maxReturnAmountFilter = maxLoanValueLamports || standartMaxLoanValue;
   console.log({ maxReturnAmountFilter, marketFloor, maxLTVRaw });
+
   const {
     instructions: instructions1,
     signers: signers1,

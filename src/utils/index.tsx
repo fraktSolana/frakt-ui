@@ -1,6 +1,6 @@
 import { web3, BN, TokenInfo } from '@frakt-protocol/frakt-sdk';
 import { notification } from 'antd';
-import { Dictionary } from 'lodash';
+import { Dictionary, divide } from 'lodash';
 
 import { formatNumber, Notify, NotifyType } from './solanaUtils';
 import { FRKT_TOKEN_MINT } from '../config';
@@ -274,4 +274,9 @@ export const formatNumbersWithCommans = (value: number | string): string =>
 
 export const getNumberWithOrdinal = (n: number): string => {
   return n + (['st', 'nd', 'rd'][((((n + 90) % 100) - 10) % 10) - 1] || 'th');
+};
+
+export const formatValue = (value: number, divisor: number, toFixed = 2) => {
+  const formattedValue = divide(value, divisor).toFixed(toFixed);
+  return isNaN(parseFloat(formattedValue)) ? '--' : formattedValue;
 };
