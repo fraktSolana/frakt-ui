@@ -28,7 +28,7 @@ export const claimNftByLender: ClaimNftByLender = async ({
     const { fbond, collateralBox, autocompoundDeposits } = bond;
 
     const { instructions, signers } = await txn({
-      programId: new web3.PublicKey(process.env.LOANS_PROGRAM_PUBKEY),
+      programId: new web3.PublicKey(process.env.BONDS_PROGRAM_PUBKEY),
       connection,
       accounts: {
         userPubkey: wallet.publicKey,
