@@ -60,7 +60,7 @@ export const ExitCell: FC<ExitCellProps> = ({ bond, bonds, hideBond }) => {
 
   return (
     <div className={styles.btnWrapper}>
-      {isOwner && (
+      {isOwner && !isAvailableToClaim && (
         <Button
           className={classNames(styles.btn, styles.btnExit, {
             [styles.positive]: pnlProfit > 0,
