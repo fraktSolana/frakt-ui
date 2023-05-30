@@ -11,8 +11,12 @@ import RefinanceModal from '../../RefinanceModal';
 
 import styles from '../LoansTable.module.scss';
 import { LoadingModal } from '@frakt/components/LoadingModal';
+import classNames from 'classnames';
 
-export const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
+export const MoreActionsCell: FC<{ loan: Loan; isCardView: boolean }> = ({
+  loan,
+  isCardView,
+}) => {
   const {
     partialRepayModalVisible,
     closePartialRepayModal,
@@ -33,7 +37,11 @@ export const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
 
   return (
     <>
-      <div className={styles.buttonWrapper}>
+      <div
+        className={classNames(styles.buttonWrapper, {
+          [styles.cardView]: isCardView,
+        })}
+      >
         <Button
           type="secondary"
           onClick={(event: Event) => {
@@ -45,7 +53,13 @@ export const MoreActionsCell: FC<{ loan: Loan }> = ({ loan }) => {
           Repay
         </Button>
         {isLoanBond && (
-          <Button onClick={openRefinanceModal} className={styles.repayButton}>
+          <Button
+            onClick={(event: Event) => {
+              openRefinanceModal();
+              event.stopPropagation();
+            }}
+            className={styles.repayButton}
+          >
             Extend
           </Button>
         )}
