@@ -1,27 +1,19 @@
 import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { stringify } from '@frakt/utils/state';
-import create from 'zustand';
-import produce from 'immer';
+
 import {
   FetchNextPageOptions,
   InfiniteQueryObserverResult,
   useInfiniteQuery,
-  useQuery,
 } from '@tanstack/react-query';
-import {
-  AuctionListItem,
-  fetchAllRaffleList,
-  fetchAuctionsList,
-  FetchItemsParams,
-  GraceListItem,
-} from '@frakt/api/raffle';
+import { FetchItemsParams } from '@frakt/api/raffle';
 
 const LIMIT = 20;
 
 const baseUrl = `https://${process.env.BACKEND_DOMAIN}`;
 
-export const useRaffleInfo = (params: {
+export const useFetchRafflesList = (params: {
   url: string;
   id: string;
   queryData: FetchItemsParams;
@@ -79,7 +71,7 @@ export const useRaffleInfo = (params: {
     networkMode: 'offlineFirst',
   });
 
-  const rafflesData = data?.pages?.map((page) => page.data).flat();
+  const rafflesData = data?.pages?.map((page) => page.data).flat() || [];
 
   return {
     data: rafflesData,
@@ -88,63 +80,3 @@ export const useRaffleInfo = (params: {
     isListEnded,
   };
 };
-
-export const useFetchAllRaffleList = () => {
-  const {
-    data,
-    isLoading,
-    isFetching,
-  }: {
-    data: GraceListItem[];
-    isLoading: boolean;
-    isFetching: boolean;
-  } = useQuery(['fetchAllRaffleList'], () => fetchAllRaffleList(), {
-    staleTime: 60_000,
-    refetchOnWindowFocus: false,
-  });
-
-  return { data, loading: isLoading || isFetching };
-};
-
-export const useFetchAuctionsList = () => {
-  const { hiddenAuctionsPubkeys, hideAuction } = useHiddenAuctionPubkeys();
-
-  const {
-    data,
-    isLoading,
-    isFetching,
-  }: {
-    data: AuctionListItem[];
-    isLoading: boolean;
-    isFetching: boolean;
-  } = useQuery(['fetchAuctionsList'], () => fetchAuctionsList(), {
-    staleTime: 5000,
-    refetchOnWindowFocus: false,
-  });
-
-  return {
-    data:
-      data?.filter(
-        ({ auctionPubkey }) => !hiddenAuctionsPubkeys.includes(auctionPubkey),
-      ) || [],
-    loading: isLoading || isFetching,
-    hideAuction,
-  };
-};
-
-interface HiddenAuctionsPubkeysState {
-  hiddenAuctionsPubkeys: string[];
-  hideAuction: (bondPubkey: string) => void;
-}
-const useHiddenAuctionPubkeys = create<HiddenAuctionsPubkeysState>((set) => ({
-  hiddenAuctionsPubkeys: [],
-  hideAuction: (bondPubkey) =>
-    set(
-      produce((state: HiddenAuctionsPubkeysState) => {
-        state.hiddenAuctionsPubkeys = [
-          ...state.hiddenAuctionsPubkeys,
-          bondPubkey,
-        ];
-      }),
-    ),
-}));

@@ -1,3 +1,4 @@
+import { web3 } from '@frakt-protocol/frakt-sdk';
 import { DeltaType } from '@frakters/raffle-sdk/lib/raffle-core/types';
 
 export interface FetchItemsParams {
@@ -56,22 +57,46 @@ export interface WonRaffleListItem {
 }
 
 export interface AuctionListItem {
-  bondPubKey?: string;
+  nftMint: string;
   nftName: string;
   nftImageUrl: string;
   nftCollectionName: string;
-  auctionPubkey: string;
-  nftMint: string;
-  timeToNextRound: number;
-  floorPrice: number;
-  startPrice: number;
-  nextPrice: number;
-  buyPrice: number;
 
-  denominator: number;
-  startedAt: number;
-  delta: number;
-  deltaType: DeltaType;
+  classicParams?: {
+    auctionPubkey: string;
+
+    startPrice: number;
+    startedAt: number;
+    delta: number;
+    deltaType: DeltaType;
+
+    timeToNextRound: number;
+    floorPrice: number;
+    nextPrice: number;
+    buyPrice: number;
+
+    denominator: number;
+  };
+
+  bondParams?: {
+    repayAccounts: {
+      bondTradeTransaction: string;
+      bondOffer: string;
+      user: string;
+    }[];
+    fbondPubkey: string;
+    collateralBox: string;
+    collateralBoxType: string;
+    collateralTokenMint: string;
+    collateralTokenAccount: string;
+    collateralOwner: string;
+    fraktMarket: string;
+    oracleFloor: string;
+    whitelistEntry: string;
+
+    floorPrice: number;
+    startAuctionTime: number;
+  };
 }
 
 export interface CollectionsListItem {

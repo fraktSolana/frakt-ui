@@ -72,6 +72,9 @@ export const useOfferPage = () => {
     BondFeatures.AutoreceiveSol,
   );
 
+  const [initialEditValues, setInitialEditValues] = useState(null);
+  const [isOfferHasChanged, setIsOfferHasChanged] = useState<boolean>(false);
+
   const editRepaymentBondFeature =
     isEdit && isAutocompoundBondFeature(autocompoundFeature)
       ? BondFeatures.Autocompound
@@ -83,24 +86,78 @@ export const useOfferPage = () => {
       : BondFeatures.ReceiveNftOnLiquidation;
 
   useEffect(() => {
-    if (isEdit && !isLoading) {
+    const updateValues = () => {
       const { duration, interest, size, ltv, rawData } = initialPairValues;
       const offerType =
         ltv === MAX_LOAN_VALUE ? OfferTypes.FIXED : OfferTypes.FLOOR;
 
-      setDuration(duration || 0);
-      setInterest((interest * 100)?.toFixed(2));
-      setOfferSize((size || 0).toFixed(2));
-      setLtv(ltv || 0);
-      setAutocompoundFeature(rawData?.bondFeature);
-      setReceiveNftFeature(rawData?.bondFeature);
-      setOfferType(offerType);
-      setMaxLoanValue((rawData?.maxReturnAmountFilter / 1e9)?.toFixed(2));
+      const updatedDuration = duration || 0;
+      const updatedInterest = (interest * 100)?.toFixed(2);
+      const updatedOfferSize = (size || 0).toFixed(2);
+      const updatedLtv = ltv || 0;
+      const updatedAutocompoundFeature = rawData?.bondFeature;
+      const updatedReceiveNftFeature = rawData?.bondFeature;
+      const updatedMaxLoanValue = (
+        rawData?.maxReturnAmountFilter / 1e9
+      )?.toFixed(2);
 
+      setDuration(updatedDuration);
+      setInterest(updatedInterest);
+      setOfferSize(updatedOfferSize);
+      setLtv(updatedLtv);
+      setAutocompoundFeature(updatedAutocompoundFeature);
+      setReceiveNftFeature(updatedReceiveNftFeature);
+      setOfferType(offerType);
+      setMaxLoanValue(updatedMaxLoanValue);
       setNotChangebleUserSize((size || 0).toFixed(2));
+
+      setInitialEditValues({
+        ltv: updatedLtv,
+        duration: updatedDuration,
+        interest: updatedInterest,
+        offerSize: updatedOfferSize,
+        autocompoundFeature: updatedAutocompoundFeature,
+        receiveNftFeature: updatedReceiveNftFeature,
+        maxLoanValue: updatedMaxLoanValue,
+        offerType,
+      });
+    };
+
+    if (isEdit && !isLoading) {
+      updateValues();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, isLoading, pair]);
+
+  useEffect(() => {
+    if (!isEmpty(initialEditValues)) {
+      const currentValues = {
+        ltv,
+        duration,
+        interest,
+        offerSize,
+        autocompoundFeature,
+        receiveNftFeature,
+        maxLoanValue,
+        offerType,
+      };
+
+      const hasChanged = Object.values(currentValues).some(
+        (value, index) => value !== Object.values(initialEditValues)[index],
+      );
+
+      setIsOfferHasChanged(hasChanged);
+    }
+  }, [
+    ltv,
+    duration,
+    interest,
+    offerSize,
+    autocompoundFeature,
+    receiveNftFeature,
+    maxLoanValue,
+    offerType,
+    initialEditValues,
+  ]);
 
   useEffect(() => {
     if (!isLoading && !isEmpty(market) && !isEdit) {
@@ -118,15 +175,6 @@ export const useOfferPage = () => {
     setDuration(nextOption.value);
   };
 
-  // useEffect(() => {
-  //   if (!isLoading && !isEmpty(market) && !isEdit) {
-  //     const marketFloor = market?.oracleFloor?.floor / 1e9;
-
-  //     const loanValue = getLoanToValueWithProtection(marketFloor, maxLoanValue);
-  //     setLtv(loanValue);
-  //   }
-  // }, [maxLoanValue, isLoading]);
-
   const onMaxLoanValueChange = (value: string) => {
     setMaxLoanValue(value);
   };
@@ -137,17 +185,6 @@ export const useOfferPage = () => {
 
   const onOfferTypeChange = (value: RBOption<OfferTypes>) => {
     setOfferType(value.value);
-  };
-
-  const handleInterestOnBlur = (interest: string) => {
-    const isDecimalNumber = parseFloat(interest) > 10;
-
-    const interestSliced =
-      parseFloat(interest) > 99.5
-        ? '99.5'
-        : interest.slice(0, isDecimalNumber ? 5 : 4);
-
-    return setInterest(interestSliced);
   };
 
   const onOfferSizeChange = (value: string) => {
@@ -163,20 +200,19 @@ export const useOfferPage = () => {
   };
 
   const findNeededBondFeature = () => {
-    const isReceitveNftFeature = receiveNftFeature !== BondFeatures.None;
+    const isReceiveNftFeature = receiveNftFeature !== BondFeatures.None;
     const isAutocompoundFeature =
       autocompoundFeature === BondFeatures.Autocompound;
 
-    if (isReceitveNftFeature && isAutocompoundFeature)
+    if (isReceiveNftFeature && isAutocompoundFeature) {
       return BondFeatures.AutoCompoundAndReceiveNft;
-
-    if (isReceitveNftFeature && !isAutocompoundFeature)
+    } else if (isReceiveNftFeature && !isAutocompoundFeature) {
       return BondFeatures.AutoReceiveAndReceiveNft;
-
-    if (isAutocompoundFeature && !isReceitveNftFeature)
+    } else if (isAutocompoundFeature && !isReceiveNftFeature) {
       return BondFeatures.Autocompound;
-
-    return BondFeatures.AutoreceiveSol;
+    } else {
+      return BondFeatures.AutoreceiveSol;
+    }
   };
 
   const {
@@ -354,7 +390,6 @@ export const useOfferPage = () => {
     onDurationChange,
     onOfferSizeChange,
     onInterestChange,
-    handleInterestOnBlur,
     onCreateOffer,
     onEditOffer,
     onRemoveOffer,
@@ -374,6 +409,7 @@ export const useOfferPage = () => {
     maxLoanValue,
     onOfferTypeChange,
     offerType,
+    isOfferHasChanged,
     notChangebleUserSize,
   };
 };

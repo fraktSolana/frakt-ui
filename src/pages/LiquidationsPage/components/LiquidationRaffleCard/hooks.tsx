@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
+
+import { useConfirmModal } from '@frakt/components/ConfirmModal';
+import { useLoadingModal } from '@frakt/components/LoadingModal';
+import { RaffleListItem } from '@frakt/api/raffle';
+import { useConnection } from '@frakt/hooks';
 import {
   participateInRaffle as participateInRaffleTxn,
   addTicketsToParticipation as addTicketsToParticipationTxn,
 } from '@frakt/utils/raffles';
-import { useConnection } from '../../../../hooks';
-import { useLoadingModal } from '../../../../components/LoadingModal';
-import { useConfirmModal } from '@frakt/components/ConfirmModal';
-import { RaffleListItem } from '@frakt/api/raffle';
+
 import { useFetchUserTickets } from '../../hooks';
 
 export const useLiquidationsRaffle = (raffle: RaffleListItem) => {

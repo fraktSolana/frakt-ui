@@ -1,19 +1,24 @@
 import { FC } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useDispatch } from 'react-redux';
 import cx from 'classnames';
 
 import { ConfirmModal } from '@frakt/components/ConfirmModal';
 import { LoadingModal } from '@frakt/components/LoadingModal';
-import styles from './LiquidationRaffleCard.module.scss';
+import { commonActions } from '@frakt/state/common/actions';
 import { createTimerJSX } from '@frakt/components/Timer';
-import { useLiquidationsRaffle } from './hooks';
-import Button from '@frakt/components/Button';
+import { RaffleListItem } from '@frakt/api/raffle';
 import { Timer, Minus, Plus } from '@frakt/icons';
+import Tooltip from '@frakt/components/Tooltip';
+import Button from '@frakt/components/Button';
+
+import { useLiquidationsRaffle } from './hooks';
 import {
   GeneralCardInfo,
   StatsRaffleValues,
 } from '../StatsRaffleValues/StatsRaffleValues';
-import Tooltip from '@frakt/components/Tooltip';
-import { RaffleListItem } from '@frakt/api/raffle';
+
+import styles from './LiquidationRaffleCard.module.scss';
 
 interface LiquidationRaffleCard {
   raffle: RaffleListItem;
@@ -24,6 +29,9 @@ const LiquidationRaffleCard: FC<LiquidationRaffleCard> = ({
   raffle,
   disabled,
 }) => {
+  const { connected } = useWallet();
+  const dispatch = useDispatch();
+
   const {
     incrementCounter,
     decrementCounter,
@@ -42,6 +50,16 @@ const LiquidationRaffleCard: FC<LiquidationRaffleCard> = ({
 
   const isParticipationExists =
     raffle.isParticipationExists || !!raffle.tickets;
+
+  const onHandleSubmit = () => {
+    if (connected) {
+      openConfirmModal();
+    } else {
+      dispatch(commonActions.setWalletModal({ isVisible: true }));
+    }
+  };
+
+  const connectedButtonText = !ticketCount ? 'Try by 0 ticket' : 'Participate';
 
   return (
     <div className={styles.cardWrapper}>
@@ -129,10 +147,10 @@ const LiquidationRaffleCard: FC<LiquidationRaffleCard> = ({
             <Button
               type="secondary"
               className={styles.btn}
-              onClick={openConfirmModal}
+              onClick={onHandleSubmit}
               disabled={disabled || !ticketCount}
             >
-              {!ticketCount ? 'Try by 0 ticket' : 'Participate'}
+              {connected ? connectedButtonText : 'Connect wallet'}
             </Button>
           </span>
         </Tooltip>
