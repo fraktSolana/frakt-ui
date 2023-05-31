@@ -19,7 +19,7 @@
     "chart.js": "^3.8.0",
     "classnames": "^2.3.1",
     "d3": "^7.6.1",
-    "fbonds-core": "^0.5.23",
+    "fbonds-core": "^0.5.25-beta.1",
     "firebase": "^9.8.3",
     "immer": "^9.0.18",
     "lodash": "^4.17.21",
