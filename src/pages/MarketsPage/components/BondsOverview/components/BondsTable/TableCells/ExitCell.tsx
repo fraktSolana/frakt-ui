@@ -102,7 +102,7 @@ const checkIsAvailableToClaimNft = (bond: Bond): boolean => {
     return false;
   }
 
-  if (moment(fbond.liquidatingAt).add(12, 'hours').isAfter(moment())) {
+  if (moment.unix(fbond.liquidatingAt).add(12, 'hours').isAfter(moment())) {
     return false;
   }
 
