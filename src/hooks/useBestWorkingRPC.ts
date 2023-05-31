@@ -62,7 +62,7 @@ const getBestWorkingEndpoint = async ({
 }: GetBestWorkingEndpointProps) => {
   const results: Array<CheckEndpointResult> = await Promise.all(
     endpoints.map((endpoint) =>
-      new Connection(endpoint)
+      new Connection(endpoint, { disableRetryOnRateLimit: true })
         .getLatestBlockhash()
         .then(() => ({ endpoint, error: null }))
         .catch(() => ({
