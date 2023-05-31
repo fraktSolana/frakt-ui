@@ -1,7 +1,5 @@
 import { useMemo, useState } from 'react';
-import { DebouncedFunc, debounce } from 'lodash';
-
-import { flatObject } from '@frakt/utils';
+import { DebouncedFunc, debounce, get, isObject } from 'lodash';
 
 type Event = { target: { value: string } };
 
@@ -23,18 +21,16 @@ export const useSearch: UseSearch = ({
 }) => {
   const [search, setSearch] = useState<string>('');
 
-  const filtering = (filterableString = '') =>
-    filterableString.toUpperCase().includes(search.toUpperCase());
-
   const filteredData = useMemo(() => {
     if (!search) return data;
 
     return data.filter((dataElement) => {
-      if (typeof searchField === 'string') {
-        return filtering(dataElement[searchField]);
-      }
-      const flattedObject = flatObject(dataElement);
-      return filtering(flattedObject[searchField[0]]);
+      const fieldValue = get(dataElement, searchField);
+      const filterableString = isObject(fieldValue)
+        ? JSON.stringify(fieldValue)
+        : String(fieldValue);
+
+      return filterableString.toUpperCase().includes(search.toUpperCase());
     });
   }, [search, data, searchField]);
 
@@ -45,10 +41,12 @@ export const useSearch: UseSearch = ({
     );
   };
 
+  const onChange = setQuerySearch
+    ? debounceSearch(setQuerySearch)
+    : debounceSearch(setSearch);
+
   return {
     filteredData,
-    onChange: setQuerySearch
-      ? debounceSearch(setQuerySearch)
-      : debounceSearch(setSearch),
+    onChange,
   };
 };

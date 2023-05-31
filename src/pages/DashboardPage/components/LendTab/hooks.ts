@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { orderBy } from 'lodash';
 
-import { selectLiquidityPools } from '@frakt/state/loans/selectors';
 import { useSolanaBalance } from '@frakt/utils/accounts';
 import { useTradePools } from '@frakt/utils/strategies';
 
@@ -22,12 +20,15 @@ import {
 import { useDebounce } from '@frakt/hooks';
 import { useMarketsPreview } from '@frakt/pages/MarketsPage/hooks';
 import { MarketPreview } from '@frakt/api/bonds';
+import { useFetchLiquidityPools } from '@frakt/pages/PoolsPage/hooks';
 
 export const useLendTab = () => {
   const { connected, publicKey } = useWallet();
   const { balance: solanaBalance } = useSolanaBalance();
 
-  const liquidityPools = useSelector(selectLiquidityPools);
+  const { data: liquidityPools } = useFetchLiquidityPools({
+    walletPublicKey: publicKey,
+  });
 
   const depositedPools = getDepositedUserPools(liquidityPools);
   const topLiquidityPools = getTopLiquidityPools(liquidityPools);

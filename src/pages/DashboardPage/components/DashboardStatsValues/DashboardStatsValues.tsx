@@ -46,10 +46,10 @@ export const DashboardColumnValue: FC<
         [styles.reverse]: reverse,
       })}
     >
-      <p className={styles.label}>{label}</p>
-      <p className={styles.value}>
+      <div className={styles.label}>{label}</div>
+      <div className={styles.value}>
         {formattedValue} {DIMENSTION_BY_VALUE_TYPE[valueType]}
-      </p>
+      </div>
     </div>
   );
 };

@@ -41,16 +41,18 @@ const BurgerMenu: FC<BurgerMenuProps> = ({ className = '' }) => {
         onClick={toggleVisibility}
       >
         <ul className={styles.navigation}>
-          {[...NAVIGATION_LINKS, ...SECONDARY_NAVIGATION_LINKS].map((item) => (
-            <MenuItem
-              key={item?.label}
-              label={item?.label}
-              to={item?.to}
-              href={item?.href}
-              pathname={item?.pathname}
-              className={styles.link}
-            />
-          ))}
+          {[...NAVIGATION_LINKS, ...SECONDARY_NAVIGATION_LINKS].map(
+            (item, idx) => (
+              <MenuItem
+                key={`${item?.label}${idx}`}
+                label={item?.label}
+                to={item?.to}
+                href={item?.href}
+                pathname={item?.pathname}
+                className={styles.link}
+              />
+            ),
+          )}
         </ul>
         <div className={styles.community}>
           <p className={styles.subtitle}>Community</p>

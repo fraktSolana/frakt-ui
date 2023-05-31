@@ -98,8 +98,4 @@ export const commonActions = {
     commonTypes.SET_CONFETTI,
     (payload: ConfettiState) => ({ payload }),
   ),
-  setSelectedNftId: createCustomAction(
-    commonTypes.SET_SELECTED_NFT_ID,
-    (id: number) => ({ id }),
-  ),
 };

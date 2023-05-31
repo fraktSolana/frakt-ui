@@ -22,12 +22,17 @@ interface SortViewProps<T> {
   sort: Sort;
   search?: {
     placeHolderText?: string;
-    onChange: DebouncedFunc<(event) => void>;
+    onChange: DebouncedFunc<
+      (event: React.ChangeEvent<HTMLInputElement>) => void
+    >;
   };
   selectLoansParams?: SelectLoansParams;
   setQueryData: (nextSort: Sort) => void;
   showSorting?: boolean;
   showSearching?: boolean;
+  showToggle?: boolean;
+  isToggleChecked: boolean;
+  setIsToggleChecked: (value: boolean) => void;
 }
 
 const SortView = <T extends unknown>({
@@ -35,80 +40,108 @@ const SortView = <T extends unknown>({
   search,
   setSort,
   sort,
-  selectLoansParams,
+  selectLoansParams: selectParams,
   setQueryData,
   showSorting = false,
   showSearching = false,
+  showToggle = false,
+  isToggleChecked,
+  setIsToggleChecked,
 }: SortViewProps<T>) => {
   const { viewState, setViewState } = useTableView();
 
   const {
     visible: sortDropdownVisible,
     close: closeDropdown,
-    toggle: toggleDropdown,
+    toggle: toggleSortDropdown,
   } = useFiltersModal();
 
   const ref = useRef(null);
   useOnClickOutside(ref, closeDropdown);
 
+  const handleViewStateChange = (state: 'card' | 'table') => {
+    setViewState(state);
+  };
+
+  const renderSearchInput = () => {
+    if (!showSearching) return null;
+
+    return (
+      <div className={styles.searchWrapper}>
+        {selectParams?.onChange && (
+          <Checkbox
+            className={styles.checkbox}
+            classNameInnerContent={styles.checkboxInnerContent}
+            onChange={selectParams.onChange}
+            checked={selectParams.selected}
+          />
+        )}
+        <Search
+          onChange={search?.onChange}
+          className={styles.searchInput}
+          placeHolderText={search?.placeHolderText}
+        />
+      </div>
+    );
+  };
+
+  const renderSwitchButtons = () => {
+    return (
+      <div className={styles.switchButtons}>
+        <Button
+          className={classNames(styles.switchViewButton, {
+            [styles.active]: viewState === 'card',
+          })}
+          onClick={() => handleViewStateChange('card')}
+          type="tertiary"
+        >
+          <CardView />
+        </Button>
+        <Button
+          className={classNames(styles.switchViewButton, {
+            [styles.active]: viewState === 'table',
+          })}
+          onClick={() => handleViewStateChange('table')}
+          type="tertiary"
+        >
+          <TableView />
+        </Button>
+      </div>
+    );
+  };
+
+  const renderSortDropdown = () => {
+    if (!showSorting) return null;
+
+    return (
+      <div ref={ref}>
+        <Button
+          className={styles.sortingButton}
+          type="tertiary"
+          onClick={toggleSortDropdown}
+        >
+          Sorting
+        </Button>
+        <SortDropdown
+          columns={columns}
+          setSort={setSort}
+          sort={sort}
+          visible={sortDropdownVisible}
+          setQueryData={setQueryData}
+          isToggleChecked={isToggleChecked}
+          setIsToggleChecked={setIsToggleChecked}
+          showToggle={showToggle}
+        />
+      </div>
+    );
+  };
+
   return (
     <div className={styles.sortWrapper}>
-      {showSearching && (
-        <div className={styles.searchWrapper}>
-          {selectLoansParams?.onChange && (
-            <Checkbox
-              className={styles.checkbox}
-              classNameInnerContent={styles.checkboxInnerContent}
-              onChange={selectLoansParams.onChange}
-              checked={selectLoansParams.selected}
-            />
-          )}
-          <Search
-            onChange={search?.onChange}
-            className={styles.searchInput}
-            placeHolderText={search?.placeHolderText}
-          />
-        </div>
-      )}
+      {renderSearchInput()}
       <div className={styles.rowGap}>
-        <div className={styles.switchButtons}>
-          <Button
-            className={classNames(styles.switchViewButton, {
-              [styles.active]: viewState === 'card',
-            })}
-            onClick={() => setViewState('card')}
-            type="tertiary"
-          >
-            <CardView />
-          </Button>
-          <Button
-            className={classNames(styles.switchViewButton, {
-              [styles.active]: viewState === 'table',
-            })}
-            onClick={() => setViewState('table')}
-            type="tertiary"
-          >
-            <TableView />
-          </Button>
-        </div>
-        {showSorting && (
-          <div ref={ref}>
-            <Button
-              className={styles.sortingButton}
-              type="tertiary"
-              onClick={toggleDropdown}
-            >
-              Sorting
-            </Button>
-            <SortDropdown
-              columns={columns}
-              setSort={setSort}
-              sort={sort}
-              visible={sortDropdownVisible}
-              setQueryData={setQueryData}
-            />
-          </div>
-        )}
+        {renderSwitchButtons()}
+        {renderSortDropdown()}
       </div>
     </div>
   );

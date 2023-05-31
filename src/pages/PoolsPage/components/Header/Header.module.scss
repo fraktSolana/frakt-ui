@@ -1,0 +1,36 @@
+.header {
+  border: 1px solid var(--primary-border);
+  background-color: var(--primary-background);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  width: 100%;
+}
+
+.title {
+  font: var(--font-text-2);
+  font-size: 20px;
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+
+  @media (max-width: 960px) {
+    gap: 16px;
+  }
+}
+
+.values {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  white-space: nowrap;
+
+  & > * {
+    margin-top: unset;
+  }
+}

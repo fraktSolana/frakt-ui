@@ -41,10 +41,10 @@ export const BorrowCard: FC<BorrowCardProps> = ({
           [styles.primary]: connected && !!mint,
         })}
       >
-        <p className={styles.value}>{duration} days</p>
-        <p className={styles.label}>
+        <div className={styles.value}>{duration} days</div>
+        <div className={styles.label}>
           Fee: <p className={styles.value}> {(fee || 0)?.toFixed(2)} ◎</p>
-        </p>
+        </div>
         {connected && !!mint && (
           <Button type="secondary" className={styles.button}>
             Get {maxLoanValue?.toFixed(2)} ◎

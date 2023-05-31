@@ -1,4 +1,4 @@
-import { DebouncedFunc } from 'lodash';
+import { DebouncedFunc, get } from 'lodash';
 
 import { TableProps, TablePropsWithSortProps } from './../Table';
 import { useSortDropdownModal } from '../hooks';
@@ -26,6 +26,7 @@ export const useTable: UseTable = ({
   rowKeyField = 'id',
   loading,
   defaultField,
+  filterField,
   searchParams = {
     debounceWait: 0,
     searchField: 'name',
@@ -34,28 +35,37 @@ export const useTable: UseTable = ({
 }) => {
   const { filteredData, onChange } = useSearch({
     data,
-    searchField: searchParams.searchField ?? 'name',
-    debounceWait: searchParams.debounceWait ?? 0,
+    searchField: get(searchParams, 'searchField', 'name'),
+    debounceWait: get(searchParams, 'debounceWait', 0),
   });
 
-  const { modal: sortDropdownModal, sortedData } = useSortDropdownModal({
+  const {
+    modal: sortDropdownModal,
+    sortedData,
+    setIsToggleChecked,
+    isToggleChecked,
+  } = useSortDropdownModal({
     data: filteredData,
     columns,
     defaultField,
+    filterField,
   });
 
-  return {
-    table: {
-      data: sortedData,
-      columns,
-      onRowClick,
-      rowKeyField,
-      loading,
-      ...sortDropdownModal,
-    },
-    search: {
-      placeHolderText: searchParams.placeHolderText ?? 'Search by name',
-      onChange,
-    },
+  const search = {
+    placeHolderText: get(searchParams, 'placeHolderText', 'Search by name'),
+    onChange,
   };
+
+  const table = {
+    data: sortedData,
+    columns,
+    onRowClick,
+    rowKeyField,
+    loading,
+    setIsToggleChecked,
+    isToggleChecked,
+    ...sortDropdownModal,
+  };
+
+  return { table, search };
 };

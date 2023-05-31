@@ -1,6 +1,8 @@
-import { ColumnsType } from 'antd/es/table';
+import { ColumnType, ColumnsType } from 'antd/es/table';
+import { filter, isEqual, map } from 'lodash';
 import classNames from 'classnames';
 
+import Toggle from '@frakt/components/Toggle/Toggle';
 import Button from '@frakt/components/Button';
 import { ArrowUp } from '@frakt/icons';
 
@@ -15,6 +17,9 @@ export interface SortDropdownProps<T> {
   setSort: (nextSort: Sort) => void;
   columns: ColumnsType<T>;
   setQueryData?: (nextSort: Sort) => void;
+  isToggleChecked?: boolean;
+  setIsToggleChecked?: (value: boolean) => void;
+  showToggle?: boolean;
 }
 
 export const SortDropdown = <T extends unknown>({
@@ -23,6 +28,9 @@ export const SortDropdown = <T extends unknown>({
   setSort,
   columns,
   setQueryData,
+  isToggleChecked,
+  setIsToggleChecked,
+  showToggle,
 }: SortDropdownProps<T>): JSX.Element => {
   const onChangeSort = ({ field, direction }: Sort) => {
     if (setQueryData) {
@@ -31,60 +39,73 @@ export const SortDropdown = <T extends unknown>({
     setSort({ field, direction });
   };
 
+  const renderSortButton = (column: ColumnType<any>) => {
+    const { field, label } = parseTableColumn(column);
+
+    const sortAsc = { field, direction: 'asc' } as Sort;
+    const sortDesc = { field, direction: 'desc' } as Sort;
+
+    const isActiveAscSortButton = isEqual(sort, sortAsc);
+    const isActiveDescSortButton =
+      isEqual(sort, sortDesc) || (column.defaultSortOrder && !sort.field);
+
+    return (
+      <div className={styles.sortWrapper} key={field}>
+        <div className={styles.sortDirectionsButtons}>
+          <Button
+            type="tertiary"
+            onClick={() => onChangeSort(sortAsc)}
+            className={classNames(styles.sortButton, {
+              [styles.active]: isActiveAscSortButton,
+            })}
+          >
+            {label}
+            <ArrowUp className={styles.arrow} />
+          </Button>
+          <Button
+            type="tertiary"
+            onClick={() => onChangeSort(sortDesc)}
+            className={classNames(styles.sortButton, {
+              [styles.active]: isActiveDescSortButton,
+            })}
+          >
+            {label}
+            <ArrowUp className={styles.arrowDown} />
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  const renderTooltip = () => {
+    if (!showToggle) return null;
+    return (
+      <Toggle
+        label="Staked only"
+        onChange={() => setIsToggleChecked(!isToggleChecked)}
+        value={isToggleChecked}
+      />
+    );
+  };
+
+  const renderSortDropdown = () => {
+    const sortableColumns = filter(columns, ({ sorter }) => !!sorter);
+    return map(sortableColumns, renderSortButton);
+  };
+
   return (
     <DropdownBackdrop visible={visible}>
-      {columns
-        .filter(({ sorter }) => !!sorter)
-        .map((column) => {
-          const { order, field, lable } = parseTableColumn(column);
-
-          const activeAscSortButton =
-            field === sort.field && sort.direction === 'asc';
-
-          const activeDescSortButton =
-            (field === sort.field && sort.direction === 'desc') ||
-            (order && !sort.field);
-
-          return (
-            <div className={styles.sortWrapper} key={field}>
-              <div className={styles.sortDirectionsButtons}>
-                <Button
-                  type="tertiary"
-                  onClick={() => onChangeSort({ field, direction: 'asc' })}
-                  className={classNames(styles.sortButton, {
-                    [styles.active]: activeAscSortButton,
-                  })}
-                >
-                  {lable}
-                  <ArrowUp className={styles.arrow} />
-                </Button>
-                <Button
-                  type="tertiary"
-                  onClick={() => onChangeSort({ field, direction: 'desc' })}
-                  className={classNames(styles.sortButton, {
-                    [styles.active]: activeDescSortButton,
-                  })}
-                >
-                  {lable}
-                  <ArrowUp className={styles.arrowDown} />
-                </Button>
-              </div>
-            </div>
-          );
-        })}
+      {renderTooltip()}
+      {renderSortDropdown()}
     </DropdownBackdrop>
   );
 };
 
 const parseTableColumn = (column) => {
-  const { key, title, defaultSortOrder } = column;
+  const { key, title } = column;
 
-  const keyString = String(key);
-  const lable = title?.(null)?.props.label || title;
+  const field = String(key);
+  const label = title?.(null)?.props.label || title;
 
-  return {
-    order: defaultSortOrder,
-    field: keyString,
-    lable,
-  };
+  return { field, label };
 };

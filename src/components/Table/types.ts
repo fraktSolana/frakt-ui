@@ -23,6 +23,7 @@ export interface ViewParams {
   showCard: boolean;
   showSorting: boolean;
   showSearching: boolean;
+  showToggle?: boolean;
 }
 
 export interface SelectLoansParams {
