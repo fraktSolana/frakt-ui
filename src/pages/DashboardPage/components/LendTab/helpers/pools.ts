@@ -1,7 +1,7 @@
 import { filter, map, orderBy, sum } from 'lodash';
 
-import { LiquidityPool } from '@frakt/state/loans/types';
 import { calcWeightedAverage } from '@frakt/utils';
+import { LiquidityPool } from '@frakt/api/pools';
 
 import { LendInfo } from '../types';
 import {

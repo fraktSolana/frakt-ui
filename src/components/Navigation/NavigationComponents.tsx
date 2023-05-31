@@ -12,8 +12,8 @@ export const createNavigationsLinks = ({
   options: Navigation[];
 }) => (
   <div className={styles.navigation}>
-    {options.map((items) => (
-      <MenuItem key={items?.pathname} {...items} />
+    {options.map((items, idx) => (
+      <MenuItem key={`${items?.pathname}${idx}`} {...items} />
     ))}
   </div>
 );

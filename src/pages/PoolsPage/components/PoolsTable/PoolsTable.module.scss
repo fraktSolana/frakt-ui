@@ -1,0 +1,59 @@
+.rowCenter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.button {
+  height: 26px;
+  width: 80px;
+}
+.button.cardView {
+  width: 100%;
+}
+
+.buttonWrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.buttonWrapper.cardView {
+  width: 100%;
+  gap: 8px;
+
+  & > * {
+    width: 100%;
+  }
+}
+
+.poolImage {
+  position: relative;
+  display: flex;
+}
+.label {
+  background: var(--light-green-color);
+  color: var(--button-text);
+  font: var(--font-text-7);
+  padding: 4px;
+
+  position: absolute;
+  top: -5px;
+  left: 0;
+}
+.image {
+  width: 26px;
+  height: 26px;
+}
+
+.collectionInfo {
+  @extend .rowCenter;
+  position: relative;
+}
+.collectionName {
+  display: flex;
+  align-items: center;
+  color: var(--primary-text);
+  font: var(--font-text-6);
+  width: 141px;
+  height: 26px;
+}

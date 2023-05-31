@@ -115,19 +115,6 @@ const setConfettiReducer = createReducer<ConfettiState>(initialConfettiState, {
   }),
 });
 
-const setSelectedNftIdReducer = createReducer<SelectedNftIdState>(
-  initialSelectedNftIdState,
-  {
-    [commonTypes.SET_SELECTED_NFT_ID]: (
-      state,
-      action: ReturnType<typeof commonActions.setSelectedNftId>,
-    ) => ({
-      ...state,
-      id: action.id,
-    }),
-  },
-);
-
 export default combineReducers({
   connection: setConnectionReducer,
   socket: setSocketReducer,
@@ -137,5 +124,4 @@ export default combineReducers({
   notification: setNotificationReducer,
   walletModal: composeReducers(setWalletModalReducer, toggleWalletModalReducer),
   confetti: setConfettiReducer,
-  selectedNftId: setSelectedNftIdReducer,
 });

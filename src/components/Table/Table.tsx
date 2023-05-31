@@ -22,6 +22,7 @@ export interface TableProps<T> {
   rowKeyField?: string;
   onRowClick?: (dataItem: T) => void;
   defaultField?: string;
+  filterField?: string | string[];
   search?: {
     placeHolderText?: string;
     onChange: DebouncedFunc<(event: ChangeEvent<HTMLInputElement>) => void>;
@@ -56,42 +57,46 @@ const Table = <T extends unknown>({
   selectLoansParams,
   setQueryData,
   cardClassName,
+  isToggleChecked,
+  setIsToggleChecked,
 }: TablePropsWithSortProps<T>): JSX.Element => {
   if (loading) return <Loader />;
 
+  const showSorting = viewParams?.showSorting;
+  const showSearching = viewParams?.showSearching;
+  const showCard = viewParams?.showCard;
+  const showToggle = viewParams?.showToggle;
+
+  const SortViewComponent = showSorting || showSearching ? SortView : null;
+  const ViewComponent = showCard ? CardView : TableView;
+
   return (
     <>
-      {(viewParams?.showSorting || viewParams?.showSearching) && (
-        <SortView
+      {SortViewComponent && (
+        <SortViewComponent
           search={search}
           sort={sort}
           setSort={setSort}
           columns={columns}
           selectLoansParams={selectLoansParams}
           setQueryData={setQueryData}
-          showSorting={viewParams?.showSorting}
-          showSearching={viewParams?.showSearching}
+          showSorting={showSorting}
+          showSearching={showSearching}
+          showToggle={showToggle}
+          isToggleChecked={isToggleChecked}
+          setIsToggleChecked={setIsToggleChecked}
         />
       )}
-      {viewParams?.showCard ? (
-        <CardView
+      {ViewComponent && (
+        <ViewComponent
           data={data}
           columns={columns}
           onRowClick={onRowClick}
           rowKeyField={rowKeyField}
-          className={cardClassName}
+          className={showCard ? cardClassName : className}
           activeRowParams={activeRowParams}
-        />
-      ) : (
-        <TableView
-          data={data}
-          className={className}
           breakpoints={breakpoints}
-          activeRowParams={activeRowParams}
           loading={loading}
-          columns={columns}
-          rowKeyField={rowKeyField}
-          onRowClick={onRowClick}
         />
       )}
     </>

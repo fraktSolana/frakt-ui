@@ -39,8 +39,12 @@ export const NFTsList: FC<NFTsListProps> = ({
         emptyMessageClassName,
       )}
     >
-      {nfts.map((nft: NFT) => (
-        <BorrowCard onClick={() => onClick(nft, hideNFT)} {...nft} />
+      {nfts.map((nft: NFT, idx) => (
+        <BorrowCard
+          key={`${nft?.mint}${idx}`}
+          onClick={() => onClick(nft, hideNFT)}
+          {...nft}
+        />
       ))}
     </InfinityScroll>
   );

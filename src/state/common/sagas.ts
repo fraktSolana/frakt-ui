@@ -2,9 +2,7 @@ import { web3 } from '@frakt-protocol/frakt-sdk';
 import moment from 'moment';
 import { all, call, takeLatest, put, select } from 'redux-saga/effects';
 
-import { sagaMiddleware } from '../store';
 import { selectConnection, selectWalletPublicKey } from './selectors';
-import loansSagas from '../loans/sagas';
 import { commonTypes, commonActions } from './actions';
 import { networkRequest, connectSocket } from '../../utils/state';
 import { parseSolanaHealth } from './helpers';
@@ -13,7 +11,6 @@ const appInitSaga = function* () {
   yield put(commonActions.fetchSolanaHealth());
   const socket = yield call(connectSocket);
   yield put(commonActions.setSocket(socket));
-  sagaMiddleware.run(loansSagas(socket));
 };
 
 const sendFcmTokenSaga = function* (action) {

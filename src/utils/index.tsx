@@ -248,21 +248,6 @@ export const calcWeightedAverage = (nums: number[], weights: number[]) => {
   return weightedAverage || 0;
 };
 
-export const flatObject = (obj) => {
-  const result = {};
-  for (const key in obj) {
-    if (typeof obj[key] === 'object') {
-      const flat = flatObject(obj[key]);
-      for (const x in flat) {
-        result[key + '.' + x] = flat[x];
-      }
-    } else {
-      result[key] = obj[key];
-    }
-  }
-  return result;
-};
-
 export const throwLogsError = (msg: any) => {
   console.error(msg);
   // eslint-disable-next-line no-console
