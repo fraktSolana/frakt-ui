@@ -1,4 +1,4 @@
-import { liquidateBondOnAuction as txn } from 'fbonds-core/lib/fbond-protocol/functions/liquidation';
+import { liquidateBondOnAuctionPnft as txn } from 'fbonds-core/lib/fbond-protocol/functions/liquidation';
 import { RepayAccounts } from 'fbonds-core/lib/fbond-protocol/functions/router';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
@@ -75,6 +75,7 @@ export const liquidateBondOnAuction: LiquidateBondOnAuction = async ({
 
     isLedger: false,
     // lookupTablePublicKey: bondTransactionsAndSignersChunks,
+    // skipPreflight: true,
     connection,
     wallet,
     commitment: 'confirmed',
