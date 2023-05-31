@@ -84,7 +84,7 @@ export const getTableColumns = (
   {
     key: 'rewards',
     dataIndex: 'rewards',
-    title: (column) => createHeaderCell(column, 'Rewawrs', 'rewards'),
+    title: (column) => createHeaderCell(column, 'Rewards', 'rewards'),
     render: (_, { userDeposit }) =>
       createSolValueJSX(
         parseFloat(userDeposit?.harvestAmount?.toFixed(2)),
