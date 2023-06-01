@@ -36,7 +36,6 @@ export const WALLETS = [
   new ExodusWalletAdapter(),
   new SentreWalletAdapter(),
   new SolletWalletAdapter({ network: WalletAdapterNetwork.Mainnet }),
-  new UnsafeBurnerWalletAdapter(),
 ];
 
 export const FRKT_TOKEN_MINT = process.env.FRKT_TOKEN_MINT;
