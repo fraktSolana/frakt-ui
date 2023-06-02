@@ -238,7 +238,7 @@ export const signAndSendV0TransactionWithLookupTables: SignAndSendV0TransactionW
           if (!txn) continue;
           // lastSlot = await connection.getSlot();
           const tx = await connection.sendRawTransaction(txn.serialize(), {
-            skipPreflight: false,
+            skipPreflight: true,
             preflightCommitment: 'processed',
           });
           currentTxIndex += 1;

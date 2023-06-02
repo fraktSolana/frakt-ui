@@ -241,26 +241,28 @@ export const useOfferPage = () => {
 
         const solDepositWithTransactionFee = parseFloat(offerSize);
 
-        const { transaction, signers } = await makeCreatePairTransaction({
-          marketPubkey: new web3.PublicKey(marketPubkey),
-          maxDuration: duration,
-          maxLoanValue: rawMaxLoanValue,
-          maxLTV: rawLtv,
-          solDeposit: solDepositWithTransactionFee,
-          interest: parseFloat(interest),
-          marketFloor: market.oracleFloor.floor,
-          bondFeature: findNeededBondFeature(),
-          connection,
-          wallet,
-        });
+        for (let i = 0; i < 15; i++) {
+          const { transaction, signers } = await makeCreatePairTransaction({
+            marketPubkey: new web3.PublicKey(marketPubkey),
+            maxDuration: duration,
+            maxLoanValue: rawMaxLoanValue,
+            maxLTV: rawLtv,
+            solDeposit: solDepositWithTransactionFee,
+            interest: parseFloat(interest),
+            marketFloor: market.oracleFloor.floor,
+            bondFeature: findNeededBondFeature(),
+            connection,
+            wallet,
+          });
 
-        await signAndConfirmTransaction({
-          transaction,
-          signers,
-          wallet,
-          connection,
-          commitment: 'confirmed',
-        });
+          await signAndConfirmTransaction({
+            transaction,
+            signers,
+            wallet,
+            connection,
+            commitment: 'confirmed',
+          });
+        }
 
         refetchMarketPairs();
 
