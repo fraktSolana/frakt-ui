@@ -1,9 +1,6 @@
 import { web3 } from '@frakt-protocol/frakt-sdk';
 import { WalletContextState } from '@solana/wallet-adapter-react';
-import {
-  refinanceFBondPnft,
-  refinanceToBondOffersV2,
-} from 'fbonds-core/lib/fbond-protocol/functions/management';
+import { refinanceToBondOffersV2 } from 'fbonds-core/lib/fbond-protocol/functions/management';
 import { getTopOrderSize } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
 import {
   isBondFeaturesAutomated,
