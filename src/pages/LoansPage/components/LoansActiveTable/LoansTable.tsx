@@ -43,7 +43,7 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
 
   const { filteredData, onChange } = useSearch({
     data,
-    searchField: ['nft.name'],
+    searchField: ['nft', 'name'],
   });
 
   const COLUMNS = TableList({ isCardView: viewState === 'card' });
