@@ -1,7 +1,5 @@
 import { web3 } from '@frakt-protocol/frakt-sdk';
 import { WalletContextState } from '@solana/wallet-adapter-react';
-import { refinanceToBondOffersV2 } from 'fbonds-core/lib/fbond-protocol/functions/management';
-import { getTopOrderSize } from 'fbonds-core/lib/fbond-protocol/utils/cartManager';
 import {
   isBondFeaturesAutomated,
   mergeBondOrderParamsByPair,
@@ -19,6 +17,7 @@ import { InstructionsAndSigners } from '@frakt/utils/transactions';
 import { PUBKEY_PLACEHOLDER, sendTxnPlaceHolder } from '..';
 import { BONDS_ADMIN_PUBKEY, BONDS_PROGRAM_PUBKEY } from '../bonds';
 import { chunk } from 'lodash';
+import { refinanceToBondOffersV2 } from 'fbonds-core/lib/fbond-protocol/functions/bond/repayment';
 
 type MakeRefinanceLoanTransaction = (props: {
   connection: web3.Connection;

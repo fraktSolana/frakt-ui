@@ -1,9 +1,6 @@
 import { sendTxnPlaceHolder } from '@frakt/utils';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
-import { virtual as pairs } from 'fbonds-core/lib/fbond-protocol/functions/market-factory/pair';
-import * as fBondsValidation from 'fbonds-core/lib/fbond-protocol/functions/validation';
-
 import {
   BondFeatures,
   BondingCurveType,
@@ -18,6 +15,7 @@ import {
   BOND_MAX_RETURN_AMOUNT_PROTECTION_BASE_POINTS,
 } from '../constants';
 import { isBondFeaturesAutomated } from '../utils';
+import { createBondOfferV2 } from 'fbonds-core/lib/fbond-protocol/functions/offer';
 
 type MakeCreatePairTransaction = (params: {
   maxLTV: number; //? % 0-100
@@ -75,7 +73,7 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
     instructions: instructions1,
     signers: signers1,
     bondOfferV2: pairPubkey,
-  } = await pairs.mutations.createBondOfferV2({
+  } = await createBondOfferV2({
     accounts: {
       hadoMarket: marketPubkey,
       userPubkey: wallet.publicKey,
@@ -95,68 +93,6 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
     connection,
     sendTxn: sendTxnPlaceHolder,
   });
-
-  // const {
-  //   instructions: instructions2,
-  //   signers: signers2,
-  //   account: adapterPubkey,
-  // } = await pairs.mutations.createClassicAuthorityAdapter({
-  //   accounts: {
-  //     pair: pairPubkey,
-  //     userPubkey: wallet.publicKey,
-  //   },
-  //   programId: BONDS_PROGRAM_PUBKEY,
-  //   connection,
-  //   sendTxn: sendTxnPlaceHolder,
-  // });
-
-  // const {
-  //   instructions: instructions3,
-  //   signers: signers3,
-  //   account: validationPubkey,
-  // } = await fBondsValidation.createValidationFilter({
-  //   accounts: {
-  //     authorityAdapter: adapterPubkey,
-  //     pair: pairPubkey,
-  //     userPubkey: wallet.publicKey,
-  //   },
-  //   args: {
-  //     loanToValueFilter: maxLTVRaw,
-  //     maxDurationFilter: maxDurationSec,
-  //     maxReturnAmountFilter: maxReturnAmountFilter,
-  //     bondFeatures: bondFeature,
-  //   },
-  //   connection,
-  //   programId: BONDS_PROGRAM_PUBKEY,
-  //   sendTxn: sendTxnPlaceHolder,
-  // });
-
-  // const { instructions: instructions4, signers: signers4 } =
-  //   await pairs.deposits.depositSolToPair({
-  //     accounts: {
-  //       authorityAdapter: adapterPubkey,
-  //       pair: pairPubkey,
-  //       userPubkey: wallet.publicKey,
-  //     },
-  //     args: {
-  //       amountOfTokensToBuy: amountOfTokensInOrder, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
-  //     },
-  //     programId: BONDS_PROGRAM_PUBKEY,
-  //     connection,
-  //     sendTxn: sendTxnPlaceHolder,
-  //   });
-
-  // const { instructions: instructions5, signers: signers5 } =
-  //   await pairs.mutations.putPairOnMarket({
-  //     accounts: {
-  //       authorityAdapter: adapterPubkey,
-  //       pair: pairPubkey,
-  //       userPubkey: wallet.publicKey,
-  //     },
-  //     programId: BONDS_PROGRAM_PUBKEY,
-  //     connection,
-  //     sendTxn: sendTxnPlaceHolder,
-  //   });
 
   return {
     transaction: new web3.Transaction().add(...[instructions1].flat()),

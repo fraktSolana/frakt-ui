@@ -14,7 +14,7 @@ import { calcPriceBasedMaxLoanValue } from '@frakt/pages/BorrowPages/cartState';
 import { makeProposeTransaction } from '@frakt/utils/loans';
 import { notify } from '@frakt/utils';
 import { captureSentryError } from '@frakt/utils/sentry';
-import { borrow as borrowBonds } from 'fbonds-core/lib/fbond-protocol/functions/management';
+import { borrow as borrowBonds } from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { showSolscanLinkNotification } from '@frakt/utils/transactions';
 

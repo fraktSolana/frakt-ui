@@ -1,8 +1,8 @@
 import { sendTxnPlaceHolder } from '@frakt/utils';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
-import { virtual as pairs } from 'fbonds-core/lib/fbond-protocol/functions/market-factory/pair';
 import { BONDS_PROGRAM_PUBKEY } from '../constants';
+import { removeBondOfferV2 } from 'fbonds-core/lib/fbond-protocol/functions/offer';
 
 type MakeRemoveOrderTransaction = (params: {
   bondOfferV2: web3.PublicKey;
@@ -19,7 +19,7 @@ export const makeRemoveOrderTransaction: MakeRemoveOrderTransaction = async ({
   wallet,
 }) => {
   const { instructions: instructions2, signers: signers2 } =
-    await pairs.mutations.removeBondOfferV2({
+    await removeBondOfferV2({
       accounts: {
         bondOfferV2: bondOfferV2,
         userPubkey: wallet.publicKey,
