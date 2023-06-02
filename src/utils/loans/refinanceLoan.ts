@@ -14,6 +14,7 @@ import {
   showSolscanLinkNotification,
   signAndSendV0TransactionWithLookupTables,
 } from '../transactions';
+import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from 'fbonds-core/lib/fbond-protocol/utils';
 
 type RefinanceLoan = (props: {
   connection: web3.Connection;
@@ -45,8 +46,9 @@ export const refinanceLoan: RefinanceLoan = async ({
     refinanceIxsAndSigners.lookupTablePublicKeys
       .map((lookup) => lookup.addresses)
       .flat().length <= MAX_ACCOUNTS_IN_FAST_TRACK;
-
-  return await signAndSendV0TransactionWithLookupTables({
+  return await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+    skipTimeout: true,
+    notBondTxns: [],
     createLookupTableTxns: ableToOptimize ? [] : [createLookupTableTxn],
     extendLookupTableTxns: ableToOptimize ? [] : extendLookupTableTxns,
     v0InstructionsAndSigners: ableToOptimize ? [] : [refinanceIxsAndSigners],
