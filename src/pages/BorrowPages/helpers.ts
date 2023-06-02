@@ -1,6 +1,5 @@
 import { web3 } from 'fbonds-core';
 import { WalletContextState } from '@solana/wallet-adapter-react';
-import { borrow } from 'fbonds-core/lib/fbond-protocol/functions/management';
 
 import { BorrowNft } from '@frakt/api/nft';
 import { BASE_POINTS } from '@frakt/utils/bonds';
@@ -13,6 +12,7 @@ import { makeProposeTransaction } from '@frakt/utils/loans';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 
 import { BondOrderParams } from './cartState';
+import { borrow } from 'fbonds-core/lib/fbond-protocol/functions/management';
 
 type CalcLtv = (props: { nft: BorrowNft; loanValue: number }) => number;
 export const calcLtv: CalcLtv = ({ nft, loanValue }) => {
