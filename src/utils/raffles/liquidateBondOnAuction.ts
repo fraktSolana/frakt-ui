@@ -1,5 +1,4 @@
 import { liquidateBondOnAuctionPnft as txn } from 'fbonds-core/lib/fbond-protocol/functions/liquidation';
-import { RepayAccounts } from 'fbonds-core/lib/fbond-protocol/functions/router';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
 
@@ -12,6 +11,7 @@ import {
 } from '../transactions';
 import { InstructionsAndSigners } from 'fbonds-core/lib/fbond-protocol/types';
 import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from 'fbonds-core/lib/fbond-protocol/utils';
+import { RepayAccounts } from 'fbonds-core/lib/fbond-protocol/functions/bond/repayment';
 
 type LiquidateBondOnAuction = (props: {
   connection: web3.Connection;
