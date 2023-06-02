@@ -2,12 +2,7 @@ import { filter } from 'lodash';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { Bond, Market, Pair } from '@frakt/api/bonds';
-import {
-  exitBond,
-  isBondAvailableToRedeem,
-  redeemAllBonds,
-  redeemBond,
-} from '@frakt/utils/bonds';
+import { exitBond, isBondAvailableToRedeem } from '@frakt/utils/bonds';
 
 import { useConnection } from './useConnection';
 import { Order } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
@@ -43,19 +38,6 @@ export const useBondsTransactions: UseBondsTransactions = ({
 
   const onClaimAll = async () => {
     try {
-      const bondsAvailableToRedeem = filter(bonds, isBondAvailableToRedeem);
-
-      const result = await redeemAllBonds({
-        bonds: bondsAvailableToRedeem,
-        wallet,
-        connection,
-      });
-
-      if (result) {
-        bondsAvailableToRedeem.forEach(({ fbond }) => {
-          hideBond?.(fbond?.publicKey);
-        });
-      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.warn(error?.logs?.join('\n'));
@@ -65,15 +47,6 @@ export const useBondsTransactions: UseBondsTransactions = ({
 
   const onRedeem = async (bond: Bond) => {
     try {
-      const result = await redeemBond({
-        bond,
-        wallet,
-        connection,
-      });
-
-      if (result) {
-        hideBond(bond?.fbond?.publicKey);
-      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.warn(error?.logs?.join('\n'));
