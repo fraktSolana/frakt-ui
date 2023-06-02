@@ -3,7 +3,7 @@ import { web3 } from '@frakt-protocol/frakt-sdk';
 import { useQuery } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
 import { orderBy } from 'lodash';
-import { borrow } from 'fbonds-core/lib/fbond-protocol/functions/management';
+import { borrow } from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
 
 import { fetchMarketPairs, fetchCertainMarket } from '@frakt/api/bonds';
 import {

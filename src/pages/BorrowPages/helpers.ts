@@ -12,7 +12,7 @@ import { makeProposeTransaction } from '@frakt/utils/loans';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 
 import { BondOrderParams } from './cartState';
-import { borrow } from 'fbonds-core/lib/fbond-protocol/functions/management';
+import { borrow } from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
 
 type CalcLtv = (props: { nft: BorrowNft; loanValue: number }) => number;
 export const calcLtv: CalcLtv = ({ nft, loanValue }) => {

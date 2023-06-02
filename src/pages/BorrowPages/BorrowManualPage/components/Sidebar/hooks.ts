@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
 import { useHistory } from 'react-router-dom';
 import { web3 } from 'fbonds-core';
-import { borrow } from 'fbonds-core/lib/fbond-protocol/functions/management';
+import { borrow } from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
 
 import { PATHS } from '@frakt/constants';
 import {

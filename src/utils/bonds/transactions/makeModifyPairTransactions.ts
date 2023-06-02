@@ -2,9 +2,6 @@ import { Pair } from '@frakt/api/bonds';
 import { sendTxnPlaceHolder } from '@frakt/utils';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
-import { virtual as pairs } from 'fbonds-core/lib/fbond-protocol/functions/market-factory/pair';
-import * as fBondsValidation from 'fbonds-core/lib/fbond-protocol/functions/validation';
-import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 import { getTopOrderSize } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 
 import {
@@ -14,6 +11,11 @@ import {
   BOND_MAX_RETURN_AMOUNT_PROTECTION_BASE_POINTS,
 } from '../constants';
 import { isBondFeaturesAutomated } from '../utils';
+import {
+  depositToBondOfferV2,
+  updateBondOfferV2,
+  withdrawFromBondOfferV2,
+} from 'fbonds-core/lib/fbond-protocol/functions/offer';
 
 type MakeModifyPairTransactions = (params: {
   maxLTV: number; //? % 0-100
@@ -71,7 +73,7 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
   console.log({ maxReturnAmountFilter, marketFloor, maxLTVRaw });
 
   const { instructions: instructions1, signers: signers1 } =
-    await pairs.mutations.updateBondOfferV2({
+    await updateBondOfferV2({
       accounts: {
         bondOfferV2: new web3.PublicKey(pair.publicKey),
         userPubkey: wallet.publicKey,
@@ -92,38 +94,35 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
   const depositInstructionsAndSigners = [];
 
   if (!!amountTokenToUpdate && amountOfTokensInOrder > topOrderSize) {
-    const { instructions, signers } = await pairs.deposits.depositToBondOfferV2(
-      {
-        accounts: {
-          bondOfferV2: new web3.PublicKey(pair.publicKey),
-          userPubkey: wallet.publicKey,
-        },
-        args: {
-          amountOfTokensToBuy: amountTokenToUpdate, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
-        },
-        programId: BONDS_PROGRAM_PUBKEY,
-        connection,
-        sendTxn: sendTxnPlaceHolder,
+    const { instructions, signers } = await depositToBondOfferV2({
+      accounts: {
+        bondOfferV2: new web3.PublicKey(pair.publicKey),
+        userPubkey: wallet.publicKey,
       },
-    );
+      args: {
+        amountOfTokensToBuy: amountTokenToUpdate, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
+      },
+      programId: BONDS_PROGRAM_PUBKEY,
+      connection,
+      sendTxn: sendTxnPlaceHolder,
+    });
 
     depositInstructionsAndSigners.push({ instructions, signers });
   }
 
   if (!!amountTokenToUpdate && amountOfTokensInOrder < topOrderSize) {
-    const { instructions, signers } =
-      await pairs.withdrawals.withdrawFromBondOfferV2({
-        accounts: {
-          bondOfferV2: new web3.PublicKey(pair.publicKey),
-          userPubkey: wallet.publicKey,
-        },
-        args: {
-          amountOfTokensToWithdraw: amountTokenToUpdate, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
-        },
-        programId: BONDS_PROGRAM_PUBKEY,
-        connection,
-        sendTxn: sendTxnPlaceHolder,
-      });
+    const { instructions, signers } = await withdrawFromBondOfferV2({
+      accounts: {
+        bondOfferV2: new web3.PublicKey(pair.publicKey),
+        userPubkey: wallet.publicKey,
+      },
+      args: {
+        amountOfTokensToWithdraw: amountTokenToUpdate, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
+      },
+      programId: BONDS_PROGRAM_PUBKEY,
+      connection,
+      sendTxn: sendTxnPlaceHolder,
+    });
 
     depositInstructionsAndSigners.push({ instructions, signers });
   }
