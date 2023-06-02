@@ -12,10 +12,7 @@ import {
 import { captureSentryError } from '@frakt/utils/sentry';
 import { BondCartOrder } from '@frakt/api/nft';
 
-import {
-  makeExitBondMultiOrdersTransaction,
-  makeExitBondMultiOrdersTransactionV2,
-} from './makeExitBondTransaction';
+import { makeExitBondMultiOrdersTransactionV2 } from './makeExitBondTransaction';
 
 type ExitBond = (props: {
   bond: Bond;
