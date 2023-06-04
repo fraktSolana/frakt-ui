@@ -83,7 +83,7 @@ export const refinanceLoan: RefinanceLoan = async ({
       captureSentryError({
         error,
         wallet,
-        transactionName: 'borrowSingleBond',
+        transactionName: 'refinanceBond',
       });
     },
   });
