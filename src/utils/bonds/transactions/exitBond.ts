@@ -2,7 +2,7 @@ import { web3 } from '@frakt-protocol/frakt-sdk';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 
 import { Bond, Market } from '@frakt/api/bonds';
-import { notify } from '@frakt/utils';
+import { notify, throwLogsError } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import {
   showSolscanLinkNotification,
@@ -13,6 +13,8 @@ import { captureSentryError } from '@frakt/utils/sentry';
 import { BondCartOrder } from '@frakt/api/nft';
 
 import { makeExitBondMultiOrdersTransactionV2 } from './makeExitBondTransaction';
+import { MAX_ACCOUNTS_IN_FAST_TRACK } from '../constants';
+import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from 'fbonds-core/lib/fbond-protocol/utils';
 
 type ExitBond = (props: {
   bond: Bond;
@@ -41,11 +43,21 @@ export const exitBond: ExitBond = async ({
     wallet,
   });
 
-  await signAndSendV0TransactionWithLookupTables({
-    createLookupTableTxns: [createLookupTableTxn],
-    extendLookupTableTxns: extendLookupTableTxns,
-    v0InstructionsAndSigners: [exitAndSellBondsIxsAndSigners],
-    fastTrackInstructionsAndSigners: [],
+  const ableToOptimize =
+    exitAndSellBondsIxsAndSigners.lookupTablePublicKeys
+      .map((lookup) => lookup.addresses)
+      .flat().length <= MAX_ACCOUNTS_IN_FAST_TRACK;
+  return await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+    skipTimeout: true,
+    notBondTxns: [],
+    createLookupTableTxns: ableToOptimize ? [] : [createLookupTableTxn],
+    extendLookupTableTxns: ableToOptimize ? [] : extendLookupTableTxns,
+    v0InstructionsAndSigners: ableToOptimize
+      ? []
+      : [exitAndSellBondsIxsAndSigners],
+    fastTrackInstructionsAndSigners: ableToOptimize
+      ? [exitAndSellBondsIxsAndSigners]
+      : [],
     connection,
     wallet,
     commitment: 'confirmed',
@@ -62,8 +74,8 @@ export const exitBond: ExitBond = async ({
       });
     },
     onError: (error) => {
-      // eslint-disable-next-line no-console
-      console.warn(error.logs?.join('\n'));
+      throwLogsError(error);
+
       const isNotConfirmed = showSolscanLinkNotification(error);
       if (!isNotConfirmed) {
         notify({
@@ -74,10 +86,8 @@ export const exitBond: ExitBond = async ({
       captureSentryError({
         error,
         wallet,
-        transactionName: 'borrowSingleBond',
+        transactionName: 'exitLoan',
       });
     },
   });
-
-  return true;
 };

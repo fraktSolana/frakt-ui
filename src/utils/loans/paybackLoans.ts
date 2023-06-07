@@ -7,7 +7,7 @@ import { showSolscanLinkNotification } from '../transactions';
 import { captureSentryError } from '../sentry';
 import { NotifyType } from '../solanaUtils';
 import { notify } from '../';
-import { makeRepayBondTransaction } from '../bonds';
+import { MAX_ACCOUNTS_IN_FAST_TRACK, makeRepayBondTransaction } from '../bonds';
 import { makePaybackLoanTransaction } from './makePaybackLoanTransaction';
 import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from 'fbonds-core/lib/fbond-protocol/utils';
 
@@ -24,30 +24,83 @@ export const paybackLoans: PaybackLoans = async ({
   loans,
   isLedger = false,
 }): Promise<boolean> => {
-  const transactionsAndSigners = await Promise.all(
-    loans.map(async (loan) => {
-      if (loan.loanType === LoanType.BOND) {
-        return await makeRepayBondTransaction({
-          loan,
-          wallet,
-          connection,
-        });
-      } else {
-        return await makePaybackLoanTransaction({
-          loan,
-          wallet,
-          connection,
-        });
-      }
-    }),
+  const notBondtransactionsAndSigners = await Promise.all(
+    loans
+      .filter((loan) => loan.loanType !== LoanType.BOND)
+      .map(
+        async (loan) =>
+          await makePaybackLoanTransaction({
+            loan,
+            wallet,
+            connection,
+          }),
+      ),
   );
 
+  const fastTrackBondTxns = (
+    await Promise.all(
+      loans
+        .filter((loan) => loan.loanType === LoanType.BOND)
+        .map(async (loan) => {
+          const {
+            createLookupTableTxn,
+            extendLookupTableTxns,
+            repayIxsAndSigners,
+          } = await makeRepayBondTransaction({
+            loan,
+            wallet,
+            connection,
+          });
+          const ableToOptimize =
+            repayIxsAndSigners.lookupTablePublicKeys
+              .map((lookup) => lookup.addresses)
+              .flat().length <= MAX_ACCOUNTS_IN_FAST_TRACK;
+          return ableToOptimize ? repayIxsAndSigners : null;
+        }),
+    )
+  ).filter((ix) => ix);
+
+  const bigBondTxns = (
+    await Promise.all(
+      loans
+        .filter((loan) => loan.loanType === LoanType.BOND)
+        .map(async (loan) => {
+          const {
+            createLookupTableTxn,
+            extendLookupTableTxns,
+            repayIxsAndSigners,
+          } = await makeRepayBondTransaction({
+            loan,
+            wallet,
+            connection,
+          });
+          const ableToOptimize =
+            repayIxsAndSigners.lookupTablePublicKeys
+              .map((lookup) => lookup.addresses)
+              .flat().length <= MAX_ACCOUNTS_IN_FAST_TRACK;
+          return !ableToOptimize
+            ? {
+                createLookupTableTxn,
+                extendLookupTableTxns,
+                repayIxsAndSigners,
+              }
+            : null;
+        }),
+    )
+  ).filter((ix) => ix);
+
   return signAndSendV0TransactionWithLookupTablesSeparateSignatures({
-    notBondTxns: transactionsAndSigners,
-    createLookupTableTxns: [],
-    extendLookupTableTxns: [],
-    v0InstructionsAndSigners: [],
-    fastTrackInstructionsAndSigners: [],
+    notBondTxns: notBondtransactionsAndSigners,
+    createLookupTableTxns: bigBondTxns.map(
+      (bigTx) => bigTx.createLookupTableTxn,
+    ),
+    extendLookupTableTxns: bigBondTxns
+      .map((bigTx) => bigTx.extendLookupTableTxns)
+      .flat(),
+    v0InstructionsAndSigners: bigBondTxns.map(
+      (bigTx) => bigTx.repayIxsAndSigners,
+    ),
+    fastTrackInstructionsAndSigners: [...fastTrackBondTxns],
 
     isLedger,
     // lookupTablePublicKey: bondTransactionsAndSignersChunks,

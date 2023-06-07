@@ -4,14 +4,15 @@ import { WalletContextState } from '@solana/wallet-adapter-react';
 import { Loan, LoanType } from '@frakt/api/loans';
 
 import { captureSentryError } from '../sentry';
-import { notify } from '../';
+import { notify, throwLogsError } from '../';
 import { NotifyType } from '../solanaUtils';
 import {
   showSolscanLinkNotification,
   signAndConfirmTransaction,
 } from '../transactions';
-import { makeRepayBondTransaction } from '../bonds';
+import { MAX_ACCOUNTS_IN_FAST_TRACK, makeRepayBondTransaction } from '../bonds';
 import { makePaybackLoanTransaction } from './makePaybackLoanTransaction';
+import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from 'fbonds-core/lib/fbond-protocol/utils';
 
 type PaybackLoan = (props: {
   connection: web3.Connection;
@@ -26,55 +27,101 @@ export const paybackLoan: PaybackLoan = async ({
   loan,
   paybackAmount,
 }): Promise<boolean> => {
-  try {
-    const { transaction, signers } = await (async () => {
-      if (loan.loanType === LoanType.BOND) {
-        return await makeRepayBondTransaction({
-          loan,
-          wallet,
-          connection,
-        });
-      } else {
+  if (
+    loan.loanType === LoanType.PRICE_BASED ||
+    loan.loanType === LoanType.TIME_BASED
+  ) {
+    try {
+      const { transaction, signers } = await (async () => {
         return await makePaybackLoanTransaction({
           loan,
           paybackAmount,
           wallet,
           connection,
         });
-      }
-    })();
+      })();
 
-    await signAndConfirmTransaction({
-      transaction,
-      signers,
-      connection,
-      wallet,
-      commitment: 'confirmed',
-    });
-
-    notify({
-      message: 'Paid back successfully!',
-      type: NotifyType.SUCCESS,
-    });
-
-    return true;
-  } catch (error) {
-    const isNotConfirmed = showSolscanLinkNotification(error);
-
-    if (!isNotConfirmed) {
-      notify({
-        message: 'The transaction just failed :( Give it another try',
-        type: NotifyType.ERROR,
+      await signAndConfirmTransaction({
+        transaction,
+        signers,
+        connection,
+        wallet,
+        commitment: 'confirmed',
       });
+
+      notify({
+        message: 'Paid back successfully!',
+        type: NotifyType.SUCCESS,
+      });
+
+      return true;
+    } catch (error) {
+      const isNotConfirmed = showSolscanLinkNotification(error);
+
+      if (!isNotConfirmed) {
+        notify({
+          message: 'The transaction just failed :( Give it another try',
+          type: NotifyType.ERROR,
+        });
+      }
+
+      captureSentryError({
+        error,
+        wallet,
+        transactionName: 'paybackLoan',
+        params: { loan },
+      });
+
+      return false;
     }
-
-    captureSentryError({
-      error,
-      wallet,
-      transactionName: 'paybackLoan',
-      params: { loan },
-    });
-
-    return false;
   }
+  const { createLookupTableTxn, extendLookupTableTxns, repayIxsAndSigners } =
+    await makeRepayBondTransaction({
+      loan,
+      wallet,
+      connection,
+    });
+  const ableToOptimize =
+    repayIxsAndSigners.lookupTablePublicKeys
+      .map((lookup) => lookup.addresses)
+      .flat().length <= MAX_ACCOUNTS_IN_FAST_TRACK;
+  return await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+    skipTimeout: true,
+    notBondTxns: [],
+    createLookupTableTxns: ableToOptimize ? [] : [createLookupTableTxn],
+    extendLookupTableTxns: ableToOptimize ? [] : extendLookupTableTxns,
+    v0InstructionsAndSigners: ableToOptimize ? [] : [repayIxsAndSigners],
+    fastTrackInstructionsAndSigners: ableToOptimize ? [repayIxsAndSigners] : [],
+    connection,
+    wallet,
+    commitment: 'confirmed',
+    onAfterSend: () => {
+      notify({
+        message: 'Transactions sent!',
+        type: NotifyType.INFO,
+      });
+    },
+    onSuccess: () => {
+      notify({
+        message: 'Repaid successfully!',
+        type: NotifyType.SUCCESS,
+      });
+    },
+    onError: (error) => {
+      throwLogsError(error);
+
+      const isNotConfirmed = showSolscanLinkNotification(error);
+      if (!isNotConfirmed) {
+        notify({
+          message: 'The transaction just failed :( Give it another try',
+          type: NotifyType.ERROR,
+        });
+      }
+      captureSentryError({
+        error,
+        wallet,
+        transactionName: 'paybackLoan',
+      });
+    },
+  });
 };
