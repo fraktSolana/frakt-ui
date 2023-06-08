@@ -2,7 +2,7 @@
   background-color: var(--primary-background);
 
   position: fixed;
-  top: var(--header-height);
+  top: calc(var(--header-height) + 1px);
   left: 0;
   right: 0;
   bottom: 0;
@@ -16,7 +16,7 @@
   width: 100%;
   height: calc(100vh - var(--header-height));
   overflow: auto;
-  z-index: 7;
+  z-index: 99 !important;
 
   &.menuOverlayHidden {
     display: none;

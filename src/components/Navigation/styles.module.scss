@@ -43,6 +43,10 @@
   width: 177px;
   height: 100vh;
 
+  @media (max-height: 700px) {
+    padding-bottom: 150px;
+  }
+
   @media (max-width: 960px) {
     display: none;
   }

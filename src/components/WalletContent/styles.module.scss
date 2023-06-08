@@ -23,7 +23,7 @@
   display: grid;
   grid-template-columns: repeat(3, 113px);
   position: absolute;
-  top: 72px;
+  top: calc(var(--header-height) + 8px);
   right: 15px;
   background-color: var(--primary-background);
   padding: 16px 16px 24px;

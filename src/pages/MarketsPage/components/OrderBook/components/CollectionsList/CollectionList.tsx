@@ -32,7 +32,6 @@ const CollectionList: FC<CollectionListProps> = ({
   return (
     <ul
       className={classNames(styles.list, {
-        [styles.create]: existSyntheticParams,
         [styles.active]: openOffersMobile,
       })}
     >

@@ -4,8 +4,7 @@
   align-items: center;
   justify-content: center;
   overflow-y: scroll;
-
-  height: calc(100% - var(--header-height));
+  height: 100%;
 
   &.create {
     height: auto;
@@ -16,16 +15,10 @@
 
     &.create {
       display: flex;
-      height: 47px;
     }
 
     &.active {
       display: flex;
-      height: calc(100% - var(--header-height) - 116px);
-    }
-
-    &.create.active {
-      height: calc(100% - var(--header-height));
     }
   }
 

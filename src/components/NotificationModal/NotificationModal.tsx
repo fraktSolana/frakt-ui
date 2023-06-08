@@ -4,14 +4,14 @@ import { useQuery } from '@tanstack/react-query';
 import { useLocalStorage } from '@frakt/hooks';
 import { Modal } from '@frakt/components/Modal';
 import { CloseModal } from '@frakt/icons';
-import { fetchTopNotification } from '@frakt/api/common';
+import { fetchModalNotification } from '@frakt/api/common';
 
 import styles from './NotificationModal.module.scss';
 
 export const NotificationModal = () => {
-  const { data: topNotificationHtml } = useQuery(
-    ['topNotification'],
-    fetchTopNotification,
+  const { data: modalNotificationHtml } = useQuery(
+    ['modalNotification'],
+    fetchModalNotification,
     {
       staleTime: 30 * 60 * 1000, // 30 mins
       refetchOnWindowFocus: false,
@@ -24,38 +24,39 @@ export const NotificationModal = () => {
 
   //? If its a new notification -- show notification again
   useEffect(() => {
-    if (!topNotificationHtml) {
+    if (!modalNotificationHtml) {
       return;
     }
     if (!previousClosedNotification) {
       return;
     }
-    if (topNotificationHtml === previousClosedNotification) {
+    if (modalNotificationHtml === previousClosedNotification) {
       return;
     }
     setPreviousClosedNotification(null);
   }, [
     previousClosedNotification,
     setPreviousClosedNotification,
-    topNotificationHtml,
+    modalNotificationHtml,
   ]);
 
   const onCancel = useCallback(
-    () => setPreviousClosedNotification(topNotificationHtml),
-    [setPreviousClosedNotification, topNotificationHtml],
+    () => setPreviousClosedNotification(modalNotificationHtml),
+    [setPreviousClosedNotification, modalNotificationHtml],
   );
 
   //? Add event listener for each link in html from BE. To auto hide and close modal when user clicks on link
   const contentRef = useRef(null);
   useLayoutEffect(() => {
-    if (topNotificationHtml) {
+    if (modalNotificationHtml) {
       const links: NodeList = contentRef.current?.querySelectorAll('a');
       links?.forEach((link) => link.addEventListener('click', onCancel));
     }
-  }, [topNotificationHtml, onCancel]);
+  }, [modalNotificationHtml, onCancel]);
 
   const showModal =
-    topNotificationHtml && topNotificationHtml !== previousClosedNotification;
+    modalNotificationHtml &&
+    modalNotificationHtml !== previousClosedNotification;
 
   return (
     <Modal
@@ -76,7 +77,7 @@ export const NotificationModal = () => {
       <div
         className={styles.content}
         ref={contentRef}
-        dangerouslySetInnerHTML={{ __html: topNotificationHtml }}
+        dangerouslySetInnerHTML={{ __html: modalNotificationHtml }}
       />
     </Modal>
   );

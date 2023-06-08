@@ -29,6 +29,10 @@
   @media (max-width: 960px) {
     padding: 0 16px;
   }
+
+  @media screen and (max-width: 550px) {
+    padding-bottom: 86px;
+  }
 }
 
 .nftInfo {
