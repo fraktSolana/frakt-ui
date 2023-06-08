@@ -100,7 +100,6 @@ export const makeRefinanceLoanTransaction: MakeRefinanceLoanTransaction =
         collateralTokenAccount: new web3.PublicKey(
           loan.bondParams.collateralTokenAccount,
         ),
-        fbondsTokenMint: new web3.PublicKey(loan.bondParams.bondTokenMint),
         adminPubkey: BONDS_ADMIN_PUBKEY,
 
         fraktMarket: new web3.PublicKey(market.fraktMarket.publicKey),
