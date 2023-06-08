@@ -29,6 +29,10 @@
 
   background-color: var(--primary-background);
   border: 1px solid var(--primary-border);
+
+  @media screen and (max-width: 550px) {
+    padding-bottom: 48px;
+  }
 }
 
 .btnsWrapper {

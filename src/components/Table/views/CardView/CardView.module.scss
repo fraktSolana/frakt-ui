@@ -8,6 +8,10 @@
   @media (max-width: 960px) {
     grid-template-columns: repeat(auto-fill, minmax(220px, 2fr));
   }
+
+  @media screen and (max-width: 550px) {
+    padding-bottom: 86px;
+  }
 }
 
 .card {

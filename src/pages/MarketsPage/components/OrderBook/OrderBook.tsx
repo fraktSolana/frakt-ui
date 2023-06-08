@@ -138,7 +138,6 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
           className={classNames(styles.content, {
             [styles.active]: openOffersMobile,
             [styles.create]: syntheticParams?.ltv,
-            [styles.visible]: !offersExist,
           })}
         >
           {isLoading && marketPubkey && (
@@ -190,7 +189,9 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
 
           {!syntheticParams?.ltv && marketPubkey && (
             <NavigationButton
-              className={styles.btn}
+              className={classNames(styles.btn, {
+                [styles.notActive]: !openOffersMobile,
+              })}
               path={`${PATHS.OFFER}/${marketPubkey}`}
             >
               Place offers

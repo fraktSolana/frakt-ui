@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { useWallet } from '@solana/wallet-adapter-react';
 
+import TopNotification from '@frakt/components/TopNotification';
 import ConnectButton from '@frakt/components/ConnectButton';
 import WalletContent from '@frakt/components/WalletContent';
 import ThemeSwitcher from '@frakt/components/ThemeSwitcher';
@@ -22,21 +23,24 @@ export const Header: FC = () => {
 
   return (
     <div className={styles.container}>
-      {visible && <WalletContent />}
-      <a href={process.env.FRAKT_LANDING_URL} className={styles.logoWrapper}>
-        <LogoFull className={classNames(styles.logo, styles.logoFull)} />
-        <Logo className={styles.logoBasic} />
-      </a>
-      <div className={styles.widgetContainer}>
-        {!data ? <FraktlistingBtn /> : <FraktlistingStatus data={data} />}
+      <TopNotification />
+      <div className={styles.header}>
+        {visible && <WalletContent />}
+        <a href={process.env.FRAKT_LANDING_URL} className={styles.logoWrapper}>
+          <LogoFull className={classNames(styles.logo, styles.logoFull)} />
+          <Logo className={styles.logoBasic} />
+        </a>
+        <div className={styles.widgetContainer}>
+          {!data ? <FraktlistingBtn /> : <FraktlistingStatus data={data} />}
 
-        <div className={styles.switcherContainer}>
-          <ThemeSwitcher />
+          <div className={styles.switcherContainer}>
+            <ThemeSwitcher />
+          </div>
+          {connected && <NotificationsButton />}
+          <ConnectButton className={styles.walletBtn} />
         </div>
-        {connected && <NotificationsButton />}
-        <ConnectButton className={styles.walletBtn} />
+        <BurgerMenu />
       </div>
-      <BurgerMenu />
     </div>
   );
 };

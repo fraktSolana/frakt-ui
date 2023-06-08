@@ -2,11 +2,11 @@
   position: fixed;
   top: var(--header-height);
   right: 0px;
-  z-index: 3;
+  z-index: 10;
 
   padding: 32px;
   width: 344px;
-  height: calc(100% - var(--header-height));
+  height: calc(100vh - var(--header-height));
 
   display: flex;
   flex-direction: column;
@@ -20,27 +20,56 @@
     right: 0;
 
     gap: 24px;
-    padding: 32px 43px 24px;
+    padding: 32px 43px 32px;
     width: 100%;
-    height: auto;
+    height: calc(91vh - var(--header-height));
 
     border-top: 1px solid var(--primary-border);
     border-left: none;
     box-shadow: 0px -5px 80px rgba(0, 0, 0, 0.25);
     transition: top 0.2s linear;
 
-    &.create {
-      gap: 8px;
-      top: calc(100% - 140px);
+    &.selected {
+      top: calc(100% - 180px);
     }
 
-    &.selected {
-      top: calc(100% - 140px);
+    &.create {
+      gap: 8px;
+      top: calc(100% - 200px);
     }
 
     &.active {
+      top: calc(var(--header-height) + 92px);
+    }
+  }
+
+  @media screen and (max-width: 550px) {
+    &.selected {
+      gap: 16px;
+      top: calc(100% - 140px);
+    }
+    &.create {
+      gap: 4px;
+      top: calc(100% - 170px);
+    }
+
+    &.active.selected {
+      gap: 4px;
+      top: calc(var(--header-height) + 82px);
+    }
+  }
+
+  @media screen and (max-width: 376px) {
+    &.selected {
       gap: 8px;
-      top: calc(var(--header-height) + 80px);
+    }
+
+    &.create {
+      gap: 4px;
+    }
+
+    &.active.selected {
+      top: calc(var(--header-height) + 60px);
     }
   }
 }
@@ -80,36 +109,9 @@
 .content {
   position: relative;
 
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  height: calc(100% - var(--header-height) - 32px);
-
-  &.visible {
-    height: 100%;
-  }
-
-  &.create {
-    height: calc(100% - var(--header-height) - 66px);
-  }
-
-  @media screen and (max-width: 960px) {
-    &.active {
-      height: calc(100vh - var(--header-height) - 204px);
-    }
-
-    &.visible.active {
-      height: calc(100vh - var(--header-height) - 116px);
-    }
-
-    &.create.active {
-      height: calc(100vh - var(--header-height) - 190px);
-    }
-  }
-
-  @media screen and (max-width: 550px) {
-    gap: 16px;
-  }
 }
 
 .loader {
@@ -130,10 +132,10 @@
   display: flex;
   flex-direction: column;
 
-  height: calc(100% - var(--header-height));
+  height: calc(70vh - var(--header-height));
 
   &.create {
-    height: auto;
+    height: calc(75vh - var(--header-height));
   }
 
   @media screen and (max-width: 960px) {
@@ -150,26 +152,61 @@
 
     &.active {
       display: flex;
-      height: calc(100% - var(--header-height) - 64px);
       overflow-y: scroll;
+      height: calc(60vh - var(--header-height));
     }
 
     &.create.active {
-      height: calc(100% - var(--header-height));
+      height: calc(70vh - var(--header-height));
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    height: calc(65vh - var(--header-height));
+
+    &.create.active {
+      height: calc(70vh - var(--header-height));
     }
   }
 
   @media screen and (max-width: 550px) {
+    &.active {
+      height: calc(54vh - var(--header-height));
+    }
+
     display: none;
     &.create {
       display: flex;
+    }
+    &.create.active {
+      height: calc(65vh - var(--header-height));
+    }
+  }
+
+  @media screen and (max-width: 376px) {
+    &.active {
+      height: calc(50vh - var(--header-height));
+    }
+
+    &.create.active {
+      height: calc(45vh - var(--header-height));
     }
   }
 }
 
 .btn {
+  position: absolute;
+  bottom: 0;
+  z-index: 100;
   padding: 14px;
   width: 100%;
+
+  @media screen and (max-width: 960px) {
+    &.notActive {
+      top: 0;
+      bottom: auto;
+    }
+  }
 }
 
 .roundBtn {
