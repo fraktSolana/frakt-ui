@@ -96,7 +96,7 @@ interface FBond {
   actualReturnedAmount: number; //? in lamports
   amountToReturn: number;
   bondProgramAuthoritySeed: number;
-  collateralBoxesQuantity: number;
+  borrowedAmount: number;
   fbondIssuer: string;
   fbondTokenMint: string;
   fbondTokenSupply: number;
