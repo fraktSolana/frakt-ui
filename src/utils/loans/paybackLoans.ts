@@ -103,6 +103,8 @@ export const paybackLoans: PaybackLoans = async ({
     fastTrackInstructionsAndSigners: [...fastTrackBondTxns],
 
     isLedger,
+    skipTimeout: true,
+
     // lookupTablePublicKey: bondTransactionsAndSignersChunks,
     connection,
     wallet,
