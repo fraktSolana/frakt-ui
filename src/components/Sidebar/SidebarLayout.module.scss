@@ -9,6 +9,7 @@
   z-index: 2;
   transform: translateX(calc(100% + 10px));
   padding-top: 18px;
+  padding-bottom: 56px;
 
   &.visible {
     z-index: 5;
@@ -16,7 +17,6 @@
 
     @media screen and (max-width: 960px) {
       max-height: calc(95vh - var(--header-height));
-      margin: -1px;
     }
 
     @media screen and (max-width: 960px) {
@@ -44,7 +44,9 @@
     bottom: 0;
     width: 100%;
     padding-top: 0px;
+    border: 0;
     border-top: 1px solid var(--secondary-border);
+    padding-bottom: 0;
   }
 }
 
