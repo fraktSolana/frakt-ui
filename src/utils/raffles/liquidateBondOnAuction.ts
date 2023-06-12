@@ -74,6 +74,7 @@ export const liquidateBondOnAuction: LiquidateBondOnAuction = async ({
     fastTrackInstructionsAndSigners: [intstructionsAndSigners],
 
     isLedger: false,
+    skipTimeout: true,
     // lookupTablePublicKey: bondTransactionsAndSignersChunks,
     // skipPreflight: true,
     connection,
