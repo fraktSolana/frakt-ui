@@ -48,7 +48,8 @@ export const DashboardColumnValue: FC<
     >
       <div className={styles.label}>{label}</div>
       <div className={styles.value}>
-        {formattedValue} {DIMENSTION_BY_VALUE_TYPE[valueType]}
+        <span>{formattedValue}</span>
+        {DIMENSTION_BY_VALUE_TYPE[valueType]}
       </div>
     </div>
   );

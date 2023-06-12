@@ -37,6 +37,9 @@
 }
 
 .value {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   color: var(--primary-text);
   font: var(--font-subtitle);
 
