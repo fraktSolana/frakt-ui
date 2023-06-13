@@ -12,7 +12,7 @@ export const InterestValueCell: FC<InterestValueCellProps> = ({
   bondLoanValue,
 }) => {
   const formattedBondFee = (bondFee / 1e9 || 0).toFixed(2);
-  const feePercent = ((bondFee / bondLoanValue) * 100).toFixed(1);
+  const feePercent = ((bondFee / bondLoanValue) * 100 || 0).toFixed(1);
 
   return (
     <span className={styles.interestValueCell}>
