@@ -38,7 +38,10 @@ export const BorrowManualTable: FC<BorrowManualTableProps> = ({
 }) => {
   const { viewState } = useTableView();
 
-  const COLUMNS = getTableColumns({ duration });
+  const COLUMNS = getTableColumns({
+    duration,
+    isCardView: viewState === 'card',
+  });
 
   const { table } = useTable({
     data,

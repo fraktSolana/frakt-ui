@@ -141,9 +141,9 @@ const Summary: FC<SummaryProps> = ({ nfts, orderParamsByMint, loanType }) => {
   });
 
   return (
-    <div className={styles.loanDetails}>
+    <div className={styles.summaryDetails}>
       {fields.map(({ label, value, tooltipText }, idx) => (
-        <div className={styles.loanDetailsValue} key={idx}>
+        <div className={styles.summaryDetailsValue} key={idx}>
           <span>
             {label}
             {tooltipText && (

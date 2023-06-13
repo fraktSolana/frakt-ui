@@ -4,19 +4,27 @@ import { LoanDuration } from '@frakt/api/nft';
 import {
   createPercentValueJSX,
   createSolValueJSX,
-  createValueJSX,
   HeaderCell,
 } from '@frakt/components/TableComponents';
 
-import { NftInfoCell } from './BorrowManualTableCells';
+import {
+  InterestValueCell,
+  NftInfoCell,
+  RepayValueCell,
+  SelectButtonCell,
+} from './BorrowManualTableCells';
 import { BorrowNftData } from './BorrowManualTable';
 import { calcPriceBasedUpfrontFee } from '@frakt/pages/BorrowPages/helpers';
 
 type GetTableColumns = (props: {
   duration: LoanDuration;
+  isCardView: boolean;
 }) => ColumnsType<BorrowNftData>;
 
-export const getTableColumns: GetTableColumns = ({ duration }) => {
+export const getTableColumns: GetTableColumns = ({
+  duration,
+  isCardView = false,
+}) => {
   const NAME_COLUMN: ColumnType<BorrowNftData> = {
     key: 'name',
     dataIndex: 'name',
@@ -33,12 +41,26 @@ export const getTableColumns: GetTableColumns = ({ duration }) => {
       <NftInfoCell
         nftName={nft.name}
         nftImage={nft.imageUrl}
-        nftFloor={nft.valuation}
         selected={selected}
       />
     ),
     // sorter: ({ nft: nftA }, { nft: nftB }) =>
     //   nftB?.name?.localeCompare(nftA?.name),
+    showSorterTooltip: false,
+  };
+
+  const FLOOR_PRICE_COLUMN: ColumnType<BorrowNftData> = {
+    key: 'valuation',
+    dataIndex: 'valuation',
+    title: (column) => (
+      <HeaderCell
+        column={column}
+        label="Floor price"
+        value="valuation"
+        hiddenSort
+      />
+    ),
+    render: (_, { nft }) => createSolValueJSX(nft.valuation),
     showSorterTooltip: false,
   };
 
@@ -48,7 +70,7 @@ export const getTableColumns: GetTableColumns = ({ duration }) => {
     title: (column) => (
       <HeaderCell
         column={column}
-        label="Loan value"
+        label="Borrow"
         value="maxLoanValue"
         hiddenSort
       />
@@ -65,7 +87,7 @@ export const getTableColumns: GetTableColumns = ({ duration }) => {
     title: (column) => (
       <HeaderCell
         column={column}
-        label="Loan value"
+        label="Borrow"
         value="maxLoanValue"
         hiddenSort
       />
@@ -87,43 +109,25 @@ export const getTableColumns: GetTableColumns = ({ duration }) => {
     key: 'interest',
     dataIndex: 'fee',
     title: (column) => (
-      <HeaderCell
-        column={column}
-        label="Interest"
-        value="interest"
-        hiddenSort
-      />
+      <HeaderCell column={column} label="Fee" value="interest" hiddenSort />
     ),
-    render: (_, { bondFee }) => createSolValueJSX(bondFee),
+    render: (_, { bondFee, bondLoanValue }) => (
+      <InterestValueCell bondFee={bondFee} bondLoanValue={bondLoanValue} />
+    ),
   };
 
   const REPAY_VALUE_COLUMN: ColumnType<BorrowNftData> = {
     key: 'repayValue',
     dataIndex: 'repayValue',
     title: (column) => (
-      <HeaderCell
-        column={column}
-        label="Repay value"
-        value="repayValue"
-        hiddenSort
+      <HeaderCell column={column} label="Repay" value="repayValue" hiddenSort />
+    ),
+    render: (_, { bondLoanValue, bondFee }) => (
+      <RepayValueCell
+        repayValue={bondLoanValue + bondFee}
+        duration={parseInt(duration)}
       />
     ),
-    render: (_, { bondLoanValue, bondFee }) =>
-      createSolValueJSX(bondLoanValue + bondFee),
-  };
-
-  const DURATION_COLUMN: ColumnType<BorrowNftData> = {
-    key: 'duration',
-    dataIndex: 'duration',
-    title: (column) => (
-      <HeaderCell
-        column={column}
-        label="Duration"
-        value="duration"
-        hiddenSort
-      />
-    ),
-    render: () => createValueJSX(`${duration} days`),
   };
 
   const YEARLY_INTEREST_COLUMN: ColumnType<BorrowNftData> = {
@@ -132,7 +136,7 @@ export const getTableColumns: GetTableColumns = ({ duration }) => {
     title: (column) => (
       <HeaderCell
         column={column}
-        label="Yearly interest"
+        label="Yearly fee"
         value="interest"
         hiddenSort
       />
@@ -189,16 +193,23 @@ export const getTableColumns: GetTableColumns = ({ duration }) => {
     },
   };
 
+  const SELECT_COLUMN: ColumnType<BorrowNftData> = {
+    render: (_, { selected }) => (
+      <SelectButtonCell selected={selected} isCardView={isCardView} />
+    ),
+  };
+
   const isPerpetual = duration === '0';
   return [
     NAME_COLUMN,
+    FLOOR_PRICE_COLUMN,
     !isPerpetual ? LOAN_VALUE_BONDS_COLUMN : null,
     isPerpetual ? LOAN_VALUE_PERPETUAL_COLUMN : null,
     !isPerpetual ? INTEREST_COLUMN : null,
     !isPerpetual ? REPAY_VALUE_COLUMN : null,
-    !isPerpetual ? DURATION_COLUMN : null,
     isPerpetual ? YEARLY_INTEREST_COLUMN : null,
     isPerpetual ? UPFRONT_FEE_COLUMN : null,
     isPerpetual ? LIQUIDATION_PRICE_COLUMN : null,
+    SELECT_COLUMN,
   ].filter(Boolean);
 };

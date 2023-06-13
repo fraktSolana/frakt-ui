@@ -1,15 +1,10 @@
 import { reduce, Dictionary } from 'lodash';
-import classNames from 'classnames';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
 
 import { LoanType } from '@frakt/api/loans';
 import { BondCartOrder, BorrowNft, OrderParamsLite } from '@frakt/api/nft';
-import { Solana } from '@frakt/icons';
-import {
-  calcLtv,
-  calcPriceBasedUpfrontFee,
-} from '@frakt/pages/BorrowPages/helpers';
+import { calcPriceBasedUpfrontFee } from '@frakt/pages/BorrowPages/helpers';
 import { calcPriceBasedMaxLoanValue } from '@frakt/pages/BorrowPages/cartState';
 import { makeProposeTransaction } from '@frakt/utils/loans';
 import { notify } from '@frakt/utils';
@@ -17,8 +12,6 @@ import { captureSentryError } from '@frakt/utils/sentry';
 import { borrow as borrowBonds } from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { showSolscanLinkNotification } from '@frakt/utils/transactions';
-
-import styles from './Sidebar.module.scss';
 
 interface LoanDetailsField {
   label: string;
@@ -47,70 +40,26 @@ export const generateLoanDetails: GenerateLoanDetails = ({
 }) => {
   const fields: Array<LoanDetailsField> = [];
 
-  const { valuation } = nft;
-
   const loanValue =
     loanType === LoanType.BOND
       ? orderParamsLite.loanValue
       : calcPriceBasedMaxLoanValue({ nft }); //TODO
 
   fields.push({
-    label: 'Loan value',
-    value: (
-      <>
-        {(loanValue / 1e9).toFixed(3)} <Solana />
-      </>
-    ),
+    label: 'Borrow',
+    value: <>{(loanValue / 1e9).toFixed(3)} ◎</>,
   });
-
-  const ltv = calcLtv({
-    loanValue,
-    nft,
-  });
-
-  fields.push({
-    label: 'LTV',
-    value: <>{ltv.toFixed(0)}%</>,
-  });
-
-  //? PriceBased yearly interest
-  if (loanType === LoanType.PRICE_BASED) {
-    const { borrowAPRPercent } = nft.classicParams.priceBased;
-
-    fields.push({
-      label: 'Yearly interest',
-      value: <>{borrowAPRPercent.toFixed(2)}%</>,
-    });
-  }
 
   //? PriceBased liquidation price
   if (loanType === LoanType.PRICE_BASED) {
-    const { collaterizationRate, ltvPercent } = nft.classicParams.priceBased;
+    const { collaterizationRate } = nft.classicParams.priceBased;
 
     const liquidationPrice =
       loanValue + loanValue * (collaterizationRate / 100);
 
-    const liquidationDrop = ((valuation - liquidationPrice) / valuation) * 100;
-
-    const MIN_LTV = 10;
-
-    const riskPercent = (ltv - MIN_LTV) / (ltvPercent - MIN_LTV);
-
     fields.push({
       label: 'Liquidation price',
-      tooltipText:
-        'How much the NFT price needs to drop for your loan to get liquidated',
-      value: (
-        <span
-          className={classNames(styles.redText, {
-            [styles.yellowText]: riskPercent < 0.875,
-            [styles.greenText]: riskPercent <= 0.5,
-          })}
-        >
-          {(liquidationPrice / 1e9)?.toFixed(3)} SOL (-
-          {liquidationDrop?.toFixed()}%)
-        </span>
-      ),
+      value: <>{(liquidationPrice / 1e9)?.toFixed(3)} ◎</>,
     });
   }
 
@@ -118,11 +67,13 @@ export const generateLoanDetails: GenerateLoanDetails = ({
   if (loanType === LoanType.BOND) {
     const fee = orderParamsLite.loanFee;
 
+    const feePercent = (fee / loanValue) * 100;
+
     fields.push({
-      label: 'Interest',
+      label: 'Fee',
       value: (
         <>
-          {(fee / 1e9).toFixed(3)} <Solana />
+          {(fee / 1e9).toFixed(3)} ◎ ({feePercent.toFixed(1)}%)
         </>
       ),
     });
@@ -162,12 +113,8 @@ export const generateSummary: GenerateSummary = ({
   });
 
   fields.push({
-    label: 'Borrowing',
-    value: (
-      <>
-        {(borrowValue / 1e9).toFixed(3)} <Solana />
-      </>
-    ),
+    label: 'Borrow',
+    value: <>{(borrowValue / 1e9).toFixed(3)} ◎</>,
   });
 
   if (loanType === LoanType.BOND) {
@@ -180,19 +127,17 @@ export const generateSummary: GenerateSummary = ({
     const repayValue = borrowValue + fees;
 
     fields.push({
-      label: 'To repay',
-      value: (
-        <>
-          {(repayValue / 1e9).toFixed(3)} <Solana />
-        </>
-      ),
+      label: 'Repay',
+      value: <>{(repayValue / 1e9).toFixed(3)} ◎</>,
     });
 
+    const feesPercent = (fees / borrowValue) * 100;
+
     fields.push({
-      label: 'Total interest',
+      label: 'Total fee',
       value: (
         <>
-          {(fees / 1e9).toFixed(3)} <Solana />
+          {(fees / 1e9).toFixed(3)} ◎ ({feesPercent.toFixed(1)}%)
         </>
       ),
     });
@@ -211,11 +156,7 @@ export const generateSummary: GenerateSummary = ({
 
     fields.push({
       label: 'Upfront fee',
-      value: (
-        <>
-          {(upfrontFee / 1e9).toFixed(3)} <Solana />
-        </>
-      ),
+      value: <>{(upfrontFee / 1e9).toFixed(3)} ◎</>,
     });
 
     const feesPerDay = reduce(
@@ -232,18 +173,14 @@ export const generateSummary: GenerateSummary = ({
     );
 
     [
-      ['Interest on 1D', 1],
-      ['Interest on 7D', 7],
-      ['Interest on 30D', 30],
-      ['Interest on 1Y', 365],
+      ['Fee on 1D', 1],
+      ['Fee on 7D', 7],
+      ['Fee on 30D', 30],
+      ['Fee on 1Y', 365],
     ].forEach(([label, daysAmount]: [string, number]) =>
       fields.push({
         label,
-        value: (
-          <>
-            {((feesPerDay * daysAmount) / 1e9).toFixed(3)} <Solana />
-          </>
-        ),
+        value: <>{((feesPerDay * daysAmount) / 1e9).toFixed(3)} ◎</>,
       }),
     );
   }

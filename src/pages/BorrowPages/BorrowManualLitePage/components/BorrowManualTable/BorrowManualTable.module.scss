@@ -59,36 +59,6 @@
     width: 100%;
   }
 }
-.nftFloor {
-  display: flex;
-  align-items: center;
-  font: var(--font-text-6);
-  width: 176px;
-  column-gap: 3px;
-  @media (max-width: 768px) {
-    width: 100%;
-  }
-
-  span:first-child {
-    color: var(--gray-color-2);
-    font: var(--font-text-7);
-    font-size: 10px;
-    text-transform: uppercase;
-  }
-  span:last-child {
-    display: flex;
-    align-items: center;
-    column-gap: 2px;
-    color: var(--black-color);
-    font: var(--font-text-4);
-    font-size: 12px;
-  }
-
-  svg {
-    width: 10px;
-    height: 10px;
-  }
-}
 
 .nftImage,
 .selectedCollectionOverlay {
@@ -123,4 +93,48 @@
 .activeRowClassName,
 .activeCardClassName {
   background: var(--gray-table-hover);
+}
+
+.selectBtnWrapper {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.selectBtn {
+  display: flex;
+  width: 80px;
+  height: 26px;
+  font: 400 14px var(--font-family-chakra);
+}
+.selectBtnFullWidth {
+  width: 100%;
+}
+
+.repayValueCell {
+  color: var(--primary-text);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font: var(--font-text-4);
+  font-size: 14px;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.interestValueCell {
+  color: var(--primary-text);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  font: var(--font-text-4);
+  font-size: 14px;
+  gap: 4px;
+  white-space: nowrap;
+  line-height: 0.8;
+
+  span:last-child {
+    font-size: 12px;
+  }
 }

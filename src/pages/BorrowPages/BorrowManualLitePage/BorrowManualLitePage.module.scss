@@ -11,73 +11,9 @@
   }
 }
 
-.header,
 .content {
   padding: 24px;
   background-color: var(--primary-background);
-}
-
-.header {
-  margin-bottom: 16px;
-  display: flex;
-  justify-content: space-between;
-
-  @media (max-width: 960px) {
-    flex-direction: column;
-  }
-
-  h1 {
-    color: var(--primary-text);
-    font: var(--font-text-2);
-    font-size: 20px;
-    line-height: 24px;
-  }
-}
-
-.headingWrapper {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-
-  @media (max-width: 960px) {
-    margin-bottom: 18px;
-  }
-}
-
-.headerStatsWrapper {
-  display: flex;
-  column-gap: 16px;
-
-  @media (max-width: 960px) {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  }
-}
-
-.headerStats {
-  display: flex;
-  align-items: center;
-
-  column-gap: 4px;
-
-  span:first-child {
-    color: var(--gray-color-2);
-    font: var(--font-text-7);
-    text-transform: uppercase;
-  }
-  span:last-child {
-    display: flex;
-    align-items: center;
-    column-gap: 4px;
-    color: var(--black-color);
-    font: var(--font-text-4);
-    font-size: 14px;
-  }
-
-  @media (max-width: 960px) {
-    justify-content: flex-start;
-    flex-wrap: wrap;
-  }
 }
 
 .loader {
@@ -105,6 +41,7 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 24px;
+  max-width: 320px;
 }
 
 .subtitle {
@@ -115,15 +52,16 @@
 }
 
 .tabs {
-  display: flex;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   column-gap: 8px;
+  font: 400 14px var(--font-family-chakra);
 }
 
 .tab {
   padding: 3px 20px;
   outline: unset;
-  border: 1px solid var(--gray-color-2);
+  border: 1px solid var(--primary-border);
   height: 24px;
   cursor: pointer;
   font: var(--font-btn-middle);
@@ -135,42 +73,4 @@
 .tabActive {
   color: #000;
   background: var(--light-green-color);
-}
-
-.toggleInner {
-  width: 56px;
-  height: 16px;
-  border-color: var(--secondary-border);
-}
-
-.rootToggle {
-  input:checked + .toggleInner:before,
-  input + .toggleInner:before {
-    border-color: var(--secondary-border);
-  }
-  input:checked + .toggleInner:before {
-    transform: translateX(32px);
-  }
-
-  input:checked + .toggleInner::after,
-  input + .toggleInner::after {
-    display: flex;
-    font: var(--font-text-9);
-    font-weight: 400;
-
-    position: absolute;
-    top: 50%;
-    transform: translate(0, -50%);
-  }
-
-  input:checked + .toggleInner::after {
-    content: 'Pro';
-    color: var(--button-text);
-    left: 8px;
-  }
-
-  input + .toggleInner::after {
-    content: 'Lite';
-    right: 8px;
-  }
 }
