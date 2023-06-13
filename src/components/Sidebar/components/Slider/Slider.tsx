@@ -4,7 +4,7 @@ import cx from 'classnames';
 
 import SliderButtons from '../SliderButtons';
 import styles from './Slider.module.scss';
-import { Trash } from '@frakt/icons';
+import { Minus } from '@frakt/icons';
 
 interface SliderProps {
   nfts: any;
@@ -23,7 +23,7 @@ const DeleteButton = ({
 }) => {
   return (
     <button className={cx(styles.removeBtn, className)} onClick={onClick}>
-      <Trash />
+      <Minus />
     </button>
   );
 };

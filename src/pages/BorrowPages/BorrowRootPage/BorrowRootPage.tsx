@@ -7,10 +7,11 @@ import Button from '@frakt/components/Button';
 import { Slider } from '@frakt/components/Slider';
 import { SOL_TOKEN } from '@frakt//utils';
 import { Loader } from '@frakt/components/Loader';
+import { BorrowMode } from '@frakt/pages/BorrowPages/types';
 
 import styles from './BorrowRootPage.module.scss';
 import { useBorrowRootPage } from './hooks';
-import { Header } from '../BorrowManualLitePage';
+import { RootHeader } from '../components/RootHeader';
 
 export const BorrowRootPage: FC = () => {
   const {
@@ -29,10 +30,10 @@ export const BorrowRootPage: FC = () => {
 
   return (
     <AppLayout>
-      <Header
+      <RootHeader
         availableToBorrow={maxBorrowValue}
-        onChange={goToLiteBorrowing}
-        checked={true}
+        onModeSwitch={goToLiteBorrowing}
+        mode={BorrowMode.PRO}
       />
 
       {!isWalletConnected && (

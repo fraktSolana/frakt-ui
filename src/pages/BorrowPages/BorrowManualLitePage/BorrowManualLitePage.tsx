@@ -2,16 +2,16 @@ import { FC } from 'react';
 import classNames from 'classnames';
 
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
-import Toggle from '@frakt/components/Toggle';
 import { LoanDuration } from '@frakt/api/nft';
 import { Tabs } from '@frakt/components/Tabs';
 import { Loader } from '@frakt/components/Loader';
 import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
-import { Solana } from '@frakt/icons';
+import { BorrowMode } from '@frakt/pages/BorrowPages/types';
 
 import { Sidebar } from './components/Sidebar';
 import { BorrowManualTable } from './components/BorrowManualTable';
 import { useBorrowManualLitePage } from './hooks';
+import { RootHeader } from '../components/RootHeader';
 import styles from './BorrowManualLitePage.module.scss';
 
 export const BorrowManualLitePage: FC = () => {
@@ -50,11 +50,11 @@ export const BorrowManualLitePage: FC = () => {
           [styles.containerSidebarVisible]: !!currentNft,
         })}
       >
-        <Header
+        <RootHeader
           collateralsAmount={maxNfts}
           availableToBorrow={maxBorrowValue}
-          onChange={goToProBorrowing}
-          checked={false}
+          onModeSwitch={goToProBorrowing}
+          mode={BorrowMode.LITE}
         />
 
         <div className={styles.content}>
@@ -62,24 +62,26 @@ export const BorrowManualLitePage: FC = () => {
             <ConnectWalletSection text="Connect your wallet to see your nfts" />
           )}
 
-          {wallet.connected && !maxBorrowValueLoading && (
+          {wallet.connected && (
             <>
-              <div className={styles.tabsWrapper}>
-                <h3 className={styles.subtitle}>Duration</h3>
-                <Tabs
-                  tabs={durationTabs}
-                  value={duration}
-                  setValue={onDurationTabClick}
-                  className={styles.tabs}
-                  additionalClassNames={{
-                    tabClassName: styles.tab,
-                    tabActiveClassName: styles.tabActive,
-                  }}
-                  type="unset"
-                />
-              </div>
+              {!maxBorrowValueLoading && (
+                <div className={styles.tabsWrapper}>
+                  <h3 className={styles.subtitle}>Duration</h3>
+                  <Tabs
+                    tabs={durationTabs}
+                    value={duration}
+                    setValue={onDurationTabClick}
+                    className={styles.tabs}
+                    additionalClassNames={{
+                      tabClassName: styles.tab,
+                      tabActiveClassName: styles.tabActive,
+                    }}
+                    type="unset"
+                  />
+                </div>
+              )}
 
-              {!!dataLoading && <Loader />}
+              {(dataLoading || maxBorrowValueLoading) && <Loader />}
 
               {!dataLoading && !!nfts && (
                 <div className={styles.tableWrapper}>
@@ -118,52 +120,5 @@ export const BorrowManualLitePage: FC = () => {
         )}
       </div>
     </AppLayout>
-  );
-};
-
-interface HeaderProps {
-  collateralsAmount?: number;
-  availableToBorrow?: number;
-  checked?: boolean;
-  onChange: () => void;
-}
-
-export const Header: FC<HeaderProps> = ({
-  collateralsAmount,
-  availableToBorrow,
-  checked,
-  onChange,
-}) => {
-  return (
-    <div className={styles.header}>
-      <div className={styles.headingWrapper}>
-        <h1>Borrow SOL</h1>
-        <Toggle
-          className={styles.rootToggle}
-          innerClassName={styles.toggleInner}
-          defaultChecked={checked}
-          onChange={onChange}
-        />
-      </div>
-
-      {(!!collateralsAmount || !!availableToBorrow) && (
-        <div className={styles.headerStatsWrapper}>
-          {!!collateralsAmount && (
-            <div className={styles.headerStats}>
-              <span>Amount of collaterals:</span>
-              <span>{collateralsAmount}</span>
-            </div>
-          )}
-          {!!availableToBorrow && (
-            <div className={styles.headerStats}>
-              <span>Available to borrow:</span>
-              <span>
-                {availableToBorrow.toFixed(2)} <Solana />
-              </span>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
   );
 };

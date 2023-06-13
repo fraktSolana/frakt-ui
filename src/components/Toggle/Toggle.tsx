@@ -1,8 +1,7 @@
 import { FC } from 'react';
-import cx from 'classnames';
+import classNames from 'classnames';
 
 import styles from './Toggle.module.scss';
-import classNames from 'classnames';
 
 interface ToggleProps {
   className?: string;
@@ -27,7 +26,7 @@ const Toggle: FC<ToggleProps> = ({
 
   return (
     <label
-      className={cx(
+      className={classNames(
         styles.root,
         { [styles.rootDisabled]: disabled },
         className,
