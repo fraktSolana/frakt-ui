@@ -30,14 +30,6 @@
   height: 26px;
 }
 
-.questionIcon {
-  svg {
-    fill: var(--blue-color);
-    width: 18px;
-    height: 18px;
-  }
-}
-
 .capitalizeValue {
   text-transform: capitalize;
 }
@@ -116,4 +108,8 @@
 .value {
   font: var(--font-text-8);
   font-size: 14px;
+}
+
+.activeRow > td {
+  background: var(--light-green-color-4) !important;
 }

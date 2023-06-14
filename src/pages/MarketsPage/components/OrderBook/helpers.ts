@@ -1,4 +1,3 @@
-import { web3 } from '@frakt-protocol/frakt-sdk';
 import { getTopOrderSize } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 import { Pair } from '@frakt/api/bonds';
 
@@ -11,14 +10,15 @@ import { MarketOrder } from './types';
 //? currentSpotPrice -- price for smallest part of token (BOND_SOL_DECIMAIL_DELTA)
 //? validation.loanToValueFilter -- LTV
 export const parseMarketOrder = (pair: Pair): MarketOrder => {
+  const interest = calcInterest({ spotPrice: pair?.currentSpotPrice });
+
   return {
     ltv: (pair?.validation?.loanToValueFilter || 0) / 100,
     size:
       (pair ? getTopOrderSize(pair) * pair?.currentSpotPrice : 0) / 1e9 || 0,
-    interest: calcInterest({
-      spotPrice: pair?.currentSpotPrice,
-    }),
+    interest,
     duration: pair?.validation?.durationFilter / 24 / 60 / 60,
+
     rawData: {
       publicKey: pair?.publicKey || '',
       assetReceiver: pair?.assetReceiver || '',
@@ -26,6 +26,8 @@ export const parseMarketOrder = (pair: Pair): MarketOrder => {
       authorityAdapter: '',
       bondFeature: pair?.validation?.bondFeatures,
       maxReturnAmountFilter: pair?.validation?.maxReturnAmountFilter,
+      fundsSolOrTokenBalance: pair?.fundsSolOrTokenBalance,
+      loanToValueFilter: pair?.validation?.loanToValueFilter,
     },
   };
 };

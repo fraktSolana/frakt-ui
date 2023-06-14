@@ -1,7 +1,9 @@
 import { FC } from 'react';
-import cx from 'classnames';
+import classNames from 'classnames';
+import { isEqual } from 'lodash';
 
-import { ArrowUp } from '../../icons';
+import { ArrowUp } from '@frakt/icons';
+
 import Button from '../Button';
 import styles from './SortOrderButton.module.scss';
 
@@ -23,28 +25,37 @@ const SortOrderButton: FC<SortOrderButtonProps> = ({
   label,
   sort,
 }) => {
-  const ASC_SORT = value + SORT_ORDER.ASC;
-  const DESC_SORT = value + SORT_ORDER.DESC;
+  const handleClick = (sortOrder: SORT_ORDER) => {
+    const sortValue = value + sortOrder;
+    setValue('sort', { label, value: sortValue });
+  };
 
-  const isActiveASC = sort.value === ASC_SORT;
-  const isActiveDESC = sort.value === DESC_SORT;
+  const isSortActive = (sortOrder: SORT_ORDER) =>
+    isEqual(sort.value, value + sortOrder);
 
   return (
     <div className={styles.sortingBtn}>
-      <Button
-        type="tertiary"
-        className={cx(styles.filterBtn, isActiveDESC && styles.filterBtnActive)}
-        onClick={() => setValue('sort', { label, value: DESC_SORT })}
-      >
-        {label} <ArrowUp className={cx(styles.icon, styles.arrowDown)} />
-      </Button>
-      <Button
-        type="tertiary"
-        className={cx(styles.filterBtn, isActiveASC && styles.filterBtnActive)}
-        onClick={() => setValue('sort', { label, value: ASC_SORT })}
-      >
-        {label} <ArrowUp className={styles.icon} />
-      </Button>
+      {[SORT_ORDER.DESC, SORT_ORDER.ASC].map((sortOrder) => {
+        const isActive = isSortActive(sortOrder);
+
+        return (
+          <Button
+            key={sortOrder}
+            type="tertiary"
+            className={classNames(styles.filterBtn, {
+              [styles.filterBtnActive]: isActive,
+            })}
+            onClick={() => handleClick(sortOrder)}
+          >
+            {label}
+            <ArrowUp
+              className={classNames(styles.icon, {
+                [styles.arrowDown]: sortOrder === SORT_ORDER.DESC,
+              })}
+            />
+          </Button>
+        );
+      })}
     </div>
   );
 };

@@ -1,0 +1,116 @@
+.card {
+  border: 1px solid var(--primary-border);
+  background-color: var(--primary-background);
+  cursor: pointer;
+  width: 100%;
+}
+.card:hover,
+.card:hover .chevronButton {
+  border-color: var(--secondary-border);
+}
+.card.active {
+  &:hover {
+    border: 1px solid var(--primary-border);
+  }
+}
+
+.card:hover .chevronButton {
+  background-color: var(--light-green-hover);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.cardBody {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 16px;
+  width: 100%;
+
+  @media (max-width: 1240px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
+.fullWidthContainer {
+  width: 100%;
+}
+
+.stats {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+
+  & > div {
+    min-width: 128px;
+  }
+
+  @media (max-width: 1340px) {
+    min-width: 100px;
+  }
+
+  @media (max-width: 1240px) {
+    min-width: 148px;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  @media (max-width: 650px) {
+    & > div {
+      min-width: 120px;
+    }
+  }
+}
+
+.durationButtons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.durationButtons button {
+  border: 1px solid var(--primary-text);
+  height: 20px;
+  width: 40px;
+
+  &:disabled {
+    border-color: var(--secondary-text);
+    color: var(--secondary-text);
+  }
+}
+
+.chevronButton {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translate(0, -50%);
+
+  height: 32px;
+  width: 32px;
+
+  @media (max-width: 1240px) {
+    top: 52px;
+  }
+}
+.chevronButton {
+  background-color: var(--light-green-color);
+
+  svg path {
+    fill: var(--button-text);
+  }
+}
+.chevronButton.active {
+  background-color: var(--light-green-hover);
+  transform: rotate(180deg);
+}
+
+.label {
+  line-height: 18px;
+}

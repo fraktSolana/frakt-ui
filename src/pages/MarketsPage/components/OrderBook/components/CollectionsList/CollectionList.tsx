@@ -24,7 +24,8 @@ const CollectionList: FC<CollectionListProps> = ({
 }) => {
   const { publicKey } = useWallet();
   const { marketsPreview, isLoading } = useMarketsPreview(
-    showOwnOrders && publicKey,
+    publicKey,
+    showOwnOrders,
   );
 
   if (isLoading) return <Loader />;

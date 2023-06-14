@@ -1,9 +1,14 @@
-import { FC, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { FC, useEffect } from 'react';
+import classNames from 'classnames';
 
-import { commonActions } from '../../state/common/actions';
+import { commonActions } from '@frakt/state/common/actions';
+import { isPathActive } from '@frakt/utils';
+import { PATHS } from '@frakt/constants';
+
 import { HeaderStateProvider, useHeaderState } from './headerState';
 import NotificationBar from '../NotificationBar';
+
 import styles from './styles.module.scss';
 
 interface LayoutProps {
@@ -21,8 +26,16 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
     dispatch(commonActions.setWalletModal({ isVisible: false }));
   }, [dispatch]);
 
+  const disableScrollToTop = isPathActive(location.pathname, PATHS.BONDS_LITE);
+
   return (
-    <div id="app-content" onScroll={onContentScroll} className={styles.content}>
+    <div
+      id="app-content"
+      onScroll={onContentScroll}
+      className={classNames(styles.content, {
+        [styles.disableScrollToTop]: disableScrollToTop,
+      })}
+    >
       {children}
       <NotificationBar />
     </div>

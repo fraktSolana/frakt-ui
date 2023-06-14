@@ -39,13 +39,17 @@ export const fetchCertainMarket: FetchCertainMarket = async ({
 
 type FetchMarketsPreview = (props: {
   walletPubkey?: web3.PublicKey;
+  showOnlyUser?: boolean;
 }) => Promise<MarketPreview[]>;
 export const fetchMarketsPreview: FetchMarketsPreview = async ({
   walletPubkey,
+  showOnlyUser,
 }) => {
-  const walletQuery = walletPubkey ? `/${walletPubkey?.toBase58()}` : '';
+  const walletQuery = walletPubkey
+    ? `?wallet=${walletPubkey?.toBase58()}&onlyUser=${showOnlyUser}`
+    : '';
   const { data } = await axios.get<MarketPreview[]>(
-    `https://${BACKEND_DOMAIN}/bonds/preview${walletQuery}?isPrivate=${IS_PRIVATE_MARKETS}`,
+    `https://${BACKEND_DOMAIN}/bonds/preview${walletQuery}`,
   );
 
   return data;

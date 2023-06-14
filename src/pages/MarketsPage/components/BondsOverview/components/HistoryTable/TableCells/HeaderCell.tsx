@@ -43,11 +43,7 @@ export const HeaderCell: FC<HeaderCellProps> = ({
   return (
     <div className={classNames(styles.row, fixedLeft && styles.fixedLeftRow)}>
       <span className={styles.title}>{label}</span>
-      {!!tooltipText && (
-        <Tooltip placement="top" overlay={tooltipText}>
-          <QuestionCircleOutlined className={styles.questionIcon} />
-        </Tooltip>
-      )}
+      {!!tooltipText && <Tooltip placement="top" overlay={tooltipText} />}
       {!removeSort && (
         <span className={styles.sortIcon}>
           {sortedColumn?.order === 'ascend' && <ArrowUpTableSort />}

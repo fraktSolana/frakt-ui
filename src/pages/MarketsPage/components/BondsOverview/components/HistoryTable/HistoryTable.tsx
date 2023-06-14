@@ -1,11 +1,15 @@
 import { FC } from 'react';
 
 import Table, { useTable, PartialBreakpoints } from '@frakt/components/Table';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { Bond } from '@frakt/api/bonds';
 
 import { COLUMNS } from './columns';
 
+import styles from './TableCells/TableCells.module.scss';
+
 export interface BondsTableProps {
-  data: ReadonlyArray<any>;
+  data: ReadonlyArray<Bond>;
   loading?: boolean;
   className?: string;
   breakpoints?: PartialBreakpoints;
@@ -17,6 +21,7 @@ export const HistoryTable: FC<BondsTableProps> = ({
   className,
   breakpoints,
 }) => {
+  const { publicKey } = useWallet();
   const { table, search } = useTable({
     data,
     columns: COLUMNS,
@@ -29,6 +34,11 @@ export const HistoryTable: FC<BondsTableProps> = ({
       search={search}
       className={className}
       breakpoints={breakpoints}
+      activeRowParams={{
+        field: 'ownerPubkey',
+        value: publicKey?.toBase58(),
+        className: styles.activeRow,
+      }}
     />
   );
 };

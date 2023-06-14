@@ -6,6 +6,8 @@ export interface MarketOrder {
   interest: number;
   synthetic?: boolean;
   duration: number;
+  loanValue?: number;
+  loanAmount?: number;
   rawData: {
     publicKey: string;
     assetReceiver: string;
@@ -13,6 +15,8 @@ export interface MarketOrder {
     edgeSettlement: number;
     bondFeature?: BondFeatures;
     maxReturnAmountFilter?: number;
+    fundsSolOrTokenBalance?: number;
+    loanToValueFilter?: number;
   };
 }
 
@@ -21,6 +25,8 @@ export interface SyntheticParams {
   interest: number;
   offerSize: number;
   durationDays: number;
+  loanValue?: number;
+  loanAmount?: number;
 }
 
 export enum SortOrder {
