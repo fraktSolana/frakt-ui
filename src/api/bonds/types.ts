@@ -146,6 +146,20 @@ export interface BondStats {
   pnlProfit?: number;
 }
 
+export interface BondHistoryStats {
+  interest: number; // used
+  apy: number; // used
+
+  size: number; //used
+  ltv: number; // used
+  expiration: number; // used
+  state: string;
+  bondPubkey: string;
+  when: number; // used
+  received: number; // used
+  status: FraktBondState; // used
+}
+
 export interface Bond {
   fbond: FBond;
   collateralBox: CollateralBox;
@@ -157,10 +171,16 @@ export interface Bond {
 }
 
 export interface BondHistory {
-  ownerPubkey?: string;
-  marketPubkey: string;
-  stats: BondStats;
-  eventSignature: string;
+  ownerPubkey: string;
+  lightMeta: LightMeta;
+  stats: BondHistoryStats;
+  eventSignature: string; // used
+}
+
+export interface LightMeta {
+  mint: string;
+  name: string;
+  imageUrl: string;
 }
 
 export interface FetchBondsRequestParams {

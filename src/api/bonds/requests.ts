@@ -144,7 +144,7 @@ export const fetchBondsHistory: FetchBondsHistory = async ({
     : '';
   const eventTypeQuery = eventType ? `eventType=${eventType}` : '';
 
-  const { data } = await axios.get<Bond[]>(
+  const { data } = await axios.get<BondHistory[]>(
     `https://${BACKEND_DOMAIN}/bonds/history?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}${eventTypeQuery}&isPrivate=${IS_PRIVATE_MARKETS}&version=2`,
   );
 

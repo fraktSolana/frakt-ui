@@ -1,7 +1,7 @@
 import moment from 'moment';
 import classNames from 'classnames';
 
-import { BondStats } from '@frakt/api/bonds';
+import { BondHistoryStats } from '@frakt/api/bonds';
 import { Solana } from '@frakt/icons';
 
 import styles from './TableCells.module.scss';
@@ -34,7 +34,7 @@ export const createliquidatingAtJSX = (when = 0, signature: string) => (
   </a>
 );
 
-export const ReceiveCell = ({ stats }: { stats: BondStats }) => {
+export const ReceiveCell = ({ stats }: { stats: BondHistoryStats }) => {
   const { received, state } = stats;
 
   if (typeof received === 'string')

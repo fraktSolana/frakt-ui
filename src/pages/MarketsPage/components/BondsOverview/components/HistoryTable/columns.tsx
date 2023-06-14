@@ -1,7 +1,7 @@
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SortOrder } from 'antd/lib/table/interface';
 
-import { Bond } from '@frakt/api/bonds';
+import { BondHistory } from '@frakt/api/bonds';
 
 import { InterestCell, SizeCell } from '../BondsTable/TableCells';
 import {
@@ -13,11 +13,11 @@ import {
 } from './TableCells';
 
 export type SortColumns = {
-  column: ColumnType<Bond>;
+  column: ColumnType<BondHistory>;
   order: SortOrder;
 }[];
 
-export const COLUMNS: ColumnsType<Bond> = [
+export const COLUMNS: ColumnsType<BondHistory> = [
   {
     key: 'nftName',
     dataIndex: 'nftName',
@@ -29,11 +29,11 @@ export const COLUMNS: ColumnsType<Bond> = [
         fixedLeft
       />
     ),
-    sorter: ({
-      collateralBox: collateralBoxA,
-      collateralBox: collateralBoxB,
-    }) => collateralBoxB.nft.name?.localeCompare(collateralBoxA.nft.name),
-    render: (_, bond: Bond) => <CollateralCell bond={bond} />,
+    sorter: ({ lightMeta: lightMetaA, lightMeta: lightMetaB }) =>
+      lightMetaB.name?.localeCompare(lightMetaA.name),
+    render: (_, bond: BondHistory) => (
+      <CollateralCell lightMeta={bond.lightMeta} />
+    ),
     showSorterTooltip: false,
   },
   {
