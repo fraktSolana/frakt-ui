@@ -49,7 +49,7 @@ export const COLUMNS: ColumnsType<BondHistory> = [
     ),
     sorter: ({ stats: statsA, stats: statsB }) => statsA.size - statsB.size,
     render: (_, { stats }) => (
-      <SizeCell ltv={stats?.fullLoanValue} size={stats?.size} />
+      <SizeCell ltv={stats.loanToReturnValue} size={stats?.size} />
     ),
     showSorterTooltip: false,
   },

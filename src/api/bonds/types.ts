@@ -153,6 +153,11 @@ export interface BondHistoryStats {
   size: number; //used
   fullLoanValue: number; // used
   fullAmountToRepay: number; // used
+
+  loanToReturnValue: number; // used
+
+  floorSnapshot: number; // used
+
   expiration: number; // used
   state: string;
   bondPubkey: string;

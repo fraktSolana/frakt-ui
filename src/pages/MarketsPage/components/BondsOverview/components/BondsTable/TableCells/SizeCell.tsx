@@ -29,7 +29,7 @@ export const SizeCell: FC<SizeCellProps> = ({ ltv, size }) => {
           styles.highestLtvColor,
         )}
       >
-        {ltv} <Solana /> Loan Value
+        {ltv}% LTV
       </span>
     </div>
   );
