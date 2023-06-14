@@ -151,7 +151,8 @@ export interface BondHistoryStats {
   apy: number; // used
 
   size: number; //used
-  ltv: number; // used
+  fullLoanValue: number; // used
+  fullAmountToRepay: number; // used
   expiration: number; // used
   state: string;
   bondPubkey: string;
@@ -174,7 +175,7 @@ export interface BondHistory {
   ownerPubkey: string;
   lightMeta: LightMeta;
   stats: BondHistoryStats;
-  eventSignature: string; // used
+  eventSignature: string;
 }
 
 export interface LightMeta {
