@@ -1,0 +1,37 @@
+.cardHeader {
+  background-color: var(--light-green-color-4);
+  border-bottom: 1px solid var(--primary-border);
+
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  gap: 24px;
+
+  @media (max-width: 1240px) {
+    padding: 8px 16px !important;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+    gap: 0;
+  }
+}
+
+.cardHeaderTitle {
+  color: #6db315;
+  font: var(--font-text-8);
+}
+
+.cardHeaderStats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  & > div {
+    min-width: 128px;
+  }
+
+  @media (max-width: 650px) {
+    & > div {
+      min-width: 120px;
+    }
+  }
+}

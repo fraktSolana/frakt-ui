@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
 import { useMarket } from '@frakt/utils/bonds';
 
+import GeneralLendInfo from '../LendPageLite/components/GeneralLendInfo';
 import CollectionsOverview from './components/CollectionsOverview';
 import OrderBook from './components/OrderBook/OrderBook';
 import BondsOverview from './components/BondsOverview';
@@ -17,6 +18,7 @@ const MarketsPreviewPage: FC = () => {
   return (
     <AppLayout>
       <div className={styles.container}>
+        <GeneralLendInfo />
         <CollectionsOverview />
         <BondsOverview />
         <OrderBook market={market} marketLoading={marketLoading} />

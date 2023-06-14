@@ -8,12 +8,13 @@ import styles from './RadioButtonField.module.scss';
 
 interface RadioButtonFieldProps<T> {
   className?: string;
+  classNameInner?: string;
   currentOption: RBOption<T>;
   options: RBOption<T>[];
   disabled?: boolean;
   onOptionChange: (nextOption: RBOption<T>) => void;
   tooltipText?: string;
-  label: string;
+  label?: string;
 }
 
 const RadioButtonField = <T extends unknown>({
@@ -24,6 +25,7 @@ const RadioButtonField = <T extends unknown>({
   onOptionChange,
   tooltipText,
   label,
+  classNameInner,
 }: RadioButtonFieldProps<T>): JSX.Element => {
   return (
     <div className={classNames(styles.radio, className)}>
@@ -36,6 +38,7 @@ const RadioButtonField = <T extends unknown>({
         disabled={disabled}
         onOptionChange={onOptionChange}
         options={options}
+        className={classNameInner}
       />
     </div>
   );

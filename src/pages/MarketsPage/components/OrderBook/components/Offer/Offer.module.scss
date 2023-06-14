@@ -1,4 +1,5 @@
 .listItem {
+  cursor: default;
   position: relative;
   padding: 15px 45px 15px 8px;
 
@@ -46,102 +47,44 @@
   }
 }
 
-.highlightBest {
+.highlightBest,
+.highlightYourOffer {
   position: relative;
-  outline: 3px solid var(--yellow-color);
   outline-offset: -3px;
 
+  font: var(--font-text-6);
+  color: var(--button-text);
+  text-align: center;
+
   &::before {
-    content: 'Best';
     position: absolute;
-    top: 0px;
-    left: -51px;
-    z-index: 99;
+    left: 0;
+    bottom: 0;
+    z-index: 9;
+
+    padding: 1px 8px;
 
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+}
 
-    width: 52px;
-    height: 48px;
+.highlightBest {
+  outline: 3px solid var(--yellow-color);
 
+  &::before {
+    content: 'Best';
     background: var(--yellow-color);
-
-    font: var(--font-text-6);
-    color: var(--button-text);
-    text-align: center;
-  }
-
-  @media screen and (max-width: 1024px) {
-    &::before {
-      height: 48px;
-    }
-  }
-
-  @media screen and (max-width: 960px) {
-    &::before {
-      left: -42px;
-
-      width: 43px;
-      height: 48px;
-    }
-  }
-
-  @media screen and (max-width: 550px) {
-    &::before {
-      left: -34px;
-
-      width: 35px;
-    }
   }
 }
 
 .highlightYourOffer {
-  position: relative;
   outline: 3px solid var(--light-green-color);
-  outline-offset: -3px;
 
   &::before {
     content: 'Your offer';
-    position: absolute;
-    top: 0px;
-    left: -51px;
-    z-index: 99;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 52px;
-    height: 48px;
-
     background: var(--light-green-color);
-
-    font: var(--font-text-6);
-    color: var(--button-text);
-    text-align: center;
-  }
-
-  @media screen and (max-width: 1024px) {
-    &::before {
-      height: 48px;
-    }
-  }
-
-  @media screen and (max-width: 960px) {
-    &::before {
-      left: -42px;
-
-      width: 43px;
-    }
-  }
-
-  @media screen and (max-width: 550px) {
-    &::before {
-      left: -34px;
-
-      width: 35px;
-    }
   }
 }
 
@@ -154,20 +97,38 @@
   border: 1px dashed var(--yellow-color);
 }
 
-.ltv {
+.ltv,
+.loanValue {
+  height: 14px;
+  background: var(--yellow-color);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+
   position: absolute;
   top: 0px;
   left: 0px;
   z-index: 10;
 
-  min-width: 75px;
-  height: 14px;
-  background: var(--yellow-color);
-
   font: var(--font-text-6);
   text-align: center;
   text-transform: uppercase;
   color: #fff;
+
+  span {
+    font: var(--font-text-9);
+    font-weight: 600;
+  }
+}
+
+.loanValue {
+  min-width: 110px;
+}
+
+.ltv {
+  min-width: 75px;
 }
 
 .valueWrapper {
@@ -179,52 +140,44 @@
 }
 
 .value {
+  color: var(--primary-text);
   display: flex;
   gap: 4px;
   font: var(--font-text-8);
   position: relative;
 
+  overflow: auto;
+  white-space: nowrap;
+
   sup {
     margin-top: 7px;
     font-size: 12px;
   }
+
+  &::-webkit-scrollbar {
+    height: 0px;
+  }
 }
 
-.loans {
-  font-family: var(--font-family-chakra);
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 16px;
-
-  color: var(--black-color);
+.sizeValue {
+  max-width: 140px;
 }
 
-.btn {
-  padding: 14px;
-  width: 100%;
+.loanAmountValue {
+  max-width: 90px;
 }
 
-.roundBtn {
-  display: none;
-  align-items: center;
-  justify-content: center;
-
-  width: 32px;
-  height: 32px;
-
+.editButton {
   background-color: var(--primary-background);
   border: 1px solid var(--primary-border);
   border-radius: 50%;
 
-  svg {
-    & path {
-      fill: var(--black-color);
-    }
-  }
-}
+  cursor: pointer;
 
-.btnTrash {
   display: flex;
+  align-items: center;
+  justify-content: center;
+
   flex-shrink: 0;
 
   position: absolute;
@@ -232,7 +185,9 @@
   right: 8px;
   transform: translateY(-50%);
 
-  cursor: pointer;
+  width: 32px;
+  height: 32px;
+
   @media screen and (max-width: 960px) {
     width: 28px;
     height: 28px;
@@ -240,5 +195,15 @@
       width: 16.8px;
       height: 16.8px;
     }
+  }
+
+  svg {
+    & path {
+      fill: var(--black-color);
+    }
+  }
+
+  &:hover {
+    border-color: var(--secondary-border);
   }
 }

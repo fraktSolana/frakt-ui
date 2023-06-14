@@ -21,3 +21,4 @@ export { useLocalStorage } from './useLocalStorage';
 export { useContainerWidth } from './useContainerWidth';
 export { useImagePreload } from './useImagePreload';
 export { useBestWorkingRPC } from './useBestWorkingRPC';
+export { useScrollPagination } from './useScrollPagination';

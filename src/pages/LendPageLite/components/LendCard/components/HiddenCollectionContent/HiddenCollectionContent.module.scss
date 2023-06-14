@@ -1,0 +1,122 @@
+.content {
+  cursor: default;
+  display: flex;
+  gap: 24px;
+  width: 100%;
+
+  & > * {
+    width: 50%;
+    flex: 1;
+  }
+}
+
+.tableContainer {
+  padding-right: 0;
+
+  @media (max-width: 960px) {
+    padding-right: 24px;
+  }
+}
+
+.tabContent {
+  height: 455px;
+  overflow: hidden;
+}
+
+.tabs {
+  margin-top: 0;
+  flex-wrap: nowrap;
+  border-bottom: 1px solid var(--primary-border);
+  gap: 16px;
+}
+
+.tabs button {
+  border-color: var(--primary-border);
+  border-bottom: 0;
+
+  &:first-child {
+    border-right: 1px solid var(--primary-border);
+    margin-left: 16px;
+  }
+
+  &:last-child {
+    border: 0;
+    background: var(--light-green-color);
+    color: var(--button-text);
+    margin-right: 16px;
+
+    &:hover {
+      background-color: var(--light-green-hover);
+    }
+  }
+}
+
+.activeTab {
+  background: var(--primary-background);
+  position: relative;
+
+  &:after {
+    content: '';
+    display: block;
+    height: 5px;
+    width: 100%;
+    background: var(--primary-background);
+    position: absolute;
+    bottom: -2px;
+  }
+
+  &:first-child {
+    border-left: 0;
+    margin-left: 0 !important;
+  }
+
+  &:last-child {
+    background: var(--primary-background) !important;
+    border-top: 1px solid var(--primary-border) !important;
+    border-left: 1px solid var(--primary-border) !important;
+    color: var(--primary-text) !important;
+    margin-right: 0 !important;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+
+  margin-right: 24px;
+  max-width: 280px;
+  min-width: 280px;
+  width: 100%;
+
+  @media (max-width: 960px) {
+    display: none;
+  }
+}
+
+.historyTable :global,
+.bondsTable :global {
+  height: 390px;
+
+  .ant-table-content {
+    max-height: 385px !important;
+    overflow: auto !important;
+  }
+
+  @media (max-width: 1240px) {
+    height: 345px;
+
+    .ant-table-content {
+      max-height: 340px !important;
+    }
+  }
+}
+
+.historyTable :global {
+  @media ((max-width: 480px)), ((max-width: 1024px) and (min-width: 961px)) {
+    height: 320px;
+
+    .ant-table-content {
+      max-height: 320px !important;
+    }
+  }
+}

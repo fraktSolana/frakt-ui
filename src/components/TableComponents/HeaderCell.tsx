@@ -43,11 +43,7 @@ export const HeaderCell = <T extends unknown>({
       })}
     >
       <span className={styles.headerCellTitle}>{label}</span>
-      {!!tooltipText && (
-        <Tooltip placement="top" overlay={tooltipText}>
-          <QuestionCircleOutlined className={styles.questionIcon} />
-        </Tooltip>
-      )}
+      {!!tooltipText && <Tooltip placement="top" overlay={tooltipText} />}
       {!hiddenSort && (
         <>
           {sortedOrder === SortOrders.ASC && <ArrowUpTableSort />}

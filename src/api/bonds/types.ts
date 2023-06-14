@@ -76,6 +76,7 @@ export interface MarketPreview {
   marketPubkey: string;
   collectionName: string;
   collectionImage: string;
+  collectionFloor: number;
   offerTVL: string;
   walletRedeemAmount?: number;
   apy: number; //? %
@@ -83,8 +84,20 @@ export interface MarketPreview {
   bestOffer: number; //? lamports
   bestLTV: number;
   activeBondsAmount: number;
+  activeOfferAmount: number;
   fee: number;
   bestDuration: number;
+  loansTVL: number;
+  user: UserMarketPreview;
+
+  selected?: boolean;
+}
+
+export interface UserMarketPreview {
+  offerAmount: number;
+  bondsAmount: number;
+  loansTVL: number;
+  offerTVL: number;
 }
 
 export type Pair = BondOfferV2;
