@@ -11,6 +11,7 @@ import {
   FetchBondsRequestParams,
   TotalBondsStats,
   MarketHistory,
+  BondHistory,
 } from './types';
 
 const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN;
@@ -127,7 +128,7 @@ type FetchBondsHistory = ({
   sortBy,
   order,
   eventType,
-}: FetchBondsRequestParams) => Promise<Bond[]>;
+}: FetchBondsRequestParams) => Promise<BondHistory[]>;
 export const fetchBondsHistory: FetchBondsHistory = async ({
   skip,
   limit,

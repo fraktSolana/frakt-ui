@@ -156,6 +156,13 @@ export interface Bond {
   eventSignature: string;
 }
 
+export interface BondHistory {
+  ownerPubkey?: string;
+  marketPubkey: string;
+  stats: BondStats;
+  eventSignature: string;
+}
+
 export interface FetchBondsRequestParams {
   skip: number;
   limit: number;
