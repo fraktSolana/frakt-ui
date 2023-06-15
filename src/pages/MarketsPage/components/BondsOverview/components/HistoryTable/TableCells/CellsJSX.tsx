@@ -43,6 +43,12 @@ export const ReceiveCell = ({ stats }: { stats: BondHistoryStats }) => {
         NFT collateral
       </span>
     );
+  else if (received === 0)
+    return (
+      <span className={classNames(styles.value, styles.capitalizeValue)}>
+        {'   '}
+      </span>
+    );
 
   return (
     <span
