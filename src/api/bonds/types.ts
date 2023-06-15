@@ -175,7 +175,7 @@ export interface BondHistoryStats {
   state: string;
   bondPubkey: string;
   when: number; // used
-  received: number; // used
+  received: number | string; // used
   status: FraktBondState; // used
 }
 

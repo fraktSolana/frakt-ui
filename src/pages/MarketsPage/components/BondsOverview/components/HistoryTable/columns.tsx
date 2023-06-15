@@ -98,7 +98,8 @@ export const COLUMNS: ColumnsType<BondHistory> = [
     ),
     render: (_, { stats }) => <ReceiveCell stats={stats} />,
     sorter: ({ stats: statsA, stats: statsB }) =>
-      statsA.received - statsB.received,
+      (typeof statsA.received === 'string' ? 0 : (statsA.received as any)) -
+      (typeof statsB.received === 'string' ? 0 : (statsB.received as any)),
     showSorterTooltip: false,
   },
   {
