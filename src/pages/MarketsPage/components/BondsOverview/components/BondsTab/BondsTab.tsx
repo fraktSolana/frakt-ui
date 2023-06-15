@@ -1,9 +1,9 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useParams } from 'react-router-dom';
+import classNames from 'classnames';
 
 import { useIntersection } from '@frakt/hooks/useIntersection';
-
 import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
 import EmptyList from '@frakt/components/EmptyList';
 import { Loader } from '@frakt/components/Loader';
@@ -14,7 +14,17 @@ import BondsWidgets from '../BondsWidgets';
 
 import styles from './BondsTab.module.scss';
 
-const BondsTab: FC = () => {
+interface BondsTabProps {
+  tableParams?: { classNames: string; scrollX: number };
+  containerClassName?: string;
+  showWidgets?: boolean;
+}
+
+const BondsTab: FC<BondsTabProps> = ({
+  tableParams,
+  containerClassName,
+  showWidgets = true,
+}) => {
   const { marketPubkey } = useParams<{ marketPubkey: string }>();
   const { ref, inView } = useIntersection();
   const { connected, publicKey } = useWallet();
@@ -43,13 +53,15 @@ const BondsTab: FC = () => {
 
   return (
     <>
-      <div className={styles.wrapper}>
-        <div className={styles.bondsTableHeader}>
-          <BondsWidgets
-            locked={bondsStats?.tvl}
-            activeLoans={bondsStats?.activeLoans}
-          />
-        </div>
+      <div className={classNames(styles.wrapper, containerClassName)}>
+        {showWidgets && (
+          <div className={styles.bondsTableHeader}>
+            <BondsWidgets
+              locked={bondsStats?.tvl}
+              activeLoans={bondsStats?.activeLoans}
+            />
+          </div>
+        )}
 
         {connected && !bonds.length && loading && <Loader />}
 
@@ -61,9 +73,9 @@ const BondsTab: FC = () => {
         ) : (
           <>
             <BondsTable
-              className={styles.bondsTable}
+              className={classNames(styles.bondsTable, tableParams?.classNames)}
               data={bonds}
-              breakpoints={{ scrollX: 744 }}
+              breakpoints={{ scrollX: tableParams?.scrollX || 744 }}
               hideBond={hideBond}
             />
             {isFetchingNextPage && <Loader />}

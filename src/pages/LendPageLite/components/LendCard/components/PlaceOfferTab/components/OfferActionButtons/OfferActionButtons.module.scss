@@ -1,0 +1,20 @@
+.buttonsWrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.button {
+  height: 40px;
+  width: 100%;
+}
+
+.deleteOfferButton {
+  color: var(--red-color);
+  border-color: var(--red-color);
+  background-color: var(--light-red-color);
+
+  &:hover {
+    background-color: var(--light-red-color-hover);
+  }
+}

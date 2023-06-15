@@ -1,0 +1,18 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid var(--primary-border);
+  background-color: var(--primary-background);
+  padding: 24px;
+
+  @media (max-width: 960px) {
+    padding: 16px;
+  }
+}
+
+.content.selected {
+  @media (max-width: 960px) {
+    padding-bottom: 120px;
+  }
+}

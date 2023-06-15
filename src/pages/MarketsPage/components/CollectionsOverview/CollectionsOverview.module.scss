@@ -1,11 +1,11 @@
 .wrapper {
   background: var(--primary-background);
   border: 1px solid var(--primary-border);
+  border-bottom: 0;
   display: flex;
   gap: 24px;
   padding: 24px;
   padding-bottom: 0;
-  margin-bottom: 16px;
   min-height: 382px;
 
   @media (max-width: 1300px) {

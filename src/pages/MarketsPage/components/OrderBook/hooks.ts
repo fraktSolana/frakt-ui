@@ -21,6 +21,8 @@ type UseMarketOrders = (props: {
   size: number; //? lamports
   interest: number;
   duration: number;
+  loanValue?: number;
+  loanAmount?: number;
 }) => {
   offers: MarketOrder[];
   isLoading: boolean;
@@ -35,6 +37,8 @@ export const useMarketOrders: UseMarketOrders = ({
   size,
   interest,
   duration,
+  loanValue,
+  loanAmount,
   filterDuration,
 }) => {
   const { publicKey } = useWallet();
@@ -56,6 +60,8 @@ export const useMarketOrders: UseMarketOrders = ({
       size: size / 1e9,
       interest: interest / 1e2,
       duration: duration ?? 7,
+      loanValue,
+      loanAmount,
       synthetic: true,
       rawData: {
         publicKey: '',
@@ -67,30 +73,27 @@ export const useMarketOrders: UseMarketOrders = ({
 
     const parsedOffers = pairs.map(parseMarketOrder);
 
-    const parsedEditabledOffers = [];
-
-    if (editOfferPubkey) {
-      const offers = parsedOffers.map((offer) => {
-        const isEditOffer = offer?.rawData?.publicKey === editOfferPubkey;
-        if (isEditOffer) return { ...myOffer, ...offer };
-        return offer;
-      });
-
-      parsedEditabledOffers.push(...offers);
-    }
+    const parsedEditableOffers = editOfferPubkey
+      ? parsedOffers.map((offer) =>
+          offer?.rawData?.publicKey === editOfferPubkey
+            ? { ...myOffer, ...offer }
+            : offer,
+        )
+      : [];
 
     if (ltv && !editOffer?.publicKey) {
       parsedOffers.push(myOffer);
     }
 
-    const offers = editOfferPubkey ? parsedEditabledOffers : parsedOffers;
+    const offers = editOfferPubkey ? parsedEditableOffers : parsedOffers;
 
     const sortedOffersByInterest = sortOffersByInterest(offers, 'desc');
+
     const sortedByLtv = sortOffersByLtv(sortedOffersByInterest, 'desc');
-    const sortedByDuration = filterOffersByDuration(
-      sortedByLtv,
-      filterDuration,
-    );
+
+    const sortedByDuration = filterDuration
+      ? filterOffersByDuration(sortedByLtv, filterDuration)
+      : sortedByLtv;
 
     const ownerOffers = sortedByDuration.filter(
       (pair) =>

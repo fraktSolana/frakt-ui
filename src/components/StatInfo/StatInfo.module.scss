@@ -1,0 +1,38 @@
+.labelWrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  svg {
+    fill: var(--secondary-text);
+  }
+}
+
+.label {
+  color: var(--secondary-text);
+  font: var(--font-text-6);
+  text-transform: uppercase;
+}
+
+.value {
+  font: var(--font-text-8);
+  line-height: 20px;
+}
+
+.columnFlex {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rowFlex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.secondValue {
+  font: var(--font-text-9);
+  font-weight: 400;
+}

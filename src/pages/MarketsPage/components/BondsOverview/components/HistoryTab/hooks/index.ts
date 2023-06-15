@@ -94,3 +94,5 @@ export const useHistoryBondsSort = create<HistoryBondsSortState>((set) => ({
       },
     })),
 }));
+export * from './useHistoryLoansTab';
+export * from './hooks';

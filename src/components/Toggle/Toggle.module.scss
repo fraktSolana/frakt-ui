@@ -58,5 +58,6 @@ input:checked + .slider:before {
   font: var(--font-text-8);
   transition: opacity var(--transition-1);
   user-select: none;
+  white-space: nowrap;
   @include flex;
 }
