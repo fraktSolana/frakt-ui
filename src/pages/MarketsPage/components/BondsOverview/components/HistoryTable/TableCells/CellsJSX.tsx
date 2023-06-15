@@ -19,7 +19,7 @@ export const createAutocompoundJSX = (status: FraktBondState) => (
       { [styles.primary]: status === 'active' },
     )}
   >
-    {status || '--'}
+    {(status === 'active' ? 'loaned' : status) || '--'}
   </span>
 );
 
