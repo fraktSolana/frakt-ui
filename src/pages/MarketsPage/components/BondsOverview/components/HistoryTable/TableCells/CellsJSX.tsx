@@ -1,7 +1,7 @@
 import moment from 'moment';
 import classNames from 'classnames';
 
-import { BondStats } from '@frakt/api/bonds';
+import { BondHistoryStats } from '@frakt/api/bonds';
 import { Solana } from '@frakt/icons';
 
 import styles from './TableCells.module.scss';
@@ -26,7 +26,7 @@ export const createAutocompoundJSX = (status: FraktBondState) => (
 export const createliquidatingAtJSX = (when = 0, signature: string) => (
   <a
     className={classNames(styles.value, styles.link)}
-    href={`${process.env.SOLANAFM_URL}/tx/${signature}`}
+    href={`${process.env.SOLANAFM_URL}/address/${signature}`}
     rel="noopener noreferrer"
     target="_blank"
   >
@@ -34,13 +34,19 @@ export const createliquidatingAtJSX = (when = 0, signature: string) => (
   </a>
 );
 
-export const ReceiveCell = ({ stats }: { stats: BondStats }) => {
+export const ReceiveCell = ({ stats }: { stats: BondHistoryStats }) => {
   const { received, state } = stats;
 
   if (typeof received === 'string')
     return (
       <span className={classNames(styles.value, styles.capitalizeValue)}>
         NFT collateral
+      </span>
+    );
+  else if (received === 0)
+    return (
+      <span className={classNames(styles.value, styles.capitalizeValue)}>
+        {'   '}
       </span>
     );
 
