@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useRBOptionState } from '@frakt/components/RadioButton';
 import { useIntersection } from '@frakt/hooks/useIntersection';
 import { useScrollPagination } from '@frakt/hooks';
-import { Bond } from '@frakt/api/bonds';
+import { Bond, BondHistory } from '@frakt/api/bonds';
 
 import { useFetchBondsHistory, useHistoryBondsSort } from './hooks';
 import { HISTORY_FILTER_OPTIONS as options } from '../constants';
@@ -34,7 +34,7 @@ export const useHistoryLoansTab = () => {
     marketPubkey,
   });
 
-  useScrollPagination<Bond>({
+  useScrollPagination<BondHistory>({
     selector: '.ant-table-content',
     hasNextPage,
     isFetchingNextPage,

@@ -11,6 +11,7 @@ import {
   FetchBondsRequestParams,
   TotalBondsStats,
   MarketHistory,
+  BondHistory,
 } from './types';
 
 const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN;
@@ -131,7 +132,7 @@ type FetchBondsHistory = ({
   sortBy,
   order,
   eventType,
-}: FetchBondsRequestParams) => Promise<Bond[]>;
+}: FetchBondsRequestParams) => Promise<BondHistory[]>;
 export const fetchBondsHistory: FetchBondsHistory = async ({
   skip,
   limit,
@@ -147,11 +148,11 @@ export const fetchBondsHistory: FetchBondsHistory = async ({
     : '';
   const eventTypeQuery = eventType ? `eventType=${eventType}` : '';
 
-  const { data } = await axios.get<Bond[]>(
-    `https://${BACKEND_DOMAIN}/bonds/history?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}${eventTypeQuery}&isPrivate=${IS_PRIVATE_MARKETS}&version=2`,
+  const { data } = await axios.get<BondHistory[]>(
+    `https://${BACKEND_DOMAIN}/bonds/historyv2?sort=${order}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&${marketQuery}${walletQuery}${eventTypeQuery}&isPrivate=${IS_PRIVATE_MARKETS}&version=2`,
   );
 
-  return data;
+  return data.filter((event) => event.stats.fullLoanValue > 0);
 };
 
 type FetchMarketHistory = (props: {

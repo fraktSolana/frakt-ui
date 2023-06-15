@@ -2,14 +2,14 @@ import { FC } from 'react';
 
 import Table, { useTable, PartialBreakpoints } from '@frakt/components/Table';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { Bond } from '@frakt/api/bonds';
+import { BondHistory } from '@frakt/api/bonds';
 
 import { COLUMNS } from './columns';
 
 import styles from './TableCells/TableCells.module.scss';
 
 export interface BondsTableProps {
-  data: ReadonlyArray<Bond>;
+  data: ReadonlyArray<BondHistory>;
   loading?: boolean;
   className?: string;
   breakpoints?: PartialBreakpoints;

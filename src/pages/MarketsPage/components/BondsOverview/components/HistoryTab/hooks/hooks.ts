@@ -2,9 +2,9 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { SortOrder } from 'antd/lib/table/interface';
 import { ColumnType } from 'antd/es/table';
-import create from 'zustand';
+import { create } from 'zustand';
 
-import { Bond, fetchBondsHistory } from '@frakt/api/bonds';
+import { BondHistory, fetchBondsHistory } from '@frakt/api/bonds';
 
 import { formatSortOrderToNormalValue } from '../../../helpers';
 
@@ -74,7 +74,7 @@ interface HistoryBondsSortState {
     column,
     order,
   }: {
-    column: ColumnType<Bond>;
+    column: ColumnType<BondHistory>;
     order: SortOrder;
   }) => void;
   queryData: {
