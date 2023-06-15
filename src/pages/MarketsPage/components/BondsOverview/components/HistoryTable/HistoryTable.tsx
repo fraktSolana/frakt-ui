@@ -6,7 +6,7 @@ import { BondHistory } from '@frakt/api/bonds';
 
 import { COLUMNS } from './columns';
 
-// import styles from './TableCells/TableCells.module.scss';
+import styles from './TableCells/TableCells.module.scss';
 
 export interface BondsTableProps {
   data: ReadonlyArray<BondHistory>;
@@ -37,7 +37,7 @@ export const HistoryTable: FC<BondsTableProps> = ({
       activeRowParams={{
         field: 'ownerPubkey',
         value: publicKey?.toBase58(),
-        // className: styles.activeRow,
+        className: styles.activeRow,
       }}
     />
   );

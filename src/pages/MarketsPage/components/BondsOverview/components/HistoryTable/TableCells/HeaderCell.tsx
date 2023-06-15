@@ -1,7 +1,6 @@
 import { FC, useEffect } from 'react';
 import classNames from 'classnames';
 
-import { QuestionCircleOutlined } from '@ant-design/icons';
 import Tooltip from '@frakt/components/Tooltip';
 import {
   ArrowDownTableSort,
