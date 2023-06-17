@@ -6,10 +6,6 @@ export const DURATION_OPTIONS: RBOption<number>[] = [
     value: 7,
   },
   {
-    label: '14 days',
-    value: 14,
-  },
-  {
     label: 'All',
     value: 30,
   },
