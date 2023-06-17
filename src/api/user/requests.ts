@@ -1,11 +1,13 @@
 import { web3 } from '@frakt-protocol/frakt-sdk';
-import { getDiscordAvatarUrl } from '@frakt/utils';
 import axios from 'axios';
+import { Dictionary } from 'lodash';
+
+import { getDiscordAvatarUrl } from '@frakt/utils';
+
 import {
   UserInfo,
   UserInfoRaw,
   Notification,
-  NotificationsSettings,
   UserStats,
   UserRewards,
   CollectionsStats,
@@ -105,10 +107,10 @@ export const deleteNotifications: DeleteNotifications = async ({
 
 type GetUserNotificationsSettings = (props: {
   publicKey: web3.PublicKey;
-}) => Promise<NotificationsSettings>;
+}) => Promise<Dictionary<boolean>>;
 export const getUserNotificationsSettings: GetUserNotificationsSettings =
   async ({ publicKey }) => {
-    const { data } = await axios.get<NotificationsSettings>(
+    const { data } = await axios.get<Dictionary<boolean>>(
       `https://${process.env.BACKEND_DOMAIN}/settings/${publicKey.toBase58()}`,
     );
 
@@ -117,7 +119,7 @@ export const getUserNotificationsSettings: GetUserNotificationsSettings =
 
 type SetUserNotificationsSettings = (props: {
   publicKey: web3.PublicKey;
-  settings: NotificationsSettings;
+  settings: Dictionary<boolean>;
 }) => Promise<void>;
 export const setUserNotificationsSettings: SetUserNotificationsSettings =
   async ({ publicKey, settings }) => {

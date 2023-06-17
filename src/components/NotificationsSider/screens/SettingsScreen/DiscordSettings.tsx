@@ -1,22 +1,17 @@
 import { FC } from 'react';
-import classNames from 'classnames';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import Button from '@frakt/components/Button';
-import Toggle from '@frakt/components/Toggle';
 import { UserAvatar } from '@frakt/components/UserAvatar';
-import { useUserInfo, useUserNotifications } from '@frakt/hooks';
+import { useUserInfo } from '@frakt/hooks';
 import { Alert } from '@frakt/icons';
 import { getDiscordUri } from '@frakt/utils';
 import { shortenAddress } from '@frakt/utils/solanaUtils';
-import { NotificationsSettingsNames } from '../constants';
-import styles from '../NotificationsSider.module.scss';
 
-export const SettingsContent: FC = () => {
+import styles from '../..//NotificationsSider.module.scss';
+
+export const DiscordSettings: FC = () => {
   const { publicKey } = useWallet();
-
-  const { settings, changeSettings } = useUserNotifications();
-
   const { data, isDiscordConnected, removeUserInfo } = useUserInfo();
 
   const linkButtonHanlder = async () => {
@@ -29,10 +24,8 @@ export const SettingsContent: FC = () => {
   };
 
   return (
-    <div className={classNames(styles.content)}>
-      <h2 className={styles.contentTitle}>Channels</h2>
-
-      <p className={styles.discordSettingsLabel}>Discord</p>
+    <div className={styles.addressSettings}>
+      <p className={styles.addressSettingsLabel}>Discord</p>
       <div className={styles.discordSettings}>
         <UserAvatar
           className={styles.discordSettingsAvatar}
@@ -64,31 +57,6 @@ export const SettingsContent: FC = () => {
           </a>{' '}
           to receive notifications
         </p>
-      </div>
-
-      <h2
-        className={classNames(
-          styles.contentTitle,
-          styles.contentTitleOffsetTop,
-        )}
-      >
-        Events
-      </h2>
-      <div className={styles.eventsList}>
-        {Object.entries(settings).map(([label, value]) => (
-          <div key={label} className={styles.eventsListRow}>
-            <p>
-              {NotificationsSettingsNames[label] ||
-                NotificationsSettingsNames.DEFAULT}
-            </p>
-            <Toggle
-              defaultChecked={value}
-              onChange={(value) =>
-                changeSettings({ ...settings, [label]: value })
-              }
-            />
-          </div>
-        ))}
       </div>
     </div>
   );

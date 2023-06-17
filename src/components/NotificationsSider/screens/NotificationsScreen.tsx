@@ -6,13 +6,13 @@ import { BellSlash } from '@frakt/icons';
 import { useIntersectionObserver, useUserNotifications } from '@frakt/hooks';
 import { Notification } from '@frakt/api/user';
 import styles from '../NotificationsSider.module.scss';
-import { LoadingContent } from './LoadingContent';
+import { LoadingScreen } from './LoadingScreen';
 
-export const NotificationsContent: FC = () => {
+export const NotificationsScreen: FC = () => {
   const { notifications, isLoading, markRead } = useUserNotifications();
 
   if (isLoading) {
-    return <LoadingContent />;
+    return <LoadingScreen />;
   }
 
   if (!notifications?.length) {

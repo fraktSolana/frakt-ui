@@ -1,32 +1,40 @@
 import { forwardRef } from 'react';
 import classNames from 'classnames';
+import { useDialectSdk } from '@dialectlabs/react-sdk';
 
-import { ContentType } from './constants';
+import { ScreenType } from './constants';
 import { useNotificationsSider } from './hooks';
-import styles from './NotificationsSider.module.scss';
 import { Header } from './components/Header';
-import { LoadingContent } from './components/LoadingContent';
-import { NotificationsContent } from './components/NotificationsContent';
-import { SetUpContent } from './components/SetUpContent';
-import { SettingsContent } from './components/SettingsContent';
-import { SignMessageContent } from './components/SignMessageContent';
+import {
+  SettingsScreen,
+  LoadingScreen,
+  SignMessageScreen,
+  NotificationsScreen,
+} from './screens';
+import styles from './NotificationsSider.module.scss';
 
 export const NotificationsSider = forwardRef<HTMLDivElement>((props, ref) => {
-  const { isVisible, contentType } = useNotificationsSider();
+  const sdk = useDialectSdk(true);
 
-  return (
+  const { isVisible, screenType } = useNotificationsSider();
+
+  //? Check if sdk exists to avoid "sdk is not initialized" error
+  return sdk ? (
     <div
       onClick={(event) => event}
       className={classNames(styles.root, { [styles.rootHidden]: !isVisible })}
       ref={ref}
     >
       <Header />
-      {contentType === ContentType.SETTINGS && <SettingsContent />}
-      {contentType === ContentType.LOADING && <LoadingContent />}
-      {contentType === ContentType.SIGN_MESSAGE && <SignMessageContent />}
-      {contentType === ContentType.NOTIFICATIONS && <NotificationsContent />}
-      {contentType === ContentType.SET_UP && <SetUpContent />}
+      <>
+        {screenType === ScreenType.SETTINGS && <SettingsScreen />}
+        {screenType === ScreenType.LOADING && <LoadingScreen />}
+        {screenType === ScreenType.SIGN_MESSAGE && <SignMessageScreen />}
+        {screenType === ScreenType.NOTIFICATIONS && <NotificationsScreen />}
+      </>
     </div>
+  ) : (
+    <></>
   );
 });
 

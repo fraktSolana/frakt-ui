@@ -16,6 +16,7 @@ import { ErrorBoundary } from '@frakt/components/ErrorBoundary';
 import { NotificationModal } from '@frakt/components/NotificationModal';
 import { useBestWorkingRPC } from '@frakt/hooks';
 import { ENDPOINTS, WALLETS } from '@frakt/config';
+import { DialectProvider } from '@frakt/utils/dialect';
 
 initSentry();
 initAmplitude();
@@ -27,9 +28,11 @@ const App: FC = () => {
       <QueryClientProvider client={queryClient}>
         <ReduxProvider store={store}>
           <SolanaConnectionWalletProvider>
-            <Router />
-            <Confetti />
-            <NotificationModal />
+            <DialectProvider>
+              <Router />
+              <Confetti />
+              <NotificationModal />
+            </DialectProvider>
           </SolanaConnectionWalletProvider>
         </ReduxProvider>
       </QueryClientProvider>

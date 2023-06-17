@@ -1,6 +1,4 @@
-import { NotificationEvents } from '@frakt/api/user';
-
-export enum ContentType {
+export enum ScreenType {
   LOADING = 'loading',
   SIGN_MESSAGE = 'sign message',
   SET_UP = 'set up',
@@ -8,11 +6,4 @@ export enum ContentType {
   NOTIFICATIONS = 'notifications',
 }
 
-export const NotificationsSettingsNames = {
-  [NotificationEvents.LOANS]: 'Loans',
-  [NotificationEvents.DEPOSITS]: 'Deposits',
-  [NotificationEvents.LOT_TICKETS]: 'Raffle tickets',
-  [NotificationEvents.GRACES]: 'Grace period',
-  [NotificationEvents.LIQUIDATIONS_IN_24H]: 'Liquidations',
-  DEFAULT: 'Unknown value',
-};
+export const DIALECT_APP_PUBLIC_KEY = process.env.DIALECT_APP_PUBLIC_KEY;

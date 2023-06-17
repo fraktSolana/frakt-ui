@@ -1,24 +1,27 @@
-import create from 'zustand';
-import { ContentType } from './constants';
+import { create } from 'zustand';
+import { useEffect } from 'react';
+
+import { useDialectSdk, useDialectWallet } from '@dialectlabs/react-sdk';
+
+import { ScreenType, DIALECT_APP_PUBLIC_KEY } from './constants';
 
 interface SiderState {
   isVisible: boolean;
   toggleVisibility: () => void;
   setVisibility: (nextValue: boolean) => void;
-  contentType: ContentType;
-  changeContentType: (nextState: ContentType) => void;
+  screenType: ScreenType;
+  changeContentType: (nextState: ScreenType) => void;
 }
 
-export const useNotificationsSider = create<SiderState>((set) => ({
+const useNotificationsSiderState = create<SiderState>((set) => ({
   isVisible: false,
-  contentType: ContentType.NOTIFICATIONS,
+  screenType: ScreenType.SIGN_MESSAGE,
   toggleVisibility: () =>
     set((state) => {
       if (state.isVisible) {
         return {
           ...state,
           isVisible: !state.isVisible,
-          contentType: ContentType.NOTIFICATIONS,
         };
       }
       return { ...state, isVisible: !state.isVisible };
@@ -29,11 +32,57 @@ export const useNotificationsSider = create<SiderState>((set) => ({
         return {
           ...state,
           isVisible: nextValue,
-          contentType: ContentType.NOTIFICATIONS,
         };
       }
       return { ...state, isVisible: nextValue };
     }),
-  changeContentType: (nextState: ContentType) =>
-    set((state) => ({ ...state, contentType: nextState })),
+  changeContentType: (nextState: ScreenType) =>
+    set((state) => ({ ...state, screenType: nextState })),
 }));
+
+export const useNotificationsSider = () => {
+  const { changeContentType, screenType, ...state } =
+    useNotificationsSiderState();
+
+  const {
+    connectionInitiatedState: { get: connectionInitiatedState },
+  } = useDialectWallet();
+
+  const sdk = useDialectSdk(true);
+
+  useEffect(() => {
+    if (!connectionInitiatedState) {
+      return changeContentType(ScreenType.SIGN_MESSAGE);
+    }
+
+    if (connectionInitiatedState) {
+      return changeContentType(ScreenType.NOTIFICATIONS);
+    }
+  }, [connectionInitiatedState, changeContentType]);
+
+  const authorize = async () => {
+    try {
+      changeContentType(ScreenType.LOADING);
+
+      const addresses = await sdk.wallet.dappAddresses.findAll({
+        dappAccountAddress: DIALECT_APP_PUBLIC_KEY,
+      });
+
+      if (addresses.length) {
+        changeContentType(ScreenType.NOTIFICATIONS);
+      } else {
+        changeContentType(ScreenType.SETTINGS);
+      }
+    } catch (error) {
+      console.error(error);
+      changeContentType(ScreenType.SIGN_MESSAGE);
+    }
+  };
+
+  return {
+    changeContentType,
+    screenType,
+    ...state,
+    authorize,
+  };
+};
