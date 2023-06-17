@@ -91,7 +91,18 @@
   padding-top: 32px;
 }
 
+.channels {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+}
+
 .signMessageSubtitle {
+  margin-bottom: 8px;
+}
+
+.ledgerCheckbox {
   margin-bottom: 8px;
 }
 
@@ -114,11 +125,129 @@
   text-align: center;
 }
 
-.discordSettingsLabel {
+.addressSettings {
+  width: 100%;
+  font: 500 14px var(--font-family-syne);
+  margin-bottom: 0;
+}
+
+.addressSettingsLabel {
   color: var(--gray-color-2);
-  font: var(--font-text-6);
-  text-transform: uppercase;
   margin-bottom: 10px;
+  text-transform: uppercase;
+  font: 700 12px var(--font-family-syne);
+}
+
+.addressInputWrapper {
+  border-bottom: 1px solid var(--gray-color-2);
+  background: var(--secondary-background);
+  height: 48px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 16px;
+
+  &__error {
+    border-bottom-color: var(--red-color);
+  }
+}
+
+.addressInput {
+  padding: 12px 8px 12px 16px;
+  height: 100%;
+  color: var(--black-color);
+  font: 400 18px var(--font-family-chakra);
+  flex-grow: 1;
+  background: transparent;
+
+  &,
+  &:focus,
+  &:focus-visible,
+  &:hover {
+    border: unset;
+    outline: unset;
+  }
+}
+
+.addressInputBtn {
+  padding: 4px 8px;
+}
+
+.addressInputLoader {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  animation: rotate 1s infinite linear reverse;
+
+  background: conic-gradient(
+    from 180deg at 50% 52.27%,
+    #aeaeb2 0deg,
+    rgba(174, 174, 178, 0) 360deg
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &::after {
+    content: '';
+    background: var(--secondary-background);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.addressErrorText {
+  color: var(--red-color);
+  font: var(--font-text-6);
+  margin-bottom: 0;
+}
+
+.addressInputDescription {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  column-gap: 8px;
+  padding-top: 6px;
+}
+.addressInputDescriptionText {
+  color: var(--black-color);
+  font: 400 16px var(--font-family-chakra);
+  flex-grow: 1;
+  margin-bottom: 0;
+  a {
+    cursor: pointer;
+
+    &,
+    &:hover,
+    &:focus,
+    &:focus-visible,
+    &:visited {
+      color: var(--blue-color);
+      border: unset;
+      border-bottom: 1px solid var(--blue-color);
+    }
+  }
+}
+
+.addressInputDescriptionBtn {
+  font-size: 14px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+.addressInputToggle {
+  padding-top: 8px;
 }
 
 .discordSettings {
@@ -142,7 +271,7 @@
 }
 
 .discordSettingsBtn {
-  width: 100%;
+  width: unset;
 }
 
 .discordAlert {
@@ -161,9 +290,7 @@
 }
 
 .discordLink {
-  font: var(--font-btn-middle);
   cursor: pointer;
-
   &,
   &:hover,
   &:focus,

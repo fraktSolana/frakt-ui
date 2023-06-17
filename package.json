@@ -5,6 +5,9 @@
   "dependencies": {
     "@amplitude/analytics-browser": "^1.0.2",
     "@ant-design/icons": "^4.7.0",
+    "@dialectlabs/blockchain-sdk-solana": "^1.0.0-beta.4",
+    "@dialectlabs/react-sdk": "^1.1.0-beta.10",
+    "@dialectlabs/react-sdk-blockchain-solana": "^1.0.0-beta.4",
     "@frakt-protocol/frakt-sdk": "^0.8.22-beta.0",
     "@frakters/raffle-sdk": "^0.0.12-beta.1",
     "@sentre/connector": "^0.1.0",
@@ -22,6 +25,7 @@
     "fbonds-core": "^0.5.41",
     "firebase": "^9.8.3",
     "immer": "^9.0.18",
+    "less": "^4.1.3",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "ramda": "^0.28.0",
@@ -34,6 +38,7 @@
     "react-hook-form": "^7.19.5",
     "react-infinite-scroll-component": "^6.1.0",
     "react-redux": "^8.0.2",
+    "react-refresh": "^0.14.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
     "react-select": "^5.2.1",
@@ -55,20 +60,20 @@
     "start": "cross-env webpack serve --config webpack.serve.js",
     "bundle": "cross-env webpack build --config webpack.build.js",
     "type-scss": "cross-env typed-scss-modules src --exportType default --nameFormat none",
-    "build": "npm run type-scss && npm run bundle",
+    "build": "yarn type-scss && yarn run bundle",
     "lint": "prettier-eslint --write $PWD/'**/*.{ts,tsx}'",
     "format": "prettier-eslint --write $PWD/'**/*.{ts,tsx}'",
     "lint-staged": "lint-staged",
     "prepare": "husky install",
-    "analyze": "cross-env ANALYZE=1 GENERATE_SOURCEMAP=false npm run build"
+    "analyze": "cross-env ANALYZE=1 GENERATE_SOURCEMAP=false yarn build"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
-      "npm run format",
-      "npm run lint"
+      "yarn format",
+      "yarn lint"
     ]
   },
   "browserslist": {

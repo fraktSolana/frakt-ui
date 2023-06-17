@@ -5,20 +5,15 @@ import {
   markNotificationsAsRead,
   deleteNotifications,
   Notification,
-  getUserNotificationsSettings,
-  NotificationsSettings,
-  setUserNotificationsSettings,
 } from '@frakt/api/user';
 import { useCallback, useMemo } from 'react';
 
 type UseUserNotifications = () => {
   notifications: ReadonlyArray<Notification> | null;
-  settings: NotificationsSettings | null;
   isLoading: boolean;
   hasUnread: boolean;
   markRead: (notificationIds: string[]) => Promise<void>;
   clearAll: () => Promise<void>;
-  changeSettings: (settings: NotificationsSettings) => Promise<void>;
 };
 export const useUserNotifications: UseUserNotifications = () => {
   const { connected, publicKey } = useWallet();
@@ -60,40 +55,11 @@ export const useUserNotifications: UseUserNotifications = () => {
     return !!notifications?.find(({ isRead }) => !isRead);
   }, [notifications]);
 
-  const {
-    data: settings,
-    isLoading: isSettingsLoading,
-    refetch: refetchSettings,
-  } = useQuery(
-    ['userNotificationsSettings'],
-    async () => {
-      const settings = await getUserNotificationsSettings({ publicKey });
-      return settings;
-    },
-    {
-      enabled: connected,
-      staleTime: 2000,
-    },
-  );
-
-  const changeSettings = useCallback(
-    async (settings: NotificationsSettings) => {
-      await setUserNotificationsSettings({
-        publicKey,
-        settings,
-      });
-      refetchSettings();
-    },
-    [publicKey, refetchSettings],
-  );
-
   return {
     notifications,
-    settings,
-    isLoading: isSettingsLoading || isNotificationsLoading,
+    isLoading: isNotificationsLoading,
     hasUnread,
     markRead,
     clearAll,
-    changeSettings,
   };
 };
