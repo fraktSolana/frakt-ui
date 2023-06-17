@@ -47,10 +47,10 @@ export const fetchMarketsPreview: FetchMarketsPreview = async ({
   showOnlyUser,
 }) => {
   const walletQuery = walletPubkey
-    ? `?wallet=${walletPubkey?.toBase58()}&onlyUser=${showOnlyUser}`
-    : '';
+    ? `?wallet=${walletPubkey?.toBase58()}&onlyUser=${showOnlyUser}&isPrivate=${IS_PRIVATE_MARKETS}`
+    : `?isPrivate=${IS_PRIVATE_MARKETS}`;
   const { data } = await axios.get<MarketPreview[]>(
-    `https://${BACKEND_DOMAIN}/bonds/preview${walletQuery}&isPrivate=${IS_PRIVATE_MARKETS}`,
+    `https://${BACKEND_DOMAIN}/bonds/preview${walletQuery}`,
   );
 
   return data;
