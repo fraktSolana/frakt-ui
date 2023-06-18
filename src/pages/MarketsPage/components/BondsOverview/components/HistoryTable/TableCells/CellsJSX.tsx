@@ -1,25 +1,25 @@
 import moment from 'moment';
 import classNames from 'classnames';
 
-import { BondHistoryStats } from '@frakt/api/bonds';
+import { BondHistoryStats, EBondHistoryEventType } from '@frakt/api/bonds';
 import { Solana } from '@frakt/icons';
 
 import styles from './TableCells.module.scss';
 import { FraktBondState } from 'fbonds-core/lib/fbond-protocol/types';
 
-export const createAutocompoundJSX = (status: FraktBondState) => (
+export const createAutocompoundJSX = (status: EBondHistoryEventType) => (
   <span
     className={classNames(
       styles.value,
       styles.capitalizeValue,
       styles.positive,
       {
-        [styles.negative]: status === 'liquidated' || status === 'liquidating',
+        [styles.negative]: status === EBondHistoryEventType.Liquidated,
       },
-      { [styles.primary]: status === 'active' },
+      { [styles.primary]: status === EBondHistoryEventType.Creation },
     )}
   >
-    {(status === 'active' ? 'loaned' : status) || '--'}
+    {(status === EBondHistoryEventType.Creation ? 'loaned' : status) || '--'}
   </span>
 );
 

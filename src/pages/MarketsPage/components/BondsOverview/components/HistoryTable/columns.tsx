@@ -73,17 +73,17 @@ export const COLUMNS: ColumnsType<BondHistory> = [
     showSorterTooltip: false,
   },
   {
-    key: 'status',
-    dataIndex: 'status',
+    key: 'state',
+    dataIndex: 'state',
     title: (column) => (
       <HeaderCell
         sortColumns={column?.sortColumns}
-        value="status"
+        value="state"
         label="Status"
         removeSort
       />
     ),
-    render: (_, { stats }) => createAutocompoundJSX(stats?.status),
+    render: (_, { stats }) => createAutocompoundJSX(stats?.state),
   },
   {
     key: 'received',
