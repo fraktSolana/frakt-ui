@@ -4,7 +4,7 @@ import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 export const DEFAULTS_OPTIONS: RBOption<string>[] = [
   {
     label: 'Sell',
-    value: BondFeatures.ReceiveNftOnLiquidation,
+    value: BondFeatures.AutoreceiveSol,
   },
   {
     label: 'Receive',
