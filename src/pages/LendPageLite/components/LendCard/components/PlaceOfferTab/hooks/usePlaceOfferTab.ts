@@ -45,7 +45,7 @@ export const usePlaceOfferTab = (setSyntheticParams) => {
   const loansAmountInput = useNumericInput('Loans amount', '');
 
   const [bondFeature, setBondFeature] = useState<BondFeatures>(
-    BondFeatures.ReceiveNftOnLiquidation,
+    BondFeatures.AutoReceiveAndReceiveNft,
   );
 
   const [initialEditValues, setInitialEditValues] = useState(null);
@@ -58,7 +58,7 @@ export const usePlaceOfferTab = (setSyntheticParams) => {
   };
 
   const onClearFields = () => {
-    setBondFeature(BondFeatures.ReceiveNftOnLiquidation);
+    setBondFeature(BondFeatures.AutoReceiveAndReceiveNft);
     loanValueInput.onChange('');
     loansAmountInput.onChange('');
   };
