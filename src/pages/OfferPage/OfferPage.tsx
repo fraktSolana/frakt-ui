@@ -19,11 +19,9 @@ import { Header } from './components/Header';
 import { useOfferPage } from './hooks';
 import { OfferTypes } from './types';
 import {
-  DURATION_OPTIONS,
   EARNER_INTEREST_OPTIONS,
   OFFER_TYPE_OPTIONS,
-  MAX_LIMIT_INTEREST_FOR_14_DAYS,
-  MAX_LIMIT_INTEREST_FOR_7_DAYS,
+  MAX_LIMIT_INTEREST,
   RECEIVE_OPTIONS,
 } from './constants';
 
@@ -38,7 +36,6 @@ export const OfferPage = () => {
     offerSize,
     interest,
     onLtvChange,
-    onDurationChange,
     onOfferSizeChange,
     onInterestChange,
     onCreateOffer,
@@ -62,12 +59,7 @@ export const OfferPage = () => {
     notChangebleUserSize,
   } = useOfferPage();
 
-  const maxLimitInterest =
-    duration === 7
-      ? MAX_LIMIT_INTEREST_FOR_7_DAYS
-      : MAX_LIMIT_INTEREST_FOR_14_DAYS;
-
-  const isMaxLimitInterest = parseFloat(interest) > maxLimitInterest;
+  const isMaxLimitInterest = parseFloat(interest) > MAX_LIMIT_INTEREST;
   const apr = (parseFloat(interest) / duration) * 365;
 
   const availableMaxBalance = (
@@ -122,15 +114,6 @@ export const OfferPage = () => {
             </>
           )}
 
-          <RadioButtonField
-            label="Duration"
-            currentOption={{
-              label: `${duration} days`,
-              value: duration,
-            }}
-            onOptionChange={onDurationChange}
-            options={DURATION_OPTIONS}
-          />
           <div className={styles.fieldWrapper}>
             <SizeField
               value={offerSize}
@@ -164,7 +147,7 @@ export const OfferPage = () => {
               />
               <div className={styles.errors}>
                 {isMaxLimitInterest && (
-                  <p>max interest rate is {maxLimitInterest}%</p>
+                  <p>max interest rate is {MAX_LIMIT_INTEREST}%</p>
                 )}
               </div>
             </>

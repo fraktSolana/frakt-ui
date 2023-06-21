@@ -67,9 +67,7 @@ const SizeField: FC<SizeFieldProps> = ({
         {!!label && (
           <div className={styles.label}>
             <span className={styles.labelName}>{label}</span>
-            <Tooltip placement="bottom" overlay={toolTipText}>
-              <QuestionCircleOutlined className={styles.questionIcon} />
-            </Tooltip>
+            <Tooltip placement="bottom" overlay={toolTipText} />
           </div>
         )}
         <div className={styles.label}>

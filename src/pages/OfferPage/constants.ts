@@ -18,9 +18,6 @@ export const riskMarks: { [key: string]: string | JSX.Element } = {
   100: '100%',
 };
 
-export const MAX_LIMIT_INTEREST_FOR_7_DAYS = 5;
-export const MAX_LIMIT_INTEREST_FOR_14_DAYS = 10;
-
 export const DURATION_OPTIONS: RBOption<number>[] = [
   {
     label: '7 days',
@@ -53,7 +50,7 @@ export const EARNER_INTEREST_OPTIONS: RBOption<BondFeatures>[] = [
 export const RECEIVE_OPTIONS: RBOption<BondFeatures>[] = [
   {
     label: 'Liquidate',
-    value: BondFeatures.AutoreceiveSol,
+    value: BondFeatures.None,
   },
   {
     label: 'Receive in wallet',
