@@ -66,7 +66,7 @@ export const useOfferPage = () => {
   const [offerType, setOfferType] = useState<OfferTypes>(OfferTypes.FIXED);
   const [maxLoanValue, setMaxLoanValue] = useState<string>('0');
   const [receiveNftFeature, setReceiveNftFeature] = useState<BondFeatures>(
-    BondFeatures.ReceiveNftOnLiquidation,
+    BondFeatures.AutoReceiveAndReceiveNft,
   );
   const [autocompoundFeature, setAutocompoundFeature] = useState<BondFeatures>(
     BondFeatures.AutoreceiveSol,
@@ -82,8 +82,8 @@ export const useOfferPage = () => {
 
   const editReceiveBondFeature =
     isEdit && isLiquidatedBondFeature(receiveNftFeature)
-      ? BondFeatures.None
-      : BondFeatures.ReceiveNftOnLiquidation;
+      ? BondFeatures.AutoreceiveSol
+      : BondFeatures.AutoReceiveAndReceiveNft;
 
   useEffect(() => {
     const updateValues = () => {

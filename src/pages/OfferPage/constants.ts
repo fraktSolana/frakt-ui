@@ -50,10 +50,10 @@ export const EARNER_INTEREST_OPTIONS: RBOption<BondFeatures>[] = [
 export const RECEIVE_OPTIONS: RBOption<BondFeatures>[] = [
   {
     label: 'Liquidate',
-    value: BondFeatures.None,
+    value: BondFeatures.AutoreceiveSol,
   },
   {
     label: 'Receive in wallet',
-    value: BondFeatures.ReceiveNftOnLiquidation,
+    value: BondFeatures.AutoReceiveAndReceiveNft,
   },
 ];

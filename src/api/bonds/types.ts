@@ -172,11 +172,20 @@ export interface BondHistoryStats {
   floorSnapshot: number; // used
 
   expiration: number; // used
-  state: string;
+  state: EBondHistoryEventType;
   bondPubkey: string;
   when: number; // used
   received: number | string; // used
   status: FraktBondState; // used
+}
+
+export enum EBondHistoryEventType {
+  All = 'all',
+  Creation = 'creation',
+  Repay = 'repay',
+  Liquidated = 'liquidated',
+  LiquidatingIn24 = 'liquidatingIn24',
+  Exited = 'exited',
 }
 
 export interface Bond {
