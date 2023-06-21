@@ -26,7 +26,7 @@ import { RBOption } from '../../components/RadioButton';
 import { makeModifyPairTransactions } from '@frakt/utils/bonds/transactions/makeModifyPairTransactions';
 import { parseMarketOrder } from '../MarketsPage/components/OrderBook/helpers';
 import { OfferTypes } from './types';
-import { MAX_LOAN_VALUE, FEE_FOR_CREATE_OFFER_TRANSACTION } from './constants';
+import { MAX_LOAN_VALUE } from './constants';
 import {
   calculateLTV,
   calculateLtvByOfferType,
