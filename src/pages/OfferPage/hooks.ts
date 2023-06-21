@@ -26,7 +26,7 @@ import { RBOption } from '../../components/RadioButton';
 import { makeModifyPairTransactions } from '@frakt/utils/bonds/transactions/makeModifyPairTransactions';
 import { parseMarketOrder } from '../MarketsPage/components/OrderBook/helpers';
 import { OfferTypes } from './types';
-import { MAX_LOAN_VALUE, FEE_FOR_CREATE_OFFER_TRANSACTION } from './constants';
+import { MAX_LOAN_VALUE } from './constants';
 import {
   calculateLTV,
   calculateLtvByOfferType,
@@ -58,7 +58,7 @@ export const useOfferPage = () => {
   const connection = useConnection();
 
   const [ltv, setLtv] = useState<number>(10);
-  const [duration, setDuration] = useState<number>(14);
+  const [duration, _] = useState<number>(7);
   const [interest, setInterest] = useState<string>('0');
   const [offerSize, setOfferSize] = useState<string>('0');
   const [notChangebleUserSize, setNotChangebleUserSize] = useState<string>('0');
@@ -87,11 +87,10 @@ export const useOfferPage = () => {
 
   useEffect(() => {
     const updateValues = () => {
-      const { duration, interest, size, ltv, rawData } = initialPairValues;
+      const { interest, size, ltv, rawData } = initialPairValues;
       const offerType =
         ltv === MAX_LOAN_VALUE ? OfferTypes.FIXED : OfferTypes.FLOOR;
 
-      const updatedDuration = duration || 0;
       const updatedInterest = (interest * 100)?.toFixed(2);
       const updatedOfferSize = (size || 0).toFixed(2);
       const updatedLtv = ltv || 0;
@@ -101,7 +100,6 @@ export const useOfferPage = () => {
         rawData?.maxReturnAmountFilter / 1e9
       )?.toFixed(2);
 
-      setDuration(updatedDuration);
       setInterest(updatedInterest);
       setOfferSize(updatedOfferSize);
       setLtv(updatedLtv);
@@ -113,7 +111,6 @@ export const useOfferPage = () => {
 
       setInitialEditValues({
         ltv: updatedLtv,
-        duration: updatedDuration,
         interest: updatedInterest,
         offerSize: updatedOfferSize,
         autocompoundFeature: updatedAutocompoundFeature,
@@ -149,7 +146,6 @@ export const useOfferPage = () => {
     }
   }, [
     ltv,
-    duration,
     interest,
     offerSize,
     autocompoundFeature,
@@ -171,9 +167,6 @@ export const useOfferPage = () => {
   }, [isLoading, market, offerType, isEdit]);
 
   const onLtvChange = useCallback((value: number) => setLtv(value), []);
-  const onDurationChange = (nextOption: RBOption<number>) => {
-    setDuration(nextOption.value);
-  };
 
   const onMaxLoanValueChange = (value: string) => {
     setMaxLoanValue(value);
@@ -387,7 +380,6 @@ export const useOfferPage = () => {
     offerSize,
     interest,
     onLtvChange,
-    onDurationChange,
     onOfferSizeChange,
     onInterestChange,
     onCreateOffer,
