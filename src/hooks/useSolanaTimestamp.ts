@@ -1,18 +1,25 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { commonActions } from './../state/common/actions';
-import { useEffect } from 'react';
+import moment from 'moment';
+import { useQuery } from '@tanstack/react-query';
+import { useConnection } from '@solana/wallet-adapter-react';
 
-import { selectSolanaTimestamp } from '../state/common/selectors';
+export const useSolanaTimestamp = () => {
+  const { connection } = useConnection();
 
-type UseSolanaTimestamp = () => number | null;
+  const { data: solanaTimestamp, isLoading } = useQuery(
+    ['solanaTimestamp'],
+    async () => {
+      const { absoluteSlot: lastSlot } = await connection.getEpochInfo();
+      const solanaTimeUnix = await connection.getBlockTime(lastSlot);
+      return solanaTimeUnix || moment().unix();
+    },
+    {
+      staleTime: 60_000,
+      refetchOnWindowFocus: false,
+    },
+  );
 
-export const useSolanaTimestamp: UseSolanaTimestamp = () => {
-  const dispatch = useDispatch();
-  const solanaTimestamp = useSelector(selectSolanaTimestamp);
-
-  useEffect(() => {
-    dispatch(commonActions.fetchSolanaTimestamp());
-  }, [dispatch]);
-
-  return solanaTimestamp;
+  return {
+    solanaTimestamp,
+    isLoading,
+  };
 };

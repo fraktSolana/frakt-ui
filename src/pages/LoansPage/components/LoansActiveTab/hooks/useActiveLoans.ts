@@ -1,22 +1,20 @@
 import { useState } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { useDispatch } from 'react-redux';
+import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { sum, map } from 'lodash';
 
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { paybackLoans } from '@frakt/utils/loans/paybackLoans';
-import { commonActions } from '@frakt/state/common/actions';
 import { throwLogsError } from '@frakt/utils';
-import { useConnection } from '@frakt/hooks';
 import {
   useSelectedLoans,
   useHiddenLoansPubkeys,
 } from '@frakt/pages/LoansPage/loansState';
+import { useConfetti } from '@frakt/components/Confetti';
 
 export const useActiveLoans = () => {
   const wallet = useWallet();
-  const connection = useConnection();
-  const dispatch = useDispatch();
+  const { connection } = useConnection();
+  const { setVisible } = useConfetti();
 
   const { selection, clearSelection } = useSelectedLoans();
   const { addHiddenLoansPubkeys } = useHiddenLoansPubkeys();
@@ -29,8 +27,7 @@ export const useActiveLoans = () => {
 
   const [isLedger, setIsLedger] = useState<boolean>(false);
 
-  const showConfetti = () =>
-    dispatch(commonActions.setConfetti({ isVisible: true }));
+  const showConfetti = () => setVisible(true);
 
   const onBulkRepay = async (): Promise<void> => {
     try {

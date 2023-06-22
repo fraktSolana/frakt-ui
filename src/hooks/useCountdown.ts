@@ -17,7 +17,7 @@ type UseCountdown = (endTime: number) => {
 export const useCountdown: UseCountdown = (endTime: number) => {
   const intervalIdRef = useRef<ReturnType<typeof setInterval>>(null);
   const [currentTime, setCurrentTime] = useState<number | null>(null);
-  const solanaTimestamp = useSolanaTimestamp();
+  const { solanaTimestamp } = useSolanaTimestamp();
 
   const formatDateUnit = (value: number): string => {
     return value < 10 ? `0${value}` : `${value}`;

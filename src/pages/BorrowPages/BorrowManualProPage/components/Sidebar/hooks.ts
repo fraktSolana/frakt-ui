@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { useHistory } from 'react-router-dom';
 
 import { PATHS } from '@frakt/constants';
-import { useConnection } from '@frakt/hooks';
 import { CartOrder, useBorrow } from '@frakt/pages/BorrowPages/cartState';
 import { useLoadingModalState } from '@frakt/components/LoadingModal';
 import { borrowBulk } from '@frakt/pages/BorrowPages/helpers';
@@ -28,7 +27,7 @@ export const useSidebar = () => {
 
   const history = useHistory();
 
-  const connection = useConnection();
+  const { connection } = useConnection();
   const wallet = useWallet();
 
   const {

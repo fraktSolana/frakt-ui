@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import moment from 'moment';
 
 import { convertTakenOrdersToOrderParams } from '@frakt/pages/BorrowPages/cartState';
-import { useBondsTransactions } from '@frakt/hooks/useBondTransactions';
+import { useBondsTransactions } from '@frakt/hooks';
 import { claimNftByLender, isReceiveNftFeature } from '@frakt/utils/bonds';
 import Button from '@frakt/components/Button';
 import { throwLogsError } from '@frakt/utils';

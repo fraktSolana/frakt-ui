@@ -4,20 +4,10 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { routes } from '@frakt/constants/routes';
 import Header from '@frakt/components/Header';
 import { Navigation } from '@frakt/components/Navigation';
-import {
-  useConnectionInit,
-  useAppInit,
-  useHealthNotification,
-  useFirebaseNotifications,
-  useWebSocketSubscriptions,
-} from '@frakt/hooks';
+import { useFirebaseNotifications } from '@frakt/hooks';
 
 const InitialCalls: FC = ({ children }) => {
-  useAppInit();
-  useHealthNotification();
-  useConnectionInit();
   useFirebaseNotifications();
-  useWebSocketSubscriptions();
 
   return <>{children}</>;
 };

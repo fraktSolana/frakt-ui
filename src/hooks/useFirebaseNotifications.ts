@@ -1,10 +1,8 @@
 import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken } from 'firebase/messaging';
-
-import { selectWalletPublicKey } from '../state/common/selectors';
-import { commonActions } from '../state/common/actions';
 
 const firebaseConfig = {
   apiKey: process.env.FCM_API_KEY,
@@ -18,16 +16,19 @@ const firebaseConfig = {
 };
 
 export const useFirebaseNotifications = (): void => {
-  const dispatch = useDispatch();
-  const walletPublicKey = useSelector(selectWalletPublicKey);
+  const wallet = useWallet();
   useEffect(() => {
-    if (walletPublicKey && dispatch && 'serviceWorker' in navigator) {
+    if (wallet.publicKey && 'serviceWorker' in navigator) {
       const app = initializeApp(firebaseConfig);
       const messaging = getMessaging(app);
 
       getToken(messaging, { vapidKey: process.env.FCM_VAPID })
         .then((token) => {
-          dispatch(commonActions.sendFcmToken(token));
+          axios.post(`https://${process.env.BACKEND_DOMAIN}/web`, {
+            token,
+            user: wallet.publicKey.toBase58(),
+            type: 'all',
+          });
         })
         .catch(() => {});
 
@@ -36,5 +37,5 @@ export const useFirebaseNotifications = (): void => {
         .then(() => {})
         .catch(() => {});
     }
-  }, [walletPublicKey, dispatch]);
+  }, [wallet]);
 };

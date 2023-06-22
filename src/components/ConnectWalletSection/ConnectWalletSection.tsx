@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import classNames from 'classnames';
-import { useDispatch } from 'react-redux';
 
-import { commonActions } from '../../state/common/actions';
-import Button from '../../components/Button';
+import { useWalletModal } from '@frakt/components/WalletModal';
+import Button from '@frakt/components/Button';
+
 import styles from './styles.module.scss';
 
 interface ConnectWalletSectionProps {
@@ -15,7 +15,7 @@ export const ConnectWalletSection: FC<ConnectWalletSectionProps> = ({
   text,
   className,
 }) => {
-  const dispatch = useDispatch();
+  const { setVisible } = useWalletModal();
 
   return (
     <div className={classNames(styles.connectWallet, className)}>
@@ -23,9 +23,7 @@ export const ConnectWalletSection: FC<ConnectWalletSectionProps> = ({
       <Button
         type="secondary"
         className={styles.connectWalletBtn}
-        onClick={() =>
-          dispatch(commonActions.setWalletModal({ isVisible: true }))
-        }
+        onClick={() => setVisible(true)}
       >
         Connect wallet
       </Button>

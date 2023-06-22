@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import { SignOut, ChangeWallet } from '@frakt/icons';
 
-import { WalletsItems } from '../WalletContent/WalletContent';
+import { WalletsItems } from '../WalletModal/WalletModal';
 import UserBalanceInfo from './components/UserBalanceInfo';
 import GeneralUserInfo from './components/GeneralUserInfo';
 

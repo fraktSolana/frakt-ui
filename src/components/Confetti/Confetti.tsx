@@ -1,20 +1,17 @@
 import { FC } from 'react';
 import ReactConfetti from 'react-confetti';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { commonActions } from '../../state/common/actions';
-import { selectConfettiVisible } from '../../state/common/selectors';
+import { useConfetti } from './hooks';
 
 const Confetti: FC = () => {
-  const dispatch = useDispatch();
-  const confettiVisible = useSelector(selectConfettiVisible);
+  const { visible, setVisible } = useConfetti();
 
   const width = window.innerWidth;
   const height = window.innerHeight;
 
   return (
     <>
-      {confettiVisible && (
+      {visible && (
         <ReactConfetti
           numberOfPieces={500}
           recycle={false}
@@ -28,7 +25,7 @@ const Confetti: FC = () => {
             h: window.innerHeight,
           }}
           onConfettiComplete={() => {
-            dispatch(commonActions.setConfetti({ isVisible: false }));
+            setVisible(false);
           }}
         />
       )}

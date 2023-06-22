@@ -1,4 +1,8 @@
-import { WalletContextState, useWallet } from '@solana/wallet-adapter-react';
+import {
+  WalletContextState,
+  useWallet,
+  useConnection,
+} from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
 import { useQuery } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
@@ -12,7 +16,7 @@ import {
   BondCartOrder,
 } from '@frakt/api/nft';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
-import { useConnection, useDebounce } from '@frakt/hooks';
+import { useDebounce } from '@frakt/hooks';
 import { captureSentryError } from '@frakt/utils/sentry';
 import { NFT } from '@frakt/pages/DashboardPage/types';
 import { notify, throwLogsError } from '@frakt/utils';
@@ -83,7 +87,7 @@ const useFetchWalletNFTsWithoutSearchParams = () => {
 };
 
 export const useBorrowSingleBond = () => {
-  const connection = useConnection();
+  const { connection } = useConnection();
   const history = useHistory();
   const wallet = useWallet();
 

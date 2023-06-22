@@ -4,8 +4,7 @@ import {
   getBestOrdersForExit,
   getBestOrdersForRefinance,
 } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { useDispatch } from 'react-redux';
+import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { sumBy, get } from 'lodash';
 
 import {
@@ -14,19 +13,18 @@ import {
 } from '@frakt/pages/BorrowPages/cartState';
 import { BASE_POINTS, useMarket, useMarketPairs } from '@frakt/utils/bonds';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
-import { commonActions } from '@frakt/state/common/actions';
 import { refinanceLoan } from '@frakt/utils/loans';
 import { throwLogsError } from '@frakt/utils';
-import { useConnection } from '@frakt/hooks';
 import { Loan } from '@frakt/api/loans';
+import { useConfetti } from '@frakt/components/Confetti';
 
 export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
   const wallet = useWallet();
-  const connection = useConnection();
-  const dispatch = useDispatch();
+  const { connection } = useConnection();
+  const { setVisible } = useConfetti();
 
   const showConfetti = (): void => {
-    dispatch(commonActions.setConfetti({ isVisible: true }));
+    setVisible(true);
   };
 
   const {

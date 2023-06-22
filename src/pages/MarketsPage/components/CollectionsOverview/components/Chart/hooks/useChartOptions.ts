@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 
-import { selectTheme } from '@frakt/state/theme/selectors';
+import { useTheme } from '@frakt/hooks';
 import { MarketHistory } from '@frakt/api/bonds';
 
 import { fontTitleOptions, axisOptions } from '../constants';
@@ -12,7 +11,7 @@ import {
 } from '../helpers';
 
 export const useChartOptions = (marketHistory: MarketHistory[]) => {
-  const theme: string = useSelector(selectTheme);
+  const { theme } = useTheme();
 
   const [tooltipBackground, setTooltipBackground] = useState<string>('');
 

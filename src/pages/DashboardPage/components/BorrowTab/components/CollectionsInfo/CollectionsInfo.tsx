@@ -1,11 +1,10 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
 
-import { commonActions } from '@frakt/state/common/actions';
 import { CollectionsStats } from '@frakt/api/user';
 import Button from '@frakt/components/Button';
+import { useWalletModal } from '@frakt/components/WalletModal';
 
 import {
   DashboardColumnValue,
@@ -19,11 +18,10 @@ const CollectionsInfo: FC<{
   hiddenButton?: boolean;
   collectionsStats: CollectionsStats;
 }> = ({ hiddenButton, collectionsStats }) => {
-  const dispatch = useDispatch();
   const { connected } = useWallet();
+  const { setVisible } = useWalletModal();
 
-  const openConnectWalleModal = () =>
-    dispatch(commonActions.setWalletModal({ isVisible: true }));
+  const openConnectWalleModal = () => setVisible(true);
 
   return (
     <div

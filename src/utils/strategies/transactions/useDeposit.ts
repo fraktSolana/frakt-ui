@@ -1,5 +1,4 @@
-import { useWallet } from '@solana/wallet-adapter-react';
-import { useConnection } from '@frakt/hooks';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { signAndConfirmTransaction } from '@frakt/utils/transactions';
@@ -22,7 +21,7 @@ export const useDeposit: UseDeposit = ({
   onClearDepositValue,
 }) => {
   const wallet = useWallet();
-  const connection = useConnection();
+  const { connection } = useConnection();
 
   const onCreateInvestment = async () => {
     if (wallet.publicKey) {

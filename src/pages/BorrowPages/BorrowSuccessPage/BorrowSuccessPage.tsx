@@ -1,21 +1,20 @@
 import { FC, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
 import { PATHS } from '@frakt/constants';
 import Button from '@frakt/components/Button';
-import { commonActions } from '@frakt/state/common/actions';
+import { useConfetti } from '@frakt/components/Confetti';
 
 import styles from './BorrowSuccessPage.module.scss';
 import { BorrowHeader } from '../components/BorrowHeader';
 
 export const BorrowSuccessPage: FC = () => {
-  const dispatch = useDispatch();
+  const { setVisible } = useConfetti();
 
   useEffect(() => {
-    dispatch(commonActions.setConfetti({ isVisible: true }));
-  }, [dispatch]);
+    setVisible(true);
+  }, [setVisible]);
 
   return (
     <AppLayout>

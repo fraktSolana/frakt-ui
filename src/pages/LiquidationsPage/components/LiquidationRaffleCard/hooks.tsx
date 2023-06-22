@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 
 import { useConfirmModal } from '@frakt/components/ConfirmModal';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { RaffleListItem } from '@frakt/api/raffle';
-import { useConnection } from '@frakt/hooks';
 import {
   participateInRaffle as participateInRaffleTxn,
   addTicketsToParticipation as addTicketsToParticipationTxn,
@@ -14,7 +13,7 @@ import { useFetchUserTickets } from '../../hooks';
 
 export const useLiquidationsRaffle = (raffle: RaffleListItem) => {
   const wallet = useWallet();
-  const connection = useConnection();
+  const { connection } = useConnection();
 
   const { lotteryTickets } = useFetchUserTickets();
   const [ticketCount, setTicketCount] = useState<number>(0);

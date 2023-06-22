@@ -29,7 +29,7 @@ export const SizeCell: FC<SizeCellProps> = ({ ltv, size }) => {
           styles.highestLtvColor,
         )}
       >
-        {ltv}% LTV
+        {Math.trunc(ltv)}% LTV
       </span>
     </div>
   );

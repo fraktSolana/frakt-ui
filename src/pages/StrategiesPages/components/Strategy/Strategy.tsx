@@ -1,16 +1,14 @@
 import { FC, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
 
 import { TabsNames } from '@frakt/components/PoolModal/types';
-import { commonActions } from '@frakt/state/common/actions';
 import { PoolModal } from '@frakt/components/PoolModal';
 import { TradePoolUser } from '@frakt/api/strategies';
 import Tooltip from '@frakt/components/Tooltip';
 import Button from '@frakt/components/Button';
 import { Solana } from '@frakt/icons';
+import { useWalletModal } from '@frakt/components/WalletModal';
 
 import CollectionsPreviews from '../CollectionsPreviews';
 import { calcWithdrawValue } from './helpers';
@@ -23,15 +21,14 @@ interface StrategyProps {
 }
 
 const Strategy: FC<StrategyProps> = ({ tradePool, isAdmin }) => {
-  const history = useHistory();
   const wallet = useWallet();
+  const { setVisible } = useWalletModal();
 
   const [poolModalVisible, setPoolModalVisible] = useState<TabsNames>(null);
-  const dispatch = useDispatch();
 
   const openPoolModal = (tab: TabsNames) => {
     if (!wallet?.connected) {
-      dispatch(commonActions.setWalletModal({ isVisible: true }));
+      setVisible(true);
     } else {
       setPoolModalVisible(tab);
     }

@@ -1,6 +1,17 @@
 import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { stringify } from '@frakt/utils/state';
+import {
+  ifElse,
+  isEmpty,
+  compose,
+  concat,
+  join,
+  map,
+  toPairs,
+  pickBy,
+  allPass,
+} from 'ramda';
+import { isNotEmpty, isNotNil } from 'ramda-adjunct';
 
 import {
   FetchNextPageOptions,
@@ -12,6 +23,18 @@ import { FetchItemsParams } from '@frakt/api/raffle';
 const LIMIT = 20;
 
 const baseUrl = `https://${process.env.BACKEND_DOMAIN}`;
+
+const stringify = ifElse(
+  isEmpty,
+  () => '',
+  compose(
+    concat('?'),
+    join('&'),
+    map(join('=')),
+    toPairs,
+    pickBy(allPass([isNotNil, isNotEmpty])),
+  ),
+);
 
 export const useFetchRafflesList = (params: {
   url: string;

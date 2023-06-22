@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Ledger, MathWallet } from '@frakt/icons';
-import styles from './styles.module.scss';
+import styles from './WalletModal.module.scss';
 
 interface WalletItemProps {
   onClick: () => void;

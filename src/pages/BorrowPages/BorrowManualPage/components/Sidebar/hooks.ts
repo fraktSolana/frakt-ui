@@ -1,5 +1,9 @@
 import { useState } from 'react';
-import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
+import {
+  useWallet,
+  WalletContextState,
+  useConnection,
+} from '@solana/wallet-adapter-react';
 import { useHistory } from 'react-router-dom';
 import { web3 } from 'fbonds-core';
 import { borrow } from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
@@ -9,7 +13,6 @@ import {
   showSolscanLinkNotification,
   signAndSendAllTransactions,
 } from '@frakt/utils/transactions';
-import { useConnection } from '@frakt/hooks';
 import { useBorrow } from '@frakt/pages/BorrowPages/cartState';
 import { Market } from '@frakt/api/bonds';
 import { notify } from '@frakt/utils';
@@ -47,7 +50,7 @@ export const useSidebar = () => {
     history.push(PATHS.BORROW_SUCCESS);
   };
 
-  const connection = useConnection();
+  const { connection } = useConnection();
   const wallet = useWallet();
 
   const {
