@@ -24,7 +24,7 @@ const BondsOverview: FC = () => {
         setValue={setTabValue}
       />
       <div className={styles.tabContent}>
-        {tabValue === MarketTabsNames.BONDS && <BondsTab />}
+        {tabValue === MarketTabsNames.LOANS && <BondsTab />}
         {tabValue === MarketTabsNames.HISTORY && <HistoryTab />}
       </div>
     </div>
