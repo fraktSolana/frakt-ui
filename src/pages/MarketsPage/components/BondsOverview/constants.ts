@@ -2,8 +2,8 @@ import { Tab } from '@frakt/components/Tabs';
 
 export const MARKET_TABS: Tab[] = [
   {
-    label: 'My bonds',
-    value: 'bonds',
+    label: 'My loans',
+    value: 'loans',
   },
   {
     label: 'Activity',
@@ -13,5 +13,5 @@ export const MARKET_TABS: Tab[] = [
 
 export enum MarketTabsNames {
   HISTORY = 'history',
-  BONDS = 'bonds',
+  LOANS = 'loans',
 }

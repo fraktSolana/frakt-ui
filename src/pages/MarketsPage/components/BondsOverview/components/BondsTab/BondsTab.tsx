@@ -68,7 +68,7 @@ const BondsTab: FC<BondsTabProps> = ({
         {!connected ? (
           <ConnectWalletSection
             className={styles.emptyList}
-            text="Connect your wallet to see my bonds"
+            text="Connect your wallet to see my loans"
           />
         ) : (
           <>
