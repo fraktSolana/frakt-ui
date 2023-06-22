@@ -1,10 +1,9 @@
 import { FC } from 'react';
 import { compose, split, nth, tail } from 'ramda';
 import { isString, isFunction } from 'lodash';
-import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 
-import { selectTheme } from '@frakt/state/theme/selectors';
+import { Theme, useTheme } from '@frakt/hooks/useTheme';
 import {
   createNavigationLink,
   createNavigationsLinks,
@@ -24,7 +23,6 @@ interface MenuItem {
   iconDark?: any;
   className?: string;
   event?: string;
-  selector?: any;
   to?: string | ((param: string) => string);
   pathname?: string;
   props?: any;
@@ -35,7 +33,6 @@ interface MenuItem {
 export const MenuItem: FC<MenuItem> = ({
   icon: rawIcon,
   iconDark,
-  selector,
   pathname = '',
   href,
   label,
@@ -43,8 +40,8 @@ export const MenuItem: FC<MenuItem> = ({
   primary,
   to,
 }) => {
-  const theme = useSelector(selectTheme);
-  const icon = theme === 'dark' ? iconDark : rawIcon;
+  const { theme } = useTheme();
+  const icon = theme === Theme.DARK ? iconDark : rawIcon;
 
   const isActive =
     compose(nth(1), split('/'))(location.pathname) === tail(pathname);
@@ -54,10 +51,7 @@ export const MenuItem: FC<MenuItem> = ({
   if (isString(to)) {
     return createNavigationLink(navigationParams);
   } else if (isFunction(to)) {
-    const param: string = useSelector(selector);
-
-    if (param) createNavigationLink({ ...navigationParams, param });
-    else return null;
+    return null;
   }
 
   return (

@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
@@ -12,7 +11,7 @@ import {
   defaults,
 } from 'chart.js';
 
-import { selectTheme } from '@frakt/state/theme/selectors';
+import { useTheme } from '@frakt/hooks';
 
 import { useFetchMarketHistory } from './useFetchMarketHistory';
 import { useChartOptions } from './useChartOptions';
@@ -36,7 +35,7 @@ ChartJS.register(
 const DEFAULT_BAR_BACKGROUND_COLOR = '#007aff';
 
 export const useChart = () => {
-  const theme: string = useSelector(selectTheme);
+  const { theme } = useTheme();
   const { marketPubkey } = useParams<{ marketPubkey: string }>();
 
   const { data: marketHistory, loading } = useFetchMarketHistory({

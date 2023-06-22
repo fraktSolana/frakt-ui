@@ -1,21 +1,18 @@
 import { FC, useRef } from 'react';
-import { useDispatch } from 'react-redux';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { useOnClickOutside } from '@frakt/hooks';
-import { commonActions } from '../../state/common/actions';
+
 import { sendAmplitudeData } from '../../utils/amplitude';
 import CurrentUserTable from '../CurrentUserTable';
-import styles from './styles.module.scss';
+import styles from './WalletModal.module.scss';
 import { WalletItem } from './WalletItem';
-
-interface WalletContentProps {
-  className?: string;
-}
+import { useWalletModal } from './hooks';
 
 export const WalletsItems: FC = () => {
   const { wallets, select } = useWallet();
-  const dispatch = useDispatch();
+
+  const { setVisible } = useWalletModal();
 
   return (
     <div className={styles.itemsContainer}>
@@ -24,7 +21,7 @@ export const WalletsItems: FC = () => {
           key={idx}
           onClick={(): void => {
             select(adapter.name);
-            dispatch(commonActions.setWalletModal({ isVisible: false }));
+            setVisible(false);
           }}
           imageSrc={adapter.icon}
           imageAlt={adapter.name}
@@ -35,21 +32,23 @@ export const WalletsItems: FC = () => {
   );
 };
 
-const WalletContent: FC<WalletContentProps> = ({ className = '' }) => {
-  const dispatch = useDispatch();
+interface WalletModalProps {
+  className?: string;
+}
+
+export const WalletModal: FC<WalletModalProps> = ({ className = '' }) => {
   const { connected } = useWallet();
+  const { setVisible } = useWalletModal();
 
   const ref = useRef();
-  useOnClickOutside(ref, () =>
-    dispatch(commonActions.setWalletModal({ isVisible: false })),
-  );
+  useOnClickOutside(ref, () => setVisible(false));
 
   return (
     <div className={`${styles.wrapper} ${className}`}>
       <div
         className={styles.overlay}
         onClick={() => {
-          dispatch(commonActions.setWalletModal({ isVisible: false }));
+          setVisible(false);
           sendAmplitudeData('navigation-connect');
         }}
       />
@@ -63,5 +62,3 @@ const WalletContent: FC<WalletContentProps> = ({ className = '' }) => {
     </div>
   );
 };
-
-export default WalletContent;

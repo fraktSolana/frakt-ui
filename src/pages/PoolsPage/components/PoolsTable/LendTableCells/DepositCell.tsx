@@ -1,15 +1,13 @@
 import { FC, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { LiquidityPool } from '@frakt-protocol/frakt-sdk';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import classNames from 'classnames';
 
 import { harvestLiquidity as harvestTxn } from '@frakt/utils/loans';
 import { PoolModal, TabsNames } from '@frakt/components/PoolModal';
-import { commonActions } from '@frakt/state/common/actions';
 import { Button } from '@frakt/components/Button';
 import Tooltip from '@frakt/components/Tooltip';
-import { useConnection } from '@frakt/hooks';
+import { useWalletModal } from '@frakt/components/WalletModal';
 
 import styles from '../PoolsTable.module.scss';
 
@@ -24,16 +22,15 @@ export const DepositCell: FC<DepositCellProps> = ({
   liquidityPool,
   isCardView,
 }) => {
-  const connection = useConnection();
+  const { connection } = useConnection();
   const wallet = useWallet();
-
-  const dispatch = useDispatch();
+  const { setVisible } = useWalletModal();
 
   const [poolModalVisible, setPoolModalVisible] = useState<TabsNames>(null);
 
   const openPoolModal = (tab: TabsNames) => {
     if (!wallet.connected) {
-      dispatch(commonActions.setWalletModal({ isVisible: true }));
+      setVisible(true);
     } else {
       setPoolModalVisible(tab);
     }

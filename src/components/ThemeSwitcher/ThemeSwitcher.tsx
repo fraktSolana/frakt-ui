@@ -1,34 +1,22 @@
-import { useEffect, FC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { FC } from 'react';
 import Switch from 'react-switch';
-
-import { selectTheme } from '../../state/theme/selectors';
-import { themeActions } from '../../state/theme/actions';
-import styles from './styles.module.scss';
-import { Sun, Moon } from '@frakt/icons';
 import classNames from 'classnames';
 
+import { Sun, Moon } from '@frakt/icons';
+import { Theme, useTheme } from '@frakt/hooks/useTheme';
+
+import styles from './styles.module.scss';
+
 export const ThemeSwitcher: FC = () => {
-  const dispatch = useDispatch();
-  const theme = useSelector(selectTheme);
+  const { theme, toggleTheme } = useTheme();
 
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  const handleThemeChange = () => {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    dispatch(themeActions.setTheme(next));
-  };
-
-  const checked = theme === 'dark';
+  const checked = theme === Theme.DARK;
 
   return (
     <Switch
       width={64}
       className={classNames(styles.switch, checked && styles.checkedValue)}
-      onChange={handleThemeChange}
+      onChange={toggleTheme}
       checked={checked}
       offColor={'#fff'}
       offHandleColor={'#fff'}

@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { useSelector } from 'react-redux';
 
 import ThemeSwitcher from '../ThemeSwitcher';
 import styles from './BurgerMenu.module.scss';
@@ -10,7 +9,8 @@ import {
   COMMUNITY_LINKS,
   DOCUMENTATIONS_LINKS,
 } from '@frakt/components/Navigation';
-import { selectTheme } from '../../state/theme/selectors';
+import { Theme, useTheme } from '@frakt/hooks/useTheme';
+
 import { useBurgerMenu } from './hooks';
 
 interface BurgerMenuProps {
@@ -20,9 +20,9 @@ interface BurgerMenuProps {
 const BurgerMenu: FC<BurgerMenuProps> = ({ className = '' }) => {
   const { isVisible, toggleVisibility } = useBurgerMenu();
 
-  const theme: string = useSelector(selectTheme);
+  const { theme } = useTheme();
 
-  const isDark = theme === 'dark';
+  const isDark = theme === Theme.DARK;
 
   return (
     <>

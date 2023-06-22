@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { web3 } from 'fbonds-core';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { useHistory, useParams } from 'react-router-dom';
 import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 
@@ -18,7 +18,6 @@ import {
 import { signAndConfirmTransaction } from '@frakt/utils/transactions';
 import { notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
-import { useConnection } from '@frakt/hooks';
 import { useNativeAccount } from '@frakt/utils/accounts';
 import { PATHS } from '@frakt/constants';
 
@@ -55,7 +54,7 @@ export const useOfferPage = () => {
     : marketLoading;
 
   const wallet = useWallet();
-  const connection = useConnection();
+  const { connection } = useConnection();
 
   const [ltv, setLtv] = useState<number>(10);
   const [duration, _] = useState<number>(7);

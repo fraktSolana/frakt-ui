@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
-import { useWallet } from '@solana/wallet-adapter-react';
-
-import { useConnection } from '../../hooks';
+import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 
 export const useNativeAccount = (): {
   account: web3.AccountInfo<Buffer>;
 } => {
-  const connection = useConnection();
+  const { connection } = useConnection();
   const { wallet, publicKey } = useWallet();
 
   const [nativeAccount, setNativeAccount] =

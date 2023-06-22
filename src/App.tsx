@@ -4,11 +4,9 @@ import {
   WalletProvider,
 } from '@solana/wallet-adapter-react';
 import { FC } from 'react';
-import { Provider as ReduxProvider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { Router } from '@frakt/router';
-import store from '@frakt/state/store';
 import { initSentry } from '@frakt/utils/sentry';
 import { initAmplitude } from '@frakt/utils/amplitude';
 import Confetti from '@frakt/components/Confetti';
@@ -26,15 +24,13 @@ const App: FC = () => {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <ReduxProvider store={store}>
-          <SolanaConnectionWalletProvider>
-            <DialectProvider>
-              <Router />
-              <Confetti />
-              <NotificationModal />
-            </DialectProvider>
-          </SolanaConnectionWalletProvider>
-        </ReduxProvider>
+        <SolanaConnectionWalletProvider>
+          <DialectProvider>
+            <Router />
+            <Confetti />
+            <NotificationModal />
+          </DialectProvider>
+        </SolanaConnectionWalletProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   );

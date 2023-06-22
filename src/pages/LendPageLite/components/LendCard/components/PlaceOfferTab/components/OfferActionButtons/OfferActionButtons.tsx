@@ -1,10 +1,9 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
 
-import { commonActions } from '@frakt/state/common/actions';
 import Button from '@frakt/components/Button';
+import { useWalletModal } from '@frakt/components/WalletModal';
 
 import styles from './OfferActionButtons.module.scss';
 
@@ -26,9 +25,9 @@ const OfferActionButtons: FC<OfferActionButtonsProps> = ({
   isOfferHasChanged,
 }) => {
   const { connected } = useWallet();
-  const dispatch = useDispatch();
+  const { toggleVisibility } = useWalletModal();
 
-  const onToggleWalletModal = () => dispatch(commonActions.toggleWalletModal());
+  const onToggleWalletModal = () => toggleVisibility();
 
   const deleteButtonProps = {
     onClick: onRemoveOffer,

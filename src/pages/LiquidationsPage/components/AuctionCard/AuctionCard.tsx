@@ -1,14 +1,13 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useDispatch } from 'react-redux';
 import moment from 'moment';
 
 import { LoadingModal } from '@frakt/components/LoadingModal';
-import { commonActions } from '@frakt/state/common/actions';
 import { createTimerJSX } from '@frakt/components/Timer';
 import { AuctionListItem } from '@frakt/api/raffle';
 import Button from '@frakt/components/Button';
 import { Timer } from '@frakt/icons';
+import { useWalletModal } from '@frakt/components/WalletModal';
 
 import { GeneralCardInfo, StatsRaffleValues } from '../StatsRaffleValues';
 import { checkPriceThreshold, parseAuctionsInfo } from './helpers';
@@ -25,7 +24,7 @@ const DENOMINATIOR_PERCENT = 7 / 1e5;
 
 const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
   const { connected } = useWallet();
-  const dispatch = useDispatch();
+  const { setVisible } = useWalletModal();
 
   const { onSubmit, closeLoadingModal, loadingModalVisible } = useAuctionCard(
     auction,
@@ -36,7 +35,7 @@ const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
     if (connected) {
       onSubmit();
     } else {
-      dispatch(commonActions.setWalletModal({ isVisible: true }));
+      setVisible(true);
     }
   };
 

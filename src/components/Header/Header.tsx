@@ -1,31 +1,29 @@
 import { FC } from 'react';
 import classNames from 'classnames';
-import { useSelector } from 'react-redux';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import TopNotification from '@frakt/components/TopNotification';
 import ConnectButton from '@frakt/components/ConnectButton';
-import WalletContent from '@frakt/components/WalletContent';
+import { WalletModal, useWalletModal } from '@frakt/components/WalletModal';
 import ThemeSwitcher from '@frakt/components/ThemeSwitcher';
 import BurgerMenu from '@frakt/components/BurgerMenu';
 import { NotificationsButton } from '@frakt/components/NotificationsButton';
 import { getNumberWithOrdinal } from '@frakt/utils';
 import { LeaderBoard } from '@frakt/api/user';
 import { Logo, LogoFull, StarFill, Triangle } from '@frakt/icons';
-import { selectWalletModalVisible } from '../../state/common/selectors';
 import { useFetchUserIndividual } from './hooks';
 import styles from './Header.module.scss';
 
 export const Header: FC = () => {
-  const visible = useSelector(selectWalletModalVisible);
   const { connected } = useWallet();
+  const { visible } = useWalletModal();
   const { data } = useFetchUserIndividual();
 
   return (
     <div className={styles.container}>
       <TopNotification />
       <div className={styles.header}>
-        {visible && <WalletContent />}
+        {visible && <WalletModal />}
         <a href={process.env.FRAKT_LANDING_URL} className={styles.logoWrapper}>
           <LogoFull className={classNames(styles.logo, styles.logoFull)} />
           <Logo className={styles.logoBasic} />

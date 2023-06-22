@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 
 import { useConfirmModal } from '@frakt/components/ConfirmModal';
 import { useLoadingModalState } from '@frakt/components/LoadingModal';
 import { PATHS } from '@frakt/constants';
-import { useConnection } from '@frakt/hooks';
 
 import { useBorrow } from '../cartState';
 import { borrowBulk } from '../helpers';
@@ -13,7 +12,7 @@ import { borrowBulk } from '../helpers';
 export const useBorrowBulkOverviewPage = () => {
   const history = useHistory();
   const wallet = useWallet();
-  const connection = useConnection();
+  const { connection } = useConnection();
   const {
     cartOrders,
     cartPairs,

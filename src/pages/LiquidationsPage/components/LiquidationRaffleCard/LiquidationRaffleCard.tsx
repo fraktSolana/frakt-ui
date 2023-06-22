@@ -1,16 +1,15 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useDispatch } from 'react-redux';
 import cx from 'classnames';
 
 import { ConfirmModal } from '@frakt/components/ConfirmModal';
 import { LoadingModal } from '@frakt/components/LoadingModal';
-import { commonActions } from '@frakt/state/common/actions';
 import { createTimerJSX } from '@frakt/components/Timer';
 import { RaffleListItem } from '@frakt/api/raffle';
 import { Timer, Minus, Plus } from '@frakt/icons';
 import Tooltip from '@frakt/components/Tooltip';
 import Button from '@frakt/components/Button';
+import { useWalletModal } from '@frakt/components/WalletModal';
 
 import { useLiquidationsRaffle } from './hooks';
 import {
@@ -30,7 +29,7 @@ const LiquidationRaffleCard: FC<LiquidationRaffleCard> = ({
   disabled,
 }) => {
   const { connected } = useWallet();
-  const dispatch = useDispatch();
+  const { setVisible } = useWalletModal();
 
   const {
     incrementCounter,
@@ -55,7 +54,7 @@ const LiquidationRaffleCard: FC<LiquidationRaffleCard> = ({
     if (connected) {
       openConfirmModal();
     } else {
-      dispatch(commonActions.setWalletModal({ isVisible: true }));
+      setVisible(true);
     }
   };
 

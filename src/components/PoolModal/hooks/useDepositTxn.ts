@@ -1,5 +1,4 @@
-import { useConnection } from '@frakt/hooks';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import {
   depositLiquidity as depositTxn,
   unstakeLiquidity as unstakeTxn,
@@ -30,7 +29,7 @@ export const useDepositTxn: UseDepositTxn = ({
   onClearDepositValue,
 }) => {
   const wallet = useWallet();
-  const connection = useConnection();
+  const { connection } = useConnection();
 
   const depositLiquidity = async (): Promise<void> => {
     const amount = Number(depositValue) * 1e9;
