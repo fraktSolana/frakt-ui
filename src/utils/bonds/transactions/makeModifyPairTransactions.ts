@@ -12,8 +12,11 @@ import {
 } from '../constants';
 import { isBondFeaturesAutomated } from '../utils';
 import {
+  depositToBondOfferStandard,
   depositToBondOfferV2,
+  updateBondOfferStandard,
   updateBondOfferV2,
+  withdrawFromBondOfferStandard,
   withdrawFromBondOfferV2,
 } from 'fbonds-core/lib/fbond-protocol/functions/offer';
 
@@ -52,16 +55,9 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
   const solDepositLamports = solDeposit * 1e9;
   const spotPrice = BOND_DECIMAL_DELTA - interest * 100;
 
-  const bidCapMultiplier = isBondFeaturesAutomated(pair.validation.bondFeatures)
-    ? 10
-    : 1; // multiplying by 10, so autocompound
-  const amountOfTokensInOrder = Math.floor(solDepositLamports / spotPrice);
-
-  const bidCap = amountOfTokensInOrder * bidCapMultiplier;
-
-  const topOrderSize = getTopOrderSize(pair);
-
-  const amountTokenToUpdate = Math.abs(amountOfTokensInOrder - topOrderSize);
+  const amountOfSolToUpdate = Math.abs(
+    solDepositLamports - pair.fundsSolOrTokenBalance,
+  );
   const standartMaxLoanValue = Math.ceil(
     (marketFloor *
       ((maxLTVRaw *
@@ -73,13 +69,13 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
   console.log({ maxReturnAmountFilter, marketFloor, maxLTVRaw });
 
   const { instructions: instructions1, signers: signers1 } =
-    await updateBondOfferV2({
+    await updateBondOfferStandard({
       accounts: {
         bondOfferV2: new web3.PublicKey(pair.publicKey),
         userPubkey: wallet.publicKey,
       },
       args: {
-        bidCap, //? 1 ORDER size. Amount of fBonds that user wants to buy
+        bidCap: 1000, //? 1 ORDER size. Amount of fBonds that user wants to buy
         delta: 0, //? Doesn't affect anything
         spotPrice, //? Price for decimal of fBond price (fBond --> Token that has BOND_SOL_DECIMAIL_DELTA decimals)
         loanToValueFilter: maxLTVRaw,
@@ -93,14 +89,17 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
 
   const depositInstructionsAndSigners = [];
 
-  if (!!amountTokenToUpdate && amountOfTokensInOrder > topOrderSize) {
-    const { instructions, signers } = await depositToBondOfferV2({
+  if (
+    !!amountOfSolToUpdate &&
+    solDepositLamports > pair.fundsSolOrTokenBalance
+  ) {
+    const { instructions, signers } = await depositToBondOfferStandard({
       accounts: {
         bondOfferV2: new web3.PublicKey(pair.publicKey),
         userPubkey: wallet.publicKey,
       },
       args: {
-        amountOfTokensToBuy: amountTokenToUpdate, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
+        amountOfSolToDeposit: amountOfSolToUpdate, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
       },
       programId: BONDS_PROGRAM_PUBKEY,
       connection,
@@ -110,14 +109,17 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
     depositInstructionsAndSigners.push({ instructions, signers });
   }
 
-  if (!!amountTokenToUpdate && amountOfTokensInOrder < topOrderSize) {
-    const { instructions, signers } = await withdrawFromBondOfferV2({
+  if (
+    !!amountOfSolToUpdate &&
+    solDepositLamports < pair.fundsSolOrTokenBalance
+  ) {
+    const { instructions, signers } = await withdrawFromBondOfferStandard({
       accounts: {
         bondOfferV2: new web3.PublicKey(pair.publicKey),
         userPubkey: wallet.publicKey,
       },
       args: {
-        amountOfTokensToWithdraw: amountTokenToUpdate, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
+        amountOfTokensToWithdraw: amountOfSolToUpdate, //? Amount of BOND_SOL_DECIMAIL_DELTA parts of fBond token
       },
       programId: BONDS_PROGRAM_PUBKEY,
       connection,

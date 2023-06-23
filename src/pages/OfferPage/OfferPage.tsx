@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 
 import { LoadingModal } from '@frakt/components/LoadingModal';
-import Tooltip from '@frakt/components/Tooltip';
 
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
 import TokenField from '@frakt/components/TokenField';
@@ -21,7 +20,6 @@ import { OfferTypes } from './types';
 import {
   EARNER_INTEREST_OPTIONS,
   OFFER_TYPE_OPTIONS,
-  MAX_LIMIT_INTEREST,
   RECEIVE_OPTIONS,
 } from './constants';
 
@@ -37,7 +35,6 @@ export const OfferPage = () => {
     interest,
     onLtvChange,
     onOfferSizeChange,
-    onInterestChange,
     onCreateOffer,
     isValid,
     isEdit,
@@ -59,9 +56,6 @@ export const OfferPage = () => {
     notChangebleUserSize,
   } = useOfferPage();
 
-  const isMaxLimitInterest = parseFloat(interest) > MAX_LIMIT_INTEREST;
-  const apr = (parseFloat(interest) / duration) * 365;
-
   const availableMaxBalance = (
     parseFloat(notChangebleUserSize) +
     walletSolBalance / 1e9
@@ -69,6 +63,10 @@ export const OfferPage = () => {
 
   const notEnoughDepositError =
     parseFloat(availableMaxBalance) < parseFloat(offerSize);
+
+  const shouldDisablePlaceOffer = !isValid || !parseFloat(maxLoanValue);
+  const shouldDisableEditOffer =
+    !isOfferHasChanged || !parseFloat(maxLoanValue);
 
   return (
     <AppLayout>
@@ -130,28 +128,6 @@ export const OfferPage = () => {
           </div>
 
           <div className={styles.fieldWrapper}>
-            <>
-              <TokenField
-                value={interest}
-                onValueChange={onInterestChange}
-                label="Interest"
-                labelRightNode={createIntrestFieldRihtLabel(apr)}
-                error={isMaxLimitInterest}
-                currentToken={{
-                  ...SOL_TOKEN,
-                  symbol: '%',
-                  logoURI: null,
-                  name: null,
-                }}
-                toolTipText="Interest (in %) for the duration of this loan"
-              />
-              <div className={styles.errors}>
-                {isMaxLimitInterest && (
-                  <p>max interest rate is {MAX_LIMIT_INTEREST}%</p>
-                )}
-              </div>
-            </>
-
             <RadioButtonField
               label="Repayments"
               currentOption={{
@@ -194,7 +170,7 @@ export const OfferPage = () => {
                   Delete offer
                 </Button>
                 <Button
-                  disabled={isMaxLimitInterest || !isOfferHasChanged}
+                  disabled={shouldDisableEditOffer}
                   onClick={onEditOffer}
                   className={styles.btn}
                   type="secondary"
@@ -205,7 +181,7 @@ export const OfferPage = () => {
             )}
             {!isEdit && (
               <Button
-                disabled={!isValid || isMaxLimitInterest}
+                disabled={shouldDisablePlaceOffer}
                 onClick={isEdit ? onEditOffer : onCreateOffer}
                 className={styles.btn}
                 type="secondary"
@@ -246,13 +222,3 @@ const createLTVFieldRightLabel = (value = 0) => {
     </div>
   );
 };
-
-const createIntrestFieldRihtLabel = (value = 0) => (
-  <div className={styles.labelRow}>
-    APR: <span>{(value || 0).toFixed(2)} %</span>
-    <Tooltip
-      placement="bottom"
-      overlay="Analyzed profit from repaying the loan"
-    />
-  </div>
-);

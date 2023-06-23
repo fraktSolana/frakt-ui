@@ -81,7 +81,7 @@ export const useOfferPage = () => {
 
   const editReceiveBondFeature =
     isEdit && isLiquidatedBondFeature(receiveNftFeature)
-      ? BondFeatures.AutoreceiveSol
+      ? BondFeatures.None
       : BondFeatures.AutoReceiveAndReceiveNft;
 
   useEffect(() => {
@@ -217,8 +217,7 @@ export const useOfferPage = () => {
     history.goBack();
   };
 
-  const isValid =
-    Number(offerSize) && Number(interest) !== 0 && wallet.connected;
+  const isValid = Number(offerSize) && wallet.connected;
 
   const onCreateOffer = async () => {
     if (marketPubkey && wallet.publicKey) {
