@@ -16,7 +16,7 @@ export const InterestValueCell: FC<InterestValueCellProps> = ({
 
   return (
     <span className={styles.interestValueCell}>
-      <span>{formattedBondFee} ◎</span>
+      <span>{formattedBondFee}◎</span>
       <span>{feePercent}%</span>
     </span>
   );

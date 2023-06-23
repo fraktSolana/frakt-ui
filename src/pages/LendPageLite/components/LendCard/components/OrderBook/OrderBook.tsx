@@ -86,7 +86,7 @@ const OrderBook: FC<{
             [styles.hidden]: openOffersMobile,
           })}
         >
-          <span>Size ◎</span>
+          <span>Size◎</span>
           <span>Loan amount</span>
         </div>
         <div

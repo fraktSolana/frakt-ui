@@ -43,9 +43,7 @@ const UserBalanceSol: FC = () => {
   return (
     <div className={styles.column}>
       <p className={styles.title}>Balance</p>
-      <p className={styles.value}>
-        {solUserValue} <Solana />
-      </p>
+      <p className={styles.value}>{solUserValue}◎</p>
     </div>
   );
 };

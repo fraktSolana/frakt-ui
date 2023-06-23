@@ -9,7 +9,7 @@ export const createSolValueJSX = (value = 0, formatValue = true) => {
 
   return (
     <span className={styles.value}>
-      {value ? <>{formattedValue} ◎</> : '--'}
+      {value ? <>{formattedValue}◎</> : '--'}
     </span>
   );
 };

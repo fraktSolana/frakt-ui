@@ -6,7 +6,6 @@ import cx from 'classnames';
 
 import { shortenAddress } from '@frakt/utils/solanaUtils';
 import { WonRaffleListItem } from '@frakt/api/raffle';
-import { Solana } from '@frakt/icons';
 
 import { GeneralCardInfo, StatsRaffleValues } from '../StatsRaffleValues';
 import SolscanNftLink from '../SolscanNftLink';
@@ -60,10 +59,7 @@ const WonRaffleCard: FC<WonRaffleCardProps> = ({ raffle }) => {
             {!raffle?.isAuction ? (
               <span>{raffle?.winnerTickets} TICKETS</span>
             ) : (
-              <span className={styles.value}>
-                <Solana />
-                {raffle?.winnerTickets}
-              </span>
+              <span className={styles.value}>◎{raffle?.winnerTickets}</span>
             )}
           </StatsRaffleValues>
           {!raffle?.isAuction && (

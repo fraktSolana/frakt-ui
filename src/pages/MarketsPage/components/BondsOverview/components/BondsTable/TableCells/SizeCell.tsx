@@ -2,7 +2,6 @@ import { FC } from 'react';
 import classNames from 'classnames';
 
 import { colorByPercentOffers, getColorByPercent } from '@frakt/utils/bonds';
-import { Solana } from '@frakt/icons';
 
 import styles from './TableCells.module.scss';
 
@@ -17,10 +16,7 @@ export const SizeCell: FC<SizeCellProps> = ({ ltv, size }) => {
 
   return (
     <div className={styles.column}>
-      <span className={styles.value}>
-        {(size || 0).toFixed(2)}
-        <Solana />
-      </span>
+      <span className={styles.value}>{(size || 0).toFixed(2)}◎</span>
       <span
         style={{ color: colorLTV }}
         className={classNames(

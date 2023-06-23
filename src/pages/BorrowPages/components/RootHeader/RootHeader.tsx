@@ -36,7 +36,7 @@ export const RootHeader: FC<RootHeaderProps> = ({
           {!!availableToBorrow && (
             <div className={styles.headerStats}>
               <span>Max borrow:</span>
-              <span>{availableToBorrow.toFixed(2)} ◎</span>
+              <span>{availableToBorrow.toFixed(2)}◎</span>
             </div>
           )}
         </div>

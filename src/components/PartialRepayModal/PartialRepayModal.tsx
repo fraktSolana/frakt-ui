@@ -114,16 +114,11 @@ export const PartialRepayModal: FC<PartialRepayModalProps> = ({
       />
       <div className={styles.info}>
         <span className={styles.infoTitle}>Repay value</span>
-        <span className={styles.infoValue}>
-          {repayValue?.toFixed(2)}
-          <Solana />
-        </span>
+        <span className={styles.infoValue}>{repayValue?.toFixed(2)}◎</span>
       </div>
       <div className={styles.info}>
         <span className={styles.infoTitle}>Remaining debt</span>
-        <span className={styles.infoValue}>
-          {remainingDebt} <Solana />
-        </span>
+        <span className={styles.infoValue}>{remainingDebt}◎</span>
       </div>
       <Button
         onClick={onSubmit}

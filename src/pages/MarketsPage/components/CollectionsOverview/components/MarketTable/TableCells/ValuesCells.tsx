@@ -2,14 +2,11 @@ import classNames from 'classnames';
 
 import { colorByPercentOffers, getColorByPercent } from '@frakt/utils/bonds';
 import { MarketPreview } from '@frakt/api/bonds';
-import { Solana } from '@frakt/icons';
 
 import styles from './TableCells.module.scss';
 
 export const createSolValueJSX = (value?: string) => (
-  <span className={styles.value}>
-    {value} <Solana />
-  </span>
+  <span className={styles.value}>{value}◎</span>
 );
 
 export const createActiveLoansJSX = (value = 0) => (
@@ -17,9 +14,7 @@ export const createActiveLoansJSX = (value = 0) => (
 );
 
 export const createOfferTvlJSX = (value?: string) => (
-  <span className={styles.value}>
-    {parseFloat(value)?.toFixed(1)} <Solana />
-  </span>
+  <span className={styles.value}>{parseFloat(value)?.toFixed(1)}◎</span>
 );
 
 export const createBestOfferJSX = (market: MarketPreview) => {
@@ -30,7 +25,7 @@ export const createBestOfferJSX = (market: MarketPreview) => {
   return (
     <div className={styles.column}>
       <span className={styles.value}>
-        {(market?.bestOffer / 1e9 || 0).toFixed(1)} <Solana />
+        {(market?.bestOffer / 1e9 || 0).toFixed(1)}◎
       </span>
       <span style={{ color: colorLTV }} className={styles.smallValue}>
         LTV {market?.bestLTV?.toFixed(0)} %

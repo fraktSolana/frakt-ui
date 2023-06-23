@@ -4,7 +4,6 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import { colorByPercentOffers, getColorByPercent } from '@frakt/utils/bonds';
 import { MarketPreview } from '@frakt/api/bonds';
 import Tooltip from '@frakt/components/Tooltip';
-import { Solana } from '@frakt/icons';
 
 import { formateMarketPreviewValues } from './helpers';
 
@@ -29,9 +28,7 @@ const ChartWidgets: FC<ChartWidgetsProps> = ({ marketPreview }) => {
           label="Best offer"
           value={
             <div className={styles.rowCenter}>
-              <span className={styles.value}>
-                {bestOffer} <Solana className={styles.solanaIcon} />
-              </span>
+              <span className={styles.value}>{bestOffer}◎</span>
               <span
                 style={{
                   color: getColorByPercent(
@@ -54,11 +51,7 @@ const ChartWidgets: FC<ChartWidgetsProps> = ({ marketPreview }) => {
         />
         <StatsValues
           label="Offer TVL"
-          value={
-            <>
-              {offerTVL} <Solana className={styles.solanaIcon} />
-            </>
-          }
+          value={<>{offerTVL}◎</>}
           tooltipText="Total liquidity currently available in active offers"
         />
         <StatsValues label="Duration" value={duration} />

@@ -1,11 +1,8 @@
 import moment from 'moment';
 import classNames from 'classnames';
-
 import { BondHistoryStats, EBondHistoryEventType } from '@frakt/api/bonds';
-import { Solana } from '@frakt/icons';
 
 import styles from './TableCells.module.scss';
-import { FraktBondState } from 'fbonds-core/lib/fbond-protocol/types';
 
 export const createAutocompoundJSX = (status: EBondHistoryEventType) => (
   <span
@@ -57,7 +54,7 @@ export const ReceiveCell = ({ stats }: { stats: BondHistoryStats }) => {
         [styles.negative]: received < 0 && state !== 'repay',
       })}
     >
-      {received?.toFixed(2) || '--'} <Solana />
+      {received ? received?.toFixed(2) + '◎' : '--'}
     </span>
   );
 };
