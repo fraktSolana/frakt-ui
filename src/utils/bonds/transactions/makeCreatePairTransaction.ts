@@ -15,7 +15,10 @@ import {
   BOND_MAX_RETURN_AMOUNT_PROTECTION_BASE_POINTS,
 } from '../constants';
 import { isBondFeaturesAutomated } from '../utils';
-import { createBondOfferV2 } from 'fbonds-core/lib/fbond-protocol/functions/offer';
+import {
+  createBondOfferStandard,
+  createBondOfferV2,
+} from 'fbonds-core/lib/fbond-protocol/functions/offer';
 
 type MakeCreatePairTransaction = (params: {
   maxLTV: number; //? % 0-100
@@ -51,14 +54,11 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
   const maxLTVRaw = maxLTV * 100; //? Max LTV (2000 --> 20%)
   const maxDurationSec = maxDuration * 24 * 60 * 60; //? Max duration (seconds)
   const solDepositLamports = solDeposit * 1e9;
+  console.log('solDepositLamports: ', solDepositLamports);
   const maxLoanValueLamports = maxLoanValue * 1e9;
 
   const spotPrice = BOND_DECIMAL_DELTA - interest * 100;
 
-  const bidCapMultiplier = isBondFeaturesAutomated(bondFeature) ? 100 : 1; // multiplying by 10, so autocompound
-  const amountOfTokensInOrder = Math.floor(solDepositLamports / spotPrice);
-
-  const bidCap = amountOfTokensInOrder * bidCapMultiplier;
   const standartMaxLoanValue = Math.ceil(
     (marketFloor *
       ((maxLTVRaw *
@@ -73,17 +73,17 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
     instructions: instructions1,
     signers: signers1,
     bondOfferV2: pairPubkey,
-  } = await createBondOfferV2({
+  } = await createBondOfferStandard({
     accounts: {
       hadoMarket: marketPubkey,
       userPubkey: wallet.publicKey,
     },
     args: {
-      bidCap: bidCap, //? 1 ORDER size. Amount of fBonds that user wants to buy
+      bidCap: 0, //? 1 ORDER size. Amount of fBonds that user wants to buy
       bondingCurveType: BondingCurveType.Linear, //? Doesn't affect anything
       delta: 0, //? Doesn't affect anything
       spotPrice: spotPrice, //? Price for decimal of fBond price (fBond --> Token that has BOND_SOL_DECIMAIL_DELTA decimals)
-      amountOfTokensToBuy: amountOfTokensInOrder,
+      amountOfSolToDeposit: solDepositLamports,
       loanToValueFilter: maxLTVRaw,
       maxDurationFilter: maxDurationSec,
       maxReturnAmountFilter: maxReturnAmountFilter,
