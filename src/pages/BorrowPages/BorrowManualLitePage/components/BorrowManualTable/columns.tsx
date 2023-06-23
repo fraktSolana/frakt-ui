@@ -6,6 +6,7 @@ import {
   createSolValueJSX,
   HeaderCell,
 } from '@frakt/components/TableComponents';
+import { calcPriceBasedUpfrontFee } from '@frakt/pages/BorrowPages/helpers';
 
 import {
   InterestValueCell,
@@ -14,7 +15,6 @@ import {
   SelectButtonCell,
 } from './BorrowManualTableCells';
 import { BorrowNftData } from './BorrowManualTable';
-import { calcPriceBasedUpfrontFee } from '@frakt/pages/BorrowPages/helpers';
 
 type GetTableColumns = (props: {
   duration: LoanDuration;
@@ -194,8 +194,12 @@ export const getTableColumns: GetTableColumns = ({
   };
 
   const SELECT_COLUMN: ColumnType<BorrowNftData> = {
-    render: (_, { selected }) => (
-      <SelectButtonCell selected={selected} isCardView={isCardView} />
+    render: (_, { bondLoanValue, selected }) => (
+      <SelectButtonCell
+        selected={selected}
+        isCardView={isCardView}
+        disabled={!bondLoanValue && duration !== '0'}
+      />
     ),
   };
 
