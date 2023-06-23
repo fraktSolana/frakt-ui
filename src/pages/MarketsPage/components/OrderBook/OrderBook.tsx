@@ -15,7 +15,6 @@ import { PATHS } from '@frakt/constants';
 import { MarketOrder, SyntheticParams } from './types';
 import CollectionsList from './components/CollectionsList';
 import NoActiveOffers from './components/NoActiveOffers';
-import Filters from './components/Filters';
 import { useMarketOrders } from './hooks';
 import Offer from './components/Offer';
 
@@ -31,7 +30,7 @@ interface OrderBookProps {
 const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
   const { marketPubkey } = useParams<{ marketPubkey: string }>();
   const history = useHistory();
-  const wallet = useWallet();
+  const { publicKey, connected } = useWallet();
 
   const [openOffersMobile, setOpenOffersMobile] = useState<boolean>(false);
   const [showOwnOrders, setShowOwnOrders] = useState<boolean>(false);
@@ -44,7 +43,7 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
   };
 
   const isOwnOrder = (order: MarketOrder): boolean => {
-    return order?.rawData?.assetReceiver === wallet?.publicKey?.toBase58();
+    return order?.rawData?.assetReceiver === publicKey?.toBase58();
   };
 
   const {
@@ -112,19 +111,16 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
               [styles.create]: !!syntheticParams?.ltv,
             })}
           >
-            <Filters
-              openOffersMobile={openOffersMobile}
-              duration={duration}
-              onSortChange={onDurationChange}
-            />
-            <Toggle
-              label="My offers"
-              className={classNames(styles.toggle, {
-                [styles.active]: openOffersMobile,
-              })}
-              defaultChecked={showOwnOrders}
-              onChange={(nextValue) => setShowOwnOrders(nextValue)}
-            />
+            {connected && (
+              <Toggle
+                label="Mine"
+                className={classNames(styles.toggle, {
+                  [styles.active]: openOffersMobile,
+                })}
+                defaultChecked={showOwnOrders}
+                onChange={(nextValue) => setShowOwnOrders(nextValue)}
+              />
+            )}
           </div>
         </div>
         {marketPubkey && offersExist && (
