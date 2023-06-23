@@ -51,7 +51,7 @@ export const BorrowCard: FC<BorrowCardProps> = ({
           </Button>
         )}
       </div>
-      {!connected && (
+      {!mint && (
         <div className={styles.badge}>+ {maxLoanValue?.toFixed(0)}◎</div>
       )}
     </CardBackdrop>

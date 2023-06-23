@@ -72,7 +72,7 @@ const ConnectedBorrowContent: FC = () => {
                 hiddenButton
               />
               <p className={styles.notNftsMessage}>
-                You don't have NFTs which we whitelisted
+                {"You don't have NFTs which we whitelisted"}
               </p>
             </div>
           )}
