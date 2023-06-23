@@ -47,7 +47,7 @@ export const generateLoanDetails: GenerateLoanDetails = ({
 
   fields.push({
     label: 'Borrow',
-    value: <>{(loanValue / 1e9).toFixed(3)} ◎</>,
+    value: <>{(loanValue / 1e9).toFixed(3)}◎</>,
   });
 
   //? PriceBased liquidation price
@@ -59,7 +59,7 @@ export const generateLoanDetails: GenerateLoanDetails = ({
 
     fields.push({
       label: 'Liquidation price',
-      value: <>{(liquidationPrice / 1e9)?.toFixed(3)} ◎</>,
+      value: <>{(liquidationPrice / 1e9)?.toFixed(3)}◎</>,
     });
   }
 
@@ -73,7 +73,7 @@ export const generateLoanDetails: GenerateLoanDetails = ({
       label: 'Fee',
       value: (
         <>
-          {(fee / 1e9).toFixed(3)} ◎ ({feePercent.toFixed(1)}%)
+          {(fee / 1e9).toFixed(3)}◎ ({feePercent.toFixed(1)}%)
         </>
       ),
     });
@@ -114,7 +114,7 @@ export const generateSummary: GenerateSummary = ({
 
   fields.push({
     label: 'Borrow',
-    value: <>{(borrowValue / 1e9).toFixed(3)} ◎</>,
+    value: <>{(borrowValue / 1e9).toFixed(3)}◎</>,
   });
 
   if (loanType === LoanType.BOND) {
@@ -128,7 +128,7 @@ export const generateSummary: GenerateSummary = ({
 
     fields.push({
       label: 'Repay',
-      value: <>{(repayValue / 1e9).toFixed(3)} ◎</>,
+      value: <>{(repayValue / 1e9).toFixed(3)}◎</>,
     });
 
     const feesPercent = (fees / borrowValue) * 100;
@@ -137,7 +137,7 @@ export const generateSummary: GenerateSummary = ({
       label: 'Total fee',
       value: (
         <>
-          {(fees / 1e9).toFixed(3)} ◎ ({feesPercent.toFixed(1)}%)
+          {(fees / 1e9).toFixed(3)}◎ ({feesPercent.toFixed(1)}%)
         </>
       ),
     });
@@ -156,7 +156,7 @@ export const generateSummary: GenerateSummary = ({
 
     fields.push({
       label: 'Upfront fee',
-      value: <>{(upfrontFee / 1e9).toFixed(3)} ◎</>,
+      value: <>{(upfrontFee / 1e9).toFixed(3)}◎</>,
     });
 
     const feesPerDay = reduce(
@@ -180,7 +180,7 @@ export const generateSummary: GenerateSummary = ({
     ].forEach(([label, daysAmount]: [string, number]) =>
       fields.push({
         label,
-        value: <>{((feesPerDay * daysAmount) / 1e9).toFixed(3)} ◎</>,
+        value: <>{((feesPerDay * daysAmount) / 1e9).toFixed(3)}◎</>,
       }),
     );
   }

@@ -3,7 +3,6 @@ import classNames from 'classnames';
 
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
 import { ConfirmModal } from '@frakt/components/ConfirmModal';
-import { Solana } from '@frakt/icons';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 
 import { BorrowHeader } from '../components/BorrowHeader';
@@ -127,7 +126,7 @@ const LoanCardValue: FC<LoanCardValue> = ({
   const DIMENSTION_BY_VALUE_TYPE: Record<CARD_VALUES_TYPES, JSX.Element> = {
     [CARD_VALUES_TYPES.string]: null,
     [CARD_VALUES_TYPES.percent]: <>{'%'}</>,
-    [CARD_VALUES_TYPES.solPrice]: <Solana />,
+    [CARD_VALUES_TYPES.solPrice]: <>{'◎'}</>,
   };
 
   return (

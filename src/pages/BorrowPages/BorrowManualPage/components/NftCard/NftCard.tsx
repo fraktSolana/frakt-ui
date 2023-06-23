@@ -1,10 +1,7 @@
 import { FC } from 'react';
-
-import { Solana } from '@frakt/icons';
-import { BorrowNft } from '@frakt/api/nft';
-
-import styles from './NftCard.module.scss';
 import classNames from 'classnames';
+import { BorrowNft } from '@frakt/api/nft';
+import styles from './NftCard.module.scss';
 
 interface NftCardProps {
   nft: BorrowNft;
@@ -54,9 +51,8 @@ export const NftCard: FC<NftCardProps> = ({
             <p className={styles.ltvTitle}>To borrow</p>
             <div className={styles.ltvContent}>
               <p className={styles.ltvText}>
-                {(maxLoanValue / 1e9)?.toFixed(2)}
+                {(maxLoanValue / 1e9)?.toFixed(2)}◎
               </p>
-              <Solana />
             </div>
           </div>
         )}

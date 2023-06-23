@@ -2,7 +2,6 @@ import { FC, ReactNode } from 'react';
 import cx from 'classnames';
 
 import styles from './StatsValues.module.scss';
-import { Solana } from '@frakt/icons';
 
 interface StatsValuesProps {
   className?: string;
@@ -56,10 +55,5 @@ export const StatsValuesColumn: FC<StatsValuesColumnProps> = ({
 };
 
 export const SolAmount: FC<{ solAmount: number }> = ({ solAmount }) => {
-  return (
-    <div className={styles.row}>
-      <Solana />
-      {solAmount?.toFixed(2)}
-    </div>
-  );
+  return <div className={styles.row}>◎{solAmount?.toFixed(2)}</div>;
 };

@@ -2,7 +2,6 @@ import { FC, ReactNode } from 'react';
 import cx from 'classnames';
 
 import styles from './StatsRaffleValues.module.scss';
-import { Solana } from '@frakt/icons';
 
 interface StatsRaffleValuesProps {
   className?: string;
@@ -37,12 +36,7 @@ export const GeneralCardInfo: FC<GeneralCardInfoProps> = ({
 export const SolAmount: FC<{ solAmount: number | string }> = ({
   solAmount,
 }) => {
-  return (
-    <div className={styles.row}>
-      <Solana />
-      {solAmount}
-    </div>
-  );
+  return <div className={styles.row}>◎{solAmount}</div>;
 };
 
 export const StatsRaffleValues: FC<StatsRaffleValuesProps> = ({

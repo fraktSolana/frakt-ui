@@ -6,7 +6,6 @@ import { Market, Pair } from '@frakt/api/bonds';
 import { LoanType } from '@frakt/api/loans';
 import { BOND_DECIMAL_DELTA, pairLoanDurationFilter } from '@frakt/utils/bonds';
 import { BorrowNft } from '@frakt/api/nft';
-import { Solana } from '@frakt/icons';
 import {
   calcBondMultiOrdersFee,
   calcLtv,
@@ -218,11 +217,7 @@ export const generateLoanDetails: GenerateLoanDetails = ({
   const { valuation } = nft;
   fields.push({
     label: 'Floor price',
-    value: (
-      <>
-        {(valuation / 1e9).toFixed(2)} <Solana />
-      </>
-    ),
+    value: <>{(valuation / 1e9).toFixed(2)}◎</>,
   });
 
   const ltv = calcLtv({
@@ -278,30 +273,18 @@ export const generateLoanDetails: GenerateLoanDetails = ({
 
     fields.push({
       label: 'Fee on 1d',
-      value: (
-        <>
-          {(feeOn1d / 1e9).toFixed(3)} <Solana />
-        </>
-      ),
+      value: <>{(feeOn1d / 1e9).toFixed(3)}◎</>,
     });
 
     fields.push({
       label: 'Fee on 7d',
-      value: (
-        <>
-          {((feeOn1d * 7) / 1e9).toFixed(3)} <Solana />
-        </>
-      ),
+      value: <>{((feeOn1d * 7) / 1e9).toFixed(3)}◎</>,
     });
 
     returnPeriodDays === 14 &&
       fields.push({
         label: 'Fee on 14d',
-        value: (
-          <>
-            {((feeOn1d * 14) / 1e9).toFixed(3)} <Solana />
-          </>
-        ),
+        value: <>{((feeOn1d * 14) / 1e9).toFixed(3)}◎</>,
       });
   }
 
@@ -313,36 +296,20 @@ export const generateLoanDetails: GenerateLoanDetails = ({
 
     fields.push({
       label: 'Fee on 1d',
-      value: (
-        <>
-          {(feePerDay / 1e9).toFixed(3)} <Solana />
-        </>
-      ),
+      value: <>{(feePerDay / 1e9).toFixed(3)}◎</>,
     });
     fields.push({
       label: 'Fee on 7d',
-      value: (
-        <>
-          {((feePerDay * 7) / 1e9).toFixed(3)} <Solana />
-        </>
-      ),
+      value: <>{((feePerDay * 7) / 1e9).toFixed(3)}◎</>,
     });
     fields.push({
       label: 'Fee on 30d',
-      value: (
-        <>
-          {((feePerDay * 30) / 1e9).toFixed(3)} <Solana />
-        </>
-      ),
+      value: <>{((feePerDay * 30) / 1e9).toFixed(3)}◎</>,
     });
     fields.push({
       label: 'Fee on 1y',
       tooltipText: 'The current yearly interest rate paid by borrowers',
-      value: (
-        <>
-          {((feePerDay * 365) / 1e9).toFixed(3)} <Solana />
-        </>
-      ),
+      value: <>{((feePerDay * 365) / 1e9).toFixed(3)}◎</>,
     });
   }
 
@@ -352,21 +319,13 @@ export const generateLoanDetails: GenerateLoanDetails = ({
 
     fields.push({
       label: 'Fee',
-      value: (
-        <>
-          {(fee / 1e9).toFixed(3)} <Solana />
-        </>
-      ),
+      value: <>{(fee / 1e9).toFixed(3)}◎</>,
     });
 
     const repayValue = loanValue + fee;
     fields.push({
       label: 'Repay value',
-      value: (
-        <>
-          {(repayValue / 1e9).toFixed(3)} <Solana />
-        </>
-      ),
+      value: <>{(repayValue / 1e9).toFixed(3)}◎</>,
     });
   }
 
@@ -388,11 +347,7 @@ export const generateLoanDetails: GenerateLoanDetails = ({
     });
     fields.push({
       label: 'Repay value',
-      value: (
-        <>
-          {(repayValue / 1e9).toFixed(3)} <Solana />
-        </>
-      ),
+      value: <>{(repayValue / 1e9).toFixed(3)}◎</>,
     });
   }
 
@@ -403,11 +358,7 @@ export const generateLoanDetails: GenerateLoanDetails = ({
     });
     fields.push({
       label: 'Upfront fee',
-      value: (
-        <>
-          {(upfrontFee / 1e9).toFixed(3)} <Solana />
-        </>
-      ),
+      value: <>{(upfrontFee / 1e9).toFixed(3)}◎</>,
     });
   }
 

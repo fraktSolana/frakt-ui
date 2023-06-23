@@ -7,7 +7,6 @@ import { PoolModal } from '@frakt/components/PoolModal';
 import { TradePoolUser } from '@frakt/api/strategies';
 import Tooltip from '@frakt/components/Tooltip';
 import Button from '@frakt/components/Button';
-import { Solana } from '@frakt/icons';
 import { useWalletModal } from '@frakt/components/WalletModal';
 
 import CollectionsPreviews from '../CollectionsPreviews';
@@ -82,17 +81,15 @@ const Strategy: FC<StrategyProps> = ({ tradePool, isAdmin }) => {
           <div className={styles.info}>
             <div className={styles.infoTitle}>total liquidity</div>
             <div className={styles.infoValue}>
-              <span>{(tradePool?.totalLiquidity / 1e9).toFixed(2)}</span>
-              <Solana className={styles.solana} />
+              <span>{(tradePool?.totalLiquidity / 1e9).toFixed(2)}◎</span>
             </div>
           </div>
           <div className={styles.info}>
             <div className={styles.infoTitle}>your liquidity</div>
             <div className={styles.infoValue}>
               <span>
-                {(tradePool?.wallet?.userLiquidity / 1e9 || 0).toFixed(2)}
+                {(tradePool?.wallet?.userLiquidity / 1e9 || 0).toFixed(2)}◎
               </span>
-              <Solana className={styles.solana} />
             </div>
           </div>
         </div>

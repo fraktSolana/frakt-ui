@@ -1,8 +1,6 @@
 import { FC } from 'react';
-import { Solana } from '@frakt/icons';
-
-import styles from './BondsWidgets.module.scss';
 import { useWallet } from '@solana/wallet-adapter-react';
+import styles from './BondsWidgets.module.scss';
 
 interface BondsWidgetsProps {
   classNames?: string;
@@ -42,11 +40,7 @@ const WidgetValue = ({
   <div className={styles.block}>
     <div className={styles.values}>
       <p className={styles.label}>{label}:</p>
-      {isSolValue && (
-        <p className={styles.value}>
-          {value} <Solana />
-        </p>
-      )}
+      {isSolValue && <p className={styles.value}>{value}◎</p>}
       {!isSolValue && <p className={styles.value}>{value}</p>}
     </div>
   </div>

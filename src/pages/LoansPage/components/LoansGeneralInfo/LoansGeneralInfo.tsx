@@ -3,7 +3,6 @@ import { sum, map } from 'lodash';
 
 import { StatsValues } from '@frakt/components/StatsValues';
 import { Loan } from '@frakt/api/loans';
-import { Solana } from '@frakt/icons';
 
 import styles from './LoansGeneralInfo.module.scss';
 
@@ -35,7 +34,5 @@ export const LoansGeneralInfo: FC<LoansGeneralInfoProps> = ({ allLoans }) => {
 };
 
 const SolAmount = ({ value = 0 }) => (
-  <span>
-    {value ? value?.toFixed(2) : '--'} <Solana />
-  </span>
+  <span>{value ? value?.toFixed(2) + '◎' : '--'}</span>
 );

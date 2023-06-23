@@ -43,16 +43,16 @@ export const BorrowCard: FC<BorrowCardProps> = ({
       >
         <div className={styles.value}>{duration} days</div>
         <div className={styles.label}>
-          Fee: <p className={styles.value}> {(fee || 0)?.toFixed(2)} ◎</p>
+          Fee: <p className={styles.value}> {(fee || 0)?.toFixed(2)}◎</p>
         </div>
         {connected && !!mint && (
           <Button type="secondary" className={styles.button}>
-            Get {maxLoanValue?.toFixed(2)} ◎
+            Get {maxLoanValue?.toFixed(2)}◎
           </Button>
         )}
       </div>
       {!connected && (
-        <div className={styles.badge}>+ {maxLoanValue?.toFixed(0)} ◎</div>
+        <div className={styles.badge}>+ {maxLoanValue?.toFixed(0)}◎</div>
       )}
     </CardBackdrop>
   );
@@ -67,7 +67,7 @@ export const LendCard = ({ image, activeLoans, amount, apr, marketPubkey }) => (
   >
     <ImageWithPreload src={image} className={styles.nftImage} />
     <div className={styles.nftInfo}>
-      <p className={styles.value}>{parseFloat(amount)?.toFixed(2)} ◎</p>
+      <p className={styles.value}>{parseFloat(amount)?.toFixed(2)}◎</p>
       <p className={styles.value}>in {activeLoans} Loans</p>
     </div>
     <div className={classNames(styles.badge, styles.lendBadge)}>

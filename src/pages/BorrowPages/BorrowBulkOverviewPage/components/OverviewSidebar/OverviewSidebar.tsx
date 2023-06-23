@@ -48,10 +48,7 @@ export const OverviewSidebar: FC<OverviewSidebarProps> = ({
           value ? (
             <div key={label} className={styles.feesRow}>
               <p className={styles.subtitle}>Fee on {label}</p>
-              <p className={styles.value}>
-                {(value / 1e9).toFixed(3)}
-                <Solana />
-              </p>
+              <p className={styles.value}>{(value / 1e9).toFixed(3)}◎</p>
             </div>
           ) : null,
         )}

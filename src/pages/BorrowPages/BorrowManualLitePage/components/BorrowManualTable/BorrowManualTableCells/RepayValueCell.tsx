@@ -15,7 +15,7 @@ export const RepayValueCell: FC<RepayValueCellProps> = ({
 
   return (
     <span className={styles.repayValueCell}>
-      {formattedValue} ◎ in {duration}d
+      {formattedValue}◎ in {duration}d
     </span>
   );
 };
