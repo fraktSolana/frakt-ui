@@ -20,7 +20,7 @@ interface AuctionCardProps {
   hideAuction: (value: string) => void;
 }
 
-const DENOMINATIOR_PERCENT = 7 / 1e5;
+const DENOMINATIOR_PERCENT = 21 / 1e5; // DUTCH_AUCTION_RATE
 
 const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
   const { connected } = useWallet();
