@@ -1,7 +1,7 @@
 .orderBook {
   position: fixed;
   top: var(--header-height);
-  right: 0px;
+  right: 0;
   z-index: 10;
 
   padding: 32px;
@@ -19,7 +19,6 @@
     left: 0;
     right: 0;
 
-    gap: 24px;
     padding: 32px 43px 32px;
     width: 100%;
     height: calc(91vh - var(--header-height));
@@ -34,7 +33,6 @@
     }
 
     &.create {
-      gap: 8px;
       top: calc(100% - 200px);
     }
 
@@ -45,29 +43,18 @@
 
   @media screen and (max-width: 550px) {
     &.selected {
-      gap: 16px;
       top: calc(100% - 140px);
     }
     &.create {
-      gap: 4px;
       top: calc(100% - 170px);
     }
 
     &.active.selected {
-      gap: 4px;
       top: calc(var(--header-height) + 82px);
     }
   }
 
   @media screen and (max-width: 376px) {
-    &.selected {
-      gap: 8px;
-    }
-
-    &.create {
-      gap: 4px;
-    }
-
     &.active.selected {
       top: calc(var(--header-height) + 60px);
     }
@@ -76,14 +63,25 @@
 
 .header {
   display: flex;
-  flex-direction: column;
+
+  justify-content: space-between;
   align-items: center;
   gap: 24px;
+  padding-bottom: 16px;
 
   @media screen and (max-width: 960px) {
-    &.create {
-      gap: 8px;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 24px;
+
+    &.active {
+      padding-bottom: 16px;
     }
+  }
+
+  @media screen and (max-width: 550px) {
+    gap: 8px;
+    padding-bottom: 8px;
   }
 }
 
@@ -93,12 +91,33 @@
 }
 
 .toggle {
+  // width: 100%;
   display: flex;
   justify-content: center;
   font: var(--font-text-8);
 
   @media screen and (max-width: 960px) {
     display: none;
+
+    &.active {
+      display: flex;
+    }
+  }
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @media screen and (max-width: 960px) {
+    display: none;
+    width: 100%;
+    justify-content: center;
+
+    &.create {
+      display: flex;
+    }
 
     &.active {
       display: flex;
@@ -258,25 +277,6 @@
     svg {
       width: 16.8px;
       height: 16.8px;
-    }
-  }
-}
-
-.filters {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-
-  @media screen and (max-width: 960px) {
-    display: none;
-
-    &.create {
-      display: flex;
-    }
-
-    &.active {
-      display: flex;
     }
   }
 }
