@@ -9,6 +9,8 @@ import NumericInputField from '../NumericInput';
 import { usePlaceOfferTab } from './hooks';
 
 import styles from './PlaceOfferTab.module.scss';
+import { BASE_POINTS } from '@frakt/utils/bonds';
+import { DEFAULT_STANDART_INTEREST } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 
 const PlaceOfferTab = ({ setSyntheticParams }) => {
   const {
@@ -79,7 +81,14 @@ const OfferSummary = ({ offerSize, interest }) => (
       flexType="row"
       valueType={VALUES_TYPES.string}
     />
-    <StatInfo label="Estimated interest" value={interest || 0} flexType="row" />
+    <StatInfo
+      label="Estimated interest"
+      value={
+        (offerSize * (BASE_POINTS - DEFAULT_STANDART_INTEREST)) / BASE_POINTS ||
+        0
+      }
+      flexType="row"
+    />
   </div>
 );
 
