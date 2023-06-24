@@ -1,6 +1,5 @@
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
-import { exitValidateAndSellToBondOffersV2 } from 'fbonds-core/lib/fbond-protocol/functions/router';
 
 import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 
@@ -16,6 +15,7 @@ import {
 import { isBondFeaturesAutomated, mergeBondOrderParamsByPair } from '../utils';
 import { InstructionsAndSigners } from '@frakt/utils/transactions';
 import { chunk } from 'lodash';
+import { exitValidateAndSellToBondOffersV2 } from 'fbonds-core/lib/fbond-protocol/functions/bond/resell';
 
 type MakeExitBondMultiOrdersTransactionV2 = (params: {
   market: Market;
