@@ -75,7 +75,9 @@ export const makeExitBondMultiOrdersTransactionV2: MakeExitBondMultiOrdersTransa
           ),
         },
         args: {
-          sellBondParamsAndAccounts,
+          sellBondParamsAndAccounts: sellBondParamsAndAccounts.filter(
+            (param) => param.amountToSell > 0,
+          ),
           userBondTradeTransactions: bond.autocompoundDeposits.map(
             (deposit) => new web3.PublicKey(deposit.publicKey),
           ),

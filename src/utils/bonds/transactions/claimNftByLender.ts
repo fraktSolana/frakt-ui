@@ -1,4 +1,4 @@
-import { claimNftByLenderPnft as txn } from 'fbonds-core/lib/fbond-protocol/functions/liquidation';
+import { claimNftByLenderPnft as txn } from 'fbonds-core/lib/fbond-protocol/functions/bond/liquidation';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
 import {
@@ -34,7 +34,6 @@ export const claimNftByLender: ClaimNftByLender = async ({
       accounts: {
         userPubkey: wallet.publicKey,
         fbond: new web3.PublicKey(fbond.publicKey),
-        fbondsTokenMint: new web3.PublicKey(fbond.fbondTokenMint),
         collateralBox: new web3.PublicKey(collateralBox.publicKey),
         collateralTokenMint: new web3.PublicKey(
           collateralBox.collateralTokenMint,
