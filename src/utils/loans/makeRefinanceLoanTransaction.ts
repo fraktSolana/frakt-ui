@@ -40,11 +40,6 @@ export const makeRefinanceLoanTransaction: MakeRefinanceLoanTransaction =
     loan,
     market,
   }): Promise<any> => {
-    const amountToReturn =
-      Math.trunc(
-        bondOrderParams.reduce((sum, order) => sum + order.orderSize, 0),
-      ) * BOND_DECIMAL_DELTA;
-
     const durationFilter = bondOrderParams.reduce(
       (smallestDurationParam, orderParams) =>
         smallestDurationParam.durationFilter < orderParams.durationFilter
@@ -70,6 +65,14 @@ export const makeRefinanceLoanTransaction: MakeRefinanceLoanTransaction =
         assetReceiver: new web3.PublicKey(orderParam.assetReceiver),
       }),
     );
+    const amountToReturn =
+      Math.trunc(
+        sellBondParamsAndAccounts.reduce(
+          (sum, order) => sum + order.amountToSell,
+          0,
+        ),
+      ) * BOND_DECIMAL_DELTA;
+
     console.log('sellBondParamsAndAccounts: ', sellBondParamsAndAccounts);
     console.log('currentLoan: ', loan);
     const {
