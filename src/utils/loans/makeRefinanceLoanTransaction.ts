@@ -86,7 +86,9 @@ export const makeRefinanceLoanTransaction: MakeRefinanceLoanTransaction =
         nextBoxIndex: '0',
         amountToReturn,
         bondDuration: durationFilter,
-        sellBondParamsAndAccounts: sellBondParamsAndAccounts,
+        sellBondParamsAndAccounts: sellBondParamsAndAccounts.filter(
+          (param) => param.amountToSell > 0,
+        ),
         repayAccounts: loan.bondParams.activeTrades.map((trade) => ({
           bondTradeTransaction: new web3.PublicKey(trade.publicKey),
           user: new web3.PublicKey(trade.user),

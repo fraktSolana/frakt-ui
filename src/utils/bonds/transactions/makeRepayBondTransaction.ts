@@ -6,6 +6,7 @@ import { BONDS_ADMIN_PUBKEY, BONDS_PROGRAM_PUBKEY } from '../constants';
 import { repayFbondToTradeTransactions } from 'fbonds-core/lib/fbond-protocol/functions/bond/repayment';
 import { InstructionsAndSigners } from '@frakt/utils/transactions';
 import { chunk } from 'lodash';
+import { findAssociatedTokenAddress } from 'fbonds-core/lib/common';
 
 type MakeRepayBondTransaction = (params: {
   loan: Loan;
@@ -22,6 +23,12 @@ export const makeRepayBondTransaction: MakeRepayBondTransaction = async ({
   wallet,
   connection,
 }) => {
+  console.log(
+    'loan.bondParams.collateralTokenAccount: ',
+    loan.bondParams.collateralTokenAccount,
+  );
+
+  // const userCollateralTokenAccount = await findAssociatedTokenAddress( new web3.PublicKey(trade.user), )
   const { instructions, signers, addressesForLookupTable } =
     await repayFbondToTradeTransactions({
       args: {
