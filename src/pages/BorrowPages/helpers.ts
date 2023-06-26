@@ -137,7 +137,9 @@ export const borrowBulk: BorrowBulk = async ({
     .filter((order) => order.loanType === LoanType.BOND)
     .map((order) => ({
       borrowNft: order.borrowNft,
-      bondOrderParams: order.bondOrderParams.orderParams,
+      bondOrderParams: order.bondOrderParams.orderParams.filter(
+        (orderParam) => orderParam.orderSize > 0,
+      ),
     }));
 
   return borrow({

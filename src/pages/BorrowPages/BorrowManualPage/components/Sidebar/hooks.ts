@@ -170,7 +170,9 @@ const borrowSingle: BorrowSingle = async ({
 
   const order = {
     borrowNft: nft,
-    bondOrderParams,
+    bondOrderParams: bondOrderParams.filter(
+      (orderParam) => orderParam.orderSize > 0,
+    ),
   };
 
   await borrow({
