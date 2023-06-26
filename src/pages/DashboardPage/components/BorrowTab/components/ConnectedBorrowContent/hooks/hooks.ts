@@ -177,7 +177,9 @@ const borrowSingle = async ({
         oracleFloor: nft.oracleFloorPubkey,
       },
     },
-    bondOrderParams,
+    bondOrderParams: bondOrderParams.filter(
+      (orderParam) => orderParam.orderSize > 0,
+    ),
   };
   return await borrow({
     notBondTxns: [],

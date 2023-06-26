@@ -61,7 +61,11 @@ export const useSidebar = ({
           loanValue: isBond
             ? orderParamsByMint[nft.mint].loanValue
             : calcPriceBasedMaxLoanValue({ nft }),
-          bondOrderParams: isBond ? orderParamsByMint[nft.mint].orders : null,
+          bondOrderParams: isBond
+            ? orderParamsByMint[nft.mint].orders.filter(
+                (orderParam) => orderParam.orderSize > 0,
+              )
+            : null,
         };
       });
 
