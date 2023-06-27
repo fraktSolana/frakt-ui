@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import EmptyList from '@frakt/components/EmptyList';
+import { Loader } from '@frakt/components/Loader';
 import { MarketPreview } from '@frakt/api/bonds';
 import { PATHS } from '@frakt/constants';
 
@@ -90,12 +91,19 @@ const DepositStrategiesView = ({
   </>
 );
 
-const LendView = ({ isDepositedAndConnected, pools, setSearch }) => {
+const LendView = ({
+  isDepositedAndConnected,
+  pools,
+  setSearch,
+  isLoadingPools,
+}) => {
   const { publicKey: walletPublicKey } = useWallet();
   const { data: stats } = useFetchAllStats({ walletPublicKey });
 
   const userHasBondsOrOffers =
     stats?.bonds?.activeUserLoans || stats?.bonds?.userOffers;
+
+  const showEmptyList = !isLoadingPools && !pools?.length;
 
   return (
     <>
@@ -109,12 +117,10 @@ const LendView = ({ isDepositedAndConnected, pools, setSearch }) => {
             onChange={setSearch}
             className={styles.search}
           />
-          {!pools?.length && (
-            <EmptyList
-              className={styles.emptyMessage}
-              text={'No items found'}
-            />
+          {showEmptyList && (
+            <EmptyList className={styles.emptyMessage} text="No items found" />
           )}
+          {isLoadingPools && !pools.length && <Loader />}
           {!!pools.length && (
             <div className={styles.nftsList}>
               {pools.map((market: MarketPreview) => (
