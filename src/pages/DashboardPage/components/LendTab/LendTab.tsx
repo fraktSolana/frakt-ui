@@ -120,7 +120,7 @@ const LendView = ({
           {showEmptyList && (
             <EmptyList className={styles.emptyMessage} text="No items found" />
           )}
-          {isLoadingPools && !pools.length && <Loader />}
+          {isLoadingPools && <Loader />}
           {!!pools.length && (
             <div className={styles.nftsList}>
               {pools.map((market: MarketPreview) => (
