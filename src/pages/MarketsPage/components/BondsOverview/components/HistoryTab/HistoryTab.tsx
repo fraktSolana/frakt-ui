@@ -34,6 +34,7 @@ const HistoryTab: FC<HistoryTabProps> = ({
     shouldShowLoader,
     shouldShowConnectSection,
     shouldShowHistoryTable,
+    isFetchingNextPage,
   } = useHistoryLoansTab();
 
   return (
@@ -56,8 +57,8 @@ const HistoryTab: FC<HistoryTabProps> = ({
           />
         )}
         <div ref={ref} />
+        {isFetchingNextPage && !shouldShowLoader && <Loader size="small" />}
       </div>
-
       {shouldShowEmptyList && <EmptyListComponent />}
     </>
   );
