@@ -23,7 +23,7 @@ export const isNftStaked = (nft: AdventureNft) => {
 };
 
 export const calcNftsPartnerPoints = (nfts: AdventureNft[] = []) => {
-  return nfts.reduce((acc, { meta }) => acc + parseInt(meta.partnerPoints), 0);
+  return nfts.reduce((acc, { meta }) => acc + parseInt(meta.partnerPoints.toString()), 0);
 };
 
 export const isNftParticipating = (
