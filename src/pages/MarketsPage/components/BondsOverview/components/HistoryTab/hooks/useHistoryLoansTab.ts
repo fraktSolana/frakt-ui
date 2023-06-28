@@ -34,7 +34,7 @@ export const useHistoryLoansTab = () => {
     marketPubkey,
   });
 
-  useScrollPagination<BondHistory>({
+  const { isLoading: isLoadingNextPage } = useScrollPagination<BondHistory>({
     selector: '.ant-table-content',
     hasNextPage,
     isFetchingNextPage,
@@ -74,5 +74,6 @@ export const useHistoryLoansTab = () => {
     shouldShowLoader,
     shouldShowConnectSection,
     shouldShowHistoryTable,
+    isLoadingNextPage,
   };
 };
