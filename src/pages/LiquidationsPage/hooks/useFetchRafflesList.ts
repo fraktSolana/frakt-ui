@@ -50,6 +50,7 @@ export const useFetchRafflesList = (params: {
   >;
   isFetchingNextPage: boolean;
   isListEnded: boolean;
+  isLoading: boolean;
 } => {
   const { publicKey } = useWallet();
 
@@ -81,18 +82,19 @@ export const useFetchRafflesList = (params: {
     };
   };
 
-  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
-    queryKey: [publicKey, queryData, id],
-    enabled: !!queryData,
-    queryFn: ({ pageParam = 0 }) => fetchData({ pageParam, queryString }),
-    getNextPageParam: (lastPage, allPages) => {
-      const nextPage = allPages.length + 1;
-      return lastPage.data.length !== 0 ? nextPage : undefined;
-    },
-    refetchInterval: 5000,
-    cacheTime: 100_000,
-    networkMode: 'offlineFirst',
-  });
+  const { data, fetchNextPage, isFetchingNextPage, isLoading } =
+    useInfiniteQuery({
+      queryKey: [publicKey, queryData, id],
+      enabled: !!queryData,
+      queryFn: ({ pageParam = 0 }) => fetchData({ pageParam, queryString }),
+      getNextPageParam: (lastPage, allPages) => {
+        const nextPage = allPages.length + 1;
+        return lastPage.data.length !== 0 ? nextPage : undefined;
+      },
+      refetchInterval: 5000,
+      cacheTime: 100_000,
+      networkMode: 'offlineFirst',
+    });
 
   const rafflesData = data?.pages?.map((page) => page.data).flat() || [];
 
@@ -101,5 +103,6 @@ export const useFetchRafflesList = (params: {
     fetchNextPage,
     isFetchingNextPage,
     isListEnded,
+    isLoading: isLoading && !rafflesData?.length,
   };
 };

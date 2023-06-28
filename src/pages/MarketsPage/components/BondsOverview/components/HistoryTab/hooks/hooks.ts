@@ -53,7 +53,6 @@ export const useFetchBondsHistory = ({
       staleTime: 60 * 1000,
       cacheTime: 100_000,
       networkMode: 'offlineFirst',
-      keepPreviousData: true,
       refetchOnWindowFocus: false,
       enabled: !!queryData?.order,
     });

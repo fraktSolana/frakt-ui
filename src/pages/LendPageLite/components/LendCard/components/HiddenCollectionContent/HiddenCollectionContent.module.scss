@@ -95,18 +95,18 @@
 
 .historyTable :global,
 .bondsTable :global {
-  height: 390px;
+  height: 370px;
 
   .ant-table-content {
-    max-height: 385px !important;
+    max-height: 360px !important;
     overflow: auto !important;
   }
 
   @media (max-width: 1240px) {
-    height: 345px;
+    height: 330px;
 
     .ant-table-content {
-      max-height: 340px !important;
+      max-height: 325px !important;
     }
   }
 }

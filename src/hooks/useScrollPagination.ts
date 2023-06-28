@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { debounce } from 'lodash';
+import { useEffect, useRef, useState } from 'react';
 import {
   InfiniteQueryObserverResult,
   FetchNextPageOptions,
@@ -20,41 +19,63 @@ type UseScrollPaginationOptions<T> = {
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
   fetchNextPage: FetchNextPageFunction<T>;
+  enable: boolean;
 };
 
-const MARGIN_ROOT = 10;
+const MARGIN_ROOT_PX = 10;
 
 export const useScrollPagination = <T>({
   selector,
   hasNextPage,
   isFetchingNextPage,
   fetchNextPage,
+  enable,
 }: UseScrollPaginationOptions<T>) => {
-  useEffect(() => {
-    const tableContent = document.querySelector(selector);
-    const debouncedFetchNextPage = debounce(fetchNextPage, 200);
+  const scrollContainerRef = useRef(null);
 
-    const handleScroll = () => {
-      const { scrollHeight, scrollTop, clientHeight } = tableContent;
-      const isScrollEnd = scrollHeight - scrollTop - MARGIN_ROOT < clientHeight;
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleScroll = () => {
+    const scrollContainer = scrollContainerRef.current;
+    if (scrollContainer) {
+      const { scrollHeight, scrollTop, clientHeight } = scrollContainer;
+      const isScrollEnd =
+        scrollHeight - scrollTop - MARGIN_ROOT_PX < clientHeight;
 
       const canFetchNextPage = hasNextPage && !isFetchingNextPage;
 
       if (isScrollEnd && canFetchNextPage) {
-        debouncedFetchNextPage();
+        setIsLoading(true);
+        fetchNextPage().then(() => {
+          setIsLoading(false);
+        });
       }
-    };
+    }
+  };
 
-    if (tableContent) {
-      tableContent.addEventListener('scroll', handleScroll);
+  useEffect(() => {
+    const scrollContainer = document.querySelector(selector);
+
+    if (scrollContainer && enable) {
+      scrollContainerRef.current = scrollContainer;
+      scrollContainer.addEventListener('scroll', handleScroll);
     }
 
     return () => {
-      if (tableContent) {
-        tableContent.removeEventListener('scroll', handleScroll);
+      if (scrollContainer) {
+        scrollContainer.removeEventListener('scroll', handleScroll);
       }
     };
-  }, [selector, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [
+    selector,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    handleScroll,
+    enable,
+  ]);
+
+  return { isLoading };
 };
 
 export default useScrollPagination;

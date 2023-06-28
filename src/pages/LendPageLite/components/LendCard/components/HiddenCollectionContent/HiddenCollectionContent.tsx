@@ -49,6 +49,7 @@ const HiddenCollectionContent = () => {
       <HistoryTab
         tableParams={{ classNames: styles.historyTable, scrollX: 650 }}
         containerClassName={styles.tableContainer}
+        isFixedTable
       />
     ),
     [CollectionTabsNames.MY_LOANS]: (
