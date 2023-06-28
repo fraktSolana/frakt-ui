@@ -16,3 +16,4 @@ export {
   BorrowManualLitePage,
 } from './BorrowPages';
 export { OfferPage } from './OfferPage';
+export { AdventuresPage } from './AdventuresPage';

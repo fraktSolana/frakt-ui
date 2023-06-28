@@ -1,21 +1,14 @@
 .loader {
-  width: 72px;
-  height: 72px;
+  width: 48px;
+  height: 48px;
   margin: auto;
   display: block;
-
-  &__firstCircle {
-    fill: var(--light-green-color);
-  }
-
-  &__secondCircle {
-    fill: var(--light-green-color);
-  }
+  animation: rotate 1s infinite linear;
 }
 
 .large {
-  width: 160px;
-  height: 160px;
+  width: 64px;
+  height: 64px;
 }
 
 .small {
@@ -33,11 +26,6 @@
   border-radius: 50%;
   border-right-color: transparent;
   border-bottom-color: transparent;
-  -webkit-transition: all 0.5s ease-in;
-  -webkit-animation-name: rotate;
-  -webkit-animation-duration: 1s;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
 
   transition: all 0.5s ease-in;
   animation-name: rotate;

@@ -10,7 +10,6 @@ import Checkbox from '@frakt/components/Checkbox';
 
 import { useActiveLoans, useFetchAllLoans } from './hooks';
 import { LoansActiveTable } from '../LoansActiveTable';
-
 import styles from './LoansActiveTab.module.scss';
 
 const LoansActiveTab: FC = () => {
@@ -29,7 +28,11 @@ const LoansActiveTab: FC = () => {
   return (
     <>
       <div className={styles.loanActiveTab}>
-        {connected && !loans.length && isLoading && <Loader />}
+        {connected && !loans.length && isLoading && (
+          <div className={styles.loaderWrapper}>
+            <Loader />
+          </div>
+        )}
 
         {!connected && (
           <ConnectWalletSection

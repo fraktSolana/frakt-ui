@@ -5790,6 +5790,13 @@ axobject-query@^3.1.1:
   dependencies:
     deep-equal "^2.0.5"
 
+b58@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/b58/-/b58-4.0.3.tgz#852a28d804b4a5a60685f9b51706315145a48c36"
+  integrity sha512-VDtdiomm0ywbL8YzgevOZ9pcx6LuOZ3d9qYTPDcYUPf7dRYNA8wvK6epYy0FKMWIM5uaDwd3kWt1x+1S9scB1Q==
+  dependencies:
+    base-x "^3.0.2"
+
 babel-eslint@^10.1.0:
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/babel-eslint/-/babel-eslint-10.1.0.tgz#6968e568a910b78fb3779cdd8b6ac2f479943232"
@@ -9538,10 +9545,10 @@ fb-watchman@^2.0.0:
   dependencies:
     bser "2.1.1"
 
-fbonds-core@0.5.57:
-  version "0.5.57"
-  resolved "https://registry.yarnpkg.com/fbonds-core/-/fbonds-core-0.5.57.tgz#3fcca2d4b93466f0bb5321f59ef868fa3673fba0"
-  integrity sha512-1h3XUxGAlF6n+H6jpWXT1up9LVhJtuc+1D+gQItA9nu7niW1AhCt7cwIJRdFaKaXay8qUsgMKXRwM209tjlBDQ==
+fbonds-core@0.5.67:
+  version "0.5.67"
+  resolved "https://registry.yarnpkg.com/fbonds-core/-/fbonds-core-0.5.67.tgz#e093110b863967da6becda565db64d12de193600"
+  integrity sha512-pQANGEH8H0wjar2/D5a/eRNDXD6f0OjWpIV/DdCw4HNllM/0aQSs6mKXiKODPR4FzKzBv5PNeeaci37LyFKLeg==
   dependencies:
     "@metaplex-foundation/mpl-token-metadata" "^2.8.1"
     "@project-serum/anchor" "^0.26.0"

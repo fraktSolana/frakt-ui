@@ -2,7 +2,6 @@ import { Pair } from '@frakt/api/bonds';
 import { sendTxnPlaceHolder } from '@frakt/utils';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
-import { getTopOrderSize } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 
 import {
   BASE_POINTS,
@@ -10,14 +9,10 @@ import {
   BOND_DECIMAL_DELTA,
   BOND_MAX_RETURN_AMOUNT_PROTECTION_BASE_POINTS,
 } from '../constants';
-import { isBondFeaturesAutomated } from '../utils';
 import {
   depositToBondOfferStandard,
-  depositToBondOfferV2,
   updateBondOfferStandard,
-  updateBondOfferV2,
   withdrawFromBondOfferStandard,
-  withdrawFromBondOfferV2,
 } from 'fbonds-core/lib/fbond-protocol/functions/offer';
 
 type MakeModifyPairTransactions = (params: {
@@ -66,7 +61,6 @@ export const makeModifyPairTransactions: MakeModifyPairTransactions = async ({
       BASE_POINTS,
   );
   const maxReturnAmountFilter = maxLoanValueLamports || standartMaxLoanValue;
-  console.log({ maxReturnAmountFilter, marketFloor, maxLTVRaw });
 
   const { instructions: instructions1, signers: signers1 } =
     await updateBondOfferStandard({

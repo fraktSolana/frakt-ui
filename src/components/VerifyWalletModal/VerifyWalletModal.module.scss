@@ -1,0 +1,110 @@
+.modal {
+  :global {
+    z-index: 2;
+
+    .ant-modal-body {
+      padding: 0 !important;
+      margin: -1px;
+    }
+  }
+  &::before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border: 1px solid var(--primary-text);
+    background-color: var(--primary-text);
+    top: 4px;
+    left: 4px;
+  }
+}
+
+.closeModalSection {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  background: var(--primary-background);
+  border-radius: 30px;
+  position: absolute;
+  top: -64px;
+  right: 0;
+
+  @media screen and (max-width: 1024px) {
+    top: -60px;
+  }
+
+  @media screen and (max-width: 550px) {
+    top: -55px;
+    height: 35px;
+  }
+}
+
+.closeModalIcon {
+  height: 40px;
+  width: 40px;
+  border: 1px solid var(--primary-border);
+  background: var(--primary-background);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: -1px;
+  cursor: pointer;
+
+  @media screen and (max-width: 550px) {
+    font-size: 18px;
+    height: 35px;
+    width: 35px;
+  }
+
+  &:hover {
+    border-color: var(--secondary-border);
+  }
+}
+
+.closeIcon {
+  width: 12px;
+
+  stroke: var(--secondary-border);
+
+  rect {
+    fill: var(--secondary-border);
+  }
+  @media screen and (max-width: 470px) {
+    width: 15px;
+  }
+}
+
+.content {
+  padding: 32px;
+  color: var(--black-color);
+
+  @media screen and (max-width: 960px) {
+    padding: 24px;
+  }
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h3 {
+    font: 700 24px var(--font-family-syne);
+
+    margin-bottom: 28px;
+  }
+
+  & > p {
+    font: 400 20px var(--font-family-chakra);
+    margin-bottom: 24px;
+  }
+}
+
+.checkbox {
+  margin-bottom: 18px;
+}
+
+.btn {
+  font: 600 16px var(--font-family-chakra);
+  padding: 12px;
+  width: 100%;
+}

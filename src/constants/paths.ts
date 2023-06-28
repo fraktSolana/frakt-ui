@@ -10,6 +10,7 @@ export const PATHS = {
   BORROW_MANUAL: '/borrow/manual',
   BORROW_LITE: '/borrow/lite',
   BORROW_SUCCESS: '/borrow/success',
+  ADVENTURES: '/adventures',
   LEND: '/lend',
   STRATEGIES: '/strategies',
   MY_STRATEGIES: '/my-strategies',
@@ -21,5 +22,4 @@ export const PATHS = {
   LOANS: '/loans',
   OFFER: '/offer',
   ROADMAP: 'https://trello.com/b/jt9JRdLg/frakt-public-roadmap',
-  STAKING: 'https://staking.frakt.xyz/',
 };

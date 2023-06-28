@@ -192,3 +192,32 @@ export const fetchUserIndividual = async (
 
   return data?.[0];
 };
+
+type SignIn = (params: {
+  publicKey: web3.PublicKey;
+  signature: string;
+}) => Promise<string | null>;
+export const signIn: SignIn = async ({ publicKey, signature }) => {
+  const { data } = await axios.post<{ access_token: string }>(
+    `https://${process.env.BACKEND_DOMAIN}/auth/sign-in`,
+    {
+      publicKey,
+      signature,
+    },
+  );
+
+  return data?.access_token || null;
+};
+
+//TODO Not implemented on BE yet. Use instead of manual expiration check of access token
+type CheckAccessToken = (token: string) => Promise<boolean>;
+export const checkAccessToken: CheckAccessToken = async (token) => {
+  const { data } = await axios.post<{ token_valid: boolean }>(
+    `https://${process.env.BACKEND_DOMAIN}/auth/validate-token`,
+    {
+      token,
+    },
+  );
+
+  return data?.token_valid || false;
+};

@@ -29,7 +29,9 @@ const PoolsPage: FC = () => {
     <AppLayout>
       <Header totalDeposited={totalDeposited} totalRewards={totalRewards} />
       <div className={styles.content}>
-        {loading && !liquidityPools?.length && <Loader />}
+        {loading && !liquidityPools?.length && (
+          <Loader className={styles.loader} />
+        )}
         {!!liquidityPools?.length && (
           <PoolsTable className={styles.rootTable} data={liquidityPools} />
         )}

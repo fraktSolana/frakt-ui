@@ -4,21 +4,15 @@ import { web3 } from 'fbonds-core';
 import {
   BondFeatures,
   BondingCurveType,
-  PairType,
 } from 'fbonds-core/lib/fbond-protocol/types';
+import { createBondOfferStandard } from 'fbonds-core/lib/fbond-protocol/functions/offer';
 
 import {
   BASE_POINTS,
   BONDS_PROGRAM_PUBKEY,
   BOND_DECIMAL_DELTA,
-  BOND_MAX_RETURN_AMOUNT_FILTER,
   BOND_MAX_RETURN_AMOUNT_PROTECTION_BASE_POINTS,
 } from '../constants';
-import { isBondFeaturesAutomated } from '../utils';
-import {
-  createBondOfferStandard,
-  createBondOfferV2,
-} from 'fbonds-core/lib/fbond-protocol/functions/offer';
 
 type MakeCreatePairTransaction = (params: {
   maxLTV: number; //? % 0-100
@@ -50,11 +44,9 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
   connection,
   wallet,
 }) => {
-  console.log('bondFeature: ', bondFeature);
   const maxLTVRaw = maxLTV * 100; //? Max LTV (2000 --> 20%)
   const maxDurationSec = maxDuration * 24 * 60 * 60; //? Max duration (seconds)
   const solDepositLamports = solDeposit * 1e9;
-  console.log('solDepositLamports: ', solDepositLamports);
   const maxLoanValueLamports = maxLoanValue * 1e9;
 
   const spotPrice = BOND_DECIMAL_DELTA - interest * 100;
@@ -67,7 +59,6 @@ export const makeCreatePairTransaction: MakeCreatePairTransaction = async ({
       BASE_POINTS,
   );
   const maxReturnAmountFilter = maxLoanValueLamports || standartMaxLoanValue;
-  console.log({ maxReturnAmountFilter, marketFloor, maxLTVRaw });
 
   const {
     instructions: instructions1,

@@ -43,12 +43,20 @@ const LoansHistoryTab: FC = () => {
             setQueryData={setQueryData}
             setQuerySearch={setQuerySearch}
           />
-          {isFetchingNextPage && <Loader />}
+          {isFetchingNextPage && (
+            <div className={styles.loaderWrapper}>
+              <Loader />
+            </div>
+          )}
           <div ref={ref} />
         </>
       )}
 
-      {!data.length && isLoading && <Loader />}
+      {!data.length && isLoading && (
+        <div className={styles.loaderWrapper}>
+          <Loader />
+        </div>
+      )}
       {connected && !data.length && !isLoading && (
         <EmptyList
           className={styles.emptyList}

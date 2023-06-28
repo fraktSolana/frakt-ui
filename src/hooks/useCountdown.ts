@@ -48,10 +48,10 @@ export const useCountdown: UseCountdown = (endTime: number) => {
 
   return {
     timeLeft: {
-      days: isExpired ? '0' : formatDateUnit(timeDifference.days()),
-      hours: isExpired ? '0' : formatDateUnit(timeDifference.hours()),
-      minutes: isExpired ? '0' : formatDateUnit(timeDifference.minutes()),
-      seconds: isExpired ? '0' : formatDateUnit(timeDifference.seconds()),
+      days: isExpired ? '00' : formatDateUnit(timeDifference.days()),
+      hours: isExpired ? '00' : formatDateUnit(timeDifference.hours()),
+      minutes: isExpired ? '00' : formatDateUnit(timeDifference.minutes()),
+      seconds: isExpired ? '00' : formatDateUnit(timeDifference.seconds()),
     },
     leftTimeInSeconds: isExpired ? 0 : timeDifference.asSeconds(),
   };
