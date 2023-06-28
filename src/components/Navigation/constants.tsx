@@ -16,13 +16,13 @@ import {
   BorrowDark,
   Raffles,
   RafflesDark,
-  Staking,
-  StakingDark,
   Lending,
   LendingDark,
+  BanxFilled,
 } from '@frakt/icons';
 
 import { Navigation } from './types';
+import { BanxFilledDark } from '@frakt/icons/BanxFilled';
 
 export const COMMUNITY_LINKS = [
   {
@@ -109,11 +109,12 @@ export const NAVIGATION_LINKS: Navigation[] = [
 
 export const SECONDARY_NAVIGATION_LINKS: Navigation[] = [
   {
-    href: PATHS.STAKING,
-    label: 'Staking',
-    event: 'navigation-staking',
-    icon: Staking,
-    iconDark: StakingDark,
+    pathname: PATHS.ADVENTURES,
+    to: PATHS.ADVENTURES,
+    label: 'Banx',
+    event: 'navigation-adventures',
+    icon: BanxFilled,
+    iconDark: BanxFilledDark,
   },
   {
     pathname: PATHS.LIQUIDATIONS,

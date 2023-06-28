@@ -9,12 +9,13 @@ export const useFetchUserIndividual = (): {
   const { publicKey } = useWallet();
 
   const { data, isLoading } = useQuery(
-    ['userIndividual', publicKey],
-    () => fetchUserIndividual(publicKey.toBase58()),
+    ['userIndividual', publicKey?.toBase58()],
+    () => fetchUserIndividual(publicKey?.toBase58()),
     {
       networkMode: 'offlineFirst',
       staleTime: Infinity,
       refetchOnWindowFocus: false,
+      enabled: !!publicKey,
     },
   );
 

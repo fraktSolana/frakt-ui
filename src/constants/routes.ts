@@ -16,6 +16,7 @@ import {
   BorrowBulkOverviewPage,
   BorrowSuccessPage,
   BorrowManualLitePage,
+  AdventuresPage,
   LendPageLite,
 } from '@frakt/pages';
 
@@ -110,6 +111,16 @@ export const routes: Route[] = [
     exact: true,
     path: PATHS.BORROW_SUCCESS,
     component: BorrowSuccessPage,
+  },
+  {
+    exact: true,
+    path: PATHS.BORROW_SUCCESS,
+    component: BorrowSuccessPage,
+  },
+  {
+    exact: true,
+    path: PATHS.ADVENTURES,
+    component: AdventuresPage,
   },
   {
     exact: true,
