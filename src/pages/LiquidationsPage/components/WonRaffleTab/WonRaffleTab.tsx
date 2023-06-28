@@ -21,6 +21,7 @@ const WonRaffleTab: FC = () => {
     fetchNextPage,
     isFetchingNextPage,
     isListEnded,
+    isLoading,
   } = useFetchRafflesList({
     url: 'liquidation?history=true&',
     id: 'wonRaffleList',
@@ -33,24 +34,24 @@ const WonRaffleTab: FC = () => {
     }
   }, [inView, fetchNextPage, isFetchingNextPage, isListEnded]);
 
+  const showEmptyList = !wonRaffleList?.length && !isLoading;
+
   return (
-    <>
-      <RafflesList isWonList>
-        {wonRaffleList?.length ? (
-          <>
-            <div className={styles.rafflesList}>
-              {wonRaffleList?.map((raffle: WonRaffleListItem) => (
-                <WonRaffleCard key={raffle.rafflePubKey} raffle={raffle} />
-              ))}
-            </div>
-            {!!isFetchingNextPage && <Loader />}
-            <div ref={ref} />
-          </>
-        ) : (
-          <EmptyList text="No raffles at the moment" />
-        )}
-      </RafflesList>
-    </>
+    <RafflesList isWonList>
+      {isLoading && <Loader />}
+      {!!wonRaffleList?.length && (
+        <>
+          <div className={styles.rafflesList}>
+            {wonRaffleList?.map((raffle: WonRaffleListItem) => (
+              <WonRaffleCard key={raffle.rafflePubKey} raffle={raffle} />
+            ))}
+          </div>
+          {!!isFetchingNextPage && <Loader />}
+          <div ref={ref} />
+        </>
+      )}
+      {showEmptyList && <EmptyList text="No raffles at the moment" />}
+    </RafflesList>
   );
 };
 

@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import classNames from 'classnames';
 
 import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
 import RadioButtonField from '@frakt/pages/OfferPage/components/RadioButtonField';
@@ -12,16 +13,17 @@ import { HISTORY_FILTER_OPTIONS as options } from './constants';
 import { HistoryTable } from '../HistoryTable';
 
 import styles from './HistoryTab.module.scss';
-import classNames from 'classnames';
 
 interface HistoryTabProps {
   tableParams?: { classNames: string; scrollX: number };
   containerClassName?: string;
+  isFixedTable?: boolean;
 }
 
 const HistoryTab: FC<HistoryTabProps> = ({
   tableParams,
   containerClassName,
+  isFixedTable,
 }) => {
   const {
     ref,
@@ -34,7 +36,9 @@ const HistoryTab: FC<HistoryTabProps> = ({
     shouldShowLoader,
     shouldShowConnectSection,
     shouldShowHistoryTable,
-  } = useHistoryLoansTab();
+    isLoadingNextPage,
+    isFetchingNextPage,
+  } = useHistoryLoansTab(isFixedTable);
 
   return (
     <>
@@ -49,15 +53,22 @@ const HistoryTab: FC<HistoryTabProps> = ({
         {shouldShowLoader && <Loader />}
         {shouldShowConnectSection && <ConnectWalletSectionComponent />}
         {shouldShowHistoryTable && (
-          <HistoryTable
-            className={classNames(styles.table, tableParams?.classNames)}
-            data={bondsHistory}
-            breakpoints={{ scrollX: tableParams?.scrollX || 744 }}
-          />
+          <div className={styles.tableWrapper}>
+            <HistoryTable
+              className={classNames(styles.table, tableParams?.classNames)}
+              data={bondsHistory}
+              breakpoints={{ scrollX: tableParams?.scrollX || 744 }}
+            />
+            {!shouldShowLoader && isLoadingNextPage && isFixedTable && (
+              <Loader className={styles.loader} size="small" />
+            )}
+            {!shouldShowLoader && isFetchingNextPage && !isFixedTable && (
+              <Loader size="small" />
+            )}
+          </div>
         )}
         <div ref={ref} />
       </div>
-
       {shouldShowEmptyList && <EmptyListComponent />}
     </>
   );

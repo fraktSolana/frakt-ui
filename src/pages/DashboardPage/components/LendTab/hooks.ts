@@ -26,9 +26,10 @@ export const useLendTab = () => {
   const { connected, publicKey } = useWallet();
   const { balance: solanaBalance } = useSolanaBalance();
 
-  const { data: liquidityPools } = useFetchLiquidityPools({
-    walletPublicKey: publicKey,
-  });
+  const { data: liquidityPools, loading: isLoadingPools } =
+    useFetchLiquidityPools({
+      walletPublicKey: publicKey,
+    });
 
   const depositedPools = getDepositedUserPools(liquidityPools);
   const topLiquidityPools = getTopLiquidityPools(liquidityPools);
@@ -79,6 +80,7 @@ export const useLendTab = () => {
       pools: filteredMarkets,
       setSearch,
       isDepositedAndConnected: connected,
+      isLoadingPools,
     },
   };
 };

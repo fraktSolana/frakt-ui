@@ -32,6 +32,7 @@ const OngoingRaffleTab: FC = () => {
     fetchNextPage,
     isFetchingNextPage,
     isListEnded,
+    isLoading,
   } = useFetchRafflesList({
     url: 'liquidation',
     id: 'ongoingRaffleList',
@@ -44,9 +45,11 @@ const OngoingRaffleTab: FC = () => {
     }
   }, [inView, fetchNextPage, isFetchingNextPage, isListEnded]);
 
-  const { data: auctionsList, loading, hideAuction } = useFetchAuctionsList();
-
-  if (loading) return <Loader />;
+  const {
+    data: auctionsList,
+    loading: isAuctionsListLoading,
+    hideAuction,
+  } = useFetchAuctionsList();
 
   const createAuctionsList = () => {
     return auctionsList.map((auction: AuctionListItem) => (
@@ -68,20 +71,24 @@ const OngoingRaffleTab: FC = () => {
     ));
   };
 
+  const isLoadingOrAuctionsListLoading = isLoading || isAuctionsListLoading;
+  const hasRaffles = !!auctionsList?.length || !!raffleList?.length;
+  const showList = hasRaffles && !isLoadingOrAuctionsListLoading;
+  const showEmptyList = !showList && !isLoadingOrAuctionsListLoading;
+
   return (
     <RafflesList withRafflesInfo>
-      {!!auctionsList?.length || !!raffleList?.length ? (
-        <>
-          <div className={styles.rafflesList}>
-            {createAuctionsList()}
-            {createRafflesList()}
-            {!!isFetchingNextPage && <Loader />}
-            <div ref={ref} />
-          </div>
-        </>
-      ) : (
-        <EmptyList text="No ongoing raffles at the moment" />
+      {isLoadingOrAuctionsListLoading && <Loader />}
+
+      {showList && (
+        <div className={styles.rafflesList}>
+          {createAuctionsList()}
+          {createRafflesList()}
+          {!!isFetchingNextPage && <Loader />}
+          <div ref={ref} />
+        </div>
       )}
+      {showEmptyList && <EmptyList text="No ongoing raffles at the moment" />}
     </RafflesList>
   );
 };

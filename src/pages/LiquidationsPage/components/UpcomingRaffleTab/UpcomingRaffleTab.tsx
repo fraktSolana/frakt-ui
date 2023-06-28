@@ -21,6 +21,7 @@ const UpcomingRaffleTab: FC = () => {
     fetchNextPage,
     isFetchingNextPage,
     isListEnded,
+    isLoading,
   } = useFetchRafflesList({
     url: 'liquidation/grace-list',
     id: 'graceList',
@@ -33,24 +34,24 @@ const UpcomingRaffleTab: FC = () => {
     }
   }, [inView, fetchNextPage, isFetchingNextPage, isListEnded]);
 
+  const showEmptyList = !graceList?.length && !isLoading;
+
   return (
-    <>
-      <RafflesList isGraceList>
-        {graceList?.length ? (
-          <>
-            <div className={styles.rafflesList}>
-              {graceList?.map((raffle) => (
-                <GraceCard key={raffle.nftMint} raffle={raffle} />
-              ))}
-            </div>
-            {!!isFetchingNextPage && <Loader />}
-            <div ref={ref} />
-          </>
-        ) : (
-          <EmptyList text="No loans on grace at the moment" />
-        )}
-      </RafflesList>
-    </>
+    <RafflesList isGraceList>
+      {isLoading && <Loader />}
+      {!!graceList?.length && (
+        <>
+          <div className={styles.rafflesList}>
+            {graceList?.map((raffle) => (
+              <GraceCard key={raffle.nftMint} raffle={raffle} />
+            ))}
+          </div>
+          {!!isFetchingNextPage && <Loader />}
+          <div ref={ref} />
+        </>
+      )}
+      {showEmptyList && <EmptyList text="No raffles at the moment" />}
+    </RafflesList>
   );
 };
 

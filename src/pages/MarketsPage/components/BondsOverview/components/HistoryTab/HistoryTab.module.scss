@@ -72,3 +72,14 @@
 .emptyList {
   padding: 120px 0 160px !important;
 }
+
+.tableWrapper {
+  position: relative;
+}
+
+.loader {
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+}

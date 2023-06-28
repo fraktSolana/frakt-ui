@@ -78,7 +78,7 @@ const BondsTab: FC<BondsTabProps> = ({
               breakpoints={{ scrollX: tableParams?.scrollX || 744 }}
               hideBond={hideBond}
             />
-            {isFetchingNextPage && <Loader />}
+            {isFetchingNextPage && <Loader size="small" />}
             <div ref={ref} />
           </>
         )}
