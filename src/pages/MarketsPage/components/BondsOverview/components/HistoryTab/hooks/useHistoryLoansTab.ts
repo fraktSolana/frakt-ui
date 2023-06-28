@@ -10,7 +10,7 @@ import { Bond, BondHistory } from '@frakt/api/bonds';
 import { useFetchBondsHistory, useHistoryBondsSort } from './hooks';
 import { HISTORY_FILTER_OPTIONS as options } from '../constants';
 
-export const useHistoryLoansTab = () => {
+export const useHistoryLoansTab = (isFixedTable: boolean) => {
   const { marketPubkey } = useParams<{ marketPubkey: string }>();
   const { connected } = useWallet();
 
@@ -39,6 +39,7 @@ export const useHistoryLoansTab = () => {
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
+    enable: isFixedTable,
   });
 
   useEffect(() => {

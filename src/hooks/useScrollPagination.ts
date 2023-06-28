@@ -19,6 +19,7 @@ type UseScrollPaginationOptions<T> = {
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
   fetchNextPage: FetchNextPageFunction<T>;
+  enable: boolean;
 };
 
 const MARGIN_ROOT_PX = 10;
@@ -28,6 +29,7 @@ export const useScrollPagination = <T>({
   hasNextPage,
   isFetchingNextPage,
   fetchNextPage,
+  enable,
 }: UseScrollPaginationOptions<T>) => {
   const scrollContainerRef = useRef(null);
 
@@ -54,7 +56,7 @@ export const useScrollPagination = <T>({
   useEffect(() => {
     const scrollContainer = document.querySelector(selector);
 
-    if (scrollContainer) {
+    if (scrollContainer && enable) {
       scrollContainerRef.current = scrollContainer;
       scrollContainer.addEventListener('scroll', handleScroll);
     }
@@ -64,7 +66,14 @@ export const useScrollPagination = <T>({
         scrollContainer.removeEventListener('scroll', handleScroll);
       }
     };
-  }, [selector, hasNextPage, isFetchingNextPage, fetchNextPage, handleScroll]);
+  }, [
+    selector,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    handleScroll,
+    enable,
+  ]);
 
   return { isLoading };
 };

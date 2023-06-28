@@ -17,11 +17,13 @@ import styles from './HistoryTab.module.scss';
 interface HistoryTabProps {
   tableParams?: { classNames: string; scrollX: number };
   containerClassName?: string;
+  isFixedTable?: boolean;
 }
 
 const HistoryTab: FC<HistoryTabProps> = ({
   tableParams,
   containerClassName,
+  isFixedTable,
 }) => {
   const {
     ref,
@@ -35,7 +37,8 @@ const HistoryTab: FC<HistoryTabProps> = ({
     shouldShowConnectSection,
     shouldShowHistoryTable,
     isLoadingNextPage,
-  } = useHistoryLoansTab();
+    isFetchingNextPage,
+  } = useHistoryLoansTab(isFixedTable);
 
   return (
     <>
@@ -56,8 +59,11 @@ const HistoryTab: FC<HistoryTabProps> = ({
               data={bondsHistory}
               breakpoints={{ scrollX: tableParams?.scrollX || 744 }}
             />
-            {isLoadingNextPage && !shouldShowLoader && (
+            {!shouldShowLoader && isLoadingNextPage && isFixedTable && (
               <Loader className={styles.loader} size="small" />
+            )}
+            {!shouldShowLoader && isFetchingNextPage && !isFixedTable && (
+              <Loader size="small" />
             )}
           </div>
         )}
