@@ -18,6 +18,7 @@ import {
   BorrowManualLitePage,
   AdventuresPage,
   LendPageLite,
+  AuctionsPage,
 } from '@frakt/pages';
 
 interface Route {
@@ -121,6 +122,11 @@ export const routes: Route[] = [
     exact: true,
     path: PATHS.ADVENTURES,
     component: AdventuresPage,
+  },
+  {
+    exact: true,
+    path: PATHS.AUCTIONS,
+    component: AuctionsPage,
   },
   {
     exact: true,
