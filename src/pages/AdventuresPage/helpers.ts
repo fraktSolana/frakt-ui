@@ -1,13 +1,13 @@
-import moment from 'moment';
+import moment from "moment";
 import {
   Adventure,
   AdventureSubscription,
   BanxStakeState,
-} from 'fbonds-core/lib/fbond-protocol/types';
+} from "fbonds-core/lib/fbond-protocol/types";
 
-import { AdventureNft, SubscriptionStatus } from '@frakt/api/adventures';
+import { AdventureNft, SubscriptionStatus } from "@frakt/api/adventures";
 
-import { AdventureStatus } from './types';
+import { AdventureStatus } from "./types";
 
 export const getAdventureStatus = (adventure: Adventure) => {
   const timeNowUnix = moment().unix();
@@ -23,20 +23,20 @@ export const isNftStaked = (nft: AdventureNft) => {
 };
 
 export const calcNftsPartnerPoints = (nfts: AdventureNft[] = []) => {
-  return nfts.reduce((acc, { meta }) => acc + meta.partnerPoints, 0);
+  return nfts.reduce((acc, { meta }) => acc + parseInt(meta.partnerPoints.toString()), 0);
 };
 
 export const isNftParticipating = (
   nft: AdventureNft,
-  adventurePubkey: string,
+  adventurePubkey: string
 ) => {
   return !!nft?.subscriptions.find(
-    (subscription) => subscription.adventure === adventurePubkey,
+    (subscription) => subscription.adventure === adventurePubkey
   );
 };
 
 export const getSubscriptionStatus = (
-  subscription: AdventureSubscription,
+  subscription: AdventureSubscription
 ): SubscriptionStatus => {
   const { unsubscribedAt, harvestedAt } = subscription;
   if (unsubscribedAt === 0 && harvestedAt === 0)
