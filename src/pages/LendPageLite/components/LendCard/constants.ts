@@ -2,6 +2,7 @@ import { CSSProperties } from 'react';
 
 import { VALUES_TYPES } from '@frakt/components/StatInfo';
 import { MarketPreview } from '@frakt/api/bonds';
+import { convertAprToApy } from '@frakt/utils';
 
 import { renderDurationButtons } from './components/CollectionsStats';
 
@@ -44,9 +45,9 @@ export const statInfos: StatInfos[] = [
   },
   {
     key: 'apy',
-    label: 'Apr',
+    label: 'Apy',
     tooltipText: 'Interest (in %) for the duration of this loan',
-    valueRenderer: (apr: number) => apr?.toFixed(0),
+    valueRenderer: (apr: number) => convertAprToApy(apr / 100)?.toFixed(0),
     valueType: VALUES_TYPES.percent,
     decimalPlaces: 0,
     valueStyles: { fontWeight: 600 },

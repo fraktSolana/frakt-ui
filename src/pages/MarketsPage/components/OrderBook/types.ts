@@ -22,9 +22,9 @@ export interface MarketOrder {
 
 export interface SyntheticParams {
   ltv: number;
-  interest: number;
+  interest?: number;
   offerSize: number;
-  durationDays: number;
+  durationDays?: number;
   loanValue?: number;
   loanAmount?: number;
 }

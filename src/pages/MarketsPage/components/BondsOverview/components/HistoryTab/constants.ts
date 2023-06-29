@@ -6,7 +6,7 @@ export const HISTORY_FILTER_OPTIONS: RBOption<string>[] = [
     value: 'all',
   },
   {
-    label: 'Issued',
+    label: 'Loaned',
     value: 'creation',
   },
   {

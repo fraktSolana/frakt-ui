@@ -1,10 +1,15 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { useHistory } from 'react-router-dom';
 
 import EmptyList from '@frakt/components/EmptyList';
 import { Loader } from '@frakt/components/Loader';
 import { MarketPreview } from '@frakt/api/bonds';
 import { PATHS } from '@frakt/constants';
+import {
+  useVisibleMarketURLControl,
+  useSearchSelectedMarketsURLControl,
+} from '@frakt/hooks';
 
 import { DepositContentView, LendListContentView } from './ContentViews';
 import { useFetchAllStats } from '../../hooks';
@@ -98,11 +103,24 @@ const LendView = ({
   isLoadingPools,
 }) => {
   const { publicKey: walletPublicKey } = useWallet();
+  const history = useHistory();
   const { data: stats } = useFetchAllStats({ walletPublicKey });
 
   const userHasBondsOrOffers =
     stats?.bonds?.activeUserLoans || stats?.bonds?.userOffers;
 
+  const { setSelectedOptions } = useSearchSelectedMarketsURLControl();
+  const { toggleVisibleCard } = useVisibleMarketURLControl();
+
+  const goToLiteLending = (collectionName: string) => {
+    setSelectedOptions([collectionName]);
+    toggleVisibleCard(collectionName);
+
+    history.push({
+      pathname: PATHS.BONDS_LITE,
+      search: `?opened=${collectionName}&collections=${collectionName}`,
+    });
+  };
   const showEmptyList = !isLoadingPools && !pools?.length;
 
   return (
@@ -125,11 +143,13 @@ const LendView = ({
             <div className={styles.nftsList}>
               {pools.map((market: MarketPreview) => (
                 <LendCard
+                  key={market?.marketPubkey}
                   image={market?.collectionImage}
                   activeLoans={market?.activeBondsAmount}
                   amount={market?.offerTVL}
                   apr={market?.apy}
-                  marketPubkey={market?.marketPubkey}
+                  collectionName={market?.collectionName}
+                  onClick={goToLiteLending}
                 />
               ))}
             </div>

@@ -8,15 +8,10 @@ import {
 
 interface TotalOverviewProps {
   size?: number;
-  interest?: number;
   duration?: number;
 }
 
-const TotalOverview: FC<TotalOverviewProps> = ({
-  size = 0,
-  interest = 0,
-  duration = 7,
-}) => {
+const TotalOverview: FC<TotalOverviewProps> = ({ size = 0, duration = 7 }) => {
   const estProfit =
     (size * (BASE_POINTS - DEFAULT_STANDART_INTEREST)) / BASE_POINTS;
 

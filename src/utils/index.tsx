@@ -1,7 +1,6 @@
 import { web3, BN, TokenInfo } from '@frakt-protocol/frakt-sdk';
 import { notification } from 'antd';
 import { Dictionary, divide } from 'lodash';
-import { compose, nth, split, tail } from 'ramda';
 
 import { formatNumber, Notify, NotifyType } from './solanaUtils';
 import { FRKT_TOKEN_MINT } from '../config';
@@ -267,7 +266,9 @@ export const formatValue = (value: number, divisor: number, toFixed = 2) => {
   return isNaN(parseFloat(formattedValue)) ? '--' : formattedValue;
 };
 
-export const isPathActive = (pathname: string, targetPath: string): boolean => {
-  const currentPath = compose(nth(1), split('/'))(pathname);
-  return currentPath === tail(targetPath);
+export const convertAprToApy = (apr: number): number => {
+  const weekInYear = 52;
+  const compoundedInterest = 1 + apr / weekInYear;
+  const apy = Math.pow(compoundedInterest, weekInYear) - 1;
+  return apy * 100;
 };

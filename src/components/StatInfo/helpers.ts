@@ -1,4 +1,4 @@
-import { isNumber } from 'lodash';
+import { isNumber, isString } from 'lodash';
 
 import { formatNumbersWithCommans } from '@frakt/utils';
 import { VALUES_TYPES } from './constants';
@@ -11,8 +11,13 @@ export const formatValue = (
   decimalPlaces: number,
   divider = 1,
 ) => {
-  if (type === VALUES_TYPES.solPrice && isNumber(value)) {
-    const roundedValue = (value / divider)?.toFixed(decimalPlaces);
+  if (!isString(value) && !isNumber(value)) {
+    return value;
+  }
+
+  if (type === VALUES_TYPES.solPrice) {
+    const formattedValue = isString(value) ? parseFloat(value) || 0 : value;
+    const roundedValue = (formattedValue / divider)?.toFixed(decimalPlaces);
 
     return formatNumbersWithCommans(roundedValue);
   }
@@ -20,12 +25,11 @@ export const formatValue = (
   return value;
 };
 
-export const getFlexStyle = (flexType?: 'row' | 'column') => {
-  if (flexType === 'row') {
-    return styles.rowFlex;
-  } else if (flexType === 'column') {
-    return styles.columnFlex;
-  } else {
-    return '';
-  }
+export const getFlexStyle = (flexType?: 'row' | 'column'): string => {
+  const flexStyles = {
+    row: styles.rowFlex,
+    column: styles.columnFlex,
+  };
+
+  return flexType ? flexStyles[flexType] : '';
 };

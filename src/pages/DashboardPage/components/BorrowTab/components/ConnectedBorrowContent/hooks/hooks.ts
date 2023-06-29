@@ -23,6 +23,10 @@ import { notify, throwLogsError } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { PATHS } from '@frakt/constants';
 import { showSolscanLinkNotification } from '@frakt/utils/transactions';
+import {
+  useVisibleMarketURLControl,
+  useSearchSelectedMarketsURLControl,
+} from '@frakt/hooks';
 
 import { useNotConnectedBorrowContent } from '../../NotConnectedBorrowContent';
 import { filterPairs, getBondOrderParams, parseNFTs } from '../helpers';
@@ -99,7 +103,24 @@ export const useBorrowSingleBond = () => {
     close: closeLoadingModal,
   } = useLoadingModal();
 
+  const { setSelectedOptions } = useSearchSelectedMarketsURLControl();
+  const { toggleVisibleCard } = useVisibleMarketURLControl();
+
+  const goToLiteLending = (collectionName: string) => {
+    setSelectedOptions([collectionName]);
+    toggleVisibleCard(collectionName);
+
+    history.push({
+      pathname: PATHS.BONDS_LITE,
+      search: `?opened=${collectionName}&collections=${collectionName}`,
+    });
+  };
+
   const onSubmit = async (nft: NFT, hideNFT: (nftMint: string) => void) => {
+    if (!nft?.mint) {
+      goToLiteLending(nft?.name);
+    }
+
     try {
       openLoadingModal();
 

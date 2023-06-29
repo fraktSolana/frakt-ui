@@ -9,8 +9,8 @@ import styles from './OfferActionButtons.module.scss';
 
 interface OfferActionButtonsProps {
   isEdit: boolean;
-  offerSize: number;
-  isOfferHasChanged: boolean;
+  disablePlaceOffer: boolean;
+  disableEditOffer: boolean;
   onCreateOffer: () => Promise<void>;
   onRemoveOffer: () => Promise<void>;
   onEditOffer: () => Promise<void>;
@@ -20,9 +20,9 @@ const OfferActionButtons: FC<OfferActionButtonsProps> = ({
   isEdit,
   onRemoveOffer,
   onEditOffer,
-  offerSize,
+  disablePlaceOffer,
+  disableEditOffer,
   onCreateOffer,
-  isOfferHasChanged,
 }) => {
   const { connected } = useWallet();
   const { toggleVisibility } = useWalletModal();
@@ -39,13 +39,13 @@ const OfferActionButtons: FC<OfferActionButtonsProps> = ({
     onClick: onEditOffer,
     className: styles.button,
     type: 'secondary' as const,
-    disabled: !isOfferHasChanged,
+    disabled: disableEditOffer,
     children: 'Update offer',
   };
 
   const placeButtonProps = {
     className: styles.button,
-    disabled: !offerSize && connected,
+    disabled: disablePlaceOffer,
     onClick: !connected ? onToggleWalletModal : onCreateOffer,
     type: 'secondary' as const,
     children: !connected ? 'Connect wallet' : 'Place',

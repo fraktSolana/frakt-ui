@@ -13,6 +13,7 @@ interface NumericInputFieldProps {
   showIcon?: boolean;
   rightLabel?: string | JSX.Element;
   integerOnly?: boolean;
+  hasError?: boolean;
 }
 
 const NumericInputField: FC<NumericInputFieldProps> = ({
@@ -24,6 +25,7 @@ const NumericInputField: FC<NumericInputFieldProps> = ({
   showIcon = true,
   integerOnly = false,
   rightLabel,
+  hasError,
 }) => {
   return (
     <div className={classNames(styles.field, className)}>
@@ -31,7 +33,9 @@ const NumericInputField: FC<NumericInputFieldProps> = ({
         <span className={styles.label}>{label}</span>
         {rightLabel && <span className={styles.rightLabel}>{rightLabel}</span>}
       </div>
-      <div className={styles.root}>
+      <div
+        className={classNames(styles.root, { [styles.inputError]: hasError })}
+      >
         <NumericInput
           value={value}
           integerOnly={integerOnly}

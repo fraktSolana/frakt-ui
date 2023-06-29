@@ -19,3 +19,5 @@ export { useBestWorkingRPC } from './useBestWorkingRPC';
 export { useScrollPagination } from './useScrollPagination';
 export { useBondsTransactions } from './useBondTransactions';
 export { useTheme } from './useTheme';
+export { useVisibleMarketURLControl } from './useVisibleMarketsStore';
+export { useSearchSelectedMarketsURLControl } from './useSearchSelectedMarkets';

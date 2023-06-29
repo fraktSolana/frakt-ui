@@ -3,6 +3,7 @@ import { SortOrder } from 'antd/lib/table/interface';
 
 import { Search } from '@frakt/components/Table/components/Search';
 import { MarketPreview } from '@frakt/api/bonds';
+import { convertAprToApy } from '@frakt/utils';
 
 import {
   TitleCell,
@@ -78,12 +79,12 @@ export const TableList = ({ onChange }) => {
       title: (column) => (
         <HeaderTitleCell
           sortColumns={column?.sortColumns}
-          label="APR"
+          label="APY"
           value="apy"
           tooltipText="Interest (in %) for the duration of this loan"
         />
       ),
-      render: (value) => createAprJSX(value),
+      render: (value) => createAprJSX(convertAprToApy(value / 100)),
       sorter: (a, b) => sortingFavoriteList(a, b, 'apy'),
       showSorterTooltip: false,
       width: 95,

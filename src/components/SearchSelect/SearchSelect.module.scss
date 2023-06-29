@@ -56,6 +56,10 @@
       gap: 0 !important;
     }
 
+    #relativeImageContainer {
+      display: none;
+    }
+
     & > div > p {
       display: none;
     }
@@ -104,6 +108,10 @@
   .ant-select-item-option-state {
     display: none;
   }
+
+  .rc-virtual-list-scrollbar {
+    display: none !important;
+  }
 }
 
 .labels {
@@ -124,7 +132,7 @@
   max-width: 780px;
   padding-bottom: 1px;
   width: 100%;
-  
+
   @media (max-width: 650px) {
     width: 50%;
   }

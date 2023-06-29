@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
-import { useHistory, useParams } from 'react-router-dom';
 import { isEmpty } from 'lodash';
 
 import { parseMarketOrder } from '@frakt/pages/MarketsPage/components/OrderBook/helpers';
+import { SyntheticParams } from '@frakt/pages/MarketsPage/components/OrderBook/types';
 import { useMarket, useMarketPair } from '@frakt/utils/bonds';
+import { useSolanaBalance } from '@frakt/utils/accounts';
 import { RBOption } from '@frakt/components/RadioButton';
-import { PATHS } from '@frakt/constants';
 
 import { useOfferTransactions } from './useOfferTransactions';
 import { useNumericInput } from '../../NumericInput';
@@ -17,15 +17,16 @@ export const OFFER_INTEREST_PERCENTAGE = 3;
 export const LOAN_TO_VALUE_RATIO = 100;
 export const DURATION_IN_DAYS = 7;
 
-export const usePlaceOfferTab = (setSyntheticParams) => {
+export const usePlaceOfferTab = (
+  marketPubkey: string,
+  setSyntheticParams: (syntheticParams: SyntheticParams) => void,
+  pairPubkey: string,
+  setPairPubkey: (pubkey: string) => void,
+) => {
   const { connection } = useConnection();
   const wallet = useWallet();
-  const history = useHistory();
 
-  const { marketPubkey, pairPubkey } = useParams<{
-    marketPubkey: string;
-    pairPubkey: string;
-  }>();
+  const { balance: solanaBalance } = useSolanaBalance();
 
   const { market, isLoading: marketLoading } = useMarket({ marketPubkey });
   const { pair, isLoading: pairLoading } = useMarketPair({ pairPubkey });
@@ -38,7 +39,8 @@ export const usePlaceOfferTab = (setSyntheticParams) => {
   const isEdit = !!pairPubkey;
 
   const goToPlaceOffer = () => {
-    history.push(`${PATHS.BONDS_LITE}/${marketPubkey}`);
+    setPairPubkey('');
+    onClearFields();
   };
 
   const loanValueInput = useNumericInput('Loan value', '');
@@ -100,19 +102,20 @@ export const usePlaceOfferTab = (setSyntheticParams) => {
   };
 
   const offerSize = calculateOfferSize();
-  const interest = offerSize * (OFFER_INTEREST_PERCENTAGE / 100);
+
+  const showDepositError = solanaBalance < offerSize;
 
   // Update synthetic params
 
   useEffect(() => {
     setSyntheticParams({
       ltv: LOAN_TO_VALUE_RATIO,
-      interest: OFFER_INTEREST_PERCENTAGE,
       loanValue: parseFloat(loanValueInput.value),
       loanAmount: parseFloat(loansAmountInput.value),
       offerSize: offerSize * 1e9 || 0,
+      interest: 0,
     });
-  }, [interest, offerSize, loansAmountInput.value, loanValueInput.value]);
+  }, [offerSize, loansAmountInput.value, loanValueInput.value]);
 
   useEffect(() => {
     if (!isEmpty(initialEditValues) && isEdit) {
@@ -140,7 +143,11 @@ export const usePlaceOfferTab = (setSyntheticParams) => {
       offerSize,
       pair,
       onAfterCreateTransaction: onClearFields,
+      goToPlaceOffer,
     });
+
+  const disableEditOffer = !isOfferHasChanged;
+  const disablePlaceOffer = !offerSize && wallet?.connected;
 
   return {
     isEdit,
@@ -149,13 +156,14 @@ export const usePlaceOfferTab = (setSyntheticParams) => {
     loanValueInput,
     loansAmountInput,
     offerSize,
-    interest,
     onCreateOffer,
     onEditOffer,
     onRemoveOffer,
     loadingModalVisible,
     goToPlaceOffer,
     onClearFields,
-    isOfferHasChanged,
+    showDepositError,
+    disablePlaceOffer,
+    disableEditOffer,
   };
 };

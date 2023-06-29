@@ -1,18 +1,32 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { debounce } from 'lodash';
 
-export const useFakeInfinityScroll = (
-  itemsPerScroll = 20,
-): {
-  itemsToShow: number;
-  next: () => void;
-  setItemsToShow: (itemsToShow: number) => void;
-} => {
-  const [itemsToShow, setItemsToShow] = useState<number>(itemsPerScroll);
+import { useIntersection } from '@frakt/hooks/useIntersection';
 
-  const onScrollHandler = () => setItemsToShow((prev) => prev + itemsPerScroll);
+export const useFakeInfinityScroll = ({
+  rawData = [],
+  enabled = false,
+  itemsPerScroll: initialItemsPerScroll = 15,
+}) => {
+  const { ref, inView } = useIntersection();
+  const [itemsPerScroll, setItemsPerScroll] = useState<number>(
+    initialItemsPerScroll,
+  );
+
+  const next = debounce(() => {
+    setItemsPerScroll(itemsPerScroll + itemsPerScroll);
+  }, 500);
+
+  useEffect(() => {
+    if (inView && rawData.length >= itemsPerScroll && enabled) {
+      next();
+    }
+  }, [inView, rawData, itemsPerScroll, enabled]);
+
+  const data = rawData.slice(0, itemsPerScroll);
+
   return {
-    itemsToShow,
-    setItemsToShow,
-    next: onScrollHandler,
+    data,
+    fetchMoreTrigger: ref,
   };
 };

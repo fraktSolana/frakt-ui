@@ -6,8 +6,12 @@ import { AppLayout } from '@frakt/components/Layout/AppLayout';
 import TokenField from '@frakt/components/TokenField';
 import Button from '@frakt/components/Button';
 import { SOL_TOKEN } from '@frakt/utils';
+import {
+  STANDART_INTEREST_PERCENT,
+  colorByPercentOffers,
+  getColorByPercent,
+} from '@frakt/utils/bonds';
 
-import { colorByPercentOffers, getColorByPercent } from '@frakt/utils/bonds';
 import { SliderGradient } from './components/SliderGradient/SliderGradient';
 import CollectionGereralInfo from './components/CollectionGereralInfo';
 import OrderBook from '../MarketsPage/components/OrderBook/OrderBook';
@@ -32,7 +36,6 @@ export const OfferPage = () => {
     ltv,
     duration,
     offerSize,
-    interest,
     onLtvChange,
     onOfferSizeChange,
     onCreateOffer,
@@ -154,11 +157,7 @@ export const OfferPage = () => {
             />
           </div>
 
-          <TotalOverview
-            size={parseFloat(offerSize)}
-            interest={parseFloat(interest)}
-            duration={duration}
-          />
+          <TotalOverview size={parseFloat(offerSize)} duration={duration} />
           <div className={styles.btnsWrapper}>
             {isEdit && (
               <>
@@ -198,7 +197,7 @@ export const OfferPage = () => {
           syntheticParams={{
             ltv,
             offerSize: parseFloat(offerSize) * 1e9 || 0,
-            interest: parseFloat(interest) || 0,
+            interest: STANDART_INTEREST_PERCENT,
             durationDays: duration,
           }}
         />
