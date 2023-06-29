@@ -57,6 +57,9 @@ body input.valueInput:not(.styles_ant-input) {
     width: 40px;
   }
 }
+.inputError {
+  border-color: var(--red-error-color);
+}
 
 .selectTokenBtn {
   @extend %valueInputStyles;

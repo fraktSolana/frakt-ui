@@ -18,16 +18,22 @@ interface BondsTabProps {
   tableParams?: { classNames: string; scrollX: number };
   containerClassName?: string;
   showWidgets?: boolean;
+  marketPubkey?: string;
 }
 
 const BondsTab: FC<BondsTabProps> = ({
   tableParams,
   containerClassName,
   showWidgets = true,
+  marketPubkey: initialMarketPubkey,
 }) => {
-  const { marketPubkey } = useParams<{ marketPubkey: string }>();
   const { ref, inView } = useIntersection();
   const { connected, publicKey } = useWallet();
+  const { marketPubkey: routeMarketPubkey } = useParams<{
+    marketPubkey: string;
+  }>();
+
+  const marketPubkey = initialMarketPubkey || routeMarketPubkey;
 
   const { queryData } = useBondsSort();
 
@@ -38,7 +44,10 @@ const BondsTab: FC<BondsTabProps> = ({
     hasNextPage,
     hideBond,
     loading,
-  } = useFetchAllBonds({ queryData, marketPubkey });
+  } = useFetchAllBonds({
+    queryData,
+    marketPubkey,
+  });
 
   useEffect(() => {
     if (inView && hasNextPage) {

@@ -1,12 +1,11 @@
 import { MinusOutlined, SearchOutlined } from '@ant-design/icons';
-import { DefaultOptionType, SelectProps } from 'antd/lib/select';
+import { SelectProps } from 'antd/lib/select';
 import { Select } from 'antd';
 
 import { Close } from '@frakt/icons';
 
 import { filterOption, getPopupContainer } from './helpers';
 import { OptionKeys, renderOption } from './Option';
-import { useSelectedOptions } from './hooks';
 
 import styles from './SearchSelect.module.scss';
 
@@ -16,12 +15,8 @@ export interface SearchSelectProps<T> extends SelectProps<T, unknown> {
   optionKeys: OptionKeys;
   placeholder?: string;
   onFilterChange?: (values: string[]) => void;
+  selectedOptions: string[];
 }
-
-type SelectChangeHandler<T> = (
-  value: T,
-  option: DefaultOptionType | DefaultOptionType[],
-) => void;
 
 export const SearchSelect = <T extends {}>({
   options = [],
@@ -29,20 +24,15 @@ export const SearchSelect = <T extends {}>({
   optionKeys,
   placeholder,
   onFilterChange,
+  selectedOptions,
   ...props
 }: SearchSelectProps<T>) => {
-  const { selectedOptions, handleSelectChange } = useSelectedOptions({
-    onFilterChange,
-  });
-
-  const handleChange: SelectChangeHandler<T> =
-    handleSelectChange as unknown as SelectChangeHandler<T>;
-
   return (
     <div className={styles.selectWrapper}>
       <PrefixInput />
       <Select
-        onChange={handleChange}
+        value={selectedOptions}
+        onChange={onFilterChange}
         mode="multiple"
         allowClear
         showSearch

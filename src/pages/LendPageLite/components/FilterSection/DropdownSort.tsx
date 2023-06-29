@@ -23,8 +23,8 @@ export const DropdownSort = ({ onSortChange }) => {
   const { control, watch, setValue } = useForm({
     defaultValues: {
       [FilterFormInputsNames.SORT]: {
-        label: <span>Active loans</span>,
-        value: 'activeLoans_desc',
+        label: <span>Offer TVL</span>,
+        value: 'offerTVL_desc',
       },
     },
   });
@@ -82,7 +82,7 @@ const SORT_VALUES = [
     value: 'activeLoans_',
   },
   {
-    label: <span>APR</span>,
+    label: <span>APY</span>,
     value: 'apr_',
   },
 ];

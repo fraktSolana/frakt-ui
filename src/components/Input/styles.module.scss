@@ -39,3 +39,12 @@ body .input {
     }
   }
 }
+
+.errors {
+  height: 16px;
+  font: var(--font-text-6);
+  color: var(--red-error-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}

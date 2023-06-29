@@ -1,6 +1,5 @@
 import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 import { WalletContextState } from '@solana/wallet-adapter-react';
-import { useHistory } from 'react-router-dom';
 import { web3 } from 'fbonds-core';
 import { isEmpty } from 'lodash';
 
@@ -10,7 +9,7 @@ import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { throwLogsError, notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { Market, Pair } from '@frakt/api/bonds';
-import { PATHS } from '@frakt/constants';
+
 import {
   makeCreatePairTransaction,
   makeRemoveOrderTransaction,
@@ -32,6 +31,7 @@ export const useOfferTransactions = ({
   offerSize,
   pair,
   onAfterCreateTransaction,
+  goToPlaceOffer,
 }: {
   wallet: WalletContextState;
   connection: web3.Connection;
@@ -42,8 +42,8 @@ export const useOfferTransactions = ({
   offerSize: number;
   pair: Pair;
   onAfterCreateTransaction: () => void;
+  goToPlaceOffer: () => void;
 }) => {
-  const history = useHistory();
   const { hidePair, refetch: refetchMarketPairs } = useMarketPairs({
     marketPubkey: market?.marketPubkey,
   });
@@ -138,7 +138,6 @@ export const useOfferTransactions = ({
         commitment: 'confirmed',
         onAfterSend: null,
         onAfterSuccess: () => {
-          history.push(`${PATHS.BONDS_LITE}/${market.marketPubkey}`);
           onAfterCreateTransaction();
           refetchMarketPairs();
         },
@@ -166,7 +165,6 @@ export const useOfferTransactions = ({
         commitment: 'processed',
         onAfterSend: null,
         onAfterSuccess: () => {
-          history.push(`${PATHS.BONDS_LITE}/${market.marketPubkey}`);
           refetchMarketPairs();
         },
       });
@@ -185,8 +183,8 @@ export const useOfferTransactions = ({
         commitment: 'confirmed',
         onAfterSend: () => hidePair(pair?.publicKey),
         onAfterSuccess: () => {
-          history.push(`${PATHS.BONDS_LITE}/${market.marketPubkey}`);
           refetchMarketPairs();
+          goToPlaceOffer();
         },
       });
     }

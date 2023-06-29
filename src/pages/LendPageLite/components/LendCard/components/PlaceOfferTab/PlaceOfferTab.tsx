@@ -1,6 +1,12 @@
+import { FC } from 'react';
+import { DEFAULT_STANDART_INTEREST } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
+
+import { SyntheticParams } from '@frakt/pages/MarketsPage/components/OrderBook/types';
 import RadioButtonField from '@frakt/pages/OfferPage/components/RadioButtonField';
-import { LoadingModal } from '@frakt/components/LoadingModal';
 import { StatInfo, VALUES_TYPES } from '@frakt/components/StatInfo';
+import { LoadingModal } from '@frakt/components/LoadingModal';
+import { InputErrorMessage } from '@frakt/components/Input';
+import { BASE_POINTS } from '@frakt/utils/bonds';
 import Button from '@frakt/components/Button';
 
 import { DEFAULTS_OPTIONS } from './constants';
@@ -9,10 +15,18 @@ import NumericInputField from '../NumericInput';
 import { usePlaceOfferTab } from './hooks';
 
 import styles from './PlaceOfferTab.module.scss';
-import { BASE_POINTS } from '@frakt/utils/bonds';
-import { DEFAULT_STANDART_INTEREST } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 
-const PlaceOfferTab = ({ setSyntheticParams }) => {
+const PlaceOfferTab = ({
+  setSyntheticParams,
+  pairPubkey,
+  setPairPubkey,
+  marketPubkey,
+}: {
+  marketPubkey: string;
+  pairPubkey: string;
+  setPairPubkey: (pubkey: string) => void;
+  setSyntheticParams: (syntheticParams: SyntheticParams) => void;
+}) => {
   const {
     isEdit,
     bondFeature,
@@ -20,14 +34,20 @@ const PlaceOfferTab = ({ setSyntheticParams }) => {
     loanValueInput,
     loansAmountInput,
     offerSize,
-    interest,
     onCreateOffer,
     onEditOffer,
     onRemoveOffer,
     loadingModalVisible,
     goToPlaceOffer,
-    isOfferHasChanged,
-  } = usePlaceOfferTab(setSyntheticParams);
+    showDepositError,
+    disablePlaceOffer,
+    disableEditOffer,
+  } = usePlaceOfferTab(
+    marketPubkey,
+    setSyntheticParams,
+    pairPubkey,
+    setPairPubkey,
+  );
 
   return (
     <div className={styles.content}>
@@ -48,7 +68,7 @@ const PlaceOfferTab = ({ setSyntheticParams }) => {
         />
       </div>
       <div className={styles.fields}>
-        <NumericInputField {...loanValueInput} />
+        <NumericInputField hasError={showDepositError} {...loanValueInput} />
         <NumericInputField
           {...loansAmountInput}
           integerOnly={true}
@@ -56,14 +76,15 @@ const PlaceOfferTab = ({ setSyntheticParams }) => {
           placeholder="0"
         />
       </div>
-      <OfferSummary offerSize={offerSize} interest={interest} />
+      <InputErrorMessage hasError={showDepositError} message="Not enough SOL" />
+      <OfferSummary offerSize={offerSize} />
       <OfferActionButtons
         isEdit={isEdit}
         onCreateOffer={onCreateOffer}
         onRemoveOffer={onRemoveOffer}
         onEditOffer={onEditOffer}
-        offerSize={offerSize}
-        isOfferHasChanged={isOfferHasChanged}
+        disableEditOffer={disableEditOffer}
+        disablePlaceOffer={disablePlaceOffer}
       />
       <LoadingModal visible={loadingModalVisible} />
     </div>
@@ -72,25 +93,23 @@ const PlaceOfferTab = ({ setSyntheticParams }) => {
 
 export default PlaceOfferTab;
 
-const OfferSummary = ({ offerSize, interest }) => (
-  <div className={styles.offerSummary}>
-    <StatInfo label="Offer size" value={offerSize || 0} flexType="row" />
-    <StatInfo
-      label="Duration"
-      value="7 days"
-      flexType="row"
-      valueType={VALUES_TYPES.string}
-    />
-    <StatInfo
-      label="Estimated interest"
-      value={
-        (offerSize * (BASE_POINTS - DEFAULT_STANDART_INTEREST)) / BASE_POINTS ||
-        0
-      }
-      flexType="row"
-    />
-  </div>
-);
+const OfferSummary: FC<{ offerSize: number }> = ({ offerSize }) => {
+  const interest =
+    (offerSize * (BASE_POINTS - DEFAULT_STANDART_INTEREST)) / BASE_POINTS || 0;
+
+  return (
+    <div className={styles.offerSummary}>
+      <StatInfo label="Offer size" value={offerSize || 0} flexType="row" />
+      <StatInfo
+        label="Duration"
+        value="7 days"
+        flexType="row"
+        valueType={VALUES_TYPES.string}
+      />
+      <StatInfo label="Estimated interest" value={interest} flexType="row" />
+    </div>
+  );
+};
 
 const OfferHeader = ({ isEdit, goToPlaceOffer }) => {
   const title = isEdit ? 'Offer editing' : 'Offer creation';

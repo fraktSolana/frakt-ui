@@ -1,3 +1,4 @@
+import { DEFAULT_STANDART_INTEREST } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 import { web3 } from 'fbonds-core';
 import { PUBKEY_PLACEHOLDER } from '..';
 
@@ -26,3 +27,6 @@ export const BOND_MAX_RETURN_AMOUNT_PROTECTION_LTV_MULTIPLIER = 3; //? 200%
 export const BASE_POINTS = 1e4;
 export const PRECISION_CORRECTION_LAMPORTS = 10000; //? 200%
 export const BONDS_PROTOCOL_FEE_IN_BASE_POINTS = 50;
+
+export const STANDART_INTEREST_PERCENT =
+  (100 * (BASE_POINTS - DEFAULT_STANDART_INTEREST)) / BASE_POINTS;

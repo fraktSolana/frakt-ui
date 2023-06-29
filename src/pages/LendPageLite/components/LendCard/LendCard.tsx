@@ -1,12 +1,9 @@
 import { FC, useEffect, useRef } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { useContainerWidth } from '@frakt/hooks';
 import { MarketPreview } from '@frakt/api/bonds';
-import Button from '@frakt/components/Button';
 import { ChevronDown } from '@frakt/icons';
-import { PATHS } from '@frakt/constants';
 
 import { GeneralCollectionInfo } from './components/GeneralCollectionInfo/GeneralCollectionInfo';
 import HiddenCollectionContent from './components/HiddenCollectionContent';
@@ -17,26 +14,20 @@ import styles from './LendCard.module.scss';
 
 const STOP_WIDTH = 1240;
 
-const LendCard: FC<{ market: MarketPreview }> = ({ market }) => {
-  const { marketPubkey } = useParams<{ marketPubkey: string }>();
-  const history = useHistory();
+interface LendCardProps {
+  market: MarketPreview;
+  isVisible: boolean;
+  onCardClick: () => void;
+}
 
+const LendCard: FC<LendCardProps> = ({ isVisible, onCardClick, market }) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (market?.selected && cardRef.current) {
+    if (isVisible && cardRef.current) {
       cardRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
-  }, [market?.selected]);
-
-  const onCardClick = () => {
-    const targetPath =
-      marketPubkey && market?.selected
-        ? PATHS.BONDS_LITE
-        : `${PATHS.BONDS_LITE}/${market?.marketPubkey}`;
-
-    history.push(targetPath);
-  };
+  }, [isVisible]);
 
   const { containerRef, containerWidth } = useContainerWidth(STOP_WIDTH);
 
@@ -57,10 +48,12 @@ const LendCard: FC<{ market: MarketPreview }> = ({ market }) => {
       <LendCardBody
         onClick={onCardClick}
         market={market}
-        active={market?.selected}
+        active={isVisible}
         containerRef={containerRef}
       />
-      {market?.selected && <HiddenCollectionContent />}
+      {isVisible && (
+        <HiddenCollectionContent marketPubkey={market?.marketPubkey} />
+      )}
     </div>
   );
 };
@@ -80,12 +73,11 @@ const LendCardBody = ({ onClick, market, active, containerRef }) => (
 );
 
 const ChevronButton = ({ active = false }) => (
-  <Button
-    type="tertiary"
+  <div
     className={classNames(styles.chevronButton, {
       [styles.active]: active,
     })}
   >
     <ChevronDown />
-  </Button>
+  </div>
 );

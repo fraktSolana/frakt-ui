@@ -64,16 +64,6 @@ export const routes: Route[] = [
   },
   {
     exact: true,
-    path: `${PATHS.BONDS_LITE}/:marketPubkey`,
-    component: LendPageLite,
-  },
-  {
-    exact: true,
-    path: `${PATHS.BONDS_LITE}/:marketPubkey/:pairPubkey`,
-    component: LendPageLite,
-  },
-  {
-    exact: true,
     path: `${PATHS.OFFER}/:marketPubkey`,
     component: OfferPage,
   },

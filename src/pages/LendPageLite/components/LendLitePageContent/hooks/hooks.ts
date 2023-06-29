@@ -1,39 +1,39 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useParams } from 'react-router-dom';
-
 import { create } from 'zustand';
 
 import { useMarketsPreview } from '@frakt/pages/MarketsPage/hooks';
+import { useSearchSelectedMarketsURLControl } from '@frakt/hooks';
 import { MarketPreview } from '@frakt/api/bonds';
 import { compareNumbers } from '@frakt/utils';
 
-import { getFilteredMarkets, getMarketsToDisplay } from './helpers';
-import { SortValue } from './../FilterSection/DropdownSort';
+import { getFilteredMarkets, getMarketsToDisplay } from '../helpers';
+import { SortValue } from '../../FilterSection/DropdownSort';
 
-const useFilteredMarkets = () => {
+export const useFilteredMarkets = () => {
   const { marketPubkey } = useParams<{ marketPubkey?: string }>();
   const { publicKey } = useWallet();
 
   const { sortValue, handleSortChange } = useSortState();
 
-  const [selectedMarkets, setSelectedMarkets] = useState<string[]>([]);
+  const { selectedMarkets, setSelectedOptions } =
+    useSearchSelectedMarketsURLControl();
+
   const { checked, onToggleChange } = useToggleState();
   const { marketsPreview, isLoading } = useMarketsPreview(publicKey, checked);
 
   const filteredMarkets = getFilteredMarkets(marketsPreview, selectedMarkets);
-  const marketsToDisplay = getMarketsToDisplay(
-    marketPubkey,
-    marketsPreview,
-    filteredMarkets,
-  );
+  const marketsToDisplay = getMarketsToDisplay(marketsPreview, filteredMarkets);
   const sortedMarkets = useSortMarkets(marketsToDisplay, sortValue);
 
   const handleFilterChange = (filteredOptions: string[]) => {
-    setSelectedMarkets(filteredOptions);
+    setSelectedOptions(filteredOptions);
   };
 
   const isMarketPubkeyPresent = Boolean(marketPubkey);
+
+  const showEmptyList = !isLoading && checked && !marketsToDisplay?.length;
 
   return {
     marketsPreview,
@@ -41,13 +41,13 @@ const useFilteredMarkets = () => {
     checked,
     onToggleChange,
     marketsToDisplay: sortedMarkets,
-    handleFilterChange,
     isMarketPubkeyPresent,
     handleSortChange,
+    showEmptyList,
+    handleFilterChange,
+    selectedMarkets,
   };
 };
-
-export default useFilteredMarkets;
 
 enum SortField {
   OFFER_TVL = 'offerTVL',
@@ -114,7 +114,7 @@ interface SortState {
 
 export const useSortState = create<SortState>((set) => ({
   sortValue: {
-    name: SortField.ACTIVE_LOANS,
+    name: SortField.OFFER_TVL,
     order: SORT_ORDER.DESC,
   },
   handleSortChange: (nextValue) =>

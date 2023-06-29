@@ -51,7 +51,7 @@ const Offer: FC<OfferProps> = ({
       {shouldDisplayLTV && (
         <ValueDisplay
           value={ltv}
-          styles={styles.ltv}
+          className={styles.ltv}
           label="LTV"
           maxPercent={27}
           offset={74}
@@ -60,7 +60,7 @@ const Offer: FC<OfferProps> = ({
       {shouldDisplayLoanValue && (
         <ValueDisplay
           value={loanValue || 0}
-          styles={styles.loanValue}
+          className={styles.loanValue}
           styleValue={maxLoanValue}
           label="Offer"
           maxPercent={36}
@@ -70,7 +70,7 @@ const Offer: FC<OfferProps> = ({
       )}
       <div className={styles.valueWrapper}>
         <div className={classNames(styles.value, styles.sizeValue)}>
-          {size?.toFixed(3)} / <sup>{duration}d</sup>
+          {size?.toFixed(3)}
         </div>
         <LoanAmountOrInterest loanAmount={loanAmount} interest={interest} />
       </div>
@@ -87,12 +87,15 @@ export default Offer;
 
 const LoanAmountOrInterest = ({ loanAmount = 0, interest = 0 }) => {
   if (interest) {
-    return <p className={styles.value}>{(interest * 100)?.toFixed(2)}</p>;
+    const formattedInterest = (interest * 100)?.toFixed(2);
+    return <p className={styles.value}>{formattedInterest}</p>;
   }
+
+  const displayLoanAmount = loanAmount < 1 ? '< 1' : loanAmount || 0;
 
   return (
     <p className={classNames(styles.value, styles.loanAmountValue)}>
-      {loanAmount || 0}
+      {displayLoanAmount}
     </p>
   );
 };

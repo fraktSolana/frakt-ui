@@ -1,13 +1,11 @@
 import { useMemo } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useParams } from 'react-router-dom';
 import { web3 } from 'fbonds-core';
 
 import { useMarketPairs } from '@frakt/utils/bonds';
 
 import { MarketOrder } from './types';
 import {
-  filterOffersByDuration,
   parseMarketOrder,
   sortOffersByInterest,
   sortOffersByLtv,
@@ -15,14 +13,13 @@ import {
 
 type UseMarketOrders = (props: {
   marketPubkey: web3.PublicKey;
-  filterDuration?: number;
   walletOwned?: boolean;
   ltv: number;
   size: number; //? lamports
   interest: number;
-  duration: number;
   loanValue?: number;
   loanAmount?: number;
+  pairPubkey: string;
 }) => {
   offers: MarketOrder[];
   isLoading: boolean;
@@ -36,14 +33,11 @@ export const useMarketOrders: UseMarketOrders = ({
   ltv,
   size,
   interest,
-  duration,
   loanValue,
   loanAmount,
-  filterDuration,
+  pairPubkey,
 }) => {
   const { publicKey } = useWallet();
-
-  const { pairPubkey: pairPubkey } = useParams<{ pairPubkey: string }>();
 
   const { pairs, isLoading, hidePair } = useMarketPairs({
     marketPubkey: marketPubkey?.toBase58(),
@@ -59,7 +53,7 @@ export const useMarketOrders: UseMarketOrders = ({
       ltv,
       size: size / 1e9,
       interest: interest / 1e2,
-      duration: duration ?? 7,
+      duration: 7,
       loanValue,
       loanAmount,
       synthetic: true,
@@ -91,17 +85,13 @@ export const useMarketOrders: UseMarketOrders = ({
 
     const sortedByLtv = sortOffersByLtv(sortedOffersByInterest, 'desc');
 
-    const sortedByDuration = filterDuration
-      ? filterOffersByDuration(sortedByLtv, filterDuration)
-      : sortedByLtv;
-
-    const ownerOffers = sortedByDuration.filter(
+    const ownerOffers = sortedByLtv.filter(
       (pair) =>
         !walletOwned || pair.rawData?.assetReceiver === publicKey?.toBase58(),
     );
 
-    return [sortedByDuration, ownerOffers];
-  }, [pairs, walletOwned, publicKey, ltv, size, interest, duration]);
+    return [sortedByLtv, ownerOffers];
+  }, [pairs, walletOwned, publicKey, ltv, size, interest]);
 
   const bestOffer = useMemo(() => {
     return allOffers.at(0)?.synthetic ? allOffers.at(1) : allOffers.at(0);

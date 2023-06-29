@@ -6,6 +6,6 @@ export enum VALUES_TYPES {
 
 export const DIMENSION_BY_VALUE_TYPE: Record<VALUES_TYPES, JSX.Element> = {
   [VALUES_TYPES.string]: null,
-  [VALUES_TYPES.percent]: <>{'%'}</>,
-  [VALUES_TYPES.solPrice]: <>{'◎'}</>,
+  [VALUES_TYPES.percent]: <>%</>,
+  [VALUES_TYPES.solPrice]: <>◎</>,
 };

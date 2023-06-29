@@ -2,23 +2,34 @@ import { useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useParams } from 'react-router-dom';
 
-import { useRBOptionState } from '@frakt/components/RadioButton';
+import { RBOption, useRBOptionState } from '@frakt/components/RadioButton';
 import { useIntersection } from '@frakt/hooks/useIntersection';
 import { useScrollPagination } from '@frakt/hooks';
-import { Bond, BondHistory } from '@frakt/api/bonds';
+import { BondHistory } from '@frakt/api/bonds';
 
 import { useFetchBondsHistory, useHistoryBondsSort } from './hooks';
-import { HISTORY_FILTER_OPTIONS as options } from '../constants';
+import { HISTORY_FILTER_OPTIONS } from '../constants';
 
-export const useHistoryLoansTab = (isFixedTable: boolean) => {
-  const { marketPubkey } = useParams<{ marketPubkey: string }>();
+export const useHistoryLoansTab = (
+  initialMarketPubkey?: string,
+  isFixedTable?: boolean,
+) => {
   const { connected } = useWallet();
-
   const { ref, inView } = useIntersection();
+  const { marketPubkey: routeMarketPubkey } = useParams<{
+    marketPubkey: string;
+  }>();
+
+  const marketPubkey = initialMarketPubkey || routeMarketPubkey;
+
+  const options = appendIdToOptionValue(HISTORY_FILTER_OPTIONS, marketPubkey);
+
   const [showOwnerBonds, setShowOwnerBonds] = useState<boolean>(false);
   const [selectedFilterOption, onChangeFilterOption] = useRBOptionState<string>(
     options[0].value,
   );
+
+  const eventType = selectedFilterOption.split('_')[0];
 
   const { queryData } = useHistoryBondsSort();
   const {
@@ -30,12 +41,16 @@ export const useHistoryLoansTab = (isFixedTable: boolean) => {
   } = useFetchBondsHistory({
     queryData,
     showOwnerBonds,
-    eventType: selectedFilterOption,
+    eventType,
     marketPubkey,
   });
 
+  const scrollContainer = document
+    .getElementById(`historyTable_${marketPubkey}`)
+    ?.querySelector('.ant-table-content');
+
   const { isLoading: isLoadingNextPage } = useScrollPagination<BondHistory>({
-    selector: '.ant-table-content',
+    scrollContainer,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
@@ -58,7 +73,6 @@ export const useHistoryLoansTab = (isFixedTable: boolean) => {
     !hasBondsHistory && (showMessage || !showOwnerBonds) && !isLoading;
 
   const shouldShowLoader = isLoading && !bondsHistory.length;
-  const shouldShowConnectSection = !connected && showOwnerBonds;
   const shouldShowHistoryTable =
     hasBondsHistory && (showMessage || !showOwnerBonds);
 
@@ -73,8 +87,17 @@ export const useHistoryLoansTab = (isFixedTable: boolean) => {
     isLoading,
     shouldShowEmptyList,
     shouldShowLoader,
-    shouldShowConnectSection,
     shouldShowHistoryTable,
+    options,
     isLoadingNextPage,
   };
+};
+
+const appendIdToOptionValue = <T>(options: RBOption<T>[], id: string) => {
+  return options.map((option) => {
+    return {
+      ...option,
+      value: `${option.value}_${id}`,
+    };
+  });
 };
