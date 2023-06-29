@@ -78,9 +78,11 @@
 .content {
   padding: 32px;
   color: var(--black-color);
+  min-height: 498px;
 
   @media screen and (max-width: 960px) {
     padding: 18px;
+    min-height: 448px;
   }
 }
 
