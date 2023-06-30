@@ -51,3 +51,7 @@ export const isSubscriptionActive = (subscription: AdventureSubscription) =>
 export const isNftHasActiveSubscriptions = (nft: AdventureNft) => {
   return !!nft?.subscriptions.find(isSubscriptionActive);
 };
+
+export const isNftLoaned = (nft: AdventureNft) => {
+  return !!nft?.banxStake?.isLoaned;
+};

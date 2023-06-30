@@ -6,6 +6,8 @@ import { Dictionary } from 'ramda';
 export interface BorrowNft {
   mint: string;
   name: string;
+  banxStake?: string;
+
   collectionName: string;
   imageUrl: string;
 

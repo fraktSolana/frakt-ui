@@ -61,6 +61,8 @@ export interface Loan {
   bondParams?: {
     marketPubkey: string;
     bondTokenMint: string;
+    banxStake?: string;
+
     collateralOrSolReceiver: string;
     collateralTokenAccount: string;
     expiredAt: number; //? unix timestamp
