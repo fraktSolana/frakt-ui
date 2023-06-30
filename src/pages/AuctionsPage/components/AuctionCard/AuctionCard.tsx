@@ -3,7 +3,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 
 import { useWalletModal } from '@frakt/components/WalletModal';
 import { LoadingModal } from '@frakt/components/LoadingModal';
-import { RefinanceAuctionListItem } from '@frakt/api/raffle';
+import { RefinanceAuctionListItem } from '@frakt/api/auctions';
 import Button from '@frakt/components/Button';
 import {
   GeneralCardInfo,
@@ -12,14 +12,16 @@ import {
 import { useAuctionCard } from './hooks';
 
 import styles from './AuctionCard.module.scss';
-import { parseRefinanceAuctionsInfo } from './helpers';
+import {
+  REFINANCE_INTEREST_REFRESH_RATE,
+  REFINANCE_INTEREST_TIC,
+  parseRefinanceAuctionsInfo,
+} from './helpers';
 
 interface AuctionCardProps {
   auction: RefinanceAuctionListItem;
   hideAuction?: (value: string) => void;
 }
-
-const DENOMINATIOR_PERCENT = 21 / 1e5; // DUTCH_AUCTION_RATE
 
 const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
   const { connected } = useWallet();
@@ -29,9 +31,8 @@ const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
     nftImageUrl,
     nftName,
     floorPrice,
-    nextInterest,
-    timeToNextRound,
-    currentInterest,
+    currentLoanAmount,
+    newLoanAmount,
     nftCollectionName,
   } = parseRefinanceAuctionsInfo(auction);
 
@@ -62,11 +63,15 @@ const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
           value={floorPrice}
         />
         <StatsRaffleValues label="Next round start">
-          Every 1 sec
+          Every {REFINANCE_INTEREST_REFRESH_RATE} sec
         </StatsRaffleValues>
-        <StatsRaffleValues label="Loan interest" value={currentInterest} />
+        <StatsRaffleValues
+          label="Current loan amount"
+          value={currentLoanAmount}
+        />
+        <StatsRaffleValues label="New loan amount" value={newLoanAmount} />
         <StatsRaffleValues label="Interest decrease">
-          -{DENOMINATIOR_PERCENT} %
+          -{REFINANCE_INTEREST_TIC / 100} %
         </StatsRaffleValues>
       </div>
       <Button

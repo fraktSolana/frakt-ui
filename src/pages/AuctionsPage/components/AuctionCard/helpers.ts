@@ -1,21 +1,40 @@
 import { calculateAuctionPrice } from '@frakters/raffle-sdk/lib/raffle-core/helpers';
 import moment from 'moment';
 
-import { RefinanceAuctionListItem } from '@frakt/api/raffle';
+import { RefinanceAuctionListItem } from '@frakt/api/auctions';
+
+export const REFINANCE_START_INTEREST = 5e2;
+export const REFINANCE_INTEREST_TIC = 10;
+export const REFINANCE_INTEREST_REFRESH_RATE = 864;
+export const REFINANCE_MAX_INTEREST = 10e2;
 
 const parseRefinanceAuctionsInfo = (auction: RefinanceAuctionListItem) => {
   const { nftName, nftImageUrl, nftCollectionName } = auction;
 
   const floorPrice = (auction?.bondParams.floorPrice / 1e9)?.toFixed(3);
+  const totalRepayValue = auction?.bondParams.repayValue / 1e9 / 0.995;
+  const currentLoanAmount = totalRepayValue?.toFixed(3);
+
+  const currentTime = moment().unix();
+  const ticsPassed =
+    (currentTime - auction.bondParams.auctionRefinanceStartTime) /
+    REFINANCE_INTEREST_REFRESH_RATE;
+  const auctionInterest =
+    REFINANCE_INTEREST_TIC * ticsPassed + REFINANCE_START_INTEREST;
+  const currentInterest =
+    auctionInterest > REFINANCE_MAX_INTEREST
+      ? REFINANCE_MAX_INTEREST
+      : auctionInterest;
+
+  const newLoanAmount = totalRepayValue * (100 / currentInterest + 1);
 
   return {
     nftName,
     nftImageUrl,
     nftCollectionName,
 
-    nextInterest: 0,
-    timeToNextRound: 0,
-    currentInterest: 0,
+    currentLoanAmount,
+    newLoanAmount,
 
     floorPrice,
   };
