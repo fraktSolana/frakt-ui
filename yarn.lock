@@ -9545,10 +9545,10 @@ fb-watchman@^2.0.0:
   dependencies:
     bser "2.1.1"
 
-fbonds-core@0.5.67:
-  version "0.5.67"
-  resolved "https://registry.yarnpkg.com/fbonds-core/-/fbonds-core-0.5.67.tgz#e093110b863967da6becda565db64d12de193600"
-  integrity sha512-pQANGEH8H0wjar2/D5a/eRNDXD6f0OjWpIV/DdCw4HNllM/0aQSs6mKXiKODPR4FzKzBv5PNeeaci37LyFKLeg==
+fbonds-core@0.5.67-beta.4:
+  version "0.5.67-beta.4"
+  resolved "https://registry.yarnpkg.com/fbonds-core/-/fbonds-core-0.5.67-beta.4.tgz#aae95a0eca03b37f64ef65b9e16065cda68058b8"
+  integrity sha512-rPq9qm7mMs62OncvajL8U4QHo1C6DFagHg3z/o6l32MjGn+mhGQ/K3sfE84wFN8XvRPWLoOp6Rpdipp53eqJJw==
   dependencies:
     "@metaplex-foundation/mpl-token-metadata" "^2.8.1"
     "@project-serum/anchor" "^0.26.0"
@@ -19384,6 +19384,7 @@ worker-rpc@^0.1.0:
     microevent.ts "~0.1.1"
 
 "wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
+  name wrap-ansi-cjs
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
