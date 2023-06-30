@@ -1,10 +1,9 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
-import { parseAuctionsInfo } from '@frakt/pages/LiquidationsPage/components/AuctionCard/helpers';
 import { useWalletModal } from '@frakt/components/WalletModal';
 import { LoadingModal } from '@frakt/components/LoadingModal';
-import { AuctionListItem } from '@frakt/api/raffle';
+import { RefinanceAuctionListItem } from '@frakt/api/raffle';
 import Button from '@frakt/components/Button';
 import {
   GeneralCardInfo,
@@ -13,9 +12,10 @@ import {
 import { useAuctionCard } from './hooks';
 
 import styles from './AuctionCard.module.scss';
+import { parseRefinanceAuctionsInfo } from './helpers';
 
 interface AuctionCardProps {
-  auction: AuctionListItem;
+  auction: RefinanceAuctionListItem;
   hideAuction?: (value: string) => void;
 }
 
@@ -25,8 +25,15 @@ const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
   const { connected } = useWallet();
   const { setVisible: setVisibleWalletModal } = useWalletModal();
 
-  const { nftImageUrl, nftName, floorPrice, buyPrice, nftCollectionName } =
-    parseAuctionsInfo(auction);
+  const {
+    nftImageUrl,
+    nftName,
+    floorPrice,
+    nextInterest,
+    timeToNextRound,
+    currentInterest,
+    nftCollectionName,
+  } = parseRefinanceAuctionsInfo(auction);
 
   const { onSubmit, loadingModalVisible } = useAuctionCard(
     auction,
@@ -57,8 +64,8 @@ const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
         <StatsRaffleValues label="Next round start">
           Every 1 sec
         </StatsRaffleValues>
-        <StatsRaffleValues label="Buy price" value={buyPrice} />
-        <StatsRaffleValues label="Price decrease">
+        <StatsRaffleValues label="Loan interest" value={currentInterest} />
+        <StatsRaffleValues label="Interest decrease">
           -{DENOMINATIOR_PERCENT} %
         </StatsRaffleValues>
       </div>
@@ -67,7 +74,7 @@ const AuctionCard: FC<AuctionCardProps> = ({ auction, hideAuction }) => {
         type="secondary"
         className={styles.button}
       >
-        {connected ? 'Liquidate' : 'Connect wallet'}
+        {connected ? 'Refinance' : 'Connect wallet'}
       </Button>
       <LoadingModal visible={loadingModalVisible} />
     </div>

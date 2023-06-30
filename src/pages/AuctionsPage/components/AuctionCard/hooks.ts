@@ -1,9 +1,11 @@
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-
+import { web3 } from 'fbonds-core';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
+import { refinanceBondByLender } from '@frakt/utils/raffles/refinanceBondByLender';
+import { RefinanceAuctionListItem } from '@frakt/api/raffle';
 
 export const useAuctionCard = (
-  auction: any, // TODO: Add interface
+  auction: RefinanceAuctionListItem,
   hideAuction: (value: string) => void,
 ) => {
   const wallet = useWallet();
@@ -18,10 +20,32 @@ export const useAuctionCard = (
   const onSubmit = async (): Promise<void> => {
     openLoadingModal();
     try {
-      //TODO: Implement request logic
+      const { nftMint } = auction;
+      const { fbondPubkey, oracleFloor, hadoMarket, repayAccounts } =
+        auction.bondParams;
 
-      //? After successful submission
-      hideAuction(auction?.mint);
+      const convertedRepayAccounts = repayAccounts.map(
+        ({ bondOffer, bondTradeTransaction, user }) => {
+          return {
+            bondOffer: new web3.PublicKey(bondOffer),
+            bondTradeTransaction: new web3.PublicKey(bondTradeTransaction),
+            user: new web3.PublicKey(user),
+          };
+        },
+      );
+
+      const result = await refinanceBondByLender({
+        connection,
+        wallet,
+        fbondPubkey,
+        oracleFloor,
+        hadoMarketPubkey: hadoMarket,
+        repayAccounts: convertedRepayAccounts,
+      });
+
+      if (result) {
+        hideAuction(nftMint);
+      }
     } catch (error) {
       console.error(error);
     } finally {
