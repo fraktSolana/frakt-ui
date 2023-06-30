@@ -20,7 +20,6 @@ import styles from './AdventuresNftsModal.module.scss';
 import {
   calcNftsPartnerPoints,
   getAdventureStatus,
-  isNftHasActiveSubscriptions,
   isNftLoaned,
   isNftStaked,
 } from '../../helpers';
@@ -337,7 +336,6 @@ const UnstakeContent: FC<UnstakeContent> = ({ nfts = [], setIsOpen }) => {
 
   const getAdditionalText = useCallback((nft: AdventureNft) => {
     if (isNftLoaned(nft)) return 'loaned';
-    if (isNftHasActiveSubscriptions(nft)) return 'subscribed';
     return null;
   }, []);
 
