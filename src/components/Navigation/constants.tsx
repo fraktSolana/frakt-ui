@@ -124,4 +124,12 @@ export const SECONDARY_NAVIGATION_LINKS: Navigation[] = [
     icon: Raffles,
     iconDark: RafflesDark,
   },
+  {
+    pathname: PATHS.AUCTIONS,
+    to: PATHS.AUCTIONS,
+    label: 'Auctions',
+    event: 'navigation-auction',
+    icon: BanxFilled,
+    iconDark: BanxFilledDark,
+  },
 ];
