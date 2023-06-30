@@ -1,16 +1,16 @@
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
-import { AuctionListItem } from '@frakt/api/raffle';
 
-import { useFetchAuctionsList } from '../LiquidationsPage/hooks';
+import { RefinanceAuctionListItem } from '@frakt/api/auctions';
 import AuctionCard from './components/AuctionCard/AuctionCard';
+import { useFetchRefinanceAuctions } from './hooks';
 
 import styles from './AuctionsPage.module.scss';
 
 const AuctionsPage = () => {
-  const { data: auctionsList, hideAuction } = useFetchAuctionsList(); // TODO: replace on another request
+  const { data: auctions, hideAuction } = useFetchRefinanceAuctions();
 
   const createAuctionsList = () => {
-    return auctionsList.map((auction: AuctionListItem) => (
+    return auctions.map((auction: RefinanceAuctionListItem) => (
       <AuctionCard
         key={auction.nftMint}
         auction={auction}

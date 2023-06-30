@@ -2,7 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import { create } from 'zustand';
 import produce from 'immer';
 
-import { fetchRefinanceAuctions } from '@frakt/api/auctions';
+import {
+  RefinanceAuctionListItem,
+  fetchRefinanceAuctions,
+} from '@frakt/api/auctions';
 
 export const useFetchRefinanceAuctions = () => {
   const { hiddenAuctionsPubkeys, hideAuction } = useHiddenAuctionPubkeys();
@@ -12,7 +15,7 @@ export const useFetchRefinanceAuctions = () => {
     isLoading,
     isFetching,
   }: {
-    data: any[];
+    data: RefinanceAuctionListItem[];
     isLoading: boolean;
     isFetching: boolean;
   } = useQuery(['fetchRefinanceAuctions'], () => fetchRefinanceAuctions(), {
