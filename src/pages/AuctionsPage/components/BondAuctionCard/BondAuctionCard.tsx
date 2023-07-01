@@ -3,7 +3,7 @@ import moment from 'moment';
 
 import { StatInfo, VALUES_TYPES } from '@frakt/components/StatInfo';
 import { LoadingModal } from '@frakt/components/LoadingModal';
-import { AuctionListItem } from '@frakt/api/raffle';
+import { BondAuctionItem } from '@frakt/api/auctions';
 
 import { checkPriceThreshold, parseAuctionsInfo } from './helpers';
 import AuctionCardBackdrop from '../AuctionCardBackdrop';
@@ -13,7 +13,7 @@ import { useBondAuctionCard } from './hooks';
 import styles from './BondAuctionCard.module.scss';
 
 interface BondAuctionCardProps {
-  auction: AuctionListItem;
+  auction: BondAuctionItem;
   hideAuction: (value: string) => void;
 }
 

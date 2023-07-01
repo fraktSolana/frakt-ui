@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { RefinanceAuctionListItem } from './types';
+import { RefinanceAuctionItem } from './types';
 
 export const fetchRefinanceAuctions = async (): Promise<
-  RefinanceAuctionListItem[]
+  RefinanceAuctionItem[]
 > => {
-  const { data } = await axios.get<RefinanceAuctionListItem[]>(
+  const { data } = await axios.get<RefinanceAuctionItem[]>(
     `https://${process.env.BACKEND_DOMAIN}/bonds/refinance`,
   );
 

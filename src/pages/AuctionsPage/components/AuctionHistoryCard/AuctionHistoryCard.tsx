@@ -5,54 +5,56 @@ import moment from 'moment';
 
 import { StatInfo, VALUES_TYPES } from '@frakt/components/StatInfo';
 import { shortenAddress } from '@frakt/utils/solanaUtils';
-import { WonRaffleListItem } from '@frakt/api/raffle';
+import { AuctionHistoryItem } from '@frakt/api/auctions';
 
 import AuctionNFTCardInfo from '../AuctionNFTCardInfo';
 
 import styles from './AuctionHistoryCard.module.scss';
 
 interface AuctionHistoryCardProps {
-  auction: WonRaffleListItem;
+  auction: AuctionHistoryItem;
 }
 
 const AuctionHistoryCard: FC<AuctionHistoryCardProps> = ({ auction }) => {
   const { publicKey } = useWallet();
-  const isWinner = auction?.user === publicKey?.toBase58();
+
+  const { nftFloorPrice, liquidationPrice, winnerTickets, expiredAt, user } =
+    auction;
+
+  const userIsWinner = user === publicKey?.toBase58();
 
   return (
     <div className={styles.cardWrapper}>
-      <div className={classNames(styles.card, isWinner && styles.cardWinner)}>
+      <div
+        className={classNames(styles.card, userIsWinner && styles.cardWinner)}
+      >
         <div className={styles.content}>
           <AuctionNFTCardInfo {...auction} />
-          {/* <SolscanNftLink nftMint={raffle?.nftMint} /> */}
+          {/* <SolscanNftLink nftMint={auction?.nftMint} /> */}
         </div>
         <div className={styles.statsValues}>
           <StatInfo
             flexType="row"
             classNamesProps={{ container: styles.opacity }}
             label="Floor price"
-            value={auction?.nftFloorPrice}
+            value={nftFloorPrice}
           />
           <StatInfo
             flexType="row"
             label="Liquidation price"
-            value={auction?.liquidationPrice}
+            value={liquidationPrice}
           />
           <StatInfo
             flexType="row"
             label="Winner"
-            value={createWinnerFieldJSX(auction, isWinner)}
+            value={createWinnerFieldJSX(user, userIsWinner)}
             valueType={VALUES_TYPES.string}
           />
-          <StatInfo
-            flexType="row"
-            label="Winner spent"
-            value={auction?.winnerTickets}
-          />
+          <StatInfo flexType="row" label="Winner spent" value={winnerTickets} />
           <StatInfo
             flexType="row"
             label="Ended"
-            value={<span>{moment(auction?.expiredAt).fromNow(false)}</span>}
+            value={<span>{moment(expiredAt).fromNow(false)}</span>}
             valueType={VALUES_TYPES.string}
           />
         </div>
@@ -63,14 +65,9 @@ const AuctionHistoryCard: FC<AuctionHistoryCardProps> = ({ auction }) => {
 
 export default AuctionHistoryCard;
 
-const createWinnerFieldJSX = (
-  auction: WonRaffleListItem,
-  isWinner: boolean,
-) => (
-  <div className={isWinner ? styles.winner : ''}>
-    {isWinner && <div className={styles.winnerBadge}>You!</div>}
-    <p className={styles.value}>
-      {auction?.user && shortenAddress(auction?.user)}
-    </p>
+const createWinnerFieldJSX = (user: string, userIsWinner: boolean) => (
+  <div className={userIsWinner ? styles.winner : ''}>
+    {userIsWinner && <div className={styles.winnerBadge}>You!</div>}
+    <p className={styles.value}>{user && shortenAddress(user)}</p>
   </div>
 );

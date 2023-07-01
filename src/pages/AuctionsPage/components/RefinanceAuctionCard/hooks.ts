@@ -3,10 +3,10 @@ import { web3 } from 'fbonds-core';
 
 import { refinanceBondByLender } from '@frakt/utils/raffles/refinanceBondByLender';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
-import { RefinanceAuctionListItem } from '@frakt/api/auctions';
+import { RefinanceAuctionItem } from '@frakt/api/auctions';
 
 export const useRefinanceAuctionCard = (
-  auction: RefinanceAuctionListItem,
+  auction: RefinanceAuctionItem,
   hideAuction: (value: string) => void,
 ) => {
   const wallet = useWallet();

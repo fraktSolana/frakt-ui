@@ -1,13 +1,13 @@
 import moment from 'moment';
 
-import { RefinanceAuctionListItem } from '@frakt/api/auctions';
+import { RefinanceAuctionItem } from '@frakt/api/auctions';
 
 export const REFINANCE_START_INTEREST = 5e2;
 export const REFINANCE_INTEREST_TIC = 10;
 export const REFINANCE_INTEREST_REFRESH_RATE = 864;
 export const REFINANCE_MAX_INTEREST = 10e2;
 
-const parseRefinanceAuctionsInfo = (auction: RefinanceAuctionListItem) => {
+const parseRefinanceAuctionsInfo = (auction: RefinanceAuctionItem) => {
   const floorPrice = (auction?.bondParams.floorPrice / 1e9)?.toFixed(3);
   const totalRepayValue = auction?.bondParams.repayValue / 1e9 / 0.995;
   const currentLoanAmount = totalRepayValue?.toFixed(3);

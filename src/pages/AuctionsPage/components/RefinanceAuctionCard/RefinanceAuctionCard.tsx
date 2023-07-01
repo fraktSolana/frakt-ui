@@ -1,11 +1,11 @@
 import { FC } from 'react';
 
-import { GeneralCardInfo } from '@frakt/pages/LiquidationsPage/components/StatsRaffleValues';
 import { StatInfo, VALUES_TYPES } from '@frakt/components/StatInfo';
 import { LoadingModal } from '@frakt/components/LoadingModal';
-import { RefinanceAuctionListItem } from '@frakt/api/auctions';
+import { RefinanceAuctionItem } from '@frakt/api/auctions';
 
 import AuctionCardBackdrop from '../AuctionCardBackdrop';
+import AuctionNFTCardInfo from '../AuctionNFTCardInfo';
 import { useRefinanceAuctionCard } from './hooks';
 import {
   REFINANCE_INTEREST_REFRESH_RATE,
@@ -14,10 +14,9 @@ import {
 } from './helpers';
 
 import styles from './RefinanceAuctionCard.module.scss';
-import AuctionNFTCardInfo from '../AuctionNFTCardInfo';
 
 interface RefinanceAuctionCardProps {
-  auction: RefinanceAuctionListItem;
+  auction: RefinanceAuctionItem;
   hideAuction?: (value: string) => void;
 }
 

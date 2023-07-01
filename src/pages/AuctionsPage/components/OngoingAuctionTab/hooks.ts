@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import produce from 'immer';
 
 import {
-  RefinanceAuctionListItem,
+  RefinanceAuctionItem,
   fetchRefinanceAuctions,
 } from '@frakt/api/auctions';
 import { AuctionListItem, fetchAuctionsList } from '@frakt/api/raffle';
@@ -16,7 +16,7 @@ export const useFetchRefinanceAuctions = () => {
     isLoading,
     isFetching,
   }: {
-    data: RefinanceAuctionListItem[];
+    data: RefinanceAuctionItem[];
     isLoading: boolean;
     isFetching: boolean;
   } = useQuery(['fetchRefinanceAuctions'], () => fetchRefinanceAuctions(), {

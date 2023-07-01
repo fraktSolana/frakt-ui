@@ -4,7 +4,7 @@ import moment from 'moment';
 import { StatInfo, VALUES_TYPES } from '@frakt/components/StatInfo';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import { createTimerJSX } from '@frakt/components/Timer';
-import { AuctionListItem } from '@frakt/api/raffle';
+import { ClassicAuctionItem } from '@frakt/api/auctions';
 import { Timer } from '@frakt/icons';
 
 import AuctionCardBackdrop from '../AuctionCardBackdrop';
@@ -15,7 +15,7 @@ import { parseAuctionsInfo } from './helpers';
 import styles from './ClassicAuctionCard.module.scss';
 
 interface ClassicAuctionCardProps {
-  auction: AuctionListItem;
+  auction: ClassicAuctionItem;
   hideAuction: (value: string) => void;
 }
 
