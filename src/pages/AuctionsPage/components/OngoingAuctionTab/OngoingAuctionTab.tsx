@@ -1,24 +1,64 @@
-import { RefinanceAuctionListItem } from '@frakt/api/auctions';
+import { Fragment } from 'react';
 
+import EmptyList from '@frakt/components/EmptyList';
+import { Loader } from '@frakt/components/Loader';
+
+import { useFetchAuctionsList, useFetchRefinanceAuctions } from './hooks';
+import ClassicAuctionCard from '../ClassicAuctionCard/ClassicAuctionCard';
+import BondAuctionCard from '../BondAuctionCard/BondAuctionCard';
 import RefinanceAuctionCard from '../RefinanceAuctionCard';
-import { useFetchRefinanceAuctions } from './hooks';
 
 import styles from './OngoingAuctionTab.module.scss';
-import BondAuctionCard from '../BondAuctionCard';
 
 const OngoingAuctionTab = () => {
-  const { data: auctions, hideAuction } = useFetchRefinanceAuctions();
+  const {
+    data: refinanceAuctions,
+    loading: isRefinanceAuctionsListLoading,
+    hideAuction: hideRefinanceAuction,
+  } = useFetchRefinanceAuctions();
+
+  const {
+    data: auctionsList,
+    loading: isAuctionsListLoading,
+    hideAuction,
+  } = useFetchAuctionsList();
+
+  const auctionCards = [
+    ...refinanceAuctions.map((auction) => ({
+      key: auction.nftMint,
+      component: (
+        <RefinanceAuctionCard
+          auction={auction}
+          hideAuction={hideRefinanceAuction}
+        />
+      ),
+    })),
+    ...auctionsList.map((auction) => ({
+      key: auction.nftMint,
+      component: auction?.bondParams?.fbondPubkey ? (
+        <BondAuctionCard auction={auction} hideAuction={hideAuction} />
+      ) : (
+        <ClassicAuctionCard auction={auction} hideAuction={hideAuction} />
+      ),
+    })),
+  ];
+
+  const isLoading = isAuctionsListLoading || isRefinanceAuctionsListLoading;
+  const showList = !!auctionCards?.length && !isLoading;
+  const showEmptyList = !showList && !isLoading;
 
   return (
-    <div className={styles.auctionsList}>
-      {auctions.map((auction: RefinanceAuctionListItem) => (
-        <BondAuctionCard
-          key={auction.nftMint}
-          auction={auction}
-          hideAuction={hideAuction}
-        />
-      ))}
-    </div>
+    <>
+      {isLoading && <Loader />}
+      {showList && (
+        <div className={styles.auctionsList}>
+          {auctionCards.map(({ key, component }) => (
+            <Fragment key={key}>{component}</Fragment>
+          ))}
+        </div>
+      )}
+      {showEmptyList && <EmptyList text="No ongoing auctions at the moment" />}
+    </>
   );
 };
 

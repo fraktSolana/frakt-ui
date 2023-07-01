@@ -6,6 +6,7 @@ import {
   RefinanceAuctionListItem,
   fetchRefinanceAuctions,
 } from '@frakt/api/auctions';
+import { AuctionListItem, fetchAuctionsList } from '@frakt/api/raffle';
 
 export const useFetchRefinanceAuctions = () => {
   const { hiddenAuctionsPubkeys, hideAuction } = useHiddenAuctionPubkeys();
@@ -19,6 +20,31 @@ export const useFetchRefinanceAuctions = () => {
     isLoading: boolean;
     isFetching: boolean;
   } = useQuery(['fetchRefinanceAuctions'], () => fetchRefinanceAuctions(), {
+    staleTime: 5000,
+    refetchOnWindowFocus: false,
+  });
+
+  return {
+    data:
+      data?.filter(({ nftMint }) => !hiddenAuctionsPubkeys.includes(nftMint)) ||
+      [],
+    loading: isLoading || isFetching,
+    hideAuction,
+  };
+};
+
+export const useFetchAuctionsList = () => {
+  const { hiddenAuctionsPubkeys, hideAuction } = useHiddenAuctionPubkeys();
+
+  const {
+    data,
+    isLoading,
+    isFetching,
+  }: {
+    data: AuctionListItem[];
+    isLoading: boolean;
+    isFetching: boolean;
+  } = useQuery(['fetchAuctionsList'], () => fetchAuctionsList(), {
     staleTime: 5000,
     refetchOnWindowFocus: false,
   });

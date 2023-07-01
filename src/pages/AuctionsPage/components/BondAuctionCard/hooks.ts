@@ -47,6 +47,21 @@ export const useBondAuctionCard = (
         },
       );
 
+      console.log({
+        connection,
+        wallet,
+        fbondPubkey,
+        collateralBoxType,
+        collateralBox,
+        collateralTokenMint,
+        collateralTokenAccount,
+        collateralOwner,
+        fraktMarket,
+        oracleFloor,
+        whitelistEntry,
+        repayAccounts: convertedRepayAccounts,
+      });
+
       const result = await liquidateBondOnAuction({
         connection,
         wallet,

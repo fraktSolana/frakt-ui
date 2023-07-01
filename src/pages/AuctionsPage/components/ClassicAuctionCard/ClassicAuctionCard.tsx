@@ -12,7 +12,7 @@ import AuctionCardBackdrop from '../AuctionCardBackdrop';
 import { useClassicAuctionCard } from './hooks';
 import { parseAuctionsInfo } from './helpers';
 
-import styles from './AuctionCard.module.scss';
+import styles from './ClassicAuctionCard.module.scss';
 
 interface ClassicAuctionCardProps {
   auction: AuctionListItem;
@@ -42,6 +42,7 @@ const ClassicAuctionCard: FC<ClassicAuctionCardProps> = ({
           classNamesProps={{ container: styles.opacity }}
         />
         <StatInfo
+          flexType="row"
           label="Next round start"
           value={createNextRoundTimerJSX(timeToNextRound)}
           valueType={VALUES_TYPES.string}
