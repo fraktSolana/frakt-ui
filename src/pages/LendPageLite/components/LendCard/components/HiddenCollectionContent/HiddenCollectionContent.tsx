@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 
 import HistoryTab from '@frakt/pages/MarketsPage/components/BondsOverview/components/HistoryTab/HistoryTab';
 import BondsTab from '@frakt/pages/MarketsPage/components/BondsOverview/components/BondsTab';
@@ -18,11 +17,20 @@ enum CollectionTabsNames {
   MY_LOANS = 'myLoans',
 }
 
-const HiddenCollectionContent = () => {
-  const { marketPubkey, pairPubkey } = useParams<{
-    marketPubkey: string;
-    pairPubkey: string;
-  }>();
+const HiddenCollectionContent = ({
+  marketPubkey,
+}: {
+  marketPubkey: string;
+}) => {
+  const [pairPubkey, setPairPubkey] = useState<string>('');
+  const [syntheticParams, setSyntheticParams] = useState<SyntheticParams>(null);
+
+  const marketData = {
+    pairPubkey,
+    marketPubkey,
+    setSyntheticParams,
+    setPairPubkey,
+  };
 
   const {
     tabs: bondTabs,
@@ -39,16 +47,13 @@ const HiddenCollectionContent = () => {
     }
   }, [pairPubkey]);
 
-  const [syntheticParams, setSyntheticParams] = useState<SyntheticParams>(null);
-
   const tabsComponents = {
-    [CollectionTabsNames.OFFER]: (
-      <PlaceOfferTab setSyntheticParams={setSyntheticParams} />
-    ),
+    [CollectionTabsNames.OFFER]: <PlaceOfferTab {...marketData} />,
     [CollectionTabsNames.HISTORY]: (
       <HistoryTab
         tableParams={{ classNames: styles.historyTable, scrollX: 650 }}
         containerClassName={styles.tableContainer}
+        marketPubkey={marketPubkey}
         isFixedTable
       />
     ),
@@ -56,6 +61,7 @@ const HiddenCollectionContent = () => {
       <BondsTab
         tableParams={{ classNames: styles.bondsTable, scrollX: 650 }}
         containerClassName={styles.tableContainer}
+        marketPubkey={marketPubkey}
         showWidgets={false}
       />
     ),
@@ -73,10 +79,7 @@ const HiddenCollectionContent = () => {
         />
         <div className={styles.tabContent}>{tabsComponents[tabValue]}</div>
       </div>
-      <OrderBook
-        syntheticParams={syntheticParams}
-        marketPubkey={marketPubkey}
-      />
+      <OrderBook {...marketData} syntheticParams={syntheticParams} />
     </div>
   );
 };

@@ -16,7 +16,11 @@ export const fetchAdventuresInfo: FetchAdventuresInfo = async ({
       `https://${process.env.BACKEND_DOMAIN}/banx/adventures${walletQuery}`,
     );
 
-    return data ?? null;
+    return (
+      data ?? {
+        adventures: [],
+      }
+    );
   } catch (error) {
     return null;
   }

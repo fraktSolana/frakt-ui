@@ -20,7 +20,7 @@ import styles from './AdventuresNftsModal.module.scss';
 import {
   calcNftsPartnerPoints,
   getAdventureStatus,
-  isNftHasActiveSubscriptions,
+  isNftLoaned,
   isNftStaked,
 } from '../../helpers';
 import { stakeNfts, unstakeNfts } from '../../transactions';
@@ -66,6 +66,12 @@ export const AdventuresNftsModal: FC<AdventuresNftsModalProps> = ({
     defaultValue: modalTabs[0].value,
   });
 
+  const sortedNfts = useMemo(() => {
+    return [...(adventuresInfo.nfts || [])]
+      ?.sort((a, b) => b.meta.name.localeCompare(a.meta.name))
+      ?.sort((a, b) => b.meta.partnerPoints - a.meta.partnerPoints);
+  }, [adventuresInfo]);
+
   return (
     <Modal
       className={styles.modal}
@@ -91,7 +97,7 @@ export const AdventuresNftsModal: FC<AdventuresNftsModalProps> = ({
         <StakeContent
           adventures={adventuresInfo.adventures}
           setIsOpen={setIsOpen}
-          nfts={adventuresInfo.nfts.filter(
+          nfts={sortedNfts.filter(
             (nft) =>
               !nft?.banxStake ||
               nft?.banxStake?.banxStakeState !== BanxStakeState.Staked,
@@ -101,7 +107,7 @@ export const AdventuresNftsModal: FC<AdventuresNftsModalProps> = ({
       {tabValue !== modalTabs[0].value && (
         <UnstakeContent
           setIsOpen={setIsOpen}
-          nfts={adventuresInfo.nfts.filter(
+          nfts={sortedNfts.filter(
             (nft) => nft?.banxStake?.banxStakeState === BanxStakeState.Staked,
           )}
         />
@@ -271,7 +277,7 @@ const UnstakeContent: FC<UnstakeContent> = ({ nfts = [], setIsOpen }) => {
   );
 
   const selectAllNfts = useCallback(() => {
-    setSelectedNfts(nfts);
+    setSelectedNfts(nfts.filter((nft) => !isNftLoaned(nft)));
   }, [nfts]);
 
   const deselectAllNfts = useCallback(() => {
@@ -328,6 +334,15 @@ const UnstakeContent: FC<UnstakeContent> = ({ nfts = [], setIsOpen }) => {
     }
   };
 
+  const getAdditionalText = useCallback((nft: AdventureNft) => {
+    if (isNftLoaned(nft)) return 'loaned';
+    return null;
+  }, []);
+
+  const loanedNfts = useMemo(() => {
+    return nfts.filter((nft) => isNftLoaned(nft));
+  }, [nfts]);
+
   return (
     <>
       <div className={styles.content}>
@@ -339,9 +354,8 @@ const UnstakeContent: FC<UnstakeContent> = ({ nfts = [], setIsOpen }) => {
                 nft={nft}
                 key={nft.mint}
                 onClick={() => toggleNft(nft)}
-                additionalText={
-                  isNftHasActiveSubscriptions(nft) ? 'subscribed' : null
-                }
+                disabled={isNftLoaned(nft)}
+                additionalText={getAdditionalText(nft)}
                 selected={
                   !!selectedNfts.find(
                     (selectedNft) => selectedNft.mint === nft.mint,
@@ -356,7 +370,7 @@ const UnstakeContent: FC<UnstakeContent> = ({ nfts = [], setIsOpen }) => {
       <div className={styles.footer}>
         <Button
           className={styles.footerBtn}
-          disabled={!nfts.length}
+          disabled={!nfts.length || loanedNfts.length === nfts.length}
           onClick={!selectedNfts.length ? selectAllNfts : deselectAllNfts}
         >
           {!selectedNfts.length ? 'Select all' : 'Deselect all'}
@@ -417,6 +431,7 @@ interface NftCheckboxProps {
   nft: AdventureNft;
   selected?: boolean;
   additionalText?: string;
+  disabled?: boolean;
   onClick?: () => void;
 }
 
@@ -424,11 +439,16 @@ const NftCheckbox: FC<NftCheckboxProps> = ({
   nft,
   selected = false,
   additionalText = '',
+  disabled = false,
   onClick,
 }) => {
   return (
     <div
-      className={classNames(styles.nft, { [styles.nftPointer]: onClick })}
+      className={classNames(
+        styles.nft,
+        { [styles.nftPointer]: onClick && !disabled },
+        { [styles.nftDisabled]: disabled },
+      )}
       onClick={onClick}
     >
       <div className={styles.image}>

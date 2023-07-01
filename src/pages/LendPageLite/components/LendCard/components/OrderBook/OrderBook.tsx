@@ -1,7 +1,6 @@
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
-import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
 import { groupWith } from 'ramda';
 
@@ -9,7 +8,6 @@ import NoActiveOffers from '@frakt/pages/MarketsPage/components/OrderBook/compon
 import { useMarketOrders } from '@frakt/pages/MarketsPage/components/OrderBook/hooks';
 import Offer from '@frakt/pages/MarketsPage/components/OrderBook/components/Offer';
 import { useMarket } from '@frakt/utils/bonds';
-import { PATHS } from '@frakt/constants';
 import { Chevron } from '@frakt/icons';
 import {
   MarketOrder,
@@ -19,12 +17,22 @@ import {
 import { calculateLoanValue } from '../PlaceOfferTab';
 import styles from './OrderBook.module.scss';
 
-const OrderBook: FC<{
+interface OrderBookProps {
+  pairPubkey: string;
   marketPubkey: string;
   syntheticParams?: SyntheticParams;
-}> = ({ marketPubkey, syntheticParams }) => {
+  setPairPubkey: (value: string) => void;
+}
+
+const MIN_SIZE_FOR_VIEW = 0.001;
+
+const OrderBook: FC<OrderBookProps> = ({
+  marketPubkey,
+  pairPubkey,
+  syntheticParams,
+  setPairPubkey,
+}) => {
   const wallet = useWallet();
-  const history = useHistory();
 
   const isOwnOrder = (order: MarketOrder): boolean => {
     return order?.rawData?.assetReceiver === wallet?.publicKey?.toBase58();
@@ -36,22 +44,26 @@ const OrderBook: FC<{
     offers: offersRaw,
     isLoading,
     bestOffer,
-  } = useMarketOrders({
-    marketPubkey: marketPubkey && new web3.PublicKey(marketPubkey),
-    ltv: syntheticParams?.ltv,
-    size: syntheticParams?.offerSize,
-    interest: syntheticParams?.interest,
-    duration: syntheticParams?.durationDays,
-    loanValue: syntheticParams?.loanValue,
-    loanAmount: syntheticParams?.loanAmount,
-  });
+  } = useMarketOrders(
+    useMemo(
+      () => ({
+        marketPubkey: marketPubkey && new web3.PublicKey(marketPubkey),
+        ltv: syntheticParams?.ltv,
+        size: syntheticParams?.offerSize,
+        interest: syntheticParams?.interest,
+        loanValue: syntheticParams?.loanValue,
+        loanAmount: syntheticParams?.loanAmount,
+        pairPubkey,
+      }),
+      [marketPubkey, syntheticParams],
+    ),
+  );
 
   const [openOffersMobile, setOpenOffersMobile] = useState<boolean>(true);
 
   const toggleOffers = () => setOpenOffersMobile((prev) => !prev);
 
-  const goToEditOffer = (orderPubkey: string) =>
-    history.push(`${PATHS.BONDS_LITE}/${marketPubkey}/${orderPubkey}`);
+  const goToEditOffer = (orderPubkey: string) => setPairPubkey(orderPubkey);
 
   const offersExist = Boolean(offersRaw.length);
 
@@ -67,6 +79,10 @@ const OrderBook: FC<{
       ...accOffer,
       size: accOffer.size + offer.size,
     })),
+  );
+
+  const filteredPositiveOffers = offers.filter(
+    (offer) => offer?.size > MIN_SIZE_FOR_VIEW || isOwnOrder(offer),
   );
 
   return (
@@ -101,7 +117,7 @@ const OrderBook: FC<{
                 [styles.active]: openOffersMobile,
               })}
             >
-              {offers.map((offer, idx) => {
+              {filteredPositiveOffers.map((offer, idx) => {
                 const { size, duration, synthetic, rawData } = offer;
                 const marketFloor = market?.oracleFloor?.floor;
 

@@ -4,18 +4,13 @@
   cursor: pointer;
   width: 100%;
 }
-.card:hover,
-.card:hover .chevronButton {
+.card:hover {
   border-color: var(--secondary-border);
 }
 .card.active {
   &:hover {
     border: 1px solid var(--primary-border);
   }
-}
-
-.card:hover .chevronButton {
-  background-color: var(--light-green-hover);
 }
 
 .row {
@@ -76,17 +71,18 @@
 }
 
 .durationButtons button {
-  border: 1px solid var(--primary-text);
-  height: 20px;
-  width: 40px;
+  border: 0;
+  padding: 0;
 
   &:disabled {
-    border-color: var(--secondary-text);
     color: var(--secondary-text);
   }
 }
 
 .chevronButton {
+  border: 0;
+  border-radius: 50%;
+  background-color: var(--light-green-color);
   position: absolute;
   top: 50%;
   right: 16px;
@@ -99,16 +95,17 @@
     top: 52px;
   }
 }
-.chevronButton {
-  background-color: var(--light-green-color);
-
-  svg path {
-    fill: var(--button-text);
-  }
+.chevronButton svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
-.chevronButton.active {
-  background-color: var(--light-green-hover);
-  transform: rotate(180deg);
+.chevronButton svg path {
+  fill: var(--button-text);
+}
+.chevronButton.active svg {
+  transform: translate(-50%, -50%) rotate(180deg);
 }
 
 .label {

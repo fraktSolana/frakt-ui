@@ -21,6 +21,8 @@ import Offer from './components/Offer';
 import styles from './OrderBook.module.scss';
 import Sort from './components/Sort';
 
+const MIN_SIZE_FOR_VIEW = 0.001;
+
 interface OrderBookProps {
   market: Market;
   marketLoading?: boolean;
@@ -28,7 +30,10 @@ interface OrderBookProps {
 }
 
 const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
-  const { marketPubkey } = useParams<{ marketPubkey: string }>();
+  const { marketPubkey, pairPubkey } = useParams<{
+    marketPubkey: string;
+    pairPubkey: string;
+  }>();
   const history = useHistory();
   const { publicKey, connected } = useWallet();
 
@@ -37,10 +42,6 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
   const [duration, setDuration] = useState<number>(30);
 
   const toggleOffers = () => setOpenOffersMobile((prev) => !prev);
-
-  const onDurationChange = (nextValue: number) => {
-    setDuration(nextValue);
-  };
 
   const isOwnOrder = (order: MarketOrder): boolean => {
     return order?.rawData?.assetReceiver === publicKey?.toBase58();
@@ -53,12 +54,11 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
   } = useMarketOrders({
     marketPubkey:
       market?.marketPubkey && new web3.PublicKey(market?.marketPubkey),
-    filterDuration: duration,
+    pairPubkey,
     walletOwned: showOwnOrders,
     ltv: syntheticParams?.ltv,
     size: syntheticParams?.offerSize,
     interest: syntheticParams?.interest,
-    duration: syntheticParams?.durationDays,
   });
 
   const offersExist = Boolean(offersRaw.length);
@@ -79,6 +79,10 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
 
   const goToEditOffer = (orderPubkey: string) =>
     history.push(`${PATHS.OFFER}/${marketPubkey}/${orderPubkey}`);
+
+  const filteredPositiveOffers = offers.filter(
+    (offer) => offer?.size > MIN_SIZE_FOR_VIEW || isOwnOrder(offer),
+  );
 
   return (
     <div
@@ -161,7 +165,7 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
                 [styles.active]: openOffersMobile,
               })}
             >
-              {offers.map((offer, idx) => (
+              {filteredPositiveOffers.map((offer, idx) => (
                 <Offer
                   ltv={offer.ltv}
                   size={offer.size}

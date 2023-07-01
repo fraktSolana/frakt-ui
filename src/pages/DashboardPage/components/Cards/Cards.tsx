@@ -1,11 +1,10 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { NavLink } from 'react-router-dom';
 import classNames from 'classnames';
 
 import ImageWithPreload from '@frakt/components/ImageWithPreload';
+import { convertAprToApy } from '@frakt/utils';
 import Button from '@frakt/components/Button';
-import { PATHS } from '@frakt/constants';
 
 import { CardBackdrop } from './CardBackdrop';
 import { NFT } from '../../types';
@@ -13,7 +12,7 @@ import { NFT } from '../../types';
 import styles from './Cards.module.scss';
 
 interface BorrowCardProps extends NFT {
-  onClick?: () => void;
+  onClick?: (nextValue?: string) => void;
   className?: string;
 }
 
@@ -31,11 +30,7 @@ export const BorrowCard: FC<BorrowCardProps> = ({
   const maxLoanValue = rawMaxLoanValue / 1e9 || 0;
 
   return (
-    <CardBackdrop
-      image={image}
-      className={className}
-      onClick={mint ? onClick : null}
-    >
+    <CardBackdrop image={image} className={className} onClick={onClick}>
       <div
         className={classNames(styles.nftInfo, {
           [styles.primary]: connected && !!mint,
@@ -60,18 +55,27 @@ export const BorrowCard: FC<BorrowCardProps> = ({
 
 export default BorrowCard;
 
-export const LendCard = ({ image, activeLoans, amount, apr, marketPubkey }) => (
-  <NavLink
-    to={`${PATHS.BONDS}/${marketPubkey}`}
-    className={classNames(styles.card, styles.clicable)}
-  >
-    <ImageWithPreload src={image} className={styles.nftImage} />
-    <div className={styles.nftInfo}>
-      <p className={styles.value}>{parseFloat(amount)?.toFixed(2)}◎</p>
-      <p className={styles.value}>in {activeLoans} Loans</p>
+export const LendCard = ({
+  image,
+  activeLoans,
+  amount,
+  apr,
+  collectionName,
+  onClick,
+}) => {
+  return (
+    <div
+      onClick={() => onClick(collectionName)}
+      className={classNames(styles.card, styles.clicable)}
+    >
+      <ImageWithPreload src={image} className={styles.nftImage} />
+      <div className={styles.nftInfo}>
+        <p className={styles.value}>{parseFloat(amount)?.toFixed(2)}◎</p>
+        <p className={styles.value}>in {activeLoans} Loans</p>
+      </div>
+      <div className={classNames(styles.badge, styles.lendBadge)}>
+        {convertAprToApy(apr / 100)?.toFixed(0)}% <span>APY</span>
+      </div>
     </div>
-    <div className={classNames(styles.badge, styles.lendBadge)}>
-      {apr?.toFixed(0)}% <span>APR</span>
-    </div>
-  </NavLink>
-);
+  );
+};

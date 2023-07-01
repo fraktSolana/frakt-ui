@@ -79,13 +79,16 @@ const RefinanceModal: FC<RefinanceModalProps> = ({
         <div className={styles.loanDifferenceWrapper}>
           {renderColumnValue(
             'Difference you will pay',
-            formatValue(difference, 1e9),
+            formatValue(Math.abs(difference), 1e9),
             true,
             difference > 0 && styles.negative,
           )}
         </div>
         <Button
-          onClick={onSubmit}
+          onClick={(event) => {
+            onSubmit();
+            event.stopPropagation();
+          }}
           type="secondary"
           className={styles.button}
           disabled={!bestLoanParams?.debt}

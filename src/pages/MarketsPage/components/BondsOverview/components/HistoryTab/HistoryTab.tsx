@@ -1,7 +1,7 @@
 import { FC } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
 import classNames from 'classnames';
 
-import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
 import RadioButtonField from '@frakt/pages/OfferPage/components/RadioButtonField';
 import { RBOption } from '@frakt/components/RadioButton';
 import EmptyList from '@frakt/components/EmptyList';
@@ -9,7 +9,6 @@ import { Loader } from '@frakt/components/Loader';
 import Toggle from '@frakt/components/Toggle';
 
 import { useHistoryLoansTab } from './hooks/useHistoryLoansTab';
-import { HISTORY_FILTER_OPTIONS as options } from './constants';
 import { HistoryTable } from '../HistoryTable';
 
 import styles from './HistoryTab.module.scss';
@@ -17,12 +16,14 @@ import styles from './HistoryTab.module.scss';
 interface HistoryTabProps {
   tableParams?: { classNames: string; scrollX: number };
   containerClassName?: string;
+  marketPubkey?: string;
   isFixedTable?: boolean;
 }
 
 const HistoryTab: FC<HistoryTabProps> = ({
   tableParams,
   containerClassName,
+  marketPubkey,
   isFixedTable,
 }) => {
   const {
@@ -34,11 +35,11 @@ const HistoryTab: FC<HistoryTabProps> = ({
     setShowOwnerBonds,
     shouldShowEmptyList,
     shouldShowLoader,
-    shouldShowConnectSection,
     shouldShowHistoryTable,
+    options,
     isLoadingNextPage,
     isFetchingNextPage,
-  } = useHistoryLoansTab(isFixedTable);
+  } = useHistoryLoansTab(marketPubkey, isFixedTable);
 
   return (
     <>
@@ -48,20 +49,23 @@ const HistoryTab: FC<HistoryTabProps> = ({
           setShowOwnerBonds={setShowOwnerBonds}
           onChangeFilterOption={onChangeFilterOption}
           showOwnerBonds={showOwnerBonds}
+          options={options}
         />
 
         {shouldShowLoader && <Loader />}
-        {shouldShowConnectSection && <ConnectWalletSectionComponent />}
         {shouldShowHistoryTable && (
-          <div className={styles.tableWrapper}>
+          <div
+            className={styles.tableWrapper}
+            id={`historyTable_${marketPubkey}`}
+          >
             <HistoryTable
               className={classNames(styles.table, tableParams?.classNames)}
               data={bondsHistory}
               breakpoints={{ scrollX: tableParams?.scrollX || 744 }}
             />
-            {!shouldShowLoader && isLoadingNextPage && isFixedTable && (
-              <Loader className={styles.loader} size="small" />
-            )}
+            {!shouldShowLoader &&
+              (isLoadingNextPage || isFetchingNextPage) &&
+              isFixedTable && <Loader className={styles.loader} size="small" />}
             {!shouldShowLoader && isFetchingNextPage && !isFixedTable && (
               <Loader size="small" />
             )}
@@ -80,39 +84,40 @@ export const EmptyListComponent = () => (
   <EmptyList className={styles.emptyList} text="No bonds at the moment" />
 );
 
-export const ConnectWalletSectionComponent = () => (
-  <ConnectWalletSection
-    className={styles.emptyList}
-    text="Connect your wallet to see my history"
-  />
-);
-
 export const BondsTableHeader: FC<{
   selectedFilterOption: string;
   onChangeFilterOption: (nextOption: RBOption<string>) => void;
   showOwnerBonds: boolean;
   setShowOwnerBonds: (value: boolean) => void;
+  options?: RBOption<string>[];
 }> = ({
   selectedFilterOption,
   onChangeFilterOption,
   showOwnerBonds,
   setShowOwnerBonds,
-}) => (
-  <div className={styles.bondsTableHeader}>
-    <RadioButtonField
-      currentOption={{
-        label: selectedFilterOption,
-        value: selectedFilterOption,
-      }}
-      onOptionChange={onChangeFilterOption}
-      options={options}
-      className={styles.radio}
-      classNameInner={styles.radioButton}
-    />
-    <Toggle
-      value={showOwnerBonds}
-      onChange={() => setShowOwnerBonds(!showOwnerBonds)}
-      label="My activity"
-    />
-  </div>
-);
+  options,
+}) => {
+  const { connected } = useWallet();
+
+  return (
+    <div className={styles.bondsTableHeader}>
+      <RadioButtonField
+        currentOption={{
+          label: selectedFilterOption,
+          value: selectedFilterOption,
+        }}
+        onOptionChange={onChangeFilterOption}
+        options={options}
+        className={styles.radio}
+        classNameInner={styles.radioButton}
+      />
+      {connected && (
+        <Toggle
+          value={showOwnerBonds}
+          onChange={() => setShowOwnerBonds(!showOwnerBonds)}
+          label="My activity"
+        />
+      )}
+    </div>
+  );
+};

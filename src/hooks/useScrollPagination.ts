@@ -15,7 +15,7 @@ type FetchNextPageFunction<T> = (options?: FetchNextPageOptions) => Promise<
 >;
 
 type UseScrollPaginationOptions<T> = {
-  selector: string;
+  scrollContainer: Element;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
   fetchNextPage: FetchNextPageFunction<T>;
@@ -25,7 +25,7 @@ type UseScrollPaginationOptions<T> = {
 const MARGIN_ROOT_PX = 10;
 
 export const useScrollPagination = <T>({
-  selector,
+  scrollContainer,
   hasNextPage,
   isFetchingNextPage,
   fetchNextPage,
@@ -54,8 +54,6 @@ export const useScrollPagination = <T>({
   };
 
   useEffect(() => {
-    const scrollContainer = document.querySelector(selector);
-
     if (scrollContainer && enable) {
       scrollContainerRef.current = scrollContainer;
       scrollContainer.addEventListener('scroll', handleScroll);
@@ -67,7 +65,7 @@ export const useScrollPagination = <T>({
       }
     };
   }, [
-    selector,
+    scrollContainer,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,

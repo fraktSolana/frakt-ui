@@ -23,7 +23,7 @@ export const isNftStaked = (nft: AdventureNft) => {
 };
 
 export const calcNftsPartnerPoints = (nfts: AdventureNft[] = []) => {
-  return nfts.reduce((acc, { meta }) => acc + meta.partnerPoints, 0);
+  return nfts.reduce((acc, { meta }) => acc + Number(meta.partnerPoints), 0);
 };
 
 export const isNftParticipating = (
@@ -50,4 +50,8 @@ export const isSubscriptionActive = (subscription: AdventureSubscription) =>
 
 export const isNftHasActiveSubscriptions = (nft: AdventureNft) => {
   return !!nft?.subscriptions.find(isSubscriptionActive);
+};
+
+export const isNftLoaned = (nft: AdventureNft) => {
+  return !!nft?.banxStake?.isLoaned;
 };

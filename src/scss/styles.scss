@@ -8,6 +8,7 @@ body {
   background-color: var(--secondary-background);
   background-image: url(../icons/lightBg.png);
   background-size: cover;
+  background-attachment: fixed;
   color: var(--secondary-border);
   font: var(--font-text-3);
 

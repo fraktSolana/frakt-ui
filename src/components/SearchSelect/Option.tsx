@@ -38,7 +38,10 @@ export const renderOption: FC<OptionProps> = ({
     <Select.Option key={value} value={label}>
       <div className={styles.optionWrapper}>
         <div className={styles.flexRow}>
-          <div className={styles.relativeImageContainer}>
+          <div
+            className={styles.relativeImageContainer}
+            id="relativeImageContainer"
+          >
             {image && <img className={styles.image} src={image} />}
             {isOptionSelected && <div className={styles.selected} />}
           </div>

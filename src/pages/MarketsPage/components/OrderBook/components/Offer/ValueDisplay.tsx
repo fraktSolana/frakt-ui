@@ -1,9 +1,11 @@
 import { FC } from 'react';
 import { colorByPercentOffers, getColorByPercent } from '@frakt/utils/bonds';
 
+import styles from './Offer.module.scss';
+
 interface ValueProps {
   value: number;
-  styles: any;
+  className: string;
   label: string;
   maxPercent: number;
   offset: number;
@@ -13,7 +15,7 @@ interface ValueProps {
 
 export const ValueDisplay: FC<ValueProps> = ({
   value,
-  styles,
+  className,
   label,
   maxPercent,
   offset,
@@ -43,7 +45,7 @@ export const ValueDisplay: FC<ValueProps> = ({
 
   return (
     <>
-      <div className={styles} style={valueStyle}>
+      <div className={className} style={valueStyle}>
         {label}:
         <span>
           {formattedValue}
