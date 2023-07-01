@@ -4,6 +4,7 @@ import RefinanceAuctionCard from '../RefinanceAuctionCard';
 import { useFetchRefinanceAuctions } from './hooks';
 
 import styles from './OngoingAuctionTab.module.scss';
+import BondAuctionCard from '../BondAuctionCard';
 
 const OngoingAuctionTab = () => {
   const { data: auctions, hideAuction } = useFetchRefinanceAuctions();
@@ -11,7 +12,7 @@ const OngoingAuctionTab = () => {
   return (
     <div className={styles.auctionsList}>
       {auctions.map((auction: RefinanceAuctionListItem) => (
-        <RefinanceAuctionCard
+        <BondAuctionCard
           key={auction.nftMint}
           auction={auction}
           hideAuction={hideAuction}

@@ -1,10 +1,9 @@
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
+import TabbedLayout from '@frakt/components/TabbedLayout';
 import { useTabs } from '@frakt/components/Tabs';
 
 import OngoingAuctionTab from './components/OngoingAuctionTab';
-import { AUCTIONS_TABS } from './constants';
-
-import TabbedLayout from '@frakt/components/TabbedLayout';
+import { AUCTIONS_TABS as tabs } from './constants';
 
 export enum AuctionsTabsNames {
   ONGOING = 'ongoing',
@@ -16,10 +15,7 @@ const AuctionsPage = () => {
     tabs: auctionsTabs,
     value: tabValue,
     setValue: setTabValue,
-  } = useTabs({
-    tabs: AUCTIONS_TABS,
-    defaultValue: AUCTIONS_TABS[0].value,
-  });
+  } = useTabs({ tabs, defaultValue: tabs[0].value });
 
   return (
     <AppLayout>
