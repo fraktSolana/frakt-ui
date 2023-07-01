@@ -1,7 +1,7 @@
 import { AppLayout } from '@frakt/components/Layout/AppLayout';
 
 import { RefinanceAuctionListItem } from '@frakt/api/auctions';
-import AuctionCard from './components/AuctionCard/AuctionCard';
+import AuctionRefinanceCard from './components/RefinanceAuctionCard/RefinanceAuctionCard';
 import { useFetchRefinanceAuctions } from './hooks';
 
 import styles from './AuctionsPage.module.scss';
@@ -11,7 +11,7 @@ const AuctionsPage = () => {
 
   const createAuctionsList = () => {
     return auctions.map((auction: RefinanceAuctionListItem) => (
-      <AuctionCard
+      <AuctionRefinanceCard
         key={auction.nftMint}
         auction={auction}
         hideAuction={hideAuction}

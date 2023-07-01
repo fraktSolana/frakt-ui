@@ -1,10 +1,11 @@
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
-import { useLoadingModal } from '@frakt/components/LoadingModal';
+
 import { refinanceBondByLender } from '@frakt/utils/raffles/refinanceBondByLender';
+import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { RefinanceAuctionListItem } from '@frakt/api/auctions';
 
-export const useAuctionCard = (
+export const useRefinanceAuctionCard = (
   auction: RefinanceAuctionListItem,
   hideAuction: (value: string) => void,
 ) => {

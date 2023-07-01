@@ -1,4 +1,3 @@
-import { calculateAuctionPrice } from '@frakters/raffle-sdk/lib/raffle-core/helpers';
 import moment from 'moment';
 
 import { RefinanceAuctionListItem } from '@frakt/api/auctions';
