@@ -40,8 +40,7 @@ const OngoingRaffleTab: FC = () => {
     }
   }, [inView, fetchNextPage, isFetchingNextPage, isListEnded]);
 
-  const hasRaffles = !!raffleList?.length;
-  const showList = hasRaffles && !isLoading;
+  const showList = !!raffleList?.length && !isLoading;
   const showEmptyList = !showList && !isLoading;
 
   return (

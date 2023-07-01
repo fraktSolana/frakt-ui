@@ -1,0 +1,30 @@
+.content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nftImage {
+  height: 48px;
+  width: 48px;
+}
+
+.nftNamesInfos {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nftName {
+  font: var(--font-subtitle-2);
+  font-size: 20px;
+
+  @media (max-width: 1024px) {
+    font-size: 18px;
+  }
+}
+
+.nftCollectionName {
+  font: var(--font-text-9);
+  font-weight: 400;
+}

@@ -8,8 +8,6 @@ export const REFINANCE_INTEREST_REFRESH_RATE = 864;
 export const REFINANCE_MAX_INTEREST = 10e2;
 
 const parseRefinanceAuctionsInfo = (auction: RefinanceAuctionListItem) => {
-  const { nftName, nftImageUrl, nftCollectionName } = auction;
-
   const floorPrice = (auction?.bondParams.floorPrice / 1e9)?.toFixed(3);
   const totalRepayValue = auction?.bondParams.repayValue / 1e9 / 0.995;
   const currentLoanAmount = totalRepayValue?.toFixed(3);
@@ -28,13 +26,8 @@ const parseRefinanceAuctionsInfo = (auction: RefinanceAuctionListItem) => {
   const newLoanAmount = totalRepayValue * (100 / currentInterest + 1);
 
   return {
-    nftName,
-    nftImageUrl,
-    nftCollectionName,
-
     currentLoanAmount,
     newLoanAmount,
-
     floorPrice,
   };
 };

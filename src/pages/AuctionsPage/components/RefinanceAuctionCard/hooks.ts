@@ -54,8 +54,5 @@ export const useRefinanceAuctionCard = (
     }
   };
 
-  return {
-    onSubmit,
-    loadingModalVisible,
-  };
+  return { onSubmit, loadingModalVisible };
 };

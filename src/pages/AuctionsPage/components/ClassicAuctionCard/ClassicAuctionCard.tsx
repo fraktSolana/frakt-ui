@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import moment from 'moment';
 
-import { GeneralCardInfo } from '@frakt/pages/LiquidationsPage/components/StatsRaffleValues';
 import { StatInfo, VALUES_TYPES } from '@frakt/components/StatInfo';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import { createTimerJSX } from '@frakt/components/Timer';
@@ -9,6 +8,7 @@ import { AuctionListItem } from '@frakt/api/raffle';
 import { Timer } from '@frakt/icons';
 
 import AuctionCardBackdrop from '../AuctionCardBackdrop';
+import AuctionNFTCardInfo from '../AuctionNFTCardInfo';
 import { useClassicAuctionCard } from './hooks';
 import { parseAuctionsInfo } from './helpers';
 
@@ -33,7 +33,7 @@ const ClassicAuctionCard: FC<ClassicAuctionCardProps> = ({
 
   return (
     <AuctionCardBackdrop onSubmit={onSubmit} submitButtonText="Liquidate">
-      <GeneralCardInfo {...auction} />
+      <AuctionNFTCardInfo {...auction} />
       <div className={styles.statsValue}>
         <StatInfo
           flexType="row"

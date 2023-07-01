@@ -1,13 +1,13 @@
 import { FC, useEffect, useState } from 'react';
 import moment from 'moment';
 
-import { GeneralCardInfo } from '@frakt/pages/LiquidationsPage/components/StatsRaffleValues';
 import { StatInfo, VALUES_TYPES } from '@frakt/components/StatInfo';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import { AuctionListItem } from '@frakt/api/raffle';
 
 import { checkPriceThreshold, parseAuctionsInfo } from './helpers';
 import AuctionCardBackdrop from '../AuctionCardBackdrop';
+import AuctionNFTCardInfo from '../AuctionNFTCardInfo';
 import { useBondAuctionCard } from './hooks';
 
 import styles from './BondAuctionCard.module.scss';
@@ -35,7 +35,7 @@ const BondAuctionCard: FC<BondAuctionCardProps> = ({
 
   return (
     <AuctionCardBackdrop onSubmit={onSubmit} submitButtonText="Liquidate">
-      <GeneralCardInfo {...auction} />
+      <AuctionNFTCardInfo {...auction} />
       <div className={styles.statsValue}>
         <StatInfo
           flexType="row"

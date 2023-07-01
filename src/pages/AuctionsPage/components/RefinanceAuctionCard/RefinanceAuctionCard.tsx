@@ -14,6 +14,7 @@ import {
 } from './helpers';
 
 import styles from './RefinanceAuctionCard.module.scss';
+import AuctionNFTCardInfo from '../AuctionNFTCardInfo';
 
 interface RefinanceAuctionCardProps {
   auction: RefinanceAuctionListItem;
@@ -24,14 +25,8 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
   auction,
   hideAuction,
 }) => {
-  const {
-    nftImageUrl,
-    nftName,
-    floorPrice,
-    currentLoanAmount,
-    newLoanAmount,
-    nftCollectionName,
-  } = parseRefinanceAuctionsInfo(auction);
+  const { floorPrice, currentLoanAmount, newLoanAmount } =
+    parseRefinanceAuctionsInfo(auction);
 
   const { onSubmit, loadingModalVisible } = useRefinanceAuctionCard(
     auction,
@@ -40,11 +35,7 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
 
   return (
     <AuctionCardBackdrop onSubmit={onSubmit} submitButtonText="Refinance">
-      <GeneralCardInfo
-        nftName={nftName}
-        nftImageUrl={nftImageUrl}
-        nftCollectionName={nftCollectionName}
-      />
+      <AuctionNFTCardInfo {...auction} />
       <div className={styles.statsValue}>
         <StatInfo
           flexType="row"
