@@ -13,11 +13,11 @@ const TabbedLayout = (
 ) => {
   const { children, contentClassName, tabClassName, ...restProps } = props;
 
-  const contentClasses = classnames(styles.content, contentClassName);
+  const containerClasses = classnames(styles.container, contentClassName);
   const tabClasses = classnames(styles.tab, tabClassName);
 
   return (
-    <div className={contentClasses}>
+    <div className={containerClasses}>
       <Tabs className={tabClasses} {...restProps} />
       <div className={styles.tabContent}>{children}</div>
     </div>

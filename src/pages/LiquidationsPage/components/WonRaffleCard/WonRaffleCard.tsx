@@ -1,8 +1,7 @@
 import { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { equals } from 'ramda';
+import classNames from 'classnames';
 import moment from 'moment';
-import cx from 'classnames';
 
 import { shortenAddress } from '@frakt/utils/solanaUtils';
 import { WonRaffleListItem } from '@frakt/api/raffle';
@@ -18,11 +17,11 @@ interface WonRaffleCardProps {
 
 const WonRaffleCard: FC<WonRaffleCardProps> = ({ raffle }) => {
   const { publicKey } = useWallet();
-  const isWinner = equals(raffle?.user, publicKey?.toBase58());
+  const isWinner = raffle?.user === publicKey?.toBase58();
 
   return (
     <div className={styles.cardWrapper}>
-      <div className={cx(styles.card, isWinner && styles.cardWinner)}>
+      <div className={classNames(styles.card, isWinner && styles.cardWinner)}>
         <div className={styles.content}>
           <GeneralCardInfo
             nftName={raffle?.nftName}
@@ -42,31 +41,14 @@ const WonRaffleCard: FC<WonRaffleCardProps> = ({ raffle }) => {
             value={raffle?.liquidationPrice}
           />
           <StatsRaffleValues label="Winner">
-            {isWinner ? (
-              <div className={styles.winner}>
-                <div className={styles.winnerBadge}>You!</div>
-                <p className={styles.value}>
-                  {raffle?.user && shortenAddress(raffle?.user)}
-                </p>
-              </div>
-            ) : (
-              <p className={styles.value}>
-                {raffle?.user && shortenAddress(raffle?.user)}
-              </p>
-            )}
+            {createWinnerFieldJSX(raffle, isWinner)}
           </StatsRaffleValues>
           <StatsRaffleValues label="Winner spent">
-            {!raffle?.isAuction ? (
-              <span>{raffle?.winnerTickets} TICKETS</span>
-            ) : (
-              <span className={styles.value}>◎{raffle?.winnerTickets}</span>
-            )}
+            <span>{raffle?.winnerTickets} TICKETS</span>
           </StatsRaffleValues>
-          {!raffle?.isAuction && (
-            <StatsRaffleValues label="Total spent">
-              <span>{raffle?.totalTickets} TICKETS</span>
-            </StatsRaffleValues>
-          )}
+          <StatsRaffleValues label="Total spent">
+            <span>{raffle?.totalTickets} TICKETS</span>
+          </StatsRaffleValues>
           <StatsRaffleValues label="Ended">
             <span>{moment(raffle?.expiredAt).fromNow(false)}</span>
           </StatsRaffleValues>
@@ -77,3 +59,12 @@ const WonRaffleCard: FC<WonRaffleCardProps> = ({ raffle }) => {
 };
 
 export default WonRaffleCard;
+
+const createWinnerFieldJSX = (raffle: WonRaffleListItem, isWinner: boolean) => (
+  <div className={isWinner ? styles.winner : ''}>
+    {isWinner && <div className={styles.winnerBadge}>You!</div>}
+    <p className={styles.value}>
+      {raffle?.user && shortenAddress(raffle?.user)}
+    </p>
+  </div>
+);
