@@ -6,7 +6,9 @@ import { Loader } from '@frakt/components/Loader';
 import { useFetchAuctionsList, useFetchRefinanceAuctions } from './hooks';
 import ClassicAuctionCard from '../ClassicAuctionCard/ClassicAuctionCard';
 import BondAuctionCard from '../BondAuctionCard/BondAuctionCard';
+import { defaultSortOption, sortOptions } from './constants';
 import RefinanceAuctionCard from '../RefinanceAuctionCard';
+import FilterSection from '../FilterSection';
 
 import styles from './OngoingAuctionTab.module.scss';
 
@@ -49,6 +51,10 @@ const OngoingAuctionTab = () => {
 
   return (
     <>
+      <FilterSection
+        sortOptions={sortOptions}
+        defaultSortOption={defaultSortOption}
+      />
       {isLoading && <Loader />}
       {showList && (
         <div className={styles.auctionsList}>
