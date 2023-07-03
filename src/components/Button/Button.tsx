@@ -1,4 +1,4 @@
-import { CSSProperties, FC } from 'react';
+import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 
@@ -12,7 +12,6 @@ interface IButtonRegularProps {
   onClick?: (args: any) => any;
   children: any;
   type?: 'primary' | 'secondary' | 'tertiary';
-  style?: CSSProperties;
 }
 
 const Button: FC<IButtonRegularProps> = ({
@@ -22,7 +21,6 @@ const Button: FC<IButtonRegularProps> = ({
   linkAttrs,
   onClick = () => {},
   type = 'primary',
-  style,
   children,
 }) => {
   if (isLink) {
@@ -46,7 +44,6 @@ const Button: FC<IButtonRegularProps> = ({
       disabled={disabled}
       type="button"
       className={classNames([styles.root, styles[type], className])}
-      style={style}
       onClick={onClick}
     >
       {children}

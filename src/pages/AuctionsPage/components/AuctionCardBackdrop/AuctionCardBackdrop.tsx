@@ -15,7 +15,7 @@ interface AuctionCardBackdropProps {
   };
   badge?: {
     text: string;
-    color?: string;
+    icon?: FC;
   };
 }
 
@@ -54,10 +54,4 @@ const AuctionCardBackdrop: FC<PropsWithChildren<AuctionCardBackdropProps>> = ({
 
 export default AuctionCardBackdrop;
 
-const DEFAULT_BADGE_COLOR = '#1F6BFF';
-
-const Badge = ({ color = DEFAULT_BADGE_COLOR, text = '' }) => (
-  <div style={{ backgroundColor: color }} className={styles.badge}>
-    {text}
-  </div>
-);
+const Badge = ({ text = '' }) => <div className={styles.badge}>{text}</div>;

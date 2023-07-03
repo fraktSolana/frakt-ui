@@ -1,3 +1,4 @@
+import { ArrowDownLeft } from '@frakt/icons';
 import { FilterOption, FilterValue } from './types';
 
 const sortOptions = [
@@ -12,26 +13,17 @@ const filterOptions: FilterOption[] = [
   {
     label: 'All',
     value: FilterValue.All,
-    colors: {
-      text: '#000000',
-      background: '#cccccc',
-    },
+    icon: ArrowDownLeft,
   },
   {
     label: 'Refinance',
     value: FilterValue.Refinance,
-    colors: {
-      text: '#821FFF',
-      background: '#E6D3FE',
-    },
+    icon: ArrowDownLeft,
   },
   {
     label: 'Liquidate',
     value: FilterValue.Collateral,
-    colors: {
-      text: '#1F6BFF',
-      background: '#d2e1ff',
-    },
+    icon: ArrowDownLeft,
   },
 ];
 

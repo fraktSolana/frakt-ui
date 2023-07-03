@@ -11,10 +11,7 @@ import styles from './FilterDropdown.module.scss';
 export type FilterOption = {
   label: string;
   value: string;
-  colors?: {
-    background: string;
-    text: string;
-  };
+  icon: FC;
 };
 
 interface FilterDropdownProps {
@@ -48,14 +45,13 @@ export const FilterDropdown: FC<FilterDropdownProps> = ({
             <Button
               key={option.value}
               onClick={() => onFilterChange(option)}
-              className={styles.button}
-              style={getButtonStyles(
-                option,
-                option.value === filterOption.value,
-              )}
+              className={classNames(styles.button, {
+                [styles.active]: option.value === filterOption.value,
+              })}
               type="tertiary"
             >
-              {option?.label}
+              {option.icon({})}
+              {option.label}
             </Button>
           ))}
         </div>
@@ -66,20 +62,7 @@ export const FilterDropdown: FC<FilterDropdownProps> = ({
 
 const DropdownButton = ({ option, onClick, open }) => (
   <Button className={styles.dropdownButton} onClick={onClick} type="tertiary">
-    <span>
-      Type:
-      <strong style={{ color: option.colors.text }}>{option.label}</strong>
-    </span>
+    <span>Type: {option.label}</span>
     <ArrowDownBtn className={open ? styles.rotate : ''} />
   </Button>
 );
-
-const getButtonStyles = (option: FilterOption, isActive: boolean) => {
-  const { colors } = option;
-
-  return {
-    backgroundColor: colors.background,
-    borderColor: isActive ? colors.text : '',
-    color: colors.text,
-  };
-};

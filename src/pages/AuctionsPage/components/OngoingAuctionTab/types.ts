@@ -1,3 +1,5 @@
+import { FC } from 'react';
+
 export enum FilterValue {
   All = 'all',
   Refinance = 'refinance',
@@ -7,5 +9,5 @@ export enum FilterValue {
 export interface FilterOption {
   label: string;
   value: FilterValue;
-  colors: { text: string; background: string };
+  icon: FC;
 }

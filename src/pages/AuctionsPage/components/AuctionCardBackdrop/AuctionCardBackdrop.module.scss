@@ -10,13 +10,14 @@
 }
 
 .badge {
-  color: #fff;
+  background-color: var(--secondary-background);
+  color: var(--primary-text);
   font: var(--font-text-6);
   position: absolute;
   left: 24px;
   top: -9px;
-  padding: 2px 4px;
-  height: 18px;
+  padding: 2px 8px;
+  height: 20px;
 }
 
 .button {
