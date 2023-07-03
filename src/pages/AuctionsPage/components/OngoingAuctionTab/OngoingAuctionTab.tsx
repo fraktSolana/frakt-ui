@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 
+import { useSortDropdown } from '@frakt/components/SortDropdown';
 import EmptyList from '@frakt/components/EmptyList';
 import { Loader } from '@frakt/components/Loader';
 
@@ -49,12 +50,17 @@ const OngoingAuctionTab = () => {
   const showList = !!auctionCards?.length && !isLoading;
   const showEmptyList = !showList && !isLoading;
 
+  const { sortOption, handleSortChange } = useSortDropdown(defaultSortOption);
+
+  const sortProps = {
+    sortOptions,
+    sortOption,
+    handleSortChange,
+  };
+
   return (
     <>
-      <FilterSection
-        sortOptions={sortOptions}
-        defaultSortOption={defaultSortOption}
-      />
+      <FilterSection {...sortProps} />
       {isLoading && <Loader />}
       {showList && (
         <div className={styles.auctionsList}>
