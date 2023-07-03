@@ -9,13 +9,21 @@ import styles from './AuctionCardBackdrop.module.scss';
 interface AuctionCardBackdropProps {
   className?: string;
   onSubmit: () => Promise<void>;
-  submitButtonText: string;
+  button: {
+    text: string;
+    disabled?: boolean;
+  };
+  badge?: {
+    text: string;
+    color?: string;
+  };
 }
 
 const AuctionCardBackdrop: FC<PropsWithChildren<AuctionCardBackdropProps>> = ({
   children,
   onSubmit,
-  submitButtonText,
+  button,
+  badge,
 }) => {
   const { connected } = useWallet();
   const { setVisible: setVisibleWalletModal } = useWalletModal();
@@ -30,16 +38,29 @@ const AuctionCardBackdrop: FC<PropsWithChildren<AuctionCardBackdropProps>> = ({
 
   return (
     <div className={styles.card}>
+      {badge && <Badge badge={badge} />}
       {children}
       <Button
         onClick={onHandleSubmit}
         type="secondary"
         className={styles.button}
+        disabled={button?.disabled}
       >
-        {connected ? submitButtonText : 'Connect wallet'}
+        {connected ? button?.text : 'Connect wallet'}
       </Button>
     </div>
   );
 };
 
 export default AuctionCardBackdrop;
+
+const DEFAULT_BADGE_COLOR = '#1F6BFF';
+
+const Badge = ({ badge }) => (
+  <div
+    style={{ backgroundColor: badge.color || DEFAULT_BADGE_COLOR }}
+    className={styles.badge}
+  >
+    {badge.text}
+  </div>
+);

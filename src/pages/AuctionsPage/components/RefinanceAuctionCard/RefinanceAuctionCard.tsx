@@ -20,6 +20,8 @@ interface RefinanceAuctionCardProps {
   hideAuction?: (value: string) => void;
 }
 
+const BADGE_COLOR = '#821FFF';
+
 const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
   auction,
   hideAuction,
@@ -33,7 +35,11 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
   );
 
   return (
-    <AuctionCardBackdrop onSubmit={onSubmit} submitButtonText="Refinance">
+    <AuctionCardBackdrop
+      onSubmit={onSubmit}
+      button={{ text: 'Refinance' }}
+      badge={{ text: 'Loan refinancing', color: BADGE_COLOR }}
+    >
       <AuctionNFTCardInfo {...auction} />
       <div className={styles.statsValue}>
         <StatInfo

@@ -6,6 +6,17 @@
   flex-direction: column;
   padding: 24px;
   gap: 16px;
+  position: relative;
+}
+
+.badge {
+  color: #fff;
+  font: var(--font-text-6);
+  position: absolute;
+  left: 24px;
+  top: -9px;
+  padding: 2px 4px;
+  height: 18px;
 }
 
 .button {
