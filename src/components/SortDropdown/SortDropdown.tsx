@@ -1,8 +1,10 @@
-import { FC, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { endsWith } from 'lodash';
 
 import { ArrowDownBtn, ArrowUp } from '@frakt/icons';
+import { useOnClickOutside } from '@frakt/hooks';
+
 import Button from '../Button';
 
 import styles from './SortDropdown.module.scss';
@@ -27,6 +29,9 @@ export const SortDropdown: FC<SortDropdownProps> = ({
 }) => {
   const [open, setOpen] = useState<boolean>(false);
 
+  const ref = useRef(null);
+  useOnClickOutside(ref, () => setOpen(false));
+
   const renderSortOption = (option: Option, sortOrder: string) => {
     const isActive = sortOption?.value === sortOrder;
 
@@ -43,7 +48,7 @@ export const SortDropdown: FC<SortDropdownProps> = ({
   };
 
   return (
-    <div className={styles.sortDropdownWrapper}>
+    <div ref={ref} className={styles.sortDropdownWrapper}>
       <Button
         className={styles.dropdownButton}
         onClick={() => setOpen((prevOpen) => !prevOpen)}

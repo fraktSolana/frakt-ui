@@ -1,26 +1,39 @@
 import { FC } from 'react';
 
+import { SortDropdown, Option } from '@frakt/components/SortDropdown';
 import {
-  SortDropdown,
-  useSortDropdown,
-  Option,
-} from '@frakt/components/SortDropdown';
+  FilterDropdown,
+  useFilterDropdown,
+} from '@frakt/components/FilterDropdown';
+
+import {
+  defaultFilterOption,
+  filterOptions,
+} from '../OngoingAuctionTab/constants';
 
 import styles from './FilterSection.module.scss';
 
 interface FilterSectionProps {
   sortOptions: Option[];
-  defaultSortOption: Option;
+  sortOption: Option;
+  handleSortChange: (option: Option) => void;
 }
 
 const FilterSection: FC<FilterSectionProps> = ({
   sortOptions,
-  defaultSortOption,
+  sortOption,
+  handleSortChange,
 }) => {
-  const { sortOption, handleSortChange } = useSortDropdown(defaultSortOption);
+  const { filterOption, handleFilterChange } =
+    useFilterDropdown(defaultFilterOption);
 
   return (
     <div className={styles.filterSectionWrapper}>
+      <FilterDropdown
+        filterOption={filterOption}
+        onFilterChange={handleFilterChange}
+        options={filterOptions}
+      />
       <SortDropdown
         sortOption={sortOption}
         onSortChange={handleSortChange}
