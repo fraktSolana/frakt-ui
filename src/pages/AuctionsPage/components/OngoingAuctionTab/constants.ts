@@ -1,3 +1,5 @@
+import { FilterOption, FilterValue } from './types';
+
 const sortOptions = [
   { label: 'Name', value: 'name' },
   { label: 'Buy price', value: 'buyPrice' },
@@ -6,10 +8,10 @@ const sortOptions = [
 
 const defaultSortOption = { ...sortOptions[0], value: 'name_asc' };
 
-const filterOptions = [
+const filterOptions: FilterOption[] = [
   {
     label: 'All',
-    value: 'all',
+    value: FilterValue.All,
     colors: {
       text: '#000000',
       background: '#cccccc',
@@ -17,7 +19,7 @@ const filterOptions = [
   },
   {
     label: 'Loan refinancing',
-    value: 'refinance',
+    value: FilterValue.Refinance,
     colors: {
       text: '#821FFF',
       background: '#E6D3FE',
@@ -25,7 +27,7 @@ const filterOptions = [
   },
   {
     label: 'Collateral',
-    value: 'collateral',
+    value: FilterValue.Collateral,
     colors: {
       text: '#1F6BFF',
       background: '#d2e1ff',

@@ -1,6 +1,7 @@
 import { useFilterDropdown } from '@frakt/components/FilterDropdown';
 import { useSortDropdown } from '@frakt/components/SortDropdown';
 
+import { FilterValue } from '../types';
 import {
   defaultFilterOption,
   defaultSortOption,
@@ -14,10 +15,10 @@ export const useSortAndFilterAuctions = (auctions: any) => {
     useFilterDropdown(defaultFilterOption);
 
   const filteredData = auctions.filter((auction) => {
-    if (filterOption.value === 'refinance') {
+    if (filterOption.value === FilterValue.Refinance) {
       return auction?.bondParams?.auctionRefinanceStartTime;
     }
-    if (filterOption.value === 'collateral') {
+    if (filterOption.value === FilterValue.Collateral) {
       return auction?.bondParams?.startAuctionTime;
     }
     return auction;
