@@ -34,8 +34,8 @@ const ClassicAuctionCard: FC<ClassicAuctionCardProps> = ({
   return (
     <AuctionCardBackdrop
       onSubmit={onSubmit}
-      button={{ text: 'Liquidate' }}
-      badge={{ text: 'Collateral redemption' }}
+      button={{ text: 'Buy' }}
+      badge={{ text: 'Liquidate' }}
     >
       <AuctionNFTCardInfo {...auction} />
       <div className={styles.statsValue}>

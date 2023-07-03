@@ -9,8 +9,8 @@ import styles from './AuctionCardBackdrop.module.scss';
 interface AuctionCardBackdropProps {
   className?: string;
   onSubmit: () => Promise<void>;
-  button: {
-    text: string;
+  button?: {
+    text?: string;
     disabled?: boolean;
   };
   badge?: {
@@ -38,7 +38,7 @@ const AuctionCardBackdrop: FC<PropsWithChildren<AuctionCardBackdropProps>> = ({
 
   return (
     <div className={styles.card}>
-      {badge && <Badge badge={badge} />}
+      {badge && <Badge {...badge} />}
       {children}
       <Button
         onClick={onHandleSubmit}
@@ -56,11 +56,8 @@ export default AuctionCardBackdrop;
 
 const DEFAULT_BADGE_COLOR = '#1F6BFF';
 
-const Badge = ({ badge }) => (
-  <div
-    style={{ backgroundColor: badge.color || DEFAULT_BADGE_COLOR }}
-    className={styles.badge}
-  >
-    {badge.text}
+const Badge = ({ color = DEFAULT_BADGE_COLOR, text = '' }) => (
+  <div style={{ backgroundColor: color }} className={styles.badge}>
+    {text}
   </div>
 );

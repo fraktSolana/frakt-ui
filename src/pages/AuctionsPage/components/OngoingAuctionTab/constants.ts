@@ -18,7 +18,7 @@ const filterOptions: FilterOption[] = [
     },
   },
   {
-    label: 'Loan refinancing',
+    label: 'Refinance',
     value: FilterValue.Refinance,
     colors: {
       text: '#821FFF',
@@ -26,7 +26,7 @@ const filterOptions: FilterOption[] = [
     },
   },
   {
-    label: 'Collateral',
+    label: 'Liquidate',
     value: FilterValue.Collateral,
     colors: {
       text: '#1F6BFF',

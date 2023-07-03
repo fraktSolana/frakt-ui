@@ -46,10 +46,15 @@
   height: 32px;
   width: 180px;
 }
-
 .dropdownButton span {
   display: flex;
   align-items: center;
+}
+.dropdownButton,
+.button {
+  svg > path {
+    fill: var(--primary-icon);
+  }
 }
 
 .buttons {
@@ -61,13 +66,19 @@
 }
 
 .button {
+  border-color: var(--secondary-border);
   display: flex;
   align-items: center;
   white-space: nowrap;
   padding: 7px 14px;
 }
 .button.active {
+  color: var(--button-text);
   background-color: var(--light-green-color);
+
+  svg path {
+    fill: var(--button-text);
+  }
 }
 
 .rotate {

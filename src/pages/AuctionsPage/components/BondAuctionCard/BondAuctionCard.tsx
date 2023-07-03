@@ -36,8 +36,8 @@ const BondAuctionCard: FC<BondAuctionCardProps> = ({
   return (
     <AuctionCardBackdrop
       onSubmit={onSubmit}
-      button={{ text: 'Liquidate', disabled: isAuctionPriceBelowThreshold }}
-      badge={{ text: 'Collateral redemption' }}
+      button={{ text: 'Buy', disabled: isAuctionPriceBelowThreshold }}
+      badge={{ text: 'Liquidate' }}
     >
       <AuctionNFTCardInfo {...auction} />
       <div className={styles.statsValue}>
