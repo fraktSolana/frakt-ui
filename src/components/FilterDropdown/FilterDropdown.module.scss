@@ -43,6 +43,13 @@
   font-size: 14px;
 }
 
+.dropdownButton,
+.button {
+  svg > path {
+    fill: var(--primary-icon);
+  }
+}
+
 .dropdownButton span {
   display: flex;
   align-items: center;

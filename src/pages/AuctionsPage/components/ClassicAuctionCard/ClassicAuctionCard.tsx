@@ -62,7 +62,7 @@ const ClassicAuctionCard: FC<ClassicAuctionCardProps> = ({
 export default ClassicAuctionCard;
 
 const createNextRoundTimerJSX = (timeToNextRound: number): JSX.Element => (
-  <div className={styles.wrapper}>
+  <div className={styles.timerWrapper}>
     <Timer />
     <div className={styles.countdown}>
       {createTimerJSX({
