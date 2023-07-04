@@ -11,3 +11,14 @@ export interface FilterOption {
   value: FilterValue;
   icon: FC;
 }
+
+export enum SortField {
+  NAME = 'name',
+  ACTIVE_LOANS = 'activeLoans',
+  APR = 'apr',
+}
+
+export enum SORT_ORDER {
+  ASC = 'asc',
+  DESC = 'desc',
+}

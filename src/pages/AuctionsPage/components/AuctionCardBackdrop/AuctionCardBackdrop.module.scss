@@ -23,7 +23,11 @@
   height: 20px;
 }
 
+.badge svg path {
+  fill: var(--primary-icon);
+}
+
 .button {
-  height: 48px;
+  height: 40px;
   width: 100%;
 }

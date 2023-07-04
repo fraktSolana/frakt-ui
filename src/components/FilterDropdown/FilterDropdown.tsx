@@ -50,8 +50,7 @@ export const FilterDropdown: FC<FilterDropdownProps> = ({
               })}
               type="tertiary"
             >
-              {option.icon({})}
-              {option.label}
+              <IconWithLabel {...option} />
             </Button>
           ))}
         </div>
@@ -63,8 +62,15 @@ export const FilterDropdown: FC<FilterDropdownProps> = ({
 const DropdownButton = ({ option, onClick, open }) => (
   <Button className={styles.dropdownButton} onClick={onClick} type="tertiary">
     <span>
-      Type: {option.icon({})} {option.label}
+      Type: <IconWithLabel {...option} />
     </span>
     <ArrowDownBtn className={open ? styles.rotate : ''} />
   </Button>
+);
+
+const IconWithLabel = ({ icon = null, label = '' }) => (
+  <>
+    {icon && icon({})}
+    {label}
+  </>
 );

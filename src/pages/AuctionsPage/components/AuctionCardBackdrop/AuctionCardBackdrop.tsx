@@ -56,7 +56,7 @@ export default AuctionCardBackdrop;
 
 const Badge = ({ text = '', icon = null }) => (
   <div className={styles.badge}>
-    {icon?.({})}
+    {icon && icon({})}
     <span>{text}</span>
   </div>
 );

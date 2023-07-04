@@ -1,7 +1,8 @@
+import { useMemo } from 'react';
 import { useFilterDropdown } from '@frakt/components/FilterDropdown';
 import { useSortDropdown } from '@frakt/components/SortDropdown';
 
-import { FilterValue } from '../types';
+import { FilterValue, SortField, SORT_ORDER } from '../types';
 import {
   defaultFilterOption,
   defaultSortOption,
@@ -14,18 +15,39 @@ export const useSortAndFilterAuctions = (auctions: any) => {
   const { filterOption, handleFilterChange } =
     useFilterDropdown(defaultFilterOption);
 
-  const filteredData = auctions.filter((auction) => {
-    if (filterOption.value === FilterValue.Refinance) {
-      return auction?.bondParams?.auctionRefinanceStartTime;
+  const filteredAuctions = useMemo(() => {
+    return auctions.filter((auction) => {
+      if (filterOption.value === FilterValue.Refinance) {
+        return auction.bondParams.auctionRefinanceStartTime;
+      }
+      if (filterOption.value === FilterValue.Collateral) {
+        return auction.bondParams.startAuctionTime;
+      }
+      return auction;
+    });
+  }, [auctions, filterOption]);
+
+  const sortedAuctions = useMemo(() => {
+    if (!sortOption.value) {
+      return filteredAuctions;
     }
-    if (filterOption.value === FilterValue.Collateral) {
-      return auction?.bondParams?.startAuctionTime;
-    }
-    return auction;
-  });
+
+    const [name, order] = sortOption.value.split('_');
+
+    const sorted = [...filteredAuctions].sort((a, b) => {
+      if (name === SortField.NAME) {
+        if (order === SORT_ORDER.ASC) {
+          return b?.nftName?.localeCompare(a?.nftName);
+        }
+        return a?.nftName?.localeCompare(b?.nftName);
+      }
+    });
+
+    return sorted;
+  }, [sortOption, filteredAuctions]);
 
   return {
-    auctions: filteredData,
+    auctions: sortedAuctions,
 
     sort: {
       sortOptions,

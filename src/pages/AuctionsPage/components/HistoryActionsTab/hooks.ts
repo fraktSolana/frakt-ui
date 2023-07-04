@@ -8,6 +8,7 @@ const baseUrl = `https://${process.env.BACKEND_DOMAIN}`;
 export const useFetchAuctionsHistory = () => {
   const { publicKey } = useWallet();
 
+  //TODO: replace to another request
   const fetchData = async ({ pageParam }: { pageParam: number }) => {
     const queryUrl = `${baseUrl}/liquidation?history=true&limit=${FETCH_LIMIT}&skip=${
       FETCH_LIMIT * pageParam
@@ -37,6 +38,8 @@ export const useFetchAuctionsHistory = () => {
 
   const auctionsAndRafflesList =
     data?.pages?.map((page) => page.data).flat() || [];
+
+  //TODO: remove isAuctin filter, request should return only auctions
 
   return {
     data: auctionsAndRafflesList.filter((auction) => auction?.isAuction),

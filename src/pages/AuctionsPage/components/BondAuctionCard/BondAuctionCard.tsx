@@ -115,11 +115,6 @@ const PriceSubtraction: FC<PriceSubtractionProps> = ({
   }, [initialPrice, percentage, startTime]);
 
   return (
-    <StatInfo
-      flexType="row"
-      label="Buy price"
-      value={price?.toFixed(3)}
-      valueType={VALUES_TYPES.string}
-    />
+    <StatInfo flexType="row" label="Buy price" value={price?.toFixed(3)} />
   );
 };
