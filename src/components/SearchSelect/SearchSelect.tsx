@@ -16,6 +16,7 @@ export interface SearchSelectProps<T> extends SelectProps<T, unknown> {
   placeholder?: string;
   onFilterChange?: (values: string[]) => void;
   selectedOptions: string[];
+  labels?: string[];
 }
 
 export const SearchSelect = <T extends {}>({
@@ -25,6 +26,7 @@ export const SearchSelect = <T extends {}>({
   placeholder,
   onFilterChange,
   selectedOptions,
+  labels,
   ...props
 }: SearchSelectProps<T>) => {
   return (
@@ -47,7 +49,7 @@ export const SearchSelect = <T extends {}>({
         {...props}
         dropdownRender={(menu) => (
           <>
-            <SelectLabels />
+            <SelectLabels labels={labels} />
             {menu}
           </>
         )}
@@ -66,9 +68,10 @@ const PrefixInput = () => (
   </div>
 );
 
-const SelectLabels = () => (
+const SelectLabels = ({ labels = [] }) => (
   <div className={styles.labels}>
-    <span>Collection name</span>
-    <span>Apr</span>
+    {labels.map((label) => (
+      <span>{label}</span>
+    ))}
   </div>
 );

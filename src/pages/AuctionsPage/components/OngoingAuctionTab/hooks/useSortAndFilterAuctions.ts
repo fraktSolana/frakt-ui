@@ -49,15 +49,27 @@ export const useSortAndFilterAuctions = (auctions: any) => {
   return {
     auctions: sortedAuctions,
 
-    sort: {
-      sortOptions,
+    sortProps: {
+      options: sortOptions,
+      onSortChange: handleSortChange,
       sortOption,
-      handleSortChange,
     },
-    filter: {
+    filterProps: {
+      options: filterOptions,
+      onFilterChange: handleFilterChange,
       filterOption,
-      handleFilterChange,
-      filterOptions,
+    },
+    searchProps: {
+      options: [],
+      placeholder: 'Select a collection',
+      optionKeys: {
+        labelKey: 'nftCollectionName',
+        valueKey: 'nftCollectionName',
+        imageKey: 'nftImageUrl',
+      },
+      selectedOptions: [],
+      labels: ['Collection', 'Auctions'],
+      onFilterChange: null,
     },
   };
 };

@@ -34,13 +34,14 @@ const FilterSection: FC<FilterSectionProps> = ({
     options: marketsPreview,
     selectedOptions: selectedMarkets,
     placeholder: 'Select a collection',
+    labels: ['Collection Name', 'APR'],
     optionKeys: {
       labelKey: 'collectionName',
       valueKey: 'marketPubkey',
       imageKey: 'collectionImage',
       secondLabelKey: 'apy',
     },
-    onFilterChange: onFilterChange,
+    onFilterChange,
   };
 
   return (

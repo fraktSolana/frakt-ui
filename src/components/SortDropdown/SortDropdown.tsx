@@ -14,7 +14,7 @@ export type Option = {
   value: string;
 };
 
-interface SortDropdownProps {
+export interface SortDropdownProps {
   sortOption: Option;
   onSortChange: (option: Option) => void;
   options: Option[];

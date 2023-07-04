@@ -14,7 +14,7 @@ export type FilterOption = {
   icon: FC;
 };
 
-interface FilterDropdownProps {
+export interface FilterDropdownProps {
   filterOption: FilterOption;
   onFilterChange: (option: FilterOption) => void;
   options: FilterOption[];

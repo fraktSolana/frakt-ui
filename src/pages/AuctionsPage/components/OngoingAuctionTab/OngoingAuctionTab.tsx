@@ -15,11 +15,16 @@ const OngoingAuctionTab = () => {
   const { isLoading, showList, showEmptyList, hideAuction, allAuctions } =
     useOngoingAuctionTab();
 
-  const { auctions, sort, filter } = useSortAndFilterAuctions(allAuctions);
+  const { auctions, sortProps, filterProps, searchProps } =
+    useSortAndFilterAuctions(allAuctions);
 
   return (
     <>
-      <FilterSection {...sort} {...filter} />
+      <FilterSection
+        sortProps={sortProps}
+        filterProps={filterProps}
+        searchProps={searchProps}
+      />
       {isLoading && <Loader />}
       {showList && (
         <div className={styles.auctionsList}>

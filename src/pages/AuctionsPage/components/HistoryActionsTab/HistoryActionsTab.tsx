@@ -26,7 +26,7 @@ const HistoryActionsTab = () => {
 
   return (
     <>
-      <FilterSection {...sort} {...filter} />
+      {/* <FilterSection {...sort} {...filter} /> */}
       {isLoading && <Loader />}
       {!!data?.length && (
         <>

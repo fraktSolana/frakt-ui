@@ -1,42 +1,34 @@
-import { FC } from 'react';
-
-import { SortDropdown, Option } from '@frakt/components/SortDropdown';
-import { FilterDropdown, FilterOption } from '@frakt/components/FilterDropdown';
+import {
+  SortDropdown,
+  SortDropdownProps,
+} from '@frakt/components/SortDropdown';
+import {
+  FilterDropdown,
+  FilterDropdownProps,
+} from '@frakt/components/FilterDropdown';
+import {
+  SearchSelect,
+  SearchSelectProps,
+} from '@frakt/components/SearchSelect';
 
 import styles from './FilterSection.module.scss';
 
-interface FilterSectionProps {
-  sortOptions: Option[];
-  sortOption: Option;
-  handleSortChange: (option: Option) => void;
-
-  filterOptions: FilterOption[];
-  filterOption: FilterOption;
-  handleFilterChange: (option: FilterOption) => void;
+interface FilterSectionProps<T> {
+  sortProps: SortDropdownProps;
+  filterProps: FilterDropdownProps;
+  searchProps: SearchSelectProps<T>;
 }
 
-const FilterSection: FC<FilterSectionProps> = ({
-  sortOptions,
-  sortOption,
-  handleSortChange,
-  filterOptions,
-  filterOption,
-  handleFilterChange,
-}) => {
-  return (
-    <div className={styles.filterSectionWrapper}>
-      <FilterDropdown
-        filterOption={filterOption}
-        onFilterChange={handleFilterChange}
-        options={filterOptions}
-      />
-      <SortDropdown
-        sortOption={sortOption}
-        onSortChange={handleSortChange}
-        options={sortOptions}
-      />
-    </div>
-  );
-};
+const FilterSection = <T,>({
+  sortProps,
+  filterProps,
+  searchProps,
+}: FilterSectionProps<T>) => (
+  <div className={styles.filterSectionWrapper}>
+    <SearchSelect {...searchProps} />
+    <FilterDropdown {...filterProps} />
+    <SortDropdown {...sortProps} />
+  </div>
+);
 
 export default FilterSection;
