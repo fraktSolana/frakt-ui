@@ -4,6 +4,7 @@ import moment from 'moment';
 import { StatInfo, VALUES_TYPES } from '@frakt/components/StatInfo';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import { BondAuctionItem } from '@frakt/api/auctions';
+import { ArrowDownLeft } from '@frakt/icons';
 
 import { checkPriceThreshold, parseAuctionsInfo } from './helpers';
 import AuctionCardBackdrop from '../AuctionCardBackdrop';
@@ -37,7 +38,7 @@ const BondAuctionCard: FC<BondAuctionCardProps> = ({
     <AuctionCardBackdrop
       onSubmit={onSubmit}
       button={{ text: 'Buy', disabled: isAuctionPriceBelowThreshold }}
-      badge={{ text: 'Liquidate' }}
+      badge={{ text: 'Liquidate', icon: ArrowDownLeft }}
     >
       <AuctionNFTCardInfo {...auction} />
       <div className={styles.statsValue}>

@@ -59,6 +59,7 @@
 
 .button {
   border: 0;
+  border-radius: 0;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -67,6 +68,10 @@
   white-space: nowrap;
   position: relative;
   width: 100%;
+
+  &:hover {
+    background: var(--gray-table-hover);
+  }
 }
 .button.active::after {
   content: '';

@@ -1,4 +1,4 @@
-import { ArrowDownLeft } from '@frakt/icons';
+import { ArrowDownLeft, Loop, Shuffle } from '@frakt/icons';
 import { FilterOption, FilterValue } from './types';
 
 const sortOptions = [
@@ -13,12 +13,12 @@ const filterOptions: FilterOption[] = [
   {
     label: 'All',
     value: FilterValue.All,
-    icon: ArrowDownLeft,
+    icon: Shuffle,
   },
   {
     label: 'Refinance',
     value: FilterValue.Refinance,
-    icon: ArrowDownLeft,
+    icon: Loop,
   },
   {
     label: 'Liquidate',

@@ -54,4 +54,9 @@ const AuctionCardBackdrop: FC<PropsWithChildren<AuctionCardBackdropProps>> = ({
 
 export default AuctionCardBackdrop;
 
-const Badge = ({ text = '' }) => <div className={styles.badge}>{text}</div>;
+const Badge = ({ text = '', icon = null }) => (
+  <div className={styles.badge}>
+    {icon?.({})}
+    <span>{text}</span>
+  </div>
+);

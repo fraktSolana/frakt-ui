@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { StatInfo, VALUES_TYPES } from '@frakt/components/StatInfo';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import { RefinanceAuctionItem } from '@frakt/api/auctions';
+import { Loop } from '@frakt/icons';
 
 import AuctionCardBackdrop from '../AuctionCardBackdrop';
 import AuctionNFTCardInfo from '../AuctionNFTCardInfo';
@@ -36,7 +37,7 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
     <AuctionCardBackdrop
       onSubmit={onSubmit}
       button={{ text: 'Refinance' }}
-      badge={{ text: 'Refinance' }}
+      badge={{ text: 'Refinance', icon: Loop }}
     >
       <AuctionNFTCardInfo {...auction} />
       <div className={styles.statsValue}>

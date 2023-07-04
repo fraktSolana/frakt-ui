@@ -5,7 +5,7 @@ import { StatInfo, VALUES_TYPES } from '@frakt/components/StatInfo';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import { createTimerJSX } from '@frakt/components/Timer';
 import { ClassicAuctionItem } from '@frakt/api/auctions';
-import { Timer } from '@frakt/icons';
+import { ArrowDownLeft, Timer } from '@frakt/icons';
 
 import AuctionCardBackdrop from '../AuctionCardBackdrop';
 import AuctionNFTCardInfo from '../AuctionNFTCardInfo';
@@ -35,7 +35,7 @@ const ClassicAuctionCard: FC<ClassicAuctionCardProps> = ({
     <AuctionCardBackdrop
       onSubmit={onSubmit}
       button={{ text: 'Buy' }}
-      badge={{ text: 'Liquidate' }}
+      badge={{ text: 'Liquidate', icon: ArrowDownLeft }}
     >
       <AuctionNFTCardInfo {...auction} />
       <div className={styles.statsValue}>

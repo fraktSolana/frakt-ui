@@ -62,7 +62,9 @@ export const FilterDropdown: FC<FilterDropdownProps> = ({
 
 const DropdownButton = ({ option, onClick, open }) => (
   <Button className={styles.dropdownButton} onClick={onClick} type="tertiary">
-    <span>Type: {option.label}</span>
+    <span>
+      Type: {option.icon({})} {option.label}
+    </span>
     <ArrowDownBtn className={open ? styles.rotate : ''} />
   </Button>
 );
