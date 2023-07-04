@@ -1,27 +1,35 @@
 import { FC } from 'react';
 import { TooltipProps as RcTooltipProps } from 'rc-tooltip/lib/Tooltip';
 import RcTooltip from 'rc-tooltip';
-import cx from 'classnames';
+import classNames from 'classnames';
 
 import 'rc-tooltip/assets/bootstrap_white.css';
 import styles from './Tooltip.module.scss';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
-const Tooltip: FC<RcTooltipProps> = ({
+interface TooltipProps extends RcTooltipProps {
+  innerClassName?: string;
+}
+
+const Tooltip: FC<TooltipProps> = ({
   children,
   overlayClassName,
+  innerClassName,
+  trigger = 'hover',
   ...props
 }) => (
   <RcTooltip
     {...props}
     arrowContent={<></>}
-    overlayClassName={cx(overlayClassName, styles['rcTooltipInner'])}
+    overlayClassName={classNames(overlayClassName, styles['rcTooltipInner'])}
     getTooltipContainer={(triggerNode) => (triggerNode as any).parentNode}
   >
     {children ? (
       children
     ) : (
-      <QuestionCircleOutlined className={styles.questionIcon} />
+      <QuestionCircleOutlined
+        className={classNames(styles.questionIcon, innerClassName)}
+      />
     )}
   </RcTooltip>
 );
