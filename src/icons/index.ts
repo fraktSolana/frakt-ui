@@ -24,6 +24,7 @@ export { Chevron } from './Chevron';
 export { ChevronDown } from './ChevronDown';
 export { CircleCheck } from './CircleCheck';
 export { Close } from './Close';
+export { CloseCircle } from './CloseCircle';
 export { CloseConfirmModal } from './CloseConfirmModal';
 export { CloseModal } from './CloseModal';
 export { Copy } from './Copy';

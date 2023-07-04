@@ -13,8 +13,15 @@ import styles from './HistoryActionsTab.module.scss';
 const HistoryActionsTab = () => {
   const { ref, inView } = useIntersection();
 
-  const { data, fetchNextPage, isFetchingNextPage, isLoading, sort, filter } =
-    useFetchAuctionsHistory();
+  const {
+    data,
+    fetchNextPage,
+    isFetchingNextPage,
+    isLoading,
+    sortProps,
+    filterProps,
+    searchProps,
+  } = useFetchAuctionsHistory();
 
   useEffect(() => {
     if (inView && !isFetchingNextPage) {
@@ -26,7 +33,11 @@ const HistoryActionsTab = () => {
 
   return (
     <>
-      {/* <FilterSection {...sort} {...filter} /> */}
+      <FilterSection
+        sortProps={sortProps}
+        filterProps={filterProps}
+        searchProps={searchProps}
+      />
       {isLoading && <Loader />}
       {!!data?.length && (
         <>

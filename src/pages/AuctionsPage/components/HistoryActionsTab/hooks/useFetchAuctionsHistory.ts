@@ -58,15 +58,27 @@ export const useFetchAuctionsHistory = () => {
     hasNextPage,
     isLoading,
 
-    sort: {
-      sortOptions,
+    sortProps: {
+      options: sortOptions,
       sortOption,
-      handleSortChange: setSortOption,
+      onSortChange: setSortOption,
     },
-    filter: {
+    filterProps: {
+      options: filterOptions,
       filterOption,
-      handleFilterChange: setFilterOption,
-      filterOptions,
+      onFilterChange: setFilterOption,
+    },
+    searchProps: {
+      options: [],
+      placeholder: 'Select a collection',
+      optionKeys: {
+        labelKey: 'nftCollectionName',
+        valueKey: 'nftCollectionName',
+        imageKey: 'nftImageUrl',
+      },
+      selectedOptions: [],
+      labels: ['Collections', 'Auctions'],
+      onFilterChange: null,
     },
   };
 };

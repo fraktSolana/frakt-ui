@@ -44,7 +44,10 @@ export const SearchSelect = <T extends {}>({
 
   return (
     <div className={styles.selectWrapper} ref={ref}>
-      <PrefixInput />
+      <PrefixInput
+        onClick={() => setCollapsed(!collapsed)}
+        collapsible={collapsible}
+      />
       <Select
         value={selectedOptions}
         onChange={onFilterChange}

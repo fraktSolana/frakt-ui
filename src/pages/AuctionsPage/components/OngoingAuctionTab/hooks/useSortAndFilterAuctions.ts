@@ -68,7 +68,7 @@ export const useSortAndFilterAuctions = (auctions: any) => {
         imageKey: 'nftImageUrl',
       },
       selectedOptions: [],
-      labels: ['Collection', 'Auctions'],
+      labels: ['Collections', 'Auctions'],
       onFilterChange: null,
     },
   };

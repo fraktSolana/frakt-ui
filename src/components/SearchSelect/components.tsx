@@ -1,11 +1,20 @@
 import { SearchOutlined } from '@ant-design/icons';
+
+import { CloseCircle } from '@frakt/icons';
+
 import Button from '../Button';
 
 import styles from './SearchSelect.module.scss';
 
-export const PrefixInput = () => (
+export const PrefixInput = ({ onClick, collapsible = false }) => (
   <div className={styles.prefix}>
-    <SearchOutlined />
+    {!collapsible ? (
+      <SearchOutlined />
+    ) : (
+      <Button type="tertiary" onClick={onClick} className={styles.closeButton}>
+        <CloseCircle />
+      </Button>
+    )}
   </div>
 );
 
