@@ -24,9 +24,11 @@ const FilterSection = <T,>({
   filterProps,
   searchProps,
 }: FilterSectionProps<T>) => (
-  <div className={styles.filterSectionWrapper}>
-    <SearchSelect {...searchProps} />
-    <FilterDropdown {...filterProps} />
+  <div className={styles.container}>
+    <div className={styles.searchFilterWrapper}>
+      <SearchSelect {...searchProps} collapsible />
+      <FilterDropdown {...filterProps} />
+    </div>
     <SortDropdown {...sortProps} />
   </div>
 );

@@ -1,9 +1,12 @@
+import { useRef, useState } from 'react';
 import { MinusOutlined, SearchOutlined } from '@ant-design/icons';
 import { SelectProps } from 'antd/lib/select';
 import { Select } from 'antd';
 
+import { useOnClickOutside } from '@frakt/hooks';
 import { Close } from '@frakt/icons';
 
+import { CollapsedContent, PrefixInput, SelectLabels } from './components';
 import { filterOption, getPopupContainer } from './helpers';
 import { OptionKeys, renderOption } from './Option';
 
@@ -17,6 +20,7 @@ export interface SearchSelectProps<T> extends SelectProps<T, unknown> {
   onFilterChange?: (values: string[]) => void;
   selectedOptions: string[];
   labels?: string[];
+  collapsible?: boolean;
 }
 
 export const SearchSelect = <T extends {}>({
@@ -27,10 +31,19 @@ export const SearchSelect = <T extends {}>({
   onFilterChange,
   selectedOptions,
   labels,
+  collapsible = false,
   ...props
 }: SearchSelectProps<T>) => {
+  const [collapsed, setCollapsed] = useState<boolean>(true);
+
+  const ref = useRef();
+  useOnClickOutside(ref, () => setCollapsed(true));
+
+  if (collapsed && collapsible)
+    return <CollapsedContent onClick={() => setCollapsed(!collapsed)} />;
+
   return (
-    <div className={styles.selectWrapper}>
+    <div className={styles.selectWrapper} ref={ref}>
       <PrefixInput />
       <Select
         value={selectedOptions}
@@ -61,17 +74,3 @@ export const SearchSelect = <T extends {}>({
     </div>
   );
 };
-
-const PrefixInput = () => (
-  <div className={styles.prefix}>
-    <SearchOutlined />
-  </div>
-);
-
-const SelectLabels = ({ labels = [] }) => (
-  <div className={styles.labels}>
-    {labels.map((label) => (
-      <span>{label}</span>
-    ))}
-  </div>
-);
