@@ -6,13 +6,14 @@ import { Loader } from '@frakt/components/Loader';
 
 import AuctionHistoryCard from '../AuctionHistoryCard';
 import { useFetchAuctionsHistory } from './hooks';
+import FilterSection from '../FilterSection';
 
 import styles from './HistoryActionsTab.module.scss';
 
 const HistoryActionsTab = () => {
   const { ref, inView } = useIntersection();
 
-  const { data, fetchNextPage, isFetchingNextPage, isLoading } =
+  const { data, fetchNextPage, isFetchingNextPage, isLoading, sort, filter } =
     useFetchAuctionsHistory();
 
   useEffect(() => {
@@ -25,6 +26,7 @@ const HistoryActionsTab = () => {
 
   return (
     <>
+      <FilterSection {...sort} {...filter} />
       {isLoading && <Loader />}
       {!!data?.length && (
         <>
