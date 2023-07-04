@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { Dictionary } from 'lodash';
-import { QuestionCircleOutlined } from '@ant-design/icons';
 
 import SidebarLayout from '@frakt/components/Sidebar';
 import CollapsedContent from '@frakt/components/Sidebar/components/CollapsedContent';
@@ -147,9 +146,11 @@ const Summary: FC<SummaryProps> = ({ nfts, orderParamsByMint, loanType }) => {
           <span>
             {label}
             {tooltipText && (
-              <Tooltip placement="bottom" trigger="hover" overlay={tooltipText}>
-                <QuestionCircleOutlined className={styles.tooltipIcon} />
-              </Tooltip>
+              <Tooltip
+                innerClassName={styles.tooltipIcon}
+                overlay={tooltipText}
+                placement="bottom"
+              />
             )}
           </span>
           <span>{value}</span>
@@ -187,9 +188,11 @@ const LoanDetails: FC<LoanDetailsProps> = ({
           <span>
             {label}
             {tooltipText && (
-              <Tooltip placement="bottom" trigger="hover" overlay={tooltipText}>
-                <QuestionCircleOutlined className={styles.tooltipIcon} />
-              </Tooltip>
+              <Tooltip
+                innerClassName={styles.tooltipIcon}
+                overlay={tooltipText}
+                placement="bottom"
+              />
             )}
           </span>
           <span>{value}</span>

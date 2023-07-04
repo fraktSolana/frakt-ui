@@ -79,9 +79,11 @@ const LoanDetails: FC = () => {
           <span>
             {label}
             {tooltipText && (
-              <Tooltip placement="bottom" trigger="hover" overlay={tooltipText}>
-                <QuestionCircleOutlined className={styles.tooltipIcon} />
-              </Tooltip>
+              <Tooltip
+                innerClassName={styles.tooltipIcon}
+                placement="bottom"
+                overlay={tooltipText}
+              />
             )}
           </span>
           <span>{value}</span>

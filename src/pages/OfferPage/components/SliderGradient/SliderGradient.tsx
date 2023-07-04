@@ -32,9 +32,7 @@ export const SliderGradient: FC<SliderGradientProps> = ({
           <Tooltip
             placement="bottom"
             overlay="Loan collateralization rate (or risk level) is a fixed % of the floor price, following the market until funding a loan"
-          >
-            <QuestionCircleOutlined className={styles.questionIcon} />
-          </Tooltip>
+          />
         </div>
         <div className={styles.label}>
           risk level

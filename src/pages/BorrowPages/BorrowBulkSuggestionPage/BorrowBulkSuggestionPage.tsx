@@ -74,7 +74,7 @@ const BulkSuggestion: FC<BulkSuggestionProps> = ({
   const borrowValue = sum(map(suggestion.orders, ({ loanValue }) => loanValue));
 
   return (
-    <Tooltip placement="top" trigger="hover" overlay={text}>
+    <Tooltip placement="top" overlay={text}>
       <div className={styles.blockWrapper}>
         <div className={classNames(styles.block, className)}>
           <div>
