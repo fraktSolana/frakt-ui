@@ -45,6 +45,10 @@
   padding: 7px 16px;
   height: 32px;
   width: 180px;
+
+  @media (max-width: 650px) {
+    width: 160px;
+  }
 }
 .dropdownButton span {
   display: flex;

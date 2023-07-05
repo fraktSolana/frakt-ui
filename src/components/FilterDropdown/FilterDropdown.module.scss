@@ -42,6 +42,10 @@
   width: 202px;
   white-space: nowrap;
   font-size: 14px;
+
+  @media (max-width: 650px) {
+    width: 175px;
+  }
 }
 
 .dropdownButton,
