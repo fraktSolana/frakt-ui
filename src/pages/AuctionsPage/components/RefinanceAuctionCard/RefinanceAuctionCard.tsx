@@ -78,8 +78,8 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
         />
         <StatInfo
           flexType="row"
-          label="Interest decrease"
-          value={`-${REFINANCE_INTEREST_TIC / 100} %`}
+          label="Interest increase"
+          value={`+${REFINANCE_INTEREST_TIC / 100} %`}
           valueType={VALUES_TYPES.string}
         />
       </div>
