@@ -5,6 +5,7 @@ import { useTabs } from '@frakt/components/Tabs';
 import OngoingAuctionTab from './components/OngoingAuctionTab';
 import HistoryActionsTab from './components/HistoryActionsTab';
 import { AUCTIONS_TABS as tabs } from './constants';
+import RootHeader from './components/RootHeader';
 
 export enum AuctionsTabsNames {
   ONGOING = 'ongoing',
@@ -20,6 +21,7 @@ const AuctionsPage = () => {
 
   return (
     <AppLayout>
+      <RootHeader />
       <TabbedLayout tabs={auctionsTabs} value={tabValue} setValue={setTabValue}>
         {tabValue === AuctionsTabsNames.ONGOING && <OngoingAuctionTab />}
         {tabValue === AuctionsTabsNames.HISTORY && <HistoryActionsTab />}
