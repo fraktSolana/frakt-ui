@@ -143,6 +143,7 @@ export const borrowBulk: BorrowBulk = async ({
     }));
 
   return borrow({
+    isTest: true,
     notBondTxns: notBondTransactionsAndSigners.flat(),
     orders: bondOrders,
     isLedger,
