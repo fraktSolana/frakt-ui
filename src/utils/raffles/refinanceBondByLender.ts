@@ -5,14 +5,8 @@ import { web3 } from '@frakt-protocol/frakt-sdk';
 import { notify, sendTxnPlaceHolder } from '../index';
 import { captureSentryError } from '../sentry';
 import { NotifyType } from '../solanaUtils';
-import {
-  showSolscanLinkNotification,
-  signAndConfirmTransaction,
-} from '../transactions';
-import {
-  BondFeatures,
-  InstructionsAndSigners,
-} from 'fbonds-core/lib/fbond-protocol/types';
+import { showSolscanLinkNotification } from '../transactions';
+import { InstructionsAndSigners } from 'fbonds-core/lib/fbond-protocol/types';
 import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from 'fbonds-core/lib/fbond-protocol/utils';
 import { RepayAccounts } from 'fbonds-core/lib/fbond-protocol/functions/bond/repayment';
 
@@ -20,7 +14,6 @@ type RefinanceBondByLender = (props: {
   connection: web3.Connection;
   wallet: WalletContextState;
   fbondPubkey: string;
-  oracleFloor: string;
   hadoMarketPubkey: string;
   repayAccounts: RepayAccounts[];
 }) => Promise<boolean>;
@@ -29,7 +22,6 @@ export const refinanceBondByLender: RefinanceBondByLender = async ({
   connection,
   wallet,
   fbondPubkey,
-  oracleFloor,
   repayAccounts,
   hadoMarketPubkey,
 }): Promise<boolean> => {
@@ -38,14 +30,12 @@ export const refinanceBondByLender: RefinanceBondByLender = async ({
     connection,
     args: {
       nextBoxIndex: '0',
-      bondFeatures: BondFeatures.None,
       repayAccounts,
     },
     addComputeUnits: true,
     accounts: {
       userPubkey: wallet.publicKey,
       fbond: new web3.PublicKey(fbondPubkey),
-      oracleFloor: new web3.PublicKey(oracleFloor),
       adminPubkey: new web3.PublicKey(process.env.BONDS_ADMIN_PUBKEY),
       hadoMarket: new web3.PublicKey(hadoMarketPubkey),
       protocolFeeReceiver: new web3.PublicKey(process.env.BONDS_ADMIN_PUBKEY),
