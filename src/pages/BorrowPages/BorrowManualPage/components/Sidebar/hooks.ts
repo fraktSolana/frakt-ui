@@ -176,6 +176,8 @@ const borrowSingle: BorrowSingle = async ({
   };
 
   await borrow({
+    isTest: true,
+
     notBondTxns: [],
     orders: [order],
     connection,
