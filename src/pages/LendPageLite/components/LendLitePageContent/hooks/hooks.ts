@@ -51,6 +51,7 @@ export const useFilteredMarkets = () => {
 
 enum SortField {
   OFFER_TVL = 'offerTVL',
+  LOANS_TVL = 'loansTVL',
   ACTIVE_LOANS = 'activeLoans',
   APR = 'apr',
 }
@@ -89,6 +90,9 @@ const useSortMarkets = (
       if (name === SortField.APR) {
         return compareNumbers(a.apy, b.apy, order === 'desc');
       }
+      if (name === SortField.LOANS_TVL) {
+        return compareNumbers(a.loansTVL, b.loansTVL, order === 'desc');
+      }
     });
 
     return sorted;
@@ -114,7 +118,7 @@ interface SortState {
 
 export const useSortState = create<SortState>((set) => ({
   sortValue: {
-    name: SortField.OFFER_TVL,
+    name: SortField.LOANS_TVL,
     order: SORT_ORDER.DESC,
   },
   handleSortChange: (nextValue) =>
