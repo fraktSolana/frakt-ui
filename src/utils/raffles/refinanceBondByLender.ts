@@ -70,7 +70,7 @@ export const refinanceBondByLender: RefinanceBondByLender = async ({
     },
     onSuccess: () => {
       notify({
-        message: 'Liquidated successfully!',
+        message: 'Refinanced successfully!',
         type: NotifyType.SUCCESS,
       });
     },

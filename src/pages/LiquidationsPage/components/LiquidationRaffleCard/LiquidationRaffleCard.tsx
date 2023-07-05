@@ -138,7 +138,6 @@ const LiquidationRaffleCard: FC<LiquidationRaffleCard> = ({
         </div>
         <Tooltip
           placement="top"
-          trigger="hover"
           overlay="You need to use at least 1 ticket"
           overlayClassName={ticketCount && styles.hiddenOverlay}
         >

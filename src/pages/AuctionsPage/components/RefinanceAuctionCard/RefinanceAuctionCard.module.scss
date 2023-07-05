@@ -12,3 +12,23 @@
     width: 100%;
   }
 }
+
+.timerWrapper {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.timerWrapper svg {
+  width: 11px;
+
+  path {
+    fill: var(--gray-color-2);
+  }
+}
+
+.countdown {
+  font: var(--font-text-8);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}

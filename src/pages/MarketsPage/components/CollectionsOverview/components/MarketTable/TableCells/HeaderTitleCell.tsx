@@ -30,11 +30,7 @@ export const HeaderTitleCell: FC<HeaderTitleCellProps> = ({
   return (
     <div className={styles.row}>
       <span className={styles.title}>{label}</span>
-      {!!tooltipText && (
-        <Tooltip placement="top" overlay={tooltipText}>
-          <QuestionCircleOutlined className={styles.questionIcon} />
-        </Tooltip>
-      )}
+      {!!tooltipText && <Tooltip placement="top" overlay={tooltipText} />}
       <span className={styles.sortIcon}>
         {sortedColumn?.order === 'ascend' && <ArrowUpTableSort />}
         {sortedColumn?.order === 'descend' && <ArrowDownTableSort />}

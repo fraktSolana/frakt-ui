@@ -55,9 +55,12 @@ export const useDashboardWalletNfts = () => {
   });
 
   const nftsData = data?.pages?.map((page) => page.data).flat() || [];
+  const bondsNfts = nftsData.filter(
+    ({ bondParams }) => bondParams?.marketPubkey,
+  );
 
   return {
-    nfts: nftsData?.filter(({ mint }) => !hiddenNFTsMint.includes(mint)) || [],
+    nfts: bondsNfts?.filter(({ mint }) => !hiddenNFTsMint.includes(mint)) || [],
     initialLoading: isLoading,
     fetchNextPage,
     isFetchingNextPage,
