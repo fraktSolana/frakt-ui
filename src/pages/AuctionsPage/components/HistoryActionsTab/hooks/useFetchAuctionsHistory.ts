@@ -17,6 +17,7 @@ export const useFetchAuctionsHistory = () => {
 
   const [sortOption, setSortOption] = useState<any>(defaultSortOption);
   const [filterOption, setFilterOption] = useState<any>(defaultFilterOption);
+  const [showOnlyMine, setShowOnlyMine] = useState<boolean>(false);
 
   //TODO: replace to another request
   const fetchData = async ({ pageParam }: { pageParam: number }) => {
@@ -79,6 +80,10 @@ export const useFetchAuctionsHistory = () => {
       selectedOptions: [],
       labels: ['Collections', 'Auctions'],
       onFilterChange: null,
+    },
+    toggleProps: {
+      onChange: setShowOnlyMine,
+      value: showOnlyMine,
     },
   };
 };

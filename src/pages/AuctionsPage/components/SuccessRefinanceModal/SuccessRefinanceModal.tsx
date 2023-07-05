@@ -29,6 +29,8 @@ const SuccessRefinanceModal: FC<SuccessRefinanceModalProps> = ({
     value: styles.statInfoValue,
   };
 
+  const titleText = 'You have successfully refinanced the loan';
+
   return (
     <Modal
       open={open}
@@ -43,13 +45,11 @@ const SuccessRefinanceModal: FC<SuccessRefinanceModalProps> = ({
       <div className={styles.container}>
         <div className={styles.innerContentainer}>
           <h3 className={classNames(styles.title, styles.mobileTitle)}>
-            You have successfully refinanced the loan
+            {titleText}
           </h3>
           <img className={styles.image} src={nftImage} />
           <div className={styles.content}>
-            <h3 className={styles.title}>
-              You have successfully refinanced the loan
-            </h3>
+            <h3 className={styles.title}>{titleText}</h3>
             <div className={styles.stats}>
               <StatInfo
                 classNamesProps={statInfoClasses}

@@ -1,3 +1,4 @@
+import Toggle from '@frakt/components/Toggle';
 import {
   SortDropdown,
   SortDropdownProps,
@@ -7,7 +8,7 @@ import {
   FilterDropdownProps,
 } from '@frakt/components/FilterDropdown';
 import {
-  SearchSelect,
+  // SearchSelect,
   SearchSelectProps,
 } from '@frakt/components/SearchSelect';
 
@@ -17,19 +18,24 @@ interface FilterSectionProps<T> {
   sortProps: SortDropdownProps;
   filterProps: FilterDropdownProps;
   searchProps: SearchSelectProps<T>;
+  toggleProps?: { onChange: () => void; value: boolean };
 }
 
 const FilterSection = <T,>({
   sortProps,
   filterProps,
-  searchProps,
+  // searchProps,
+  toggleProps,
 }: FilterSectionProps<T>) => (
   <div className={styles.container}>
-    <div className={styles.searchFilterWrapper}>
-      <SearchSelect {...searchProps} collapsible />
+    <div className={styles.searchAndFilterWrapper}>
+      {/* <SearchSelect {...searchProps} collapsible /> */}
       <FilterDropdown {...filterProps} />
     </div>
-    <SortDropdown {...sortProps} />
+    <div className={styles.sortAndToggleWrapper}>
+      {toggleProps && <Toggle label="Mine" />}
+      <SortDropdown {...sortProps} />
+    </div>
   </div>
 );
 

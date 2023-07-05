@@ -8,5 +8,6 @@ export const AUCTIONS_TABS: Tab[] = [
   {
     label: 'History',
     value: 'history',
+    disabled: true,
   },
 ];
