@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
 
@@ -11,6 +12,9 @@ export const useRefinanceAuctionCard = (
 ) => {
   const wallet = useWallet();
   const { connection } = useConnection();
+
+  const [visibleSuccessRefinanceModal, setVisibleSuccessRefinanceModal] =
+    useState<boolean>(false);
 
   const {
     visible: loadingModalVisible,
@@ -46,6 +50,7 @@ export const useRefinanceAuctionCard = (
 
       if (result) {
         hideAuction(nftMint);
+        setVisibleSuccessRefinanceModal(true);
       }
     } catch (error) {
       console.error(error);
@@ -54,5 +59,10 @@ export const useRefinanceAuctionCard = (
     }
   };
 
-  return { onSubmit, loadingModalVisible };
+  return {
+    onSubmit,
+    loadingModalVisible,
+    visibleSuccessRefinanceModal,
+    setVisibleSuccessRefinanceModal,
+  };
 };

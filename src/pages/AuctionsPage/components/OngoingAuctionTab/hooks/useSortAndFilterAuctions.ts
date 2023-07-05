@@ -18,10 +18,10 @@ export const useSortAndFilterAuctions = (auctions: any) => {
   const filteredAuctions = useMemo(() => {
     return auctions.filter((auction) => {
       if (filterOption.value === FilterValue.Refinance) {
-        return auction.bondParams.auctionRefinanceStartTime;
+        return auction?.bondParams?.auctionRefinanceStartTime;
       }
       if (filterOption.value === FilterValue.Collateral) {
-        return auction.bondParams.startAuctionTime;
+        return auction?.bondParams?.startAuctionTime;
       }
       return auction;
     });

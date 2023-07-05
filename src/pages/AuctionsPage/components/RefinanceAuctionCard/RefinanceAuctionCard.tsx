@@ -5,6 +5,7 @@ import { LoadingModal } from '@frakt/components/LoadingModal';
 import { RefinanceAuctionItem } from '@frakt/api/auctions';
 import { Loop } from '@frakt/icons';
 
+import SuccessRefinanceModal from '../SuccessRefinanceModal';
 import AuctionCardBackdrop from '../AuctionCardBackdrop';
 import AuctionNFTCardInfo from '../AuctionNFTCardInfo';
 import { useRefinanceAuctionCard } from './hooks';
@@ -28,10 +29,12 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
   const { floorPrice, currentLoanAmount, newLoanAmount } =
     parseRefinanceAuctionsInfo(auction);
 
-  const { onSubmit, loadingModalVisible } = useRefinanceAuctionCard(
-    auction,
-    hideAuction,
-  );
+  const {
+    onSubmit,
+    loadingModalVisible,
+    visibleSuccessRefinanceModal,
+    setVisibleSuccessRefinanceModal,
+  } = useRefinanceAuctionCard(auction, hideAuction);
 
   return (
     <AuctionCardBackdrop
@@ -71,6 +74,13 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
         />
       </div>
       <LoadingModal visible={loadingModalVisible} />
+      <SuccessRefinanceModal
+        open={visibleSuccessRefinanceModal}
+        onCancel={() => setVisibleSuccessRefinanceModal(false)}
+        nftImage={auction.nftImageUrl}
+        floorPrice={floorPrice}
+        lendPrice={currentLoanAmount}
+      />
     </AuctionCardBackdrop>
   );
 };
