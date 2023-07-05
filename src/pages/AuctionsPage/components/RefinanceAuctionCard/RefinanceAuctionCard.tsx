@@ -28,7 +28,7 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
   auction,
   hideAuction,
 }) => {
-  const { floorPrice, currentLoanAmount, newLoanAmount, interest } =
+  const { floorPrice, newLoanAmount, currentInterest, interest } =
     parseRefinanceAuctionsInfo(auction);
 
   const {
@@ -60,13 +60,20 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
         />
         <StatInfo
           flexType="row"
-          label="Current loan amount"
-          value={currentLoanAmount}
+          label="New loan amount"
+          value={newLoanAmount}
         />
         <StatInfo
           flexType="row"
-          label="New loan amount"
-          value={newLoanAmount}
+          label="Interest increase"
+          value={`+${REFINANCE_INTEREST_TIC / 100} %`}
+          valueType={VALUES_TYPES.string}
+        />
+        <StatInfo
+          flexType="row"
+          label="New interest"
+          value={`${currentInterest} %`}
+          valueType={VALUES_TYPES.string}
         />
         <StatInfo
           flexType="row"
@@ -76,12 +83,6 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
           )}
           valueType={VALUES_TYPES.string}
         />
-        <StatInfo
-          flexType="row"
-          label="Interest increase"
-          value={`+${REFINANCE_INTEREST_TIC / 100} %`}
-          valueType={VALUES_TYPES.string}
-        />
       </div>
       <LoadingModal visible={loadingModalVisible} />
       <SuccessRefinanceModal
@@ -89,7 +90,7 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
         onCancel={() => closeRefinanceModal(auction?.nftMint)}
         nftImage={auction.nftImageUrl}
         floorPrice={floorPrice}
-        lendPrice={currentLoanAmount}
+        lendPrice={newLoanAmount?.toFixed(2)}
         interest={interest}
       />
     </AuctionCardBackdrop>
