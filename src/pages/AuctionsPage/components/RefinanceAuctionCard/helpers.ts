@@ -23,7 +23,7 @@ const parseRefinanceAuctionsInfo = (auction: RefinanceAuctionItem) => {
       ? REFINANCE_MAX_INTEREST
       : auctionInterest;
 
-  const newLoanAmount = totalRepayValue / (1 - currentInterest / 1e4);
+  const newLoanAmount = (totalRepayValue * 0.995) / (1 - currentInterest / 1e4);
 
   return {
     currentLoanAmount,
