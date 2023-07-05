@@ -1,4 +1,3 @@
-import { web3 } from '@frakt-protocol/frakt-sdk';
 import { DeltaType } from '@frakters/raffle-sdk/lib/raffle-core/types';
 
 export interface FetchItemsParams {

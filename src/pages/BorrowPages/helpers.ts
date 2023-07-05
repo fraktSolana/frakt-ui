@@ -13,6 +13,7 @@ import { NotifyType } from '@frakt/utils/solanaUtils';
 
 import { BondOrderParams } from './cartState';
 import { borrow } from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
+import { IS_TEST_TRANSACTION } from '@frakt/config';
 
 type CalcLtv = (props: { nft: BorrowNft; loanValue: number }) => number;
 export const calcLtv: CalcLtv = ({ nft, loanValue }) => {
@@ -143,6 +144,7 @@ export const borrowBulk: BorrowBulk = async ({
     }));
 
   return borrow({
+    isTest: IS_TEST_TRANSACTION,
     notBondTxns: notBondTransactionsAndSigners.flat(),
     orders: bondOrders,
     isLedger,

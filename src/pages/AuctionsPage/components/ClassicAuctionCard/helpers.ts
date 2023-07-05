@@ -4,10 +4,8 @@ import moment from 'moment';
 import { AuctionListItem } from '@frakt/api/raffle';
 
 const calcPriceAndTimeForClassicAuctions = (auction: AuctionListItem) => {
-  if (!auction?.classicParams?.auctionPubkey) return null;
-
   const { denominator, startedAt, startPrice, delta, deltaType } =
-    auction?.classicParams;
+    auction?.classicParams || {};
 
   const currentTime = moment().unix();
 
@@ -42,36 +40,19 @@ const calcPriceAndTimeForClassicAuctions = (auction: AuctionListItem) => {
 };
 
 const parseAuctionsInfo = (auction: AuctionListItem) => {
-  const { nftName, nftImageUrl, nftCollectionName } = auction;
+  const { classicParams } = auction;
 
-  const isBondAuction = auction?.bondParams?.fbondPubkey;
+  const { nextPrice, timeToNextRound, buyPrice } =
+    calcPriceAndTimeForClassicAuctions(auction) || {};
 
-  const classicAuctionsInfo = calcPriceAndTimeForClassicAuctions(auction);
-
-  const floorPrice = isBondAuction
-    ? (auction?.bondParams?.floorPrice / 1e9)?.toFixed(3)
-    : auction?.classicParams?.floorPrice?.toFixed(3);
+  const floorPrice = classicParams?.floorPrice?.toFixed(3);
 
   return {
-    nftName,
-    nftImageUrl,
-    nftCollectionName,
-
-    nextPrice: classicAuctionsInfo?.nextPrice,
-    timeToNextRound: classicAuctionsInfo?.timeToNextRound,
-    buyPrice: classicAuctionsInfo?.buyPrice,
-
+    timeToNextRound,
     floorPrice,
-    isBondAuction,
+    nextPrice,
+    buyPrice,
   };
 };
 
-const checkPriceThreshold = (
-  fullPrice: number,
-  currentPrice: number,
-): boolean => {
-  const threshold = fullPrice * 0.25;
-  return currentPrice < threshold;
-};
-
-export { parseAuctionsInfo, checkPriceThreshold };
+export { parseAuctionsInfo };

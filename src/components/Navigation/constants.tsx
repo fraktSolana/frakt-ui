@@ -19,6 +19,8 @@ import {
   Lending,
   LendingDark,
   BanxFilled,
+  Auction,
+  AuctionDark,
 } from '@frakt/icons';
 
 import { Navigation } from './types';
@@ -123,5 +125,13 @@ export const SECONDARY_NAVIGATION_LINKS: Navigation[] = [
     event: 'navigation-liquidation',
     icon: Raffles,
     iconDark: RafflesDark,
+  },
+  {
+    pathname: PATHS.AUCTIONS,
+    to: PATHS.AUCTIONS,
+    label: 'Auctions',
+    event: 'navigation-auction',
+    icon: Auction,
+    iconDark: AuctionDark,
   },
 ];

@@ -1,0 +1,33 @@
+.card {
+  background: var(--primary-background);
+  border: 1px solid var(--primary-border);
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  padding: 24px;
+  gap: 16px;
+  position: relative;
+}
+
+.badge {
+  background-color: var(--secondary-background);
+  color: var(--primary-text);
+  font: var(--font-text-6);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: absolute;
+  left: 24px;
+  top: -9px;
+  padding: 2px 8px;
+  height: 20px;
+}
+
+.badge svg path {
+  fill: var(--primary-icon);
+}
+
+.button {
+  height: 40px;
+  width: 100%;
+}

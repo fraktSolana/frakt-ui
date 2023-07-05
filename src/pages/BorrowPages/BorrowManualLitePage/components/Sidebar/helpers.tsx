@@ -12,6 +12,7 @@ import { captureSentryError } from '@frakt/utils/sentry';
 import { borrow as borrowBonds } from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { showSolscanLinkNotification } from '@frakt/utils/transactions';
+import { IS_TEST_TRANSACTION } from '@frakt/config';
 
 interface LoanDetailsField {
   label: string;
@@ -226,6 +227,7 @@ export const borrow: Borrow = async ({
   const bondOrders = orders.filter((order) => order.loanType === LoanType.BOND);
 
   return await borrowBonds({
+    isTest: IS_TEST_TRANSACTION,
     notBondTxns: [...notBondTransactionsAndSigners.flat()],
     orders: bondOrders,
     isLedger,

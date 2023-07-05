@@ -16,6 +16,7 @@ export const PATHS = {
   MY_STRATEGIES: '/my-strategies',
   STRATEGY_CREATION: '/my-strategies/create',
   LIQUIDATIONS: '/liquidations',
+  AUCTIONS: '/auctions',
   BONDS: '/bonds',
   BONDS_LITE: '/bonds-lite',
   BOND: '/bond',
