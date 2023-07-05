@@ -22,6 +22,7 @@ import { makeProposeTransaction } from '@frakt/utils/loans';
 import { LoanType } from '@frakt/api/loans';
 import { BondCartOrder, BorrowNft } from '@frakt/api/nft';
 import { useLoadingModalState } from '@frakt/components/LoadingModal';
+import { IS_TEST_TRANSACTION } from '@frakt/config';
 
 export const useSidebar = () => {
   const {
@@ -176,7 +177,7 @@ const borrowSingle: BorrowSingle = async ({
   };
 
   await borrow({
-    isTest: true,
+    isTest: IS_TEST_TRANSACTION,
 
     notBondTxns: [],
     orders: [order],

@@ -31,6 +31,7 @@ import {
 import { useNotConnectedBorrowContent } from '../../NotConnectedBorrowContent';
 import { filterPairs, getBondOrderParams, parseNFTs } from '../helpers';
 import { useDashboardWalletNfts } from './useDashboardWalletNfts';
+import { IS_TEST_TRANSACTION } from '@frakt/config';
 
 export const useConnectedBorrowContent = () => {
   const { nfts, fetchNextPage, initialLoading, setSearch, hideNFT } =
@@ -206,7 +207,7 @@ const borrowSingle = async ({
     ),
   };
   return await borrow({
-    isTest: true,
+    isTest: IS_TEST_TRANSACTION,
 
     notBondTxns: [],
     orders: [order],
