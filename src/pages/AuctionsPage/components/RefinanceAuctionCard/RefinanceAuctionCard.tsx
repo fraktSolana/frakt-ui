@@ -28,7 +28,7 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
   auction,
   hideAuction,
 }) => {
-  const { floorPrice, newLoanAmount, interest, currentInterest } =
+  const { floorPrice, newLoanAmount, currentInterest, interest } =
     parseRefinanceAuctionsInfo(auction);
 
   const {
