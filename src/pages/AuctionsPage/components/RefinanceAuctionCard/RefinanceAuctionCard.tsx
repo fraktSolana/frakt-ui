@@ -1,9 +1,11 @@
 import { FC } from 'react';
+import moment from 'moment';
 
 import { StatInfo, VALUES_TYPES } from '@frakt/components/StatInfo';
 import { LoadingModal } from '@frakt/components/LoadingModal';
+import { createTimerJSX } from '@frakt/components/Timer';
 import { RefinanceAuctionItem } from '@frakt/api/auctions';
-import { Loop } from '@frakt/icons';
+import { Loop, Timer } from '@frakt/icons';
 
 import SuccessRefinanceModal from '../SuccessRefinanceModal';
 import AuctionCardBackdrop from '../AuctionCardBackdrop';
@@ -68,6 +70,14 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
         />
         <StatInfo
           flexType="row"
+          label="Will end in"
+          value={createAuctionTimerJSX(
+            auction?.bondParams?.auctionRefinanceStartTime,
+          )}
+          valueType={VALUES_TYPES.string}
+        />
+        <StatInfo
+          flexType="row"
           label="Interest decrease"
           value={`-${REFINANCE_INTEREST_TIC / 100} %`}
           valueType={VALUES_TYPES.string}
@@ -87,3 +97,14 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
 };
 
 export default RefinanceAuctionCard;
+
+const createAuctionTimerJSX = (timeToNextRound: number): JSX.Element => (
+  <div className={styles.timerWrapper}>
+    <Timer />
+    <div className={styles.countdown}>
+      {createTimerJSX({
+        expiredAt: moment.unix(timeToNextRound + 24 * 60 * 60),
+      })}
+    </div>
+  </div>
+);
