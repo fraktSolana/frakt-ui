@@ -87,8 +87,6 @@ export const makeRefinanceLoanTransaction: MakeRefinanceLoanTransaction =
       connection,
       args: {
         nextBoxIndex: '0',
-        amountToReturn,
-        bondDuration: durationFilter,
         sellBondParamsAndAccounts: sellBondParamsAndAccounts.filter(
           (param) => param.amountToSell > 0,
         ),

@@ -87,11 +87,7 @@ const StatsValues = ({
   <div className={styles.values}>
     <div className={styles.rowCenter}>
       <span className={styles.label}>{label}</span>
-      {tooltipText && (
-        <Tooltip placement="bottom" overlay={tooltipText}>
-          <QuestionCircleOutlined className={styles.questionIcon} />
-        </Tooltip>
-      )}
+      {tooltipText && <Tooltip placement="bottom" overlay={tooltipText} />}
     </div>
     <span className={styles.value}>{value}</span>
   </div>

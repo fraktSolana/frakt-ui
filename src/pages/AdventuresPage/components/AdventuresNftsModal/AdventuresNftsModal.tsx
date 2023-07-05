@@ -199,7 +199,7 @@ const StakeContent: FC<StakeContent> = ({
             wallet,
             transactionName: 'adventuresStake',
             params: {
-              selectedNfts,
+              selectedNfts: JSON.stringify(selectedNfts, null, ' '),
             },
           });
         },
@@ -324,7 +324,7 @@ const UnstakeContent: FC<UnstakeContent> = ({ nfts = [], setIsOpen }) => {
             wallet,
             transactionName: 'adventuresUnstake',
             params: {
-              selectedNfts,
+              selectedNfts: JSON.stringify(selectedNfts, null, ' '),
             },
           });
         },

@@ -87,7 +87,10 @@ const useFetchWalletNFTsWithoutSearchParams = () => {
     },
   );
 
-  return { data, loading: isLoading || isFetching };
+  return {
+    data: (data || []).filter(({ bondParams }) => bondParams?.marketPubkey),
+    loading: isLoading || isFetching,
+  };
 };
 
 export const useBorrowSingleBond = () => {

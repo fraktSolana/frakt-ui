@@ -16,7 +16,6 @@ export const TicketsCounter: FC<TicketsCounterProps> = ({
   return (
     <Tooltip
       placement="top"
-      trigger="hover"
       overlay="Spent tickets are refunded 24 hours after raffle ended"
     >
       <div className={styles.ticket}>
