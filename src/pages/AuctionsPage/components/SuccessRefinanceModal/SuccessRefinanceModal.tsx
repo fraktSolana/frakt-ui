@@ -15,6 +15,7 @@ interface SuccessRefinanceModalProps {
   nftImage: string;
   floorPrice: string;
   lendPrice: string;
+  interest: number;
 }
 
 const SuccessRefinanceModal: FC<SuccessRefinanceModalProps> = ({
@@ -23,6 +24,7 @@ const SuccessRefinanceModal: FC<SuccessRefinanceModalProps> = ({
   nftImage,
   floorPrice,
   lendPrice,
+  interest,
 }) => {
   const statInfoClasses = {
     container: styles.statInfo,
@@ -65,9 +67,9 @@ const SuccessRefinanceModal: FC<SuccessRefinanceModalProps> = ({
               />
               <StatInfo
                 classNamesProps={statInfoClasses}
-                decimalPlaces={0}
+                decimalPlaces={2}
                 label="Interest"
-                value="2"
+                value={interest}
               />
             </div>
           </div>

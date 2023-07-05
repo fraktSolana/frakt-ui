@@ -26,7 +26,7 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
   auction,
   hideAuction,
 }) => {
-  const { floorPrice, currentLoanAmount, newLoanAmount } =
+  const { floorPrice, currentLoanAmount, newLoanAmount, interest } =
     parseRefinanceAuctionsInfo(auction);
 
   const {
@@ -80,6 +80,7 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
         nftImage={auction.nftImageUrl}
         floorPrice={floorPrice}
         lendPrice={currentLoanAmount}
+        interest={interest}
       />
     </AuctionCardBackdrop>
   );
