@@ -18,7 +18,7 @@ interface BondAuctionCardProps {
   hideAuction: (value: string) => void;
 }
 
-const DENOMINATIOR_PERCENT = 21 / 1e5; // DUTCH_AUCTION_RATE
+const DENOMINATOR_PERCENT = 42 / 1e5; // DUTCH_AUCTION_RATE
 
 const BondAuctionCard: FC<BondAuctionCardProps> = ({
   auction,
@@ -56,14 +56,14 @@ const BondAuctionCard: FC<BondAuctionCardProps> = ({
         />
         <PriceSubtraction
           initialPrice={floorPrice}
-          percentage={DENOMINATIOR_PERCENT}
+          percentage={DENOMINATOR_PERCENT}
           startTime={moment.unix(auction?.bondParams?.startAuctionTime)}
           setIsAuctionPriceBelowThreshold={setIsAuctionPriceBelowThreshold}
         />
         <StatInfo
           flexType="row"
           label="Price decrease"
-          value={`-${DENOMINATIOR_PERCENT} %`}
+          value={`-${DENOMINATOR_PERCENT} %`}
           valueType={VALUES_TYPES.string}
         />
       </div>
