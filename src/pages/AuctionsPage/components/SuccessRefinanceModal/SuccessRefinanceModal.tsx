@@ -75,11 +75,11 @@ const SuccessRefinanceModal: FC<SuccessRefinanceModalProps> = ({
           </div>
         </div>
         <p className={styles.subtitle}>
-          Now you can check it on{' '}
+          It will show up in{' '}
           <NavLink to={PATHS.LOANS} className={styles.link}>
-            your loans
+            my loans
           </NavLink>{' '}
-          that you fund
+          in no time
         </p>
         <NavigationButton
           path={PATHS.LOANS}

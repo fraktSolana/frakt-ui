@@ -28,7 +28,7 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
   auction,
   hideAuction,
 }) => {
-  const { floorPrice, newLoanAmount, currentInterest, interest } =
+  const { ticsPassed, floorPrice, newLoanAmount, interest } =
     parseRefinanceAuctionsInfo(auction);
 
   const {
@@ -52,16 +52,13 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
           value={floorPrice}
           classNamesProps={{ container: styles.opacity }}
         />
+
+        <StatInfo flexType="row" label="Principle" value={newLoanAmount} />
         <StatInfo
           flexType="row"
-          label="Next round start"
-          value={`Every ${REFINANCE_INTEREST_REFRESH_RATE} sec`}
-          valueType={VALUES_TYPES.string}
-        />
-        <StatInfo
-          flexType="row"
-          label="New loan amount"
-          value={newLoanAmount}
+          label="Interest"
+          decimalPlaces={2}
+          value={interest}
         />
         <StatInfo
           flexType="row"
@@ -71,13 +68,15 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
         />
         <StatInfo
           flexType="row"
-          label="New interest"
-          value={`${currentInterest} %`}
+          label="Next interest increase"
+          value={`${moment
+            .duration(REFINANCE_INTEREST_REFRESH_RATE - ticsPassed, 'seconds')
+            .humanize(true)}`}
           valueType={VALUES_TYPES.string}
         />
         <StatInfo
           flexType="row"
-          label="Will end in"
+          label="Ends in"
           value={createAuctionTimerJSX(
             auction?.bondParams?.auctionRefinanceStartTime,
           )}

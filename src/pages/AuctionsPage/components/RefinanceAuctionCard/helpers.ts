@@ -26,6 +26,7 @@ const parseRefinanceAuctionsInfo = (auction: RefinanceAuctionItem) => {
   const newLoanAmount = (totalRepayValue * 0.995) / (1 - currentInterest / 1e4);
 
   return {
+    ticsPassed,
     currentLoanAmount,
     newLoanAmount,
     floorPrice,
