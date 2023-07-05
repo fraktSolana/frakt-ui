@@ -35,7 +35,7 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
     onSubmit,
     loadingModalVisible,
     visibleSuccessRefinanceModal,
-    setVisibleSuccessRefinanceModal,
+    closeRefinanceModal,
   } = useRefinanceAuctionCard(auction, hideAuction);
 
   return (
@@ -86,7 +86,7 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
       <LoadingModal visible={loadingModalVisible} />
       <SuccessRefinanceModal
         open={visibleSuccessRefinanceModal}
-        onCancel={() => setVisibleSuccessRefinanceModal(false)}
+        onCancel={() => closeRefinanceModal(auction?.nftMint)}
         nftImage={auction.nftImageUrl}
         floorPrice={floorPrice}
         lendPrice={currentLoanAmount}

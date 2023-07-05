@@ -47,7 +47,6 @@ export const useRefinanceAuctionCard = (
       });
 
       if (result) {
-        hideAuction(nftMint);
         setVisibleSuccessRefinanceModal(true);
       }
     } catch (error) {
@@ -57,10 +56,15 @@ export const useRefinanceAuctionCard = (
     }
   };
 
+  const closeRefinanceModal = (nftMint: string) => {
+    setVisibleSuccessRefinanceModal(false);
+    hideAuction(nftMint);
+  };
+
   return {
     onSubmit,
     loadingModalVisible,
     visibleSuccessRefinanceModal,
-    setVisibleSuccessRefinanceModal,
+    closeRefinanceModal,
   };
 };
