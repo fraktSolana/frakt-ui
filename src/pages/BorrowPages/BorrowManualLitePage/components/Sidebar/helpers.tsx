@@ -226,6 +226,7 @@ export const borrow: Borrow = async ({
   const bondOrders = orders.filter((order) => order.loanType === LoanType.BOND);
 
   return await borrowBonds({
+    isTest: true,
     notBondTxns: [...notBondTransactionsAndSigners.flat()],
     orders: bondOrders,
     isLedger,
