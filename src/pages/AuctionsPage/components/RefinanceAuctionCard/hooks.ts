@@ -26,8 +26,7 @@ export const useRefinanceAuctionCard = (
     openLoadingModal();
     try {
       const { nftMint } = auction;
-      const { fbondPubkey, oracleFloor, hadoMarket, repayAccounts } =
-        auction.bondParams;
+      const { fbondPubkey, hadoMarket, repayAccounts } = auction.bondParams;
 
       const convertedRepayAccounts = repayAccounts.map(
         ({ bondOffer, bondTradeTransaction, user }) => {
@@ -43,7 +42,6 @@ export const useRefinanceAuctionCard = (
         connection,
         wallet,
         fbondPubkey,
-        oracleFloor,
         hadoMarketPubkey: hadoMarket,
         repayAccounts: convertedRepayAccounts,
       });
