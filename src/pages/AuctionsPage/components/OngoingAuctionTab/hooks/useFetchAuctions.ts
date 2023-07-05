@@ -2,7 +2,36 @@ import { useQuery } from '@tanstack/react-query';
 import { create } from 'zustand';
 import produce from 'immer';
 
+import {
+  RefinanceAuctionItem,
+  fetchRefinanceAuctions,
+} from '@frakt/api/auctions';
 import { AuctionListItem, fetchAuctionsList } from '@frakt/api/raffle';
+
+export const useFetchRefinanceAuctions = () => {
+  const { hiddenAuctionsPubkeys, hideAuction } = useHiddenAuctionPubkeys();
+
+  const {
+    data,
+    isLoading,
+    isFetching,
+  }: {
+    data: RefinanceAuctionItem[];
+    isLoading: boolean;
+    isFetching: boolean;
+  } = useQuery(['fetchRefinanceAuctions'], () => fetchRefinanceAuctions(), {
+    staleTime: 5000,
+    refetchOnWindowFocus: false,
+  });
+
+  return {
+    data:
+      data?.filter(({ nftMint }) => !hiddenAuctionsPubkeys.includes(nftMint)) ||
+      [],
+    loading: isLoading || isFetching,
+    hideAuction,
+  };
+};
 
 export const useFetchAuctionsList = () => {
   const { hiddenAuctionsPubkeys, hideAuction } = useHiddenAuctionPubkeys();

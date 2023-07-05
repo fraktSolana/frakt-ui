@@ -18,6 +18,11 @@ export const IS_PRIVATE_MARKETS =
     ? process.env.IS_PRIVATE_MARKETS
     : false;
 
+export const IS_TEST_TRANSACTION =
+  process.env.IS_TEST_TRANSACTION !== undefined
+    ? process.env.IS_TEST_TRANSACTION
+    : false;
+
 export const ENDPOINTS = [
   process.env.RPC_LOCALHOST,
   process.env.RPC_HELIOS,

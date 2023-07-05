@@ -1,20 +1,15 @@
 import { FC, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
-import { AuctionListItem, RaffleListItem } from '@frakt/api/raffle';
+import { RaffleListItem } from '@frakt/api/raffle';
 import { useIntersection } from '@frakt/hooks/useIntersection';
 import { Loader } from '@frakt/components/Loader';
 import EmptyList from '@frakt/components/EmptyList';
 
+import { useFetchUserTickets, useFetchRafflesList } from '../../hooks';
 import LiquidationRaffleCard from '../LiquidationRaffleCard';
 import { useRaffleSort } from '../Liquidations/hooks';
 import RafflesList from '../RafflesList';
-import AuctionCard from '../AuctionCard';
-import {
-  useFetchUserTickets,
-  useFetchAuctionsList,
-  useFetchRafflesList,
-} from '../../hooks';
 
 import styles from './OngoingRaffleTab.module.scss';
 
@@ -45,45 +40,22 @@ const OngoingRaffleTab: FC = () => {
     }
   }, [inView, fetchNextPage, isFetchingNextPage, isListEnded]);
 
-  const {
-    data: auctionsList,
-    loading: isAuctionsListLoading,
-    hideAuction,
-  } = useFetchAuctionsList();
-
-  const createAuctionsList = () => {
-    return auctionsList.map((auction: AuctionListItem) => (
-      <AuctionCard
-        key={auction.nftMint}
-        auction={auction}
-        hideAuction={hideAuction}
-      />
-    ));
-  };
-
-  const createRafflesList = () => {
-    return raffleList.map((raffle: RaffleListItem) => (
-      <LiquidationRaffleCard
-        key={raffle.rafflePubKey}
-        raffle={raffle}
-        disabled={lotteryTickets?.currentTickets < 1}
-      />
-    ));
-  };
-
-  const isLoadingOrAuctionsListLoading = isLoading || isAuctionsListLoading;
-  const hasRaffles = !!auctionsList?.length || !!raffleList?.length;
-  const showList = hasRaffles && !isLoadingOrAuctionsListLoading;
-  const showEmptyList = !showList && !isLoadingOrAuctionsListLoading;
+  const showList = !!raffleList?.length && !isLoading;
+  const showEmptyList = !showList && !isLoading;
 
   return (
     <RafflesList withRafflesInfo>
-      {isLoadingOrAuctionsListLoading && <Loader />}
+      {isLoading && <Loader />}
 
       {showList && (
         <div className={styles.rafflesList}>
-          {createAuctionsList()}
-          {createRafflesList()}
+          {raffleList.map((raffle: RaffleListItem) => (
+            <LiquidationRaffleCard
+              key={raffle.rafflePubKey}
+              raffle={raffle}
+              disabled={lotteryTickets?.currentTickets < 1}
+            />
+          ))}
           {!!isFetchingNextPage && <Loader />}
           <div ref={ref} />
         </div>
