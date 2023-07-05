@@ -6,7 +6,7 @@ const sortOptions = [
   // { label: 'Buy price', value: 'buyPrice' },
 ];
 
-const defaultSortOption = { ...sortOptions[0], value: 'name_asc' };
+const defaultSortOption = { ...sortOptions[0], value: 'name_desc' };
 
 const filterOptions: FilterOption[] = [
   {
