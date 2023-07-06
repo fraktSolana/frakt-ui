@@ -32,6 +32,7 @@ const parseRefinanceAuctionsInfo = (auction: RefinanceAuctionItem) => {
     floorPrice,
     interest: newLoanAmount - totalRepayValue,
     currentInterest: ((currentInterest - 5e1) / 100).toFixed(2),
+
   };
 };
 
