@@ -12,8 +12,9 @@
 }
 
 .content {
-  padding: 24px;
   background-color: var(--primary-background);
+  border: 1px solid var(--primary-border);
+  padding: 24px;
 }
 
 .loader {
