@@ -1,12 +1,13 @@
 .header {
   padding: 24px;
   background-color: var(--primary-background);
+  border: 1px solid var(--primary-border);
 
   margin-bottom: 16px;
   display: flex;
   justify-content: space-between;
 
-  @media (max-width: 960px) {
+  @media (max-width: 650px) {
     flex-direction: column;
   }
 
@@ -16,25 +17,24 @@
     font-size: 20px;
     line-height: 24px;
   }
+
+  @media (max-width: 650px) {
+    gap: 16px;
+  }
 }
 
 .headingWrapper {
   display: flex;
   align-items: center;
   gap: 16px;
-
-  @media (max-width: 960px) {
-    margin-bottom: 18px;
-  }
 }
 
 .headerStatsWrapper {
   display: flex;
   column-gap: 16px;
 
-  @media (max-width: 960px) {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  @media (max-width: 650px) {
+    flex-direction: column;
   }
 }
 
