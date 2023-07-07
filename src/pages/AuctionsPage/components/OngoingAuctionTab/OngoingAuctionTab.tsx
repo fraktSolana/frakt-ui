@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 
 import EmptyList from '@frakt/components/EmptyList';
 import { Loader } from '@frakt/components/Loader';
+import { AuctionItem } from '@frakt/api/auctions';
 
 import { useOngoingAuctionTab, useSortAndFilterAuctions } from './hooks';
 import ClassicAuctionCard from '../ClassicAuctionCard/ClassicAuctionCard';
@@ -10,13 +11,23 @@ import RefinanceAuctionCard from '../RefinanceAuctionCard';
 import FilterSection from '../FilterSection';
 
 import styles from './OngoingAuctionTab.module.scss';
+import { useFakeInfinityScroll } from '@frakt/components/InfinityScroll';
 
 const OngoingAuctionTab = () => {
-  const { isLoading, showList, showEmptyList, hideAuction, allAuctions } =
+  const { isLoading, showList, showEmptyList, hideAuction, auctions } =
     useOngoingAuctionTab();
 
-  const { auctions, sortProps, filterProps, searchProps } =
-    useSortAndFilterAuctions(allAuctions);
+  const {
+    auctions: filteredAuctions,
+    sortProps,
+    filterProps,
+    searchProps,
+  } = useSortAndFilterAuctions(auctions);
+
+  const { data, fetchMoreTrigger } = useFakeInfinityScroll({
+    rawData: filteredAuctions,
+    enabled: !!filteredAuctions?.length,
+  });
 
   return (
     <>
@@ -28,11 +39,12 @@ const OngoingAuctionTab = () => {
       {isLoading && <Loader />}
       {showList && (
         <div className={styles.auctionsList}>
-          {auctions.map((auction) => (
+          {data.map((auction: AuctionItem) => (
             <Fragment key={auction.nftMint}>
               <AuctionCard auction={auction} hideAuction={hideAuction} />
             </Fragment>
           ))}
+          <div ref={fetchMoreTrigger} />
         </div>
       )}
       {showEmptyList && <EmptyList text="No ongoing auctions at the moment" />}

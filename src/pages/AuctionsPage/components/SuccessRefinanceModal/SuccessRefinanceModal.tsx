@@ -1,13 +1,17 @@
 import { FC } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import classNames from 'classnames';
 
-import { NavigationButton } from '@frakt/components/Button';
+import { Button } from '@frakt/components/Button';
 import { StatInfo } from '@frakt/components/StatInfo';
 import { Modal } from '@frakt/components/Modal';
 import { PATHS } from '@frakt/constants';
+import {
+  useSearchSelectedMarketsURLControl,
+  useVisibleMarketURLControl,
+} from '@frakt/hooks';
 
 import styles from './SuccessRefinanceModal.module.scss';
-import classNames from 'classnames';
 
 interface SuccessRefinanceModalProps {
   open: boolean;
@@ -16,6 +20,7 @@ interface SuccessRefinanceModalProps {
   floorPrice: string;
   lendPrice: string;
   interest: number;
+  collectionName: string;
 }
 
 const SuccessRefinanceModal: FC<SuccessRefinanceModalProps> = ({
@@ -25,7 +30,23 @@ const SuccessRefinanceModal: FC<SuccessRefinanceModalProps> = ({
   floorPrice,
   lendPrice,
   interest,
+  collectionName,
 }) => {
+  const history = useHistory();
+
+  const { setSelectedOptions } = useSearchSelectedMarketsURLControl();
+  const { toggleVisibleCard } = useVisibleMarketURLControl();
+
+  const goToLiteLending = () => {
+    setSelectedOptions([collectionName]);
+    toggleVisibleCard(collectionName);
+
+    history.push({
+      pathname: PATHS.BONDS_LITE,
+      search: `?opened=${collectionName}&collections=${collectionName}`,
+    });
+  };
+
   const statInfoClasses = {
     container: styles.statInfo,
     value: styles.statInfoValue,
@@ -55,13 +76,13 @@ const SuccessRefinanceModal: FC<SuccessRefinanceModalProps> = ({
             <div className={styles.stats}>
               <StatInfo
                 classNamesProps={statInfoClasses}
-                decimalPlaces={0}
+                decimalPlaces={2}
                 label="Floor"
                 value={floorPrice}
               />
               <StatInfo
                 classNamesProps={statInfoClasses}
-                decimalPlaces={0}
+                decimalPlaces={2}
                 label="Lend price"
                 value={lendPrice}
               />
@@ -75,19 +96,19 @@ const SuccessRefinanceModal: FC<SuccessRefinanceModalProps> = ({
           </div>
         </div>
         <p className={styles.subtitle}>
-          Now you can check it on{' '}
-          <NavLink to={PATHS.LOANS} className={styles.link}>
-            your loans
-          </NavLink>{' '}
-          that you fund
+          It will show up in{' '}
+          <a onClick={goToLiteLending} className={styles.link}>
+            my loans
+          </a>{' '}
+          in no time
         </p>
-        <NavigationButton
-          path={PATHS.LOANS}
+        <Button
+          onClick={goToLiteLending}
           type="secondary"
           className={styles.button}
         >
           Check it out
-        </NavigationButton>
+        </Button>
       </div>
     </Modal>
   );

@@ -44,7 +44,8 @@
   font-size: 14px;
 
   @media (max-width: 650px) {
-    width: 175px;
+    padding: 7px 10px;
+    width: 140px;
   }
 }
 
@@ -59,6 +60,14 @@
   display: flex;
   align-items: center;
   gap: 4px;
+
+  @media (max-width: 650px) {
+    gap: 2px;
+
+    svg {
+      display: none;
+    }
+  }
 }
 
 .button {

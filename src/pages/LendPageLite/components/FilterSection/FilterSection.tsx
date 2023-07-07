@@ -39,7 +39,10 @@ const FilterSection: FC<FilterSectionProps> = ({
       labelKey: 'collectionName',
       valueKey: 'marketPubkey',
       imageKey: 'collectionImage',
-      secondLabelKey: 'apy',
+      secondLabelKey: {
+        key: 'apy',
+        symbol: '%',
+      },
     },
     onFilterChange,
   };

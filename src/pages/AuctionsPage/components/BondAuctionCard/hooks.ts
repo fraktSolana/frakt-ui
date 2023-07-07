@@ -3,10 +3,10 @@ import { web3 } from 'fbonds-core';
 
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { liquidateBondOnAuction } from '@frakt/utils/raffles';
-import { AuctionListItem } from '@frakt/api/raffle';
+import { AuctionItem } from '@frakt/api/auctions';
 
 export const useBondAuctionCard = (
-  auction: AuctionListItem,
+  auction: AuctionItem,
   hideAuction: (value: string) => void,
 ) => {
   const wallet = useWallet();

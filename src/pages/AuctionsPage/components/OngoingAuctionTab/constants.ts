@@ -3,10 +3,11 @@ import { FilterOption, FilterValue } from './types';
 
 const sortOptions = [
   { label: 'Name', value: 'name' },
-  // { label: 'Buy price', value: 'buyPrice' },
+  { label: 'APY', value: 'apy' },
+  { label: 'Principle', value: 'principle' },
 ];
 
-const defaultSortOption = { ...sortOptions[0], value: 'name_desc' };
+const defaultSortOption = { ...sortOptions[1], value: 'apy_desc' };
 
 const filterOptions: FilterOption[] = [
   {

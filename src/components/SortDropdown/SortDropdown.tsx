@@ -19,6 +19,7 @@ export interface SortDropdownProps {
   onSortChange: (option: Option) => void;
   options: Option[];
   className?: string;
+  innerClassName?: string;
 }
 
 export const SortDropdown: FC<SortDropdownProps> = ({
@@ -26,6 +27,7 @@ export const SortDropdown: FC<SortDropdownProps> = ({
   onSortChange,
   options,
   className,
+  innerClassName,
 }) => {
   const [open, setOpen] = useState<boolean>(false);
 
@@ -48,7 +50,10 @@ export const SortDropdown: FC<SortDropdownProps> = ({
   };
 
   return (
-    <div ref={ref} className={styles.sortDropdownWrapper}>
+    <div
+      ref={ref}
+      className={classNames(styles.sortDropdownWrapper, className)}
+    >
       <Button
         className={styles.dropdownButton}
         onClick={() => setOpen((prevOpen) => !prevOpen)}
@@ -61,7 +66,7 @@ export const SortDropdown: FC<SortDropdownProps> = ({
         <ArrowDownBtn className={open ? styles.rotate : ''} />
       </Button>
       {open && (
-        <div className={classNames(styles.dropdown, className)}>
+        <div className={classNames(styles.dropdown, innerClassName)}>
           {options.map(({ label, value }) => (
             <div className={styles.buttons} key={label}>
               {renderSortOption({ label, value }, `${value}_asc`)}
@@ -76,5 +81,5 @@ export const SortDropdown: FC<SortDropdownProps> = ({
 
 const getSortOrderClassName = (sortOrder: string): string => {
   const isAsc = endsWith(sortOrder, 'asc');
-  return isAsc ? styles.rotate : '';
+  return !isAsc ? styles.rotate : '';
 };
