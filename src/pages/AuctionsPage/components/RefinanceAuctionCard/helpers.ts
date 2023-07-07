@@ -14,7 +14,7 @@ const parseRefinanceAuctionsInfo = (auction: AuctionItem) => {
   const floorPrice = (auction?.bondParams.floorPrice / 1e9)?.toFixed(3);
   const totalRepayValue = auction?.bondParams.repayValue / 1e9 / 0.995;
   const currentLoanAmount = totalRepayValue?.toFixed(3);
-  const graceStartTime = auction.bondParams.auctionRefinanceStartTime + 43200;
+  const graceStartTime = auction.bondParams.auctionRefinanceStartTime;
 
   const currentTime = moment().unix();
   const ticsPassed = Math.floor(
