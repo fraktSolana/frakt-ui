@@ -55,49 +55,6 @@ export interface WonRaffleListItem {
   isAuction?: boolean;
 }
 
-export interface AuctionListItem {
-  nftMint: string;
-  nftName: string;
-  nftImageUrl: string;
-  nftCollectionName: string;
-
-  classicParams?: {
-    auctionPubkey: string;
-
-    startPrice: number;
-    startedAt: number;
-    delta: number;
-    deltaType: DeltaType;
-
-    timeToNextRound: number;
-    floorPrice: number;
-    nextPrice: number;
-    buyPrice: number;
-
-    denominator: number;
-  };
-
-  bondParams?: {
-    repayAccounts: {
-      bondTradeTransaction: string;
-      bondOffer: string;
-      user: string;
-    }[];
-    fbondPubkey: string;
-    collateralBox: string;
-    collateralBoxType: string;
-    collateralTokenMint: string;
-    collateralTokenAccount: string;
-    collateralOwner: string;
-    fraktMarket: string;
-    oracleFloor: string;
-    whitelistEntry: string;
-
-    floorPrice: number;
-    startAuctionTime: number;
-  };
-}
-
 export interface CollectionsListItem {
   name: string;
 }

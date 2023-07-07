@@ -1,0 +1,18 @@
+.link {
+  border: 1px solid var(--primary-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  min-width: 32px;
+
+  &:hover {
+    border-color: var(--secondary-border);
+  }
+}
+
+.link img {
+  width: 16px;
+  height: 16px;
+}

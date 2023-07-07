@@ -6,25 +6,6 @@ interface RepayAccount {
   user: string;
 }
 
-export interface RefinanceAuctionItem {
-  nftMint: string;
-  nftName: string;
-  nftImageUrl: string;
-  nftCollectionName: string;
-
-  bondParams: {
-    repayAccounts: RepayAccount[];
-    fbondPubkey: string;
-    oracleFloor: string;
-    hadoMarket: string;
-
-    floorPrice: number;
-    auctionRefinanceStartTime: number;
-    loanValue: number;
-    repayValue: number;
-  };
-}
-
 export interface AuctionItem {
   nftMint: string;
   nftName: string;
@@ -48,19 +29,26 @@ export interface AuctionItem {
   };
 
   bondParams?: {
-    repayAccounts: RepayAccount[];
     fbondPubkey: string;
-    collateralBox: string;
-    collateralBoxType: string;
-    collateralTokenMint: string;
-    collateralTokenAccount: string;
-    collateralOwner: string;
-    fraktMarket: string;
-    oracleFloor: string;
-    whitelistEntry: string;
-
     floorPrice: number;
-    startAuctionTime: number;
+    oracleFloor: string;
+    repayAccounts: RepayAccount[];
+
+    //? bonds auction params
+    collateralBox?: string;
+    collateralBoxType?: string;
+    collateralTokenMint?: string;
+    collateralTokenAccount?: string;
+    collateralOwner?: string;
+    fraktMarket?: string;
+    whitelistEntry?: string;
+    startAuctionTime?: number;
+
+    //? refinace auction params
+    auctionRefinanceStartTime?: number;
+    loanValue?: number;
+    repayValue?: number;
+    hadoMarket?: string;
   };
 }
 

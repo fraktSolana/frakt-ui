@@ -2,36 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { create } from 'zustand';
 import produce from 'immer';
 
-import {
-  RefinanceAuctionItem,
-  fetchRefinanceAuctions,
-} from '@frakt/api/auctions';
-import { AuctionListItem, fetchAuctionsList } from '@frakt/api/raffle';
-
-export const useFetchRefinanceAuctions = () => {
-  const { hiddenAuctionsPubkeys, hideAuction } = useHiddenAuctionPubkeys();
-
-  const {
-    data,
-    isLoading,
-    isFetching,
-  }: {
-    data: RefinanceAuctionItem[];
-    isLoading: boolean;
-    isFetching: boolean;
-  } = useQuery(['fetchRefinanceAuctions'], () => fetchRefinanceAuctions(), {
-    staleTime: 5000,
-    refetchOnWindowFocus: false,
-  });
-
-  return {
-    data:
-      data?.filter(({ nftMint }) => !hiddenAuctionsPubkeys.includes(nftMint)) ||
-      [],
-    loading: isLoading || isFetching,
-    hideAuction,
-  };
-};
+import { AuctionItem, fetchAllAuctions } from '@frakt/api/auctions';
+import { parseRefinanceAuctionsInfo } from '../../RefinanceAuctionCard';
 
 export const useFetchAuctionsList = () => {
   const { hiddenAuctionsPubkeys, hideAuction } = useHiddenAuctionPubkeys();
@@ -41,18 +13,30 @@ export const useFetchAuctionsList = () => {
     isLoading,
     isFetching,
   }: {
-    data: AuctionListItem[];
+    data: AuctionItem[];
     isLoading: boolean;
     isFetching: boolean;
-  } = useQuery(['fetchAuctionsList'], () => fetchAuctionsList(), {
+  } = useQuery(['fetchAuctionsList'], () => fetchAllAuctions(), {
     staleTime: 5000,
     refetchOnWindowFocus: false,
   });
 
+  const filteredAuctions =
+    data?.filter(({ nftMint }) => !hiddenAuctionsPubkeys.includes(nftMint)) ||
+    [];
+
+  const auctions = filteredAuctions.filter((auction: AuctionItem) => {
+    if (auction?.bondParams?.auctionRefinanceStartTime) {
+      const { floorPrice, currentLoanAmount } =
+        parseRefinanceAuctionsInfo(auction);
+
+      return parseFloat(currentLoanAmount) < parseFloat(floorPrice);
+    }
+    return auction;
+  });
+
   return {
-    data:
-      data?.filter(({ nftMint }) => !hiddenAuctionsPubkeys.includes(nftMint)) ||
-      [],
+    data: auctions,
     loading: isLoading || isFetching,
     hideAuction,
   };

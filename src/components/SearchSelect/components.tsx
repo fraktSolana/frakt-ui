@@ -21,14 +21,23 @@ export const PrefixInput = ({ onClick, collapsible = false }) => (
 export const SelectLabels = ({ labels = [] }) => (
   <div className={styles.labels}>
     {labels.map((label) => (
-      <span>{label}</span>
+      <span key={label}>{label}</span>
     ))}
   </div>
 );
 
-export const CollapsedContent = ({ onClick }: { onClick: () => void }) => (
+export const CollapsedContent = ({
+  onClick,
+  selectedOptions,
+}: {
+  onClick: () => void;
+  selectedOptions: string[];
+}) => (
   <div className={styles.collapsedContent}>
     <Button type="tertiary" onClick={onClick}>
+      {!!selectedOptions?.length && (
+        <div className={styles.tip}>{selectedOptions?.length}</div>
+      )}
       <SearchOutlined />
     </Button>
   </div>

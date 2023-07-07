@@ -1,13 +1,11 @@
 import axios from 'axios';
-import { RefinanceAuctionItem } from './types';
+import { AuctionItem } from './types';
 import { IS_PRIVATE_MARKETS } from '@frakt/config';
 import moment from 'moment';
 
-export const fetchRefinanceAuctions = async (): Promise<
-  RefinanceAuctionItem[]
-> => {
-  const { data } = await axios.get<RefinanceAuctionItem[]>(
-    `https://${process.env.BACKEND_DOMAIN}/bonds/refinance?isPrivate=${IS_PRIVATE_MARKETS}`,
+export const fetchAllAuctions = async (): Promise<AuctionItem[]> => {
+  const { data } = await axios.get<AuctionItem[]>(
+    `https://${process.env.BACKEND_DOMAIN}/liquidation/auctions?isPrivate=${IS_PRIVATE_MARKETS}`,
   );
 
   const timeNowUnix = moment().unix();

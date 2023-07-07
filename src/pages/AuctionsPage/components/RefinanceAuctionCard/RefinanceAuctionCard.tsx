@@ -4,7 +4,7 @@ import moment from 'moment';
 import { StatInfo, VALUES_TYPES } from '@frakt/components/StatInfo';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import { createTimerJSX } from '@frakt/components/Timer';
-import { RefinanceAuctionItem } from '@frakt/api/auctions';
+import { AuctionItem } from '@frakt/api/auctions';
 import { Loop, Timer } from '@frakt/icons';
 
 import SuccessRefinanceModal from '../SuccessRefinanceModal';
@@ -20,7 +20,7 @@ import {
 import styles from './RefinanceAuctionCard.module.scss';
 
 interface RefinanceAuctionCardProps {
-  auction: RefinanceAuctionItem;
+  auction: AuctionItem;
   hideAuction?: (value: string) => void;
 }
 
@@ -28,7 +28,7 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
   auction,
   hideAuction,
 }) => {
-  const { floorPrice, newLoanAmount, currentInterest, interest } =
+  const { ticsPassed, floorPrice, newLoanAmount, interest, apy } =
     parseRefinanceAuctionsInfo(auction);
 
   const {
@@ -52,16 +52,14 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
           value={floorPrice}
           classNamesProps={{ container: styles.opacity }}
         />
+
+        <StatInfo flexType="row" label="Principle" value={newLoanAmount} />
         <StatInfo
           flexType="row"
-          label="Next round start"
-          value={`Every ${REFINANCE_INTEREST_REFRESH_RATE} sec`}
+          label="Interest"
+          decimalPlaces={2}
+          value={`${interest?.toFixed(2)}◎  (${apy}% APY)`}
           valueType={VALUES_TYPES.string}
-        />
-        <StatInfo
-          flexType="row"
-          label="New loan amount"
-          value={newLoanAmount}
         />
         <StatInfo
           flexType="row"
@@ -71,13 +69,15 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
         />
         <StatInfo
           flexType="row"
-          label="New interest"
-          value={`${currentInterest} %`}
+          label="Next interest increase"
+          value={`${moment
+            .duration(REFINANCE_INTEREST_REFRESH_RATE - ticsPassed, 'seconds')
+            .humanize(true)}`}
           valueType={VALUES_TYPES.string}
         />
         <StatInfo
           flexType="row"
-          label="Will end in"
+          label="Ends in"
           value={createAuctionTimerJSX(
             auction?.bondParams?.auctionRefinanceStartTime,
           )}
@@ -92,6 +92,7 @@ const RefinanceAuctionCard: FC<RefinanceAuctionCardProps> = ({
         floorPrice={floorPrice}
         lendPrice={newLoanAmount?.toFixed(2)}
         interest={interest}
+        collectionName={auction?.nftCollectionName}
       />
     </AuctionCardBackdrop>
   );

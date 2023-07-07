@@ -47,7 +47,8 @@
   width: 180px;
 
   @media (max-width: 650px) {
-    width: 160px;
+    padding: 7px 10px;
+    width: 150px;
   }
 }
 .dropdownButton span {

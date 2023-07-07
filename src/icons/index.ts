@@ -77,3 +77,4 @@ export { UploadImg } from './UploadImg';
 //? Raster icons
 export { default as LightBg } from './lightBg.png';
 export { default as TabletBg } from './tabletBg.png';
+export { default as SolanaFM } from './SolanaFM.png';
