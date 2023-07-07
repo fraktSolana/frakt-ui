@@ -14,8 +14,8 @@ export interface FilterOption {
 
 export enum SortField {
   NAME = 'name',
-  ACTIVE_LOANS = 'activeLoans',
-  APR = 'apr',
+  APY = 'apy',
+  PRINCIPLE = 'principle',
 }
 
 export enum SORT_ORDER {

@@ -1,4 +1,6 @@
-import Toggle from '@frakt/components/Toggle';
+import { useState } from 'react';
+import classNames from 'classnames';
+
 import {
   SortDropdown,
   SortDropdownProps,
@@ -8,7 +10,7 @@ import {
   FilterDropdownProps,
 } from '@frakt/components/FilterDropdown';
 import {
-  // SearchSelect,
+  SearchSelect,
   SearchSelectProps,
 } from '@frakt/components/SearchSelect';
 
@@ -18,25 +20,35 @@ interface FilterSectionProps<T> {
   sortProps: SortDropdownProps;
   filterProps: FilterDropdownProps;
   searchProps: SearchSelectProps<T>;
-  toggleProps?: { onChange: () => void; value: boolean };
 }
 
 const FilterSection = <T,>({
   sortProps,
   filterProps,
-  // searchProps,
-  toggleProps,
-}: FilterSectionProps<T>) => (
-  <div className={styles.container}>
-    <div className={styles.searchAndFilterWrapper}>
-      {/* <SearchSelect {...searchProps} collapsible /> */}
-      <FilterDropdown {...filterProps} />
+  searchProps,
+}: FilterSectionProps<T>) => {
+  const [collapsed, setCollapsed] = useState<boolean>(true);
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.searchAndFilterWrapper}>
+        <SearchSelect
+          {...searchProps}
+          onChangeCollapsed={setCollapsed}
+          className={styles.searchSelect}
+          collapsed={collapsed}
+          collapsible
+        />
+        {collapsed && <FilterDropdown {...filterProps} />}
+      </div>
+      <SortDropdown
+        className={classNames(styles.sortDropdown, {
+          [styles.hidden]: !collapsed,
+        })}
+        {...sortProps}
+      />
     </div>
-    <div className={styles.sortAndToggleWrapper}>
-      {toggleProps && <Toggle label="Mine" />}
-      <SortDropdown {...sortProps} />
-    </div>
-  </div>
-);
+  );
+};
 
 export default FilterSection;

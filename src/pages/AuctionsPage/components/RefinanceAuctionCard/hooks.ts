@@ -4,10 +4,10 @@ import { web3 } from 'fbonds-core';
 
 import { refinanceBondByLender } from '@frakt/utils/raffles/refinanceBondByLender';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
-import { RefinanceAuctionItem } from '@frakt/api/auctions';
+import { AuctionItem } from '@frakt/api/auctions';
 
 export const useRefinanceAuctionCard = (
-  auction: RefinanceAuctionItem,
+  auction: AuctionItem,
   hideAuction: (value: string) => void,
 ) => {
   const wallet = useWallet();
@@ -25,7 +25,6 @@ export const useRefinanceAuctionCard = (
   const onSubmit = async (): Promise<void> => {
     openLoadingModal();
     try {
-      const { nftMint } = auction;
       const { fbondPubkey, hadoMarket, repayAccounts } = auction.bondParams;
 
       const convertedRepayAccounts = repayAccounts.map(

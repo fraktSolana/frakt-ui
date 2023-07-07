@@ -1,11 +1,11 @@
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 
 import { useLoadingModal } from '@frakt/components/LoadingModal';
-import { AuctionListItem } from '@frakt/api/raffle';
+import { AuctionItem } from '@frakt/api/auctions';
 import { buyAuction } from '@frakt/utils/raffles';
 
 export const useClassicAuctionCard = (
-  auction: AuctionListItem,
+  auction: AuctionItem,
   hideAuction: (value: string) => void,
 ) => {
   const wallet = useWallet();

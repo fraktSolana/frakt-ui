@@ -11,10 +11,33 @@
   align-items: center;
   gap: 16px;
   width: 100%;
+
+  @media (max-width: 650px) {
+    gap: 8px;
+  }
 }
 
-.sortAndToggleWrapper {
+.sortDropdown {
   display: flex;
-  align-items: center;
-  gap: 16px;
+}
+.sortDropdown.hidden {
+  @media (max-width: 960px) {
+    display: none;
+  }
+}
+
+.searchSelect {
+  width: 100%;
+
+  @media (max-width: 1240px) {
+    max-width: 600px;
+  }
+
+  @media (max-width: 1080px) {
+    max-width: 450px;
+  }
+
+  @media (max-width: 960px) {
+    max-width: unset;
+  }
 }

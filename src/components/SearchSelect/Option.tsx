@@ -8,7 +8,10 @@ import styles from './SearchSelect.module.scss';
 export interface OptionKeys {
   labelKey: string;
   valueKey: string;
-  secondLabelKey?: string;
+  secondLabelKey?: {
+    key: string;
+    symbol?: string;
+  };
   imageKey?: string;
 }
 
@@ -25,12 +28,7 @@ export const renderOption: FC<OptionProps> = ({
 }) => {
   const { labelKey, secondLabelKey, valueKey, imageKey } = optionKeys || {};
 
-  const {
-    [valueKey]: value,
-    [labelKey]: label,
-    [imageKey]: image,
-    [secondLabelKey]: secondLabel,
-  } = option;
+  const { [valueKey]: value, [labelKey]: label, [imageKey]: image } = option;
 
   const isOptionSelected = includes(selectedOptions, label);
 
@@ -47,8 +45,10 @@ export const renderOption: FC<OptionProps> = ({
           </div>
           <p className={styles.label}>{label}</p>
         </div>
-        {secondLabel ? (
-          <p className={styles.secondValue}>{secondLabel?.toFixed(0)} %</p>
+        {option[secondLabelKey.key] ? (
+          <p className={styles.secondValue}>
+            {option[secondLabelKey.key]?.toFixed(0)} {secondLabelKey.symbol}
+          </p>
         ) : (
           <p>--</p>
         )}

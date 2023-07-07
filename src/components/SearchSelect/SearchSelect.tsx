@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react';
-import { MinusOutlined, SearchOutlined } from '@ant-design/icons';
+import { useRef } from 'react';
+import { MinusOutlined } from '@ant-design/icons';
 import { SelectProps } from 'antd/lib/select';
+import classNames from 'classnames';
 import { Select } from 'antd';
 
 import { useOnClickOutside } from '@frakt/hooks';
@@ -21,6 +22,8 @@ export interface SearchSelectProps<T> extends SelectProps<T, unknown> {
   selectedOptions: string[];
   labels?: string[];
   collapsible?: boolean;
+  collapsed?: boolean;
+  onChangeCollapsed?: (value: boolean) => void;
 }
 
 export const SearchSelect = <T extends {}>({
@@ -32,20 +35,30 @@ export const SearchSelect = <T extends {}>({
   selectedOptions,
   labels,
   collapsible = false,
+  collapsed,
+  onChangeCollapsed,
+  className,
   ...props
 }: SearchSelectProps<T>) => {
-  const [collapsed, setCollapsed] = useState<boolean>(true);
-
   const ref = useRef();
-  useOnClickOutside(ref, () => setCollapsed(true));
+
+  useOnClickOutside(
+    ref,
+    onChangeCollapsed ? () => onChangeCollapsed(true) : () => {},
+  );
 
   if (collapsed && collapsible)
-    return <CollapsedContent onClick={() => setCollapsed(!collapsed)} />;
+    return (
+      <CollapsedContent
+        selectedOptions={selectedOptions}
+        onClick={() => onChangeCollapsed(!collapsed)}
+      />
+    );
 
   return (
-    <div className={styles.selectWrapper} ref={ref}>
+    <div className={classNames(styles.selectWrapper, className)} ref={ref}>
       <PrefixInput
-        onClick={() => setCollapsed(!collapsed)}
+        onClick={() => onChangeCollapsed(!collapsed)}
         collapsible={collapsible}
       />
       <Select
@@ -55,6 +68,7 @@ export const SearchSelect = <T extends {}>({
         allowClear
         showSearch
         filterOption={filterOption}
+        defaultOpen={!collapsed && collapsible}
         placeholder={placeholder}
         notFoundContent={null}
         className={styles.root}

@@ -1,9 +1,9 @@
 import { calculateAuctionPrice } from '@frakters/raffle-sdk/lib/raffle-core/helpers';
 import moment from 'moment';
 
-import { AuctionListItem } from '@frakt/api/raffle';
+import { AuctionItem } from '@frakt/api/auctions';
 
-const calcPriceAndTimeForClassicAuctions = (auction: AuctionListItem) => {
+const calcPriceAndTimeForClassicAuctions = (auction: AuctionItem) => {
   const { denominator, startedAt, startPrice, delta, deltaType } =
     auction?.classicParams || {};
 
@@ -39,7 +39,7 @@ const calcPriceAndTimeForClassicAuctions = (auction: AuctionListItem) => {
   };
 };
 
-const parseAuctionsInfo = (auction: AuctionListItem) => {
+const parseAuctionsInfo = (auction: AuctionItem) => {
   const { classicParams } = auction;
 
   const { nextPrice, timeToNextRound, buyPrice } =
