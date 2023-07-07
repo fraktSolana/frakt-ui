@@ -11,11 +11,11 @@ const parseRefinanceAuctionsInfo = (auction: RefinanceAuctionItem) => {
   const floorPrice = (auction?.bondParams.floorPrice / 1e9)?.toFixed(3);
   const totalRepayValue = auction?.bondParams.repayValue / 1e9 / 0.995;
   const currentLoanAmount = totalRepayValue?.toFixed(3);
+  const graceStartTime = auction.bondParams.auctionRefinanceStartTime + 43200;
 
   const currentTime = moment().unix();
   const ticsPassed = Math.floor(
-    (currentTime - auction.bondParams.auctionRefinanceStartTime) /
-      REFINANCE_INTEREST_REFRESH_RATE,
+    (currentTime - graceStartTime) / REFINANCE_INTEREST_REFRESH_RATE,
   );
   const auctionInterest =
     REFINANCE_INTEREST_TIC * ticsPassed + REFINANCE_START_INTEREST;
@@ -32,7 +32,6 @@ const parseRefinanceAuctionsInfo = (auction: RefinanceAuctionItem) => {
     floorPrice,
     interest: newLoanAmount - totalRepayValue,
     currentInterest: ((currentInterest - 5e1) / 100).toFixed(2),
-
   };
 };
 
