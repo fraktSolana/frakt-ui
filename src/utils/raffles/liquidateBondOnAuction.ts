@@ -59,7 +59,7 @@ export const liquidateBondOnAuction: LiquidateBondOnAuction = async ({
       whitelistEntry: new web3.PublicKey(whitelistEntry),
       admin: new web3.PublicKey(process.env.BONDS_ADMIN_PUBKEY),
       repayAccounts: repayAccounts,
-      banxStake: EMPTY_PUBKEY,
+      banxStake: new web3.PublicKey(whitelistEntry),
       subscriptionsAndAdventures: [],
     },
     sendTxn: sendTxnPlaceHolder,
