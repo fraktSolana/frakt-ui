@@ -105,7 +105,7 @@ const createAuctionTimerJSX = (timeToNextRound: number): JSX.Element => (
     <Timer />
     <div className={styles.countdown}>
       {createTimerJSX({
-        expiredAt: moment.unix(timeToNextRound + 24 * 60 * 60),
+        expiredAt: moment.unix(timeToNextRound + 12 * 60 * 60),
       })}
     </div>
   </div>
