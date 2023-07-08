@@ -12,6 +12,7 @@ import {
 import { InstructionsAndSigners } from 'fbonds-core/lib/fbond-protocol/types';
 import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from 'fbonds-core/lib/fbond-protocol/utils';
 import { RepayAccounts } from 'fbonds-core/lib/fbond-protocol/functions/bond/repayment';
+import { EMPTY_PUBKEY } from 'fbonds-core/lib/fbond-protocol/constants';
 
 type LiquidateBondOnAuction = (props: {
   connection: web3.Connection;
@@ -44,7 +45,7 @@ export const liquidateBondOnAuction: LiquidateBondOnAuction = async ({
   const { instructions, signers } = await txn({
     programId: new web3.PublicKey(process.env.BONDS_PROGRAM_PUBKEY),
     connection,
-    args: { repayAccounts },
+    // args: { repayAccounts },
     addComputeUnits: true,
     accounts: {
       userPubkey: wallet.publicKey,
@@ -57,6 +58,9 @@ export const liquidateBondOnAuction: LiquidateBondOnAuction = async ({
       oracleFloor: new web3.PublicKey(oracleFloor),
       whitelistEntry: new web3.PublicKey(whitelistEntry),
       admin: new web3.PublicKey(process.env.BONDS_ADMIN_PUBKEY),
+      repayAccounts: repayAccounts,
+      banxStake: EMPTY_PUBKEY,
+      subscriptionsAndAdventures: [],
     },
     sendTxn: sendTxnPlaceHolder,
   });

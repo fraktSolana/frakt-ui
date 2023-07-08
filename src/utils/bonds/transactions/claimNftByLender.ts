@@ -10,6 +10,7 @@ import { notify, sendTxnPlaceHolder } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { captureSentryError } from '@frakt/utils/sentry';
 import { Bond } from '@frakt/api/bonds';
+import { EMPTY_PUBKEY } from 'fbonds-core/lib/fbond-protocol/constants';
 
 type ClaimNftByLender = (props: {
   connection: web3.Connection;
@@ -45,6 +46,8 @@ export const claimNftByLender: ClaimNftByLender = async ({
         bondTradeTransactionV2: new web3.PublicKey(
           autocompoundDeposits[0].publicKey,
         ),
+        banxStake: EMPTY_PUBKEY,
+        subscriptionsAndAdventures: [],
       },
       sendTxn: sendTxnPlaceHolder,
     });
