@@ -12,7 +12,8 @@ export const TitleCell: FC<{ bond: Bond }> = ({ bond }) => {
   const { collateralBox } = bond;
 
   const isReceiveLiquidatedNfts =
-    wallet?.publicKey?.toBase58() === bond?.fbond?.bondCollateralOrSolReceiver;
+    bond.autocompoundDeposits.length === 1 &&
+    bond.autocompoundDeposits[0].user === wallet?.publicKey?.toBase58();
 
   return (
     <div className={styles.fixedLeftRow}>
