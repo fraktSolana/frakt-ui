@@ -46,8 +46,13 @@ export const claimNftByLender: ClaimNftByLender = async ({
         bondTradeTransactionV2: new web3.PublicKey(
           autocompoundDeposits[0].publicKey,
         ),
-        banxStake: EMPTY_PUBKEY,
-        subscriptionsAndAdventures: [],
+        banxStake: new web3.PublicKey(bond.fbond.banxStake),
+        subscriptionsAndAdventures: bond.adventureSubscriptions.map(
+          (subscription) => ({
+            adventureSubscription: new web3.PublicKey(subscription.publicKey),
+            adventure: new web3.PublicKey(subscription.adventure),
+          }),
+        ),
       },
       sendTxn: sendTxnPlaceHolder,
     });
