@@ -11,6 +11,7 @@ import { NotifyType } from '@frakt/utils/solanaUtils';
 import { captureSentryError } from '@frakt/utils/sentry';
 import { Bond } from '@frakt/api/bonds';
 import { EMPTY_PUBKEY } from 'fbonds-core/lib/fbond-protocol/constants';
+import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from 'fbonds-core/lib/fbond-protocol/utils';
 
 type ClaimNftByLender = (props: {
   connection: web3.Connection;
@@ -25,65 +26,74 @@ export const claimNftByLender: ClaimNftByLender = async ({
   bond,
   onAfterSend,
 }): Promise<boolean> => {
-  try {
-    const { fbond, collateralBox, autocompoundDeposits } = bond;
+  const { fbond, collateralBox, autocompoundDeposits } = bond;
 
-    const { instructions, signers } = await txn({
-      programId: new web3.PublicKey(process.env.BONDS_PROGRAM_PUBKEY),
-      connection,
-      addComputeUnits: true,
-      accounts: {
-        userPubkey: wallet.publicKey,
-        fbond: new web3.PublicKey(fbond.publicKey),
-        collateralBox: new web3.PublicKey(collateralBox.publicKey),
-        collateralTokenMint: new web3.PublicKey(
-          collateralBox.collateralTokenMint,
-        ),
-        collateralTokenAccount: new web3.PublicKey(
-          collateralBox.collateralTokenAccount,
-        ),
-        collateralOwner: new web3.PublicKey(fbond.fbondIssuer),
-        bondTradeTransactionV2: new web3.PublicKey(
-          autocompoundDeposits[0].publicKey,
-        ),
-        banxStake: EMPTY_PUBKEY,
-        subscriptionsAndAdventures: [],
+  const { instructions, signers } = await txn({
+    programId: new web3.PublicKey(process.env.BONDS_PROGRAM_PUBKEY),
+    connection,
+    addComputeUnits: true,
+    accounts: {
+      userPubkey: wallet.publicKey,
+      fbond: new web3.PublicKey(fbond.publicKey),
+      collateralBox: new web3.PublicKey(collateralBox.publicKey),
+      collateralTokenMint: new web3.PublicKey(
+        collateralBox.collateralTokenMint,
+      ),
+      collateralTokenAccount: new web3.PublicKey(
+        collateralBox.collateralTokenAccount,
+      ),
+      collateralOwner: new web3.PublicKey(fbond.fbondIssuer),
+      bondTradeTransactionV2: new web3.PublicKey(
+        autocompoundDeposits[0].publicKey,
+      ),
+      banxStake: new web3.PublicKey(bond.fbond.banxStake),
+      subscriptionsAndAdventures: bond.adventureSubscriptions.map(
+        (subscription) => ({
+          adventureSubscription: new web3.PublicKey(subscription.publicKey),
+          adventure: new web3.PublicKey(subscription.adventure),
+        }),
+      ),
+    },
+    sendTxn: sendTxnPlaceHolder,
+  });
+  return await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+    skipTimeout: true,
+    notBondTxns: [],
+    createLookupTableTxns: [],
+    extendLookupTableTxns: [],
+    v0InstructionsAndSigners: [],
+    fastTrackInstructionsAndSigners: [
+      {
+        instructions,
+        signers,
+        lookupTablePublicKeys: [],
       },
-      sendTxn: sendTxnPlaceHolder,
-    });
-
-    const transaction = new web3.Transaction().add(...instructions);
-
-    await signAndConfirmTransaction({
-      transaction,
-      onAfterSend,
-      signers,
-      connection,
-      wallet,
-    });
-
-    notify({
-      message: 'Claim Nft successfully!',
-      type: NotifyType.SUCCESS,
-    });
-
-    return true;
-  } catch (error) {
-    const isNotConfirmed = showSolscanLinkNotification(error);
-
-    if (!isNotConfirmed) {
+    ],
+    connection,
+    wallet,
+    commitment: 'confirmed',
+    onAfterSend,
+    onSuccess: () => {
       notify({
-        message: 'The transaction just failed :( Give it another try',
-        type: NotifyType.ERROR,
+        message: 'Claim Nft successfully!',
+        type: NotifyType.SUCCESS,
       });
-    }
+    },
+    onError: (error) => {
+      const isNotConfirmed = showSolscanLinkNotification(error);
 
-    captureSentryError({
-      error,
-      wallet,
-      transactionName: 'claimNftByLender',
-    });
+      if (!isNotConfirmed) {
+        notify({
+          message: 'The transaction just failed :( Give it another try',
+          type: NotifyType.ERROR,
+        });
+      }
 
-    return false;
-  }
+      captureSentryError({
+        error,
+        wallet,
+        transactionName: 'claimNftByLender',
+      });
+    },
+  });
 };

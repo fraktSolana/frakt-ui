@@ -8,6 +8,8 @@ import {
   FraktBondState,
   BondOfferV2,
   BondTradeTransactionV2,
+  AdventureSubscription,
+  FraktBond,
 } from 'fbonds-core/lib/fbond-protocol/types';
 
 interface FMarket {
@@ -102,24 +104,24 @@ export interface UserMarketPreview {
 
 export type Pair = BondOfferV2;
 
-interface FBond {
-  publicKey: string;
-  activatedAt: number;
-  liquidatingAt: number;
-  actualReturnedAmount: number; //? in lamports
-  amountToReturn: number;
-  bondProgramAuthoritySeed: number;
-  borrowedAmount: number;
-  fbondIssuer: string;
-  fbondTokenMint: string;
-  fbondTokenSupply: number;
-  fraktBondState: FraktBondState;
+interface FBond extends FraktBond {
+  // publicKey: string;
+  // activatedAt: number;
+  // liquidatingAt: number;
+  // actualReturnedAmount: number; //? in lamports
+  // amountToReturn: number;
+  // bondProgramAuthoritySeed: number;
+  // borrowedAmount: number;
+  // fbondIssuer: string;
+  // fbondTokenMint: string;
+  // fbondTokenSupply: number;
+  // fraktBondState: FraktBondState;
   isRemoved: boolean;
-  redeemedAt: number;
-  returnFundsOwnerSeed: number;
-  returnTokenAccount: string;
-  returnTokenMint: string;
-  bondCollateralOrSolReceiver: string;
+  // redeemedAt: number;
+  // returnFundsOwnerSeed: number;
+  // returnTokenAccount: string;
+  // returnTokenMint: string;
+  // bondCollateralOrSolReceiver: string;
   fbondTokenName: string;
   marketPubkey: string;
   ltvPercent: string;
@@ -191,6 +193,7 @@ export enum EBondHistoryEventType {
 export interface Bond {
   fbond: FBond;
   collateralBox: CollateralBox;
+  adventureSubscriptions: AdventureSubscription[];
   autocompoundDeposits?: BondTradeTransactionV2[];
   ownerPubkey?: string;
   marketPubkey: string;
