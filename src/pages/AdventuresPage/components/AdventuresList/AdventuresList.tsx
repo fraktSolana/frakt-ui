@@ -67,7 +67,8 @@ const AdventuresCard: FC<AdventuresCardProps> = (props) => {
         {!isEnded ? (
           <AdventuresTimer {...props} />
         ) : (
-          <AdventuresStats {...props} />
+          <></>
+          // <AdventuresStats {...props} />
         )}
 
         <div className={styles.stats}>
@@ -84,7 +85,7 @@ const AdventuresCard: FC<AdventuresCardProps> = (props) => {
 
         {props.walletConnected && (
           <div className={styles.statusAndBtnWrapper}>
-            <AdventureStatusLine {...props} />
+            {!isEnded && <AdventureStatusLine {...props} />}
             <AdventureSubscribeButton {...props} />
           </div>
         )}
