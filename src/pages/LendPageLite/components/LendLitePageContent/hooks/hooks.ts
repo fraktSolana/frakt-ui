@@ -12,7 +12,6 @@ import { getFilteredMarkets, getMarketsToDisplay } from '../helpers';
 import { SortValue } from '../../FilterSection/DropdownSort';
 
 export const useFilteredMarkets = () => {
-  const { marketPubkey } = useParams<{ marketPubkey?: string }>();
   const { publicKey } = useWallet();
 
   const { sortValue, handleSortChange } = useSortState();
@@ -31,8 +30,6 @@ export const useFilteredMarkets = () => {
     setSelectedOptions(filteredOptions);
   };
 
-  const isMarketPubkeyPresent = Boolean(marketPubkey);
-
   const showEmptyList = !isLoading && checked && !marketsToDisplay?.length;
 
   return {
@@ -41,7 +38,6 @@ export const useFilteredMarkets = () => {
     checked,
     onToggleChange,
     marketsToDisplay: sortedMarkets,
-    isMarketPubkeyPresent,
     handleSortChange,
     showEmptyList,
     handleFilterChange,
