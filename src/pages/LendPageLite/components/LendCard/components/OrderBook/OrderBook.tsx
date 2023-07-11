@@ -2,12 +2,12 @@ import { FC, useMemo, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
 import classNames from 'classnames';
-import { chain } from 'lodash';
 
 import NoActiveOffers from '@frakt/pages/MarketsPage/components/OrderBook/components/NoActiveOffers';
 import { useMarketOrders } from '@frakt/pages/MarketsPage/components/OrderBook/hooks';
 import Offer from '@frakt/pages/MarketsPage/components/OrderBook/components/Offer';
 import { useMarket } from '@frakt/utils/bonds';
+import { groupWith } from '@frakt/utils';
 import { Chevron } from '@frakt/icons';
 import {
   MarketOrder,
@@ -67,17 +67,19 @@ const OrderBook: FC<OrderBookProps> = ({
 
   const offersExist = Boolean(offersRaw.length);
 
-  const offers = chain(offersRaw)
-    .groupBy((offer) => `${offer.interest}-${offer.ltv}`)
-    .values()
-    // .filter((group) => group.some((offer) => !isOwnOrder(offer)))
-    .value()
-    .map((squashedOffers) =>
-      squashedOffers.reduce((accOffer, offer) => ({
-        ...accOffer,
-        size: accOffer.size + offer.size,
-      })),
-    );
+  const offers = groupWith(
+    offersRaw,
+    (offerA, offerB) =>
+      offerA.interest === offerB.interest &&
+      offerA.ltv === offerB.ltv &&
+      !isOwnOrder(offerA) &&
+      !isOwnOrder(offerB),
+  ).map((squashedOffers) =>
+    squashedOffers.reduce((accOffer, offer) => ({
+      ...accOffer,
+      size: accOffer.size + offer.size,
+    })),
+  );
 
   const filteredPositiveOffers = offers.filter(
     (offer) => offer?.size > MIN_SIZE_FOR_VIEW || isOwnOrder(offer),
