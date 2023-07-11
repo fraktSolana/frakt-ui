@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { Control, useForm, UseFormSetValue } from 'react-hook-form';
-import { equals } from 'ramda';
+import { isEqual } from 'lodash';
 
 import { useRaffleSort } from './useRaffleSort';
 import { Tab } from '@frakt/components/Tabs';
@@ -97,7 +97,7 @@ export const useLiquidationsPage: UseLiquidationsPage = (
   }, [sort.value]);
 
   useEffect(() => {
-    if (equals(prevCollections, collections)) {
+    if (isEqual(prevCollections, collections)) {
       return;
     }
     fetchItems();

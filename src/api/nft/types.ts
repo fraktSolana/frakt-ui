@@ -1,7 +1,8 @@
 import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
+import { Dictionary } from 'lodash';
+
 import { Market, Pair, WhitelistType } from '../bonds';
 import { LoanType } from '../loans';
-import { Dictionary } from 'ramda';
 
 export interface BorrowNft {
   mint: string;

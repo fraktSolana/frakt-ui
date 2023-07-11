@@ -1,4 +1,4 @@
-import { maxBy } from 'lodash';
+import { groupBy } from 'lodash';
 import {
   BondFeatures,
   FraktBondState,
@@ -6,7 +6,6 @@ import {
 
 import { Bond, Pair } from '@frakt/api/bonds';
 import { BondCartOrder } from '@frakt/api/nft';
-import { groupBy } from 'ramda';
 
 export const calcRisk = (value: number) => {
   if (value < 40) {
@@ -110,7 +109,7 @@ export const mergeBondOrderParamsByPair: MergeBondOrderParamsByPair = ({
   bondOrderParams,
 }) => {
   const groupedPairOrderParams = Object.values(
-    groupBy((orderParam) => orderParam.pairPubkey, bondOrderParams),
+    groupBy(bondOrderParams, (orderParam) => orderParam.pairPubkey),
   );
 
   const mergedPairsOrderParams = groupedPairOrderParams.map((orderParams) =>

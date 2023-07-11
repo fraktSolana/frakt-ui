@@ -1,17 +1,6 @@
 import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import {
-  ifElse,
-  isEmpty,
-  compose,
-  concat,
-  join,
-  map,
-  toPairs,
-  pickBy,
-  allPass,
-} from 'ramda';
-import { isNotEmpty, isNotNil } from 'ramda-adjunct';
+import { isEmpty, toPairs, isNil } from 'lodash';
 
 import {
   FetchNextPageOptions,
@@ -24,17 +13,15 @@ const LIMIT = 20;
 
 const baseUrl = `https://${process.env.BACKEND_DOMAIN}`;
 
-const stringify = ifElse(
-  isEmpty,
-  () => '',
-  compose(
-    concat('?'),
-    join('&'),
-    map(join('=')),
-    toPairs,
-    pickBy(allPass([isNotNil, isNotEmpty])),
-  ),
-);
+const stringify = (obj: FetchItemsParams): string => {
+  const queryParams = toPairs(obj)
+    .filter(([_, value]) => !isNil(value) && !isEmpty(value))
+    .map(([key, value]) => `${key}=${value}`);
+
+  const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
+
+  return queryString;
+};
 
 export const useFetchRafflesList = (params: {
   url: string;
