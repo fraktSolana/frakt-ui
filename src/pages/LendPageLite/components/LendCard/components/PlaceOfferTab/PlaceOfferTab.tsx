@@ -33,6 +33,8 @@ const PlaceOfferTab = ({
     onBondFeatureChange,
     loanValueInput,
     loansAmountInput,
+    setLoanValueInput,
+    setLoansAmountInput,
     offerSize,
     onCreateOffer,
     onEditOffer,
@@ -68,9 +70,16 @@ const PlaceOfferTab = ({
         />
       </div>
       <div className={styles.fields}>
-        <NumericInputField hasError={showDepositError} {...loanValueInput} />
         <NumericInputField
-          {...loansAmountInput}
+          label="Loan value"
+          onChange={setLoanValueInput}
+          value={loanValueInput}
+          hasError={showDepositError}
+        />
+        <NumericInputField
+          label="Loan amount"
+          onChange={setLoansAmountInput}
+          value={loansAmountInput}
           integerOnly={true}
           showIcon={false}
           placeholder="0"
