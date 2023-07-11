@@ -71,17 +71,7 @@
 }
 
 .nftsList {
-  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
-
-  @media (max-width: 1240px) {
-    grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
-  }
-}
-
-.nftsList img {
-  @media (min-width: 961px) {
-    height: 150px;
-  }
+  grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
 }
 
 .notNftsMessage {

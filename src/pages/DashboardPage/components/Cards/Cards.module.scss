@@ -94,6 +94,8 @@
 .button {
   position: absolute;
   font: var(--font-btn-middle);
+  padding: 0;
+  white-space: nowrap;
 
   top: -20px;
   left: 50%;

@@ -22,7 +22,7 @@ export const CardBackdrop: FC<PropsWithChildren<CardBackdropProps>> = ({
       [styles.clicable]: onClick,
     })}
   >
-    <ImageWithPreload src={image} className={styles.nftImage} />
+    <ImageWithPreload src={image} className={styles.nftImage} square />
     {children}
   </div>
 );
