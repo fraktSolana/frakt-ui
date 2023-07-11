@@ -10,7 +10,6 @@ import { useSolanaBalance } from '@frakt/utils/accounts';
 import { RBOption } from '@frakt/components/RadioButton';
 
 import { useOfferTransactions } from './useOfferTransactions';
-import { useNumericInput } from '../../NumericInput';
 import { calculateLoanValue } from './../helpers';
 
 export const OFFER_INTEREST_PERCENTAGE = 3;
@@ -43,8 +42,8 @@ export const usePlaceOfferTab = (
     onClearFields();
   };
 
-  const loanValueInput = useNumericInput('Loan value', '');
-  const loansAmountInput = useNumericInput('Loans amount', '');
+  const [loanValueInput, setLoanValueInput] = useState<string>('0');
+  const [loansAmountInput, setLoansAmountInput] = useState<string>('0');
 
   const [bondFeature, setBondFeature] = useState<BondFeatures>(
     BondFeatures.AutoReceiveAndReceiveNft,
@@ -61,8 +60,8 @@ export const usePlaceOfferTab = (
 
   const onClearFields = () => {
     setBondFeature(BondFeatures.AutoReceiveAndReceiveNft);
-    loanValueInput.onChange('');
-    loansAmountInput.onChange('');
+    setLoanValueInput('0');
+    setLoansAmountInput('0');
   };
 
   // Initialization
@@ -78,42 +77,24 @@ export const usePlaceOfferTab = (
 
     const marketFloor = market?.oracleFloor?.floor;
     const loanValue = calculateLoanValue(initialPairValues, marketFloor);
-    const loanAmount = Math.round(rawData.fundsSolOrTokenBalance / loanValue);
+    const loanAmount = (
+      rawData.fundsSolOrTokenBalance / loanValue || 0
+    )?.toFixed(0);
 
     const updatedLoanValue = (loanValue / 1e9)?.toFixed(2);
 
-    loansAmountInput.onChange(loanAmount?.toFixed(0));
-    loanValueInput.onChange(updatedLoanValue);
+    setLoansAmountInput(loanAmount);
+    setLoanValueInput(updatedLoanValue);
 
     setBondFeature(rawData?.bondFeature);
 
     setInitialEditValues({
-      loanAmount: loanAmount?.toFixed(0),
+      loanAmount,
       loanValue: updatedLoanValue,
     });
   };
 
-  // Calculation
-
-  const calculateOfferSize = () => {
-    if (isEdit) {
-      const { rawData } = initialPairValues;
-      const marketFloor = market?.oracleFloor?.floor;
-
-      const loanValue =
-        calculateLoanValue(initialPairValues, marketFloor) / 1e9;
-
-      const loanAmount = rawData.fundsSolOrTokenBalance / loanValue / 1e9;
-
-      return loanValue * loanAmount;
-    } else {
-      const { value: loanValue } = loanValueInput;
-      const { value: loansAmount } = loansAmountInput;
-      return parseFloat(loanValue) * parseFloat(loansAmount);
-    }
-  };
-
-  const offerSize = calculateOfferSize();
+  const offerSize = parseFloat(loanValueInput) * parseFloat(loansAmountInput);
 
   const showDepositError = solanaBalance < offerSize;
 
@@ -122,18 +103,18 @@ export const usePlaceOfferTab = (
   useEffect(() => {
     setSyntheticParams({
       ltv: LOAN_TO_VALUE_RATIO,
-      loanValue: parseFloat(loanValueInput.value),
-      loanAmount: parseFloat(loansAmountInput.value),
+      loanValue: parseFloat(loanValueInput),
+      loanAmount: parseFloat(loansAmountInput),
       offerSize: offerSize * 1e9 || 0,
       interest: 0,
     });
-  }, [offerSize, loansAmountInput.value, loanValueInput.value]);
+  }, [offerSize, loansAmountInput, loanValueInput]);
 
   useEffect(() => {
     if (!isEmpty(initialEditValues) && isEdit) {
       const currentValues = {
-        loanAmount: loansAmountInput.value,
-        loanValue: loanValueInput.value,
+        loanAmount: loansAmountInput,
+        loanValue: loanValueInput,
       };
 
       const hasChanged = Object.values(currentValues).some(
@@ -142,13 +123,13 @@ export const usePlaceOfferTab = (
 
       setIsOfferHasChanged(hasChanged);
     }
-  }, [loanValueInput.value, loansAmountInput.value]);
+  }, [loanValueInput, loansAmountInput]);
 
   const { onCreateOffer, onEditOffer, onRemoveOffer, loadingModalVisible } =
     useOfferTransactions({
       wallet,
       connection,
-      loanValue: parseFloat(loanValueInput.value),
+      loanValue: parseFloat(loanValueInput),
       market,
       durationInDays: DURATION_IN_DAYS,
       bondFeature,
@@ -177,5 +158,7 @@ export const usePlaceOfferTab = (
     showDepositError,
     disablePlaceOffer,
     disableEditOffer,
+    setLoanValueInput,
+    setLoansAmountInput,
   };
 };
