@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { web3 } from 'fbonds-core';
 
-import { AdventuresInfo } from './types';
+import { AdventuresInfo, BanxStats } from './types';
 
 type FetchAdventuresInfo = (props: {
   publicKey?: web3.PublicKey;
@@ -23,5 +23,23 @@ export const fetchAdventuresInfo: FetchAdventuresInfo = async ({
     );
   } catch (error) {
     return null;
+  }
+};
+
+type FetchBanxStats = () => Promise<BanxStats>;
+export const fetchBanxStats: FetchBanxStats = async () => {
+  const DEFAULT_DATA = {
+    totalRevealed: 0,
+    totalPartnerPoints: 0,
+  };
+
+  try {
+    const { data } = await axios.get<BanxStats>(
+      `https://${process.env.BACKEND_DOMAIN}/stats/banx`,
+    );
+
+    return data ?? DEFAULT_DATA;
+  } catch (error) {
+    return DEFAULT_DATA;
   }
 };

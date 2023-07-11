@@ -2,7 +2,7 @@ import { FC, PropsWithChildren } from 'react';
 import classNames from 'classnames';
 import { isNumber } from 'lodash';
 
-import { formatNumbersWithCommans } from '@frakt/utils';
+import { formatNumbersWithCommas } from '@frakt/utils';
 import { Solana } from '@frakt/icons';
 
 import styles from './DashboardStatsValues.module.scss';
@@ -63,7 +63,7 @@ const formatValue = (
   if (type === VALUES_TYPES.solPrice && isNumber(value)) {
     const roundedValue = value?.toFixed(toFixed);
 
-    const formatedNumbersWithCommans = formatNumbersWithCommans(roundedValue);
+    const formatedNumbersWithCommans = formatNumbersWithCommas(roundedValue);
     return formatedNumbersWithCommans;
   }
 

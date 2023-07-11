@@ -8,7 +8,7 @@ import { Alert, MoneyBill, Timer, CircleCheck } from '@frakt/icons';
 import Button from '@frakt/components/Button';
 import { Adventure, BanxUser } from 'fbonds-core/lib/fbond-protocol/types';
 import { AdventureNft } from '@frakt/api/adventures';
-import { notify, throwLogsError } from '@frakt/utils';
+import { formatNumbersWithCommas, notify, throwLogsError } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { showSolscanLinkNotification } from '@frakt/utils/transactions';
 import { captureSentryError } from '@frakt/utils/sentry';
@@ -23,6 +23,7 @@ import {
 } from '../../helpers';
 import { AdventureStatus } from '../../types';
 import { subscribeNfts } from '../../transactions';
+import { useBanxStats } from './hooks';
 import { START_PERIOD_TIME_ADJUST } from '../../constants';
 
 interface AdventuresComponentsProps {
@@ -279,6 +280,8 @@ export const WalletParticipationColumn: FC<AdventuresComponentsProps> = ({
 export const TotalParticipationColumn: FC<AdventuresComponentsProps> = ({
   adventure,
 }) => {
+  const { data: banxStats } = useBanxStats();
+
   const TITLE_BY_STATUS = {
     [AdventureStatus.ENDED]: 'Total participation',
     DEFAULT: 'Total participating',
@@ -286,11 +289,21 @@ export const TotalParticipationColumn: FC<AdventuresComponentsProps> = ({
 
   const adventureStatus = getAdventureStatus(adventure);
 
+  const format = formatNumbersWithCommas;
+
+  const totalBanxSubscribed = `${format(adventure.totalBanxSubscribed)}${
+    banxStats ? `/${format(banxStats.totalRevealed)}` : ''
+  }`;
+
+  const totalPartnerPoints = `${format(adventure.totalPartnerPoints)}${
+    banxStats ? `/${format(banxStats.totalPartnerPoints)}` : ''
+  }`;
+
   return (
     <div className={styles.statsCol}>
       <h5>{TITLE_BY_STATUS[adventureStatus] || TITLE_BY_STATUS.DEFAULT}</h5>
-      <p>{adventure.totalBanxSubscribed} Banx</p>
-      <p>{adventure.totalPartnerPoints} Partner points</p>
+      <p>{totalBanxSubscribed} Banx</p>
+      <p>{totalPartnerPoints} Partner points</p>
     </div>
   );
 };
