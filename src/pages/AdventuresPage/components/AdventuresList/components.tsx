@@ -23,6 +23,7 @@ import {
 } from '../../helpers';
 import { AdventureStatus } from '../../types';
 import { subscribeNfts } from '../../transactions';
+import { START_PERIOD_TIME_ADJUST } from '../../constants';
 
 interface AdventuresComponentsProps {
   adventure: Adventure;
@@ -308,7 +309,9 @@ export const AdventuresTimer: FC<AdventuresComponentsProps> = ({
   const isLive = adventureStatus === AdventureStatus.LIVE;
 
   const { timeLeft } = useCountdown(
-    isLive ? adventure.periodEndingAt : adventure.periodStartedAt,
+    isLive
+      ? adventure.periodEndingAt
+      : adventure.periodStartedAt + START_PERIOD_TIME_ADJUST,
   );
 
   return (
