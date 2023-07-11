@@ -96,9 +96,21 @@ export const usePlaceOfferTab = (
   // Calculation
 
   const calculateOfferSize = () => {
-    const { value: loanValue } = loanValueInput;
-    const { value: loansAmount } = loansAmountInput;
-    return parseFloat(loanValue) * parseFloat(loansAmount);
+    if (isEdit) {
+      const { rawData } = initialPairValues;
+      const marketFloor = market?.oracleFloor?.floor;
+
+      const loanValue =
+        calculateLoanValue(initialPairValues, marketFloor) / 1e9;
+
+      const loanAmount = rawData.fundsSolOrTokenBalance / loanValue / 1e9;
+
+      return loanValue * loanAmount;
+    } else {
+      const { value: loanValue } = loanValueInput;
+      const { value: loansAmount } = loansAmountInput;
+      return parseFloat(loanValue) * parseFloat(loansAmount);
+    }
   };
 
   const offerSize = calculateOfferSize();
