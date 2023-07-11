@@ -86,8 +86,7 @@ export const useMarketOrders: UseMarketOrders = ({
     const sortedByLtv = sortOffersByLtv(sortedOffersByInterest, 'desc');
 
     const ownerOffers = sortedByLtv.filter(
-      (pair) =>
-        !walletOwned || pair.rawData?.assetReceiver === publicKey?.toBase58(),
+      (pair) => pair.rawData?.assetReceiver === publicKey?.toBase58(),
     );
 
     return [sortedByLtv, ownerOffers];
