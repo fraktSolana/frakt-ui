@@ -3,7 +3,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useHistory, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { web3 } from 'fbonds-core';
-import { groupWith } from 'ramda';
+import { chain } from 'lodash';
 
 import { Chevron } from '@frakt/icons';
 import { NavigationButton } from '@frakt/components/Button';
@@ -63,19 +63,17 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
 
   const offersExist = Boolean(offersRaw.length);
 
-  const offers = groupWith(
-    (offerA, offerB) =>
-      offerA.interest === offerB.interest &&
-      offerA.ltv === offerB.ltv &&
-      !isOwnOrder(offerA) &&
-      !isOwnOrder(offerB),
-    offersRaw,
-  ).map((squashedOffers) =>
-    squashedOffers.reduce((accOffer, offer) => ({
-      ...accOffer,
-      size: accOffer.size + offer.size,
-    })),
-  );
+  const offers = chain(offersRaw)
+    .groupBy((offer) => `${offer.interest}-${offer.ltv}`)
+    .values()
+    .filter((group) => group.some((offer) => !isOwnOrder(offer)))
+    .value()
+    .map((squashedOffers) =>
+      squashedOffers.reduce((accOffer, offer) => ({
+        ...accOffer,
+        size: accOffer.size + offer.size,
+      })),
+    );
 
   const goToEditOffer = (orderPubkey: string) =>
     history.push(`${PATHS.OFFER}/${marketPubkey}/${orderPubkey}`);

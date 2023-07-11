@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { compose, split, nth, tail } from 'ramda';
 import { isString, isFunction } from 'lodash';
 import classNames from 'classnames';
 
@@ -43,8 +42,7 @@ export const MenuItem: FC<MenuItem> = ({
   const { theme } = useTheme();
   const icon = theme === Theme.DARK ? iconDark : rawIcon;
 
-  const isActive =
-    compose(nth(1), split('/'))(location.pathname) === tail(pathname);
+  const isActive = location.pathname.split('/')[1] === pathname.split('/')[1];
 
   const navigationParams = { icon, label, className, to, isActive, primary };
 

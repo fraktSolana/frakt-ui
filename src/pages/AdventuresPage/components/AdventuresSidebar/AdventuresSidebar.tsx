@@ -5,15 +5,15 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import SidebarLayout from '@frakt/components/Sidebar';
 import Button from '@frakt/components/Button';
 import { PATHS } from '@frakt/constants';
-import { Gamepad, StarAltFill, MoneyBill } from '@frakt/icons';
+import { Gamepad, StarAltFill /* MoneyBill */ } from '@frakt/icons';
 import { AdventuresInfo } from '@frakt/api/adventures';
 
 import styles from './AdventuresSidebar.module.scss';
 import { calcNftsPartnerPoints, isNftStaked } from '../../helpers';
 import { useRaffleTicketsQuery } from '../../hooks';
 
-const DOCS_LINK =
-  'https://docs.frakt.xyz/frakt/holder-benefits/sustainable-passive-income-discounts-raffles-and-boosts';
+// const DOCS_LINK =
+//   'https://docs.frakt.xyz/frakt/holder-benefits/sustainable-passive-income-discounts-raffles-and-boosts';
 
 interface AdventuresSidebarProps {
   adventuresInfo: AdventuresInfo;
@@ -44,9 +44,9 @@ export const AdventuresSidebar: FC<AdventuresSidebarProps> = ({
 
   //TODO: Calc this values
   // const flipLoansDiscount = 0;
-  const rewards = useMemo(() => {
-    return 0;
-  }, []);
+  // const rewards = useMemo(() => {
+  //   return 0;
+  // }, []);
 
   return (
     <>
@@ -95,7 +95,7 @@ export const AdventuresSidebar: FC<AdventuresSidebarProps> = ({
             /> */}
           </div>
 
-          <div className={styles.section}>
+          {/* <div className={styles.section}>
             <Title text="My rewards" icon={<MoneyBill />} />
 
             <Info
@@ -106,14 +106,14 @@ export const AdventuresSidebar: FC<AdventuresSidebarProps> = ({
                 onClick: () => window.open(DOCS_LINK),
               }}
             />
-          </div>
+          </div> */}
 
           <div className={styles.section}>
             <div className={styles.warns}>
               <p>
                 <ExclamationCircleOutlined />
                 As your Banx stay in your wallet when used as collateral for a
-                loan on Frakt they can be send in Adventures in parallel
+                loan on Frakt they can be sent in Adventures in parallel
               </p>
             </div>
           </div>

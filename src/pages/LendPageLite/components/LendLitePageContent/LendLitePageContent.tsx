@@ -21,7 +21,6 @@ const LendLitePageContent: FC = () => {
     onToggleChange,
     marketsToDisplay,
     handleFilterChange,
-    isMarketPubkeyPresent,
     handleSortChange,
     showEmptyList,
     selectedMarkets,
@@ -37,7 +36,7 @@ const LendLitePageContent: FC = () => {
   return (
     <div
       className={classNames(styles.content, {
-        [styles.selected]: isMarketPubkeyPresent,
+        [styles.selected]: !!visibleCards?.length,
       })}
     >
       <FilterSection

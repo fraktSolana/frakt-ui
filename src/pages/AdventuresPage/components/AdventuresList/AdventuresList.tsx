@@ -15,7 +15,7 @@ import {
   TotalParticipationColumn,
   WalletParticipationColumn,
   AdventureSubscribeButton,
-  AdventuresStats,
+  // AdventuresStats,
 } from './components';
 import { getAdventureStatus, isNftParticipating } from '../../helpers';
 import { AdventureStatus } from '../../types';
