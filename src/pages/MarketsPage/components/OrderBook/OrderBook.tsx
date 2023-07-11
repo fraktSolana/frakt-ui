@@ -66,7 +66,7 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
   const offers = chain(offersRaw)
     .groupBy((offer) => `${offer.interest}-${offer.ltv}`)
     .values()
-    .filter((group) => group.some((offer) => !isOwnOrder(offer)))
+    // .filter((group) => group.some((offer) => !isOwnOrder(offer)))
     .value()
     .map((squashedOffers) =>
       squashedOffers.reduce((accOffer, offer) => ({
