@@ -3,7 +3,6 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useHistory, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { web3 } from 'fbonds-core';
-import { chain } from 'lodash';
 
 import { Chevron } from '@frakt/icons';
 import { NavigationButton } from '@frakt/components/Button';
@@ -11,6 +10,7 @@ import { Loader } from '@frakt/components/Loader';
 import Toggle from '@frakt/components/Toggle';
 import { Market } from '@frakt/api/bonds';
 import { PATHS } from '@frakt/constants';
+import { groupWith } from '@frakt/utils';
 
 import { MarketOrder, SyntheticParams } from './types';
 import CollectionsList from './components/CollectionsList';
@@ -63,17 +63,19 @@ const OrderBook: FC<OrderBookProps> = ({ market, syntheticParams }) => {
 
   const offersExist = Boolean(offersRaw.length);
 
-  const offers = chain(offersRaw)
-    .groupBy((offer) => `${offer.interest}-${offer.ltv}`)
-    .values()
-    // .filter((group) => group.some((offer) => !isOwnOrder(offer)))
-    .value()
-    .map((squashedOffers) =>
-      squashedOffers.reduce((accOffer, offer) => ({
-        ...accOffer,
-        size: accOffer.size + offer.size,
-      })),
-    );
+  const offers = groupWith(
+    offersRaw,
+    (offerA, offerB) =>
+      offerA.interest === offerB.interest &&
+      offerA.ltv === offerB.ltv &&
+      !isOwnOrder(offerA) &&
+      !isOwnOrder(offerB),
+  ).map((squashedOffers) =>
+    squashedOffers.reduce((accOffer, offer) => ({
+      ...accOffer,
+      size: accOffer.size + offer.size,
+    })),
+  );
 
   const goToEditOffer = (orderPubkey: string) =>
     history.push(`${PATHS.OFFER}/${marketPubkey}/${orderPubkey}`);

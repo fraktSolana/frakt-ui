@@ -272,3 +272,26 @@ export const convertAprToApy = (apr: number): number => {
   const apy = Math.pow(compoundedInterest, weekInYear) - 1;
   return apy * 100;
 };
+
+export const groupWith = (array, predicate) => {
+  const result = [];
+  let currentGroup = [];
+
+  for (let i = 0; i < array.length; i++) {
+    const currentItem = array[i];
+    const previousItem = array[i - 1];
+
+    if (i === 0 || predicate(previousItem, currentItem)) {
+      currentGroup.push(currentItem);
+    } else {
+      result.push(currentGroup);
+      currentGroup = [currentItem];
+    }
+  }
+
+  if (currentGroup.length > 0) {
+    result.push(currentGroup);
+  }
+
+  return result;
+};
