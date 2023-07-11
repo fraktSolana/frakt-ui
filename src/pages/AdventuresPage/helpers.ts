@@ -8,13 +8,15 @@ import {
 import { AdventureNft, SubscriptionStatus } from '@frakt/api/adventures';
 
 import { AdventureStatus } from './types';
+import { START_PERIOD_TIME_ADJUST } from './constants';
 
 export const getAdventureStatus = (adventure: Adventure) => {
   const timeNowUnix = moment().unix();
   const { periodStartedAt, periodEndingAt } = adventure;
 
   if (timeNowUnix > periodEndingAt) return AdventureStatus.ENDED;
-  if (timeNowUnix > periodStartedAt) return AdventureStatus.LIVE;
+  if (timeNowUnix > periodStartedAt + START_PERIOD_TIME_ADJUST)
+    return AdventureStatus.LIVE;
   return AdventureStatus.UPCOMING;
 };
 

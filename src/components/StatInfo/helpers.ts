@@ -1,6 +1,6 @@
 import { isNumber, isString } from 'lodash';
 
-import { formatNumbersWithCommans } from '@frakt/utils';
+import { formatNumbersWithCommas } from '@frakt/utils';
 import { VALUES_TYPES } from './constants';
 
 import styles from './StatInfo.module.scss';
@@ -19,7 +19,7 @@ export const formatValue = (
     const formattedValue = isString(value) ? parseFloat(value) || 0 : value;
     const roundedValue = (formattedValue / divider)?.toFixed(decimalPlaces);
 
-    return formatNumbersWithCommans(roundedValue);
+    return formatNumbersWithCommas(roundedValue);
   }
 
   return value;

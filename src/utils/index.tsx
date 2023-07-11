@@ -254,7 +254,7 @@ export const throwLogsError = (msg: any) => {
   console.warn(msg?.logs?.join('\n'));
 };
 
-export const formatNumbersWithCommans = (value: number | string): string =>
+export const formatNumbersWithCommas = (value: number | string): string =>
   value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
 export const getNumberWithOrdinal = (n: number): string => {

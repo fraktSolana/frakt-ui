@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { formatNumbersWithCommans } from '@frakt/utils';
+import { formatNumbersWithCommas } from '@frakt/utils';
 import { Loader } from '@frakt/components/Loader';
 
 import { LendInfo } from '../types';
@@ -22,8 +22,8 @@ const TopLendList: FC<LendListProps> = ({ data = [], isLoading }) => {
       {isLoading && !data?.length && <Loader />}
 
       <div className={styles.cardsList}>
-        {data.map((data) => (
-          <LendCard {...data} />
+        {data.map((data, idx) => (
+          <LendCard key={idx} {...data} />
         ))}
       </div>
     </>
@@ -45,10 +45,10 @@ const LendCard: FC<LendInfo> = ({
         <p className={styles.cardName}>{name}</p>
       </div>
       <p className={styles.cardValue}>
-        {formatNumbersWithCommans(totalLiquidity)}
+        {formatNumbersWithCommas(totalLiquidity)}
       </p>
       <p className={styles.cardValue}>
-        {formatNumbersWithCommans(depositYield)} %
+        {formatNumbersWithCommas(depositYield)} %
       </p>
     </div>
   );

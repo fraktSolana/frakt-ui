@@ -39,3 +39,8 @@ export enum SubscriptionStatus {
   Unsubscribed = 'unsubscribed',
   Harvested = 'harvested',
 }
+
+export interface BanxStats {
+  totalRevealed: number;
+  totalPartnerPoints: number;
+}
