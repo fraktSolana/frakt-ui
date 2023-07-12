@@ -29,7 +29,7 @@ export const Header: FC = () => {
           <Logo className={styles.logoBasic} />
         </a>
         <div className={styles.widgetContainer}>
-          {!data ? <FraktlistingBtn /> : <FraktlistingStatus data={data} />}
+          {/* {!data ? <FraktlistingBtn /> : <FraktlistingStatus data={data} />} */}
 
           <div className={styles.switcherContainer}>
             <ThemeSwitcher />
