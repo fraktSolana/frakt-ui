@@ -6,15 +6,16 @@ import { UserAvatar } from '@frakt/components/UserAvatar';
 import { shortenAddress } from '@frakt/utils/solanaUtils';
 import { copyToClipboard } from '@frakt/utils';
 import { Copy } from '@frakt/icons';
-
+import { useUserInfo } from '@frakt/hooks';
 import styles from './GeneralUserInfo.module.scss';
 
 const GeneralUserInfo: FC = () => {
   const { publicKey } = useWallet();
+  const { data } = useUserInfo();
 
   return (
     <div className={styles.userWrapper}>
-      <UserAvatar className={styles.avatar} />
+      <UserAvatar className={styles.avatar} imageUrl={data?.avatarUrl} />
       <CopiedUserAddress publicKey={publicKey} />
     </div>
   );

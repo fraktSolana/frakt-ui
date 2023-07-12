@@ -32,15 +32,15 @@
     width: 32px;
   }
 
-  @media screen and (max-width: 575px) {
-    height: 28px;
-    width: 28px;
+  // @media screen and (max-width: 575px) {
+  //   height: 28px;
+  //   width: 28px;
 
-    svg {
-      height: 20px;
-      width: 20px;
-    }
-  }
+  //   svg {
+  //     height: 20px;
+  //     width: 20px;
+  //   }
+  // }
 }
 .buttonActive {
   border-color: var(--secondary-border);

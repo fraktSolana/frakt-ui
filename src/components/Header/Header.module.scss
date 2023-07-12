@@ -27,9 +27,9 @@
   @include flex(row, nowrap, flex-start, center);
   gap: 16px;
 
-  @media (max-width: 960px) {
-    gap: 8px;
-  }
+  // @media (max-width: 960px) {
+  //   gap: 8px;
+  // }
 }
 
 .walletBtn {
@@ -85,10 +85,10 @@
     display: block;
   }
 
-  @media screen and (max-width: 430px) {
-    width: 24px;
-    height: 24px;
-  }
+  // @media screen and (max-width: 430px) {
+  //   width: 24px;
+  //   height: 24px;
+  // }
 }
 
 .logoFull {
