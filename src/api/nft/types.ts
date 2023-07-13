@@ -51,6 +51,7 @@ export interface BorrowNft {
     fraktMarket: string;
     oracleFloor: string;
     durations: Array<number>; //? days
+    floorPrice: number; // sol lamports
   };
 }
 

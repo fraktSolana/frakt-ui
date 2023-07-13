@@ -25,6 +25,8 @@ export const getTableColumns: GetTableColumns = ({
   duration,
   isCardView = false,
 }) => {
+  const isPerpetual = duration === '0';
+
   const NAME_COLUMN: ColumnType<BorrowNftData> = {
     key: 'name',
     dataIndex: 'name',
@@ -60,7 +62,11 @@ export const getTableColumns: GetTableColumns = ({
         hiddenSort
       />
     ),
-    render: (_, { nft }) => createSolValueJSX(nft.valuation),
+    render: (_, { nft }) => {
+      return createSolValueJSX(
+        isPerpetual ? nft.valuation : nft.bondParams.floorPrice,
+      );
+    },
     showSorterTooltip: false,
   };
 
@@ -203,7 +209,6 @@ export const getTableColumns: GetTableColumns = ({
     ),
   };
 
-  const isPerpetual = duration === '0';
   return [
     NAME_COLUMN,
     FLOOR_PRICE_COLUMN,

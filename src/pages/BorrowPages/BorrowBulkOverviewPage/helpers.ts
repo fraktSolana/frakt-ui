@@ -26,6 +26,7 @@ export const getLoanFields: GetLoanFields = ({ order }) => {
   const ltv = calcLtv({
     loanValue,
     nft: borrowNft,
+    loanType,
   });
 
   fields.push({

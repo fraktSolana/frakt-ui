@@ -212,9 +212,11 @@ export const generateLoanDetails: GenerateLoanDetails = ({
   loanValue,
   bondOrderParams,
 }) => {
+  const isBond = loanType === LoanType.BOND && bondOrderParams;
+  const valuation = isBond ? nft.bondParams.floorPrice : nft.valuation;
+
   const fields: Array<LoanDetailsField> = [];
 
-  const { valuation } = nft;
   fields.push({
     label: 'Floor price',
     value: <>{(valuation / 1e9).toFixed(2)}◎</>,
@@ -314,7 +316,7 @@ export const generateLoanDetails: GenerateLoanDetails = ({
   }
 
   //? Bond fee and repay value
-  if (loanType === LoanType.BOND && bondOrderParams) {
+  if (isBond) {
     const fee = calcBondMultiOrdersFee(bondOrderParams);
 
     fields.push({
