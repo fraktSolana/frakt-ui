@@ -15,9 +15,16 @@ import { BondOrderParams } from './cartState';
 import { borrow } from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
 import { IS_TEST_TRANSACTION } from '@frakt/config';
 
-type CalcLtv = (props: { nft: BorrowNft; loanValue: number }) => number;
-export const calcLtv: CalcLtv = ({ nft, loanValue }) => {
-  const ltv = (loanValue / nft.valuation) * 100;
+type CalcLtv = (props: {
+  nft: BorrowNft;
+  loanValue: number;
+  loanType?: LoanType;
+}) => number;
+export const calcLtv: CalcLtv = ({ nft, loanValue, loanType }) => {
+  const isBond = loanType === LoanType.BOND;
+  const valuation = isBond ? nft.bondParams.floorPrice : nft.valuation;
+
+  const ltv = (loanValue / valuation) * 100;
 
   return ltv;
 };

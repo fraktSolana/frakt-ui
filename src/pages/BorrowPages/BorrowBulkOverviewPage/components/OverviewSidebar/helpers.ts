@@ -13,7 +13,7 @@ type CalcCartFees = (props: {
   orders: CartOrder[];
   pairs: Pair[];
 }) => [string, number][];
-export const calcCartFees: CalcCartFees = ({ orders, pairs }) => {
+export const calcCartFees: CalcCartFees = ({ orders }) => {
   const feesByDayArr = orders.map((order) =>
     calcOrderFees({
       order,

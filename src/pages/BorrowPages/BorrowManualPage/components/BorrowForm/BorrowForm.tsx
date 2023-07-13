@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { QuestionCircleOutlined } from '@ant-design/icons';
 
 import Button from '@frakt/components/Button';
 import { Slider } from '@frakt/components/Slider';
