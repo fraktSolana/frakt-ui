@@ -27,6 +27,8 @@ export interface Loan {
     liquidationLot?: string; //? For classic loans only
   };
 
+  isGracePeriod?: boolean; //? appeared after local mapping
+
   nft: {
     mint: string;
     name: string;

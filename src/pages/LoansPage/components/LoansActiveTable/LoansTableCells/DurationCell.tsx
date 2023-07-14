@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { Loan, LoanType } from '@frakt/api/loans';
 import { useCountdown } from '@frakt/hooks';
 
+import { checkBondExpired } from '../../LoansActiveTab/hooks';
 import styles from '../LoansTable.module.scss';
 
 export const DurationCell = ({
@@ -22,7 +23,7 @@ export const DurationCell = ({
 
   return (
     <div className={classNames(styles.value, className)}>
-      {!!loan?.gracePeriod && <p className={styles.badgeOnGrace}>On grace</p>}
+      {!!loan?.isGracePeriod && <p className={styles.badgeOnGrace}>On grace</p>}
       {timeLeft.days}d<p>:</p>
       {timeLeft.hours}h<p>:</p>
       {timeLeft.minutes}m
@@ -31,18 +32,26 @@ export const DurationCell = ({
 };
 
 const getExpiretAtByLoanType = (loan: Loan): number => {
+  const GRACE_BOND_PERIOD = 12 * 60 * 60; //? 12 hours
+
   const { loanType, classicParams, gracePeriod, bondParams } = loan;
 
   const timeBasedexpiredAt = classicParams?.timeBased?.expiredAt;
   const gracePeriodExpiredAt = gracePeriod?.expiredAt;
   const bondExpiredAt = bondParams?.expiredAt;
 
+  const isBondExpired = checkBondExpired(loan);
+
   const onGracePeriod = !!gracePeriod;
 
   if (loanType === LoanType.TIME_BASED && !onGracePeriod)
     return timeBasedexpiredAt;
 
-  if (loanType === LoanType.BOND && !onGracePeriod) return bondExpiredAt;
+  if (loanType === LoanType.BOND && isBondExpired) {
+    return bondExpiredAt + GRACE_BOND_PERIOD;
+  }
+
+  if (loanType === LoanType.BOND) return bondExpiredAt;
 
   return gracePeriodExpiredAt;
 };
