@@ -6,7 +6,6 @@ import { LoadingModal } from '@frakt/components/LoadingModal';
 import EmptyList from '@frakt/components/EmptyList';
 import { Button } from '@frakt/components/Button';
 import { Loader } from '@frakt/components/Loader';
-import Checkbox from '@frakt/components/Checkbox';
 
 import { useActiveLoans, useFetchAllLoans } from './hooks';
 import { LoansActiveTable } from '../LoansActiveTable';
@@ -16,14 +15,8 @@ const LoansActiveTab: FC = () => {
   const { connected } = useWallet();
   const { loans, isLoading } = useFetchAllLoans();
 
-  const {
-    onBulkRepay,
-    isLedger,
-    setIsLedger,
-    totalBorrowed,
-    loadingModalVisible,
-    closeLoadingModal,
-  } = useActiveLoans();
+  const { onBulkRepay, totalBorrowed, loadingModalVisible, closeLoadingModal } =
+    useActiveLoans();
 
   return (
     <>
@@ -50,11 +43,6 @@ const LoansActiveTab: FC = () => {
               >
                 Repay {totalBorrowed?.toFixed(2)} SOL
               </Button>
-              <Checkbox
-                onChange={() => setIsLedger(!isLedger)}
-                label="I use ledger"
-                checked={isLedger}
-              />
             </div>
             <LoansActiveTable
               cardClassName={styles.card}

@@ -6,7 +6,7 @@ import { Modal } from '@frakt/components/Modal';
 import { Button } from '@frakt/components/Button';
 import Checkbox from '@frakt/components/Checkbox';
 import { CloseModal } from '@frakt/icons';
-import { useFraktLogin } from '@frakt/utils/fraktLogin';
+import { useFraktLogin, useIsLedger } from '@frakt/store';
 import { shortenAddress } from '@frakt/utils/solanaUtils';
 
 import styles from './VerifyWalletModal.module.scss';
@@ -23,7 +23,8 @@ export const useVerifyWalletModal = create<VerifyWalletModalState>((set) => ({
 
 export const VerifyWalletModal = () => {
   const wallet = useWallet();
-  const { accessToken, logIn, isLedger, setIsLedger } = useFraktLogin();
+  const { accessToken, logIn } = useFraktLogin();
+  const { isLedger, setIsLedger } = useIsLedger();
   const { isOpen, setIsOpen } = useVerifyWalletModal();
 
   const onCancel = () => setIsOpen(false);

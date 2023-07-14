@@ -16,15 +16,14 @@ export const WalletItem: FC<WalletItemProps> = ({
   name,
 }) => {
   return (
-    <div className={styles.walletItemContainer}>
-      <div className={styles.walletItem} onClick={onClick}>
-        {name === 'Ledger' && <Ledger className={styles.icon} />}
-        {name === 'MathWallet' && <MathWallet className={styles.icon} />}
-        {name !== 'Ledger' && name !== 'MathWallet' && (
-          <img alt={imageAlt} src={imageSrc} />
-        )}
-        {name}
-      </div>
+    <div className={styles.walletItem} onClick={onClick}>
+      {/*//?  To prevent same background for white icons */}
+      {name === 'Ledger' && <Ledger className={styles.walletIcon} />}
+      {name === 'MathWallet' && <MathWallet className={styles.walletIcon} />}
+      {name !== 'Ledger' && name !== 'MathWallet' && (
+        <img alt={imageAlt} src={imageSrc} />
+      )}
+      {name}
     </div>
   );
 };

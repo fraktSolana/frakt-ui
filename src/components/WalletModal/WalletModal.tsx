@@ -1,50 +1,25 @@
-import { FC, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { useOnClickOutside } from '@frakt/hooks';
+import { sendAmplitudeData } from '@frakt/utils/amplitude';
 
-import { sendAmplitudeData } from '../../utils/amplitude';
-import CurrentUserTable from '../CurrentUserTable';
-import styles from './WalletModal.module.scss';
+import { UserInfo } from './UserInfo';
 import { WalletItem } from './WalletItem';
 import { useWalletModal } from './hooks';
+import styles from './WalletModal.module.scss';
 
-export const WalletsItems: FC = () => {
-  const { wallets, select } = useWallet();
-
+export const WalletModal = () => {
+  const { connected, wallets, select } = useWallet();
   const { setVisible } = useWalletModal();
 
-  return (
-    <div className={styles.itemsContainer}>
-      {wallets.map(({ adapter }, idx) => (
-        <WalletItem
-          key={idx}
-          onClick={(): void => {
-            select(adapter.name);
-            setVisible(false);
-          }}
-          imageSrc={adapter.icon}
-          imageAlt={adapter.name}
-          name={adapter.name}
-        />
-      ))}
-    </div>
-  );
-};
-
-interface WalletModalProps {
-  className?: string;
-}
-
-export const WalletModal: FC<WalletModalProps> = ({ className = '' }) => {
-  const { connected } = useWallet();
-  const { setVisible } = useWalletModal();
+  const [changeWallet, setChangeWallet] = useState(false);
 
   const ref = useRef();
   useOnClickOutside(ref, () => setVisible(false));
 
   return (
-    <div className={`${styles.wrapper} ${className}`}>
+    <div className={styles.wrapper}>
       <div
         className={styles.overlay}
         onClick={() => {
@@ -52,11 +27,25 @@ export const WalletModal: FC<WalletModalProps> = ({ className = '' }) => {
           sendAmplitudeData('navigation-connect');
         }}
       />
-      <div ref={ref} className={`${styles.container} container`}>
-        {connected ? (
-          <CurrentUserTable className={styles.itemsContainer} />
-        ) : (
-          <WalletsItems />
+      <div ref={ref} className={styles.contentWrapper}>
+        {connected && !changeWallet && (
+          <UserInfo setChangeWallet={setChangeWallet} />
+        )}
+        {(!connected || changeWallet) && (
+          <div className={styles.walletItems}>
+            {wallets.map(({ adapter }, idx) => (
+              <WalletItem
+                key={idx}
+                onClick={(): void => {
+                  select(adapter.name);
+                  setVisible(false);
+                }}
+                imageSrc={adapter.icon}
+                imageAlt={adapter.name}
+                name={adapter.name}
+              />
+            ))}
+          </div>
         )}
       </div>
     </div>
