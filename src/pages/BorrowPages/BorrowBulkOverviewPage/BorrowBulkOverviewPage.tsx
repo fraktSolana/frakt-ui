@@ -22,8 +22,6 @@ export const BorrowBulkOverviewPage: FC = () => {
     openConfirmModal,
     closeConfirmModal,
     onBulkEdit,
-    isLedger,
-    setIsLedger,
     loadingModalVisible,
     setLoadingModalVisible,
     loadingModalTextStatus,
@@ -36,8 +34,6 @@ export const BorrowBulkOverviewPage: FC = () => {
         pairs={cartPairs}
         onChangeAssets={() => onBulkEdit()}
         onBorrow={openConfirmModal}
-        isLedger={isLedger}
-        setIsLedger={setIsLedger}
       />
 
       <div

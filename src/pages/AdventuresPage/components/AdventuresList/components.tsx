@@ -12,6 +12,7 @@ import { formatNumbersWithCommas, notify, throwLogsError } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { showSolscanLinkNotification } from '@frakt/utils/transactions';
 import { captureSentryError } from '@frakt/utils/sentry';
+import { useIsLedger } from '@frakt/store';
 
 import styles from './AdventuresList.module.scss';
 import { useAdventuresInfoQuery } from '../../hooks';
@@ -45,6 +46,7 @@ export const AdventureSubscribeButton: FC<AdventuresComponentsProps> = ({
 
   const { connection } = useConnection();
   const wallet = useWallet();
+  const { isLedger } = useIsLedger();
 
   const { refetch } = useAdventuresInfoQuery();
 
@@ -68,6 +70,7 @@ export const AdventureSubscribeButton: FC<AdventuresComponentsProps> = ({
         ),
         connection,
         wallet,
+        isLedger,
         onAfterSend: () => {
           notify({
             message: 'Transactions sent!',
@@ -105,7 +108,15 @@ export const AdventureSubscribeButton: FC<AdventuresComponentsProps> = ({
     } catch (error) {
       throwLogsError(error);
     }
-  }, [refetch, connection, wallet, adventure, stakedNfts, subscribedNfts]);
+  }, [
+    refetch,
+    connection,
+    wallet,
+    adventure,
+    stakedNfts,
+    subscribedNfts,
+    isLedger,
+  ]);
 
   const isParticipating = !!subscribedNfts.length;
 

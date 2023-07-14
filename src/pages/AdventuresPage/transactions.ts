@@ -18,6 +18,9 @@ const BANX_STAKING_HADO_REGISTRY_PUBKEY = new web3.PublicKey(
   process.env.BANX_STAKING_HADO_REGISTRY_PUBKEY,
 );
 
+const CHUNK_SIZE_NORMAL = 20;
+const CHUNK_SIZE_LEDGER = 5;
+
 type StakeNfts = (props: {
   nftMints: string[];
   adventures: Adventure[];
@@ -27,6 +30,7 @@ type StakeNfts = (props: {
   onSuccess?: () => void;
   onError?: (error?: any) => void;
   commitment?: web3.Commitment;
+  isLedger?: boolean;
 }) => Promise<boolean>;
 export const stakeNfts: StakeNfts = async ({
   nftMints = [],
@@ -37,6 +41,7 @@ export const stakeNfts: StakeNfts = async ({
   onSuccess,
   onError,
   commitment = 'confirmed',
+  isLedger = false,
 }): Promise<boolean> => {
   const txnsData = await Promise.all(
     nftMints.map((mint) =>
@@ -73,7 +78,7 @@ export const stakeNfts: StakeNfts = async ({
         lookupTablePublicKeys: [],
       }),
     ),
-    split: 20,
+    split: isLedger ? CHUNK_SIZE_LEDGER : CHUNK_SIZE_NORMAL,
     connection,
     wallet,
     commitment,
@@ -91,6 +96,7 @@ type UnstakeNfts = (props: {
   onSuccess?: () => void;
   onError?: (error?: any) => void;
   commitment?: web3.Commitment;
+  isLedger?: boolean;
 }) => Promise<boolean>;
 export const unstakeNfts: UnstakeNfts = async ({
   nfts = [],
@@ -100,6 +106,7 @@ export const unstakeNfts: UnstakeNfts = async ({
   onSuccess,
   onError,
   commitment = 'confirmed',
+  isLedger = false,
 }): Promise<boolean> => {
   const txnsData = await Promise.all(
     nfts.map((nft) =>
@@ -136,7 +143,7 @@ export const unstakeNfts: UnstakeNfts = async ({
         lookupTablePublicKeys: [],
       }),
     ),
-    split: 20,
+    split: isLedger ? CHUNK_SIZE_LEDGER : CHUNK_SIZE_NORMAL,
     connection,
     wallet,
     commitment,
@@ -155,16 +162,18 @@ type SubscribeNfts = (props: {
   onSuccess?: () => void;
   onError?: (error?: any) => void;
   commitment?: web3.Commitment;
+  isLedger?: boolean;
 }) => Promise<boolean>;
 export const subscribeNfts: SubscribeNfts = async ({
   nfts = [],
   adventure,
   connection,
   wallet,
-  commitment,
+  commitment = 'confirmed',
   onAfterSend,
   onSuccess,
   onError,
+  isLedger = false,
 }): Promise<boolean> => {
   const txnsData = await Promise.all(
     nfts.map((nft) =>
@@ -198,7 +207,7 @@ export const subscribeNfts: SubscribeNfts = async ({
         lookupTablePublicKeys: [],
       }),
     ),
-    split: 20,
+    split: isLedger ? CHUNK_SIZE_LEDGER : CHUNK_SIZE_NORMAL,
     connection,
     wallet,
     commitment,

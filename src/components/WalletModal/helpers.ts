@@ -1,8 +1,8 @@
 import { sum, map } from 'lodash';
+import { web3 } from 'fbonds-core';
 
 import { formatNumber } from '@frakt/utils/solanaUtils';
 import { UserRewards } from '@frakt/api/user/types';
-import { web3 } from '@frakt-protocol/frakt-sdk';
 
 const getUserRewardsValue = (usersRewards: UserRewards) => {
   if (!usersRewards) return '--';

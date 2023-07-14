@@ -15,6 +15,7 @@ import { showSolscanLinkNotification } from '@frakt/utils/transactions';
 import { captureSentryError } from '@frakt/utils/sentry';
 import { notify, throwLogsError } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
+import { useIsLedger } from '@frakt/store';
 
 import styles from './AdventuresNftsModal.module.scss';
 import {
@@ -129,6 +130,7 @@ const StakeContent: FC<StakeContent> = ({
   const { connection } = useConnection();
   const wallet = useWallet();
   const { refetch } = useAdventuresInfoQuery();
+  const { isLedger } = useIsLedger();
 
   const [selectedNfts, setSelectedNfts] = useState<AdventureNft[]>([]);
 
@@ -169,6 +171,7 @@ const StakeContent: FC<StakeContent> = ({
         adventures: adventuresToSubscribe,
         connection,
         wallet,
+        isLedger,
         onAfterSend: () => {
           notify({
             message: 'Transactions sent!',
@@ -260,6 +263,7 @@ const UnstakeContent: FC<UnstakeContent> = ({ nfts = [], setIsOpen }) => {
   const { connection } = useConnection();
   const wallet = useWallet();
   const { refetch } = useAdventuresInfoQuery();
+  const { isLedger } = useIsLedger();
 
   const [selectedNfts, setSelectedNfts] = useState<AdventureNft[]>([]);
 
@@ -294,6 +298,7 @@ const UnstakeContent: FC<UnstakeContent> = ({ nfts = [], setIsOpen }) => {
         nfts: selectedNfts,
         connection,
         wallet,
+        isLedger,
         onAfterSend: () => {
           notify({
             message: 'Transactions sent!',

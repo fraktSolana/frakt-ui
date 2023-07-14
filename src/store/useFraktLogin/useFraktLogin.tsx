@@ -12,40 +12,32 @@ import {
   setFraktLoginDataLS,
 } from './functions';
 import { ACCESS_TOKEN_LIFE_TIME, AUTH_MESSAGE } from './constants';
+import { useIsLedger } from '../useIsLedger';
 
 interface FraktLoginState {
   isLoggingIn: boolean;
   accessToken: string | null;
-  isLedger: boolean;
   setIsLoggingIn: (nextValue: boolean) => void;
   setAccessToken: (nextValue: string | null) => void;
-  setIsLedger: (nextValue: boolean) => void;
 }
 
 const useFraktLoginState = create<FraktLoginState>((set) => ({
   isLoggingIn: false,
-  isLedger: false,
   accessToken: null,
   setIsLoggingIn: (nextValue) =>
     set((state) => ({ ...state, isLoggingIn: nextValue })),
   setAccessToken: (nextValue) =>
     set((state) => ({ ...state, accessToken: nextValue })),
-  setIsLedger: (nextValue) =>
-    set((state) => ({ ...state, isLedger: nextValue })),
 }));
 
 export const useFraktLogin = () => {
   const wallet = useWallet();
   const { connection } = useConnection();
 
-  const {
-    isLoggingIn,
-    setIsLoggingIn,
-    accessToken,
-    setAccessToken,
-    isLedger,
-    setIsLedger,
-  } = useFraktLoginState();
+  const { isLoggingIn, setIsLoggingIn, accessToken, setAccessToken } =
+    useFraktLoginState();
+
+  const { isLedger } = useIsLedger();
 
   const logIn = useCallback(async () => {
     if (isLoggingIn) return;
@@ -121,7 +113,5 @@ export const useFraktLogin = () => {
     isLoggedIn: !!accessToken,
     isLoggingIn,
     logIn,
-    isLedger,
-    setIsLedger,
   };
 };

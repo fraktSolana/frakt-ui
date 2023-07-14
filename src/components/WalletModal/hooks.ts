@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { fetchUserRewards } from '@frakt/api/user';
+import { useQuery } from '@tanstack/react-query';
 
 interface WalletModalState {
   visible: boolean;
@@ -12,3 +14,20 @@ export const useWalletModal = create<WalletModalState>((set) => ({
     set((state) => ({ ...state, visible: !state.visible })),
   setVisible: (nextValue) => set((state) => ({ ...state, visible: nextValue })),
 }));
+
+export const useFetchUserRewards = ({ walletPublicKey }) => {
+  const { data, isLoading, isFetching } = useQuery(
+    ['fetchUserRewards', walletPublicKey],
+    () => fetchUserRewards({ publicKey: walletPublicKey }),
+    {
+      staleTime: 60_000,
+      refetchOnWindowFocus: false,
+      enabled: !!walletPublicKey,
+    },
+  );
+
+  return {
+    data: data,
+    loading: isLoading || isFetching,
+  };
+};

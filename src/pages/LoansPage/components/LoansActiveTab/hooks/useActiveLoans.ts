@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { sum, map } from 'lodash';
 
@@ -10,6 +9,7 @@ import {
   useHiddenLoansPubkeys,
 } from '@frakt/pages/LoansPage/loansState';
 import { useConfetti } from '@frakt/components/Confetti';
+import { useIsLedger } from '@frakt/store';
 
 export const useActiveLoans = () => {
   const wallet = useWallet();
@@ -25,7 +25,7 @@ export const useActiveLoans = () => {
     open: openLoadingModal,
   } = useLoadingModal();
 
-  const [isLedger, setIsLedger] = useState<boolean>(false);
+  const { isLedger, setIsLedger } = useIsLedger();
 
   const showConfetti = () => setVisible(true);
 

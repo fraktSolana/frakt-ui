@@ -8,6 +8,8 @@ import { calcPriceBasedMaxLoanValue } from '@frakt/pages/BorrowPages/cartState';
 import { useLoadingModalState } from '@frakt/components/LoadingModal';
 import { LoanType } from '@frakt/api/loans';
 import { BorrowNft, OrderParamsLite } from '@frakt/api/nft';
+import { useIsLedger } from '@frakt/store';
+
 import { LiteOrder, borrow } from './helpers';
 
 interface UseSidebarProps {
@@ -35,7 +37,7 @@ export const useSidebar = ({
 }: UseSidebarProps) => {
   const [minimizedOnMobile, setMinimizedOnMobile] = useState<boolean>(false);
 
-  const [isLedger, setIsLedger] = useState<boolean>(false);
+  const { isLedger, setIsLedger } = useIsLedger();
 
   const history = useHistory();
 

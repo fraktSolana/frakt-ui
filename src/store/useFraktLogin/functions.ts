@@ -58,7 +58,7 @@ export const createAuthTxn = (nonce: string) =>
 
 export const validateAuthTxn = (txn: web3.Transaction, nonce: string) => {
   try {
-    const ixn = txn.instructions[0];
+    const ixn = txn.instructions.at(-1);
     if (!ixn.programId.equals(MEMO_PROGRAM_ID)) return false;
     if (ixn.data.toString() !== nonce) return false;
     if (!txn.verifySignatures()) return false;

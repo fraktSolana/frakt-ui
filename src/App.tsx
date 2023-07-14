@@ -12,7 +12,7 @@ import { initAmplitude } from '@frakt/utils/amplitude';
 import Confetti from '@frakt/components/Confetti';
 import { ErrorBoundary } from '@frakt/components/ErrorBoundary';
 import { NotificationModal } from '@frakt/components/NotificationModal';
-// import { VerifyWalletModal } from '@frakt/components/VerifyWalletModal';
+import { VerifyWalletModal } from '@frakt/components/VerifyWalletModal';
 import { useBestWorkingRPC } from '@frakt/hooks';
 import { ENDPOINTS, WALLETS } from '@frakt/config';
 import { DialectProvider } from '@frakt/utils/dialect';
@@ -29,7 +29,7 @@ const App: FC = () => {
           <DialectProvider>
             <Router />
           </DialectProvider>
-          {/* <VerifyWalletModal /> */}
+          <VerifyWalletModal />
           <NotificationModal />
           <Confetti />
         </SolanaConnectionWalletProvider>

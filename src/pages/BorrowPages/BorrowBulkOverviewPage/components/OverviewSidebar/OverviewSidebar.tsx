@@ -1,11 +1,8 @@
 import { FC } from 'react';
-import classNames from 'classnames';
 
-import { Alert, Solana } from '@frakt/icons';
+import { Alert } from '@frakt/icons';
 import Button from '@frakt/components/Button';
 import { CartOrder, useBorrow } from '@frakt/pages/BorrowPages/cartState';
-
-import Checkbox from '@frakt/components/Checkbox';
 
 import styles from './OverviewSidebar.module.scss';
 import { Pair } from '@frakt/api/bonds';
@@ -16,8 +13,6 @@ interface OverviewSidebarProps {
   pairs: Pair[];
   onChangeAssets: () => void;
   onBorrow: () => void;
-  isLedger: boolean;
-  setIsLedger?: (value: boolean) => void;
 }
 
 export const OverviewSidebar: FC<OverviewSidebarProps> = ({
@@ -25,8 +20,6 @@ export const OverviewSidebar: FC<OverviewSidebarProps> = ({
   pairs,
   onChangeAssets,
   onBorrow,
-  isLedger,
-  setIsLedger,
 }) => {
   const { totalBorrowValue } = useBorrow();
 
@@ -60,18 +53,6 @@ export const OverviewSidebar: FC<OverviewSidebarProps> = ({
           Please note that you have loans with different durations
         </div>
       )}
-
-      <div
-        className={classNames(styles.checkboxWrapper, {
-          [styles.checkboxMarginTop]: isDifferentDurations || !!fees.length,
-        })}
-      >
-        <Checkbox
-          onChange={() => setIsLedger(!isLedger)}
-          label="I use ledger"
-          checked={isLedger}
-        />
-      </div>
 
       <div className={styles.sidebarBtnWrapper}>
         <Button type="secondary" onClick={onBorrow} className={styles.btn}>
