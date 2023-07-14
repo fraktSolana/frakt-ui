@@ -1,9 +1,11 @@
 import { useMemo } from 'react';
+import { BanxStakeState } from 'fbonds-core/lib/fbond-protocol/types';
 import { useQuery } from '@tanstack/react-query';
 import { create } from 'zustand';
 import produce from 'immer';
 
 import { AuctionItem, fetchAllAuctions } from '@frakt/api/auctions';
+
 import { parseRefinanceAuctionsInfo } from '../../RefinanceAuctionCard';
 
 export const useFetchAuctionsList = () => {
@@ -28,7 +30,8 @@ export const useFetchAuctionsList = () => {
 
   const filteredStakedNFTs = useMemo(() => {
     return filteredAuctions.filter(
-      (auction: AuctionItem) => auction?.banxStake?.banxStakeState !== 'staked',
+      (auction: AuctionItem) =>
+        auction?.banxStake?.banxStakeState !== BanxStakeState.Staked,
     );
   }, [filteredAuctions]);
 

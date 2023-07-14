@@ -16,12 +16,6 @@ export interface AuctionItem {
   nftImageUrl: string;
   nftCollectionName: string;
 
-  banxStake?: {
-    publicKey: string;
-    adventureSubscriptionsQuantity: number;
-    banxStakeState: string;
-  };
-
   classicParams?: {
     auctionPubkey: string;
 
