@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { create } from 'zustand';
 import produce from 'immer';
@@ -25,18 +26,26 @@ export const useFetchAuctionsList = () => {
     data?.filter(({ nftMint }) => !hiddenAuctionsPubkeys.includes(nftMint)) ||
     [];
 
-  const auctions = filteredAuctions.filter((auction: AuctionItem) => {
-    if (auction?.bondParams?.auctionRefinanceStartTime) {
-      const { floorPrice, currentLoanAmount } =
-        parseRefinanceAuctionsInfo(auction);
+  const filteredStakedNFTs = useMemo(() => {
+    return filteredAuctions.filter(
+      (auction: AuctionItem) => auction?.banxStake?.banxStakeState !== 'staked',
+    );
+  }, [filteredAuctions]);
 
-      return parseFloat(currentLoanAmount) < parseFloat(floorPrice);
-    }
-    return auction;
-  });
+  const filteredValidAuctions = useMemo(() => {
+    return filteredStakedNFTs.filter((auction: AuctionItem) => {
+      if (auction?.bondParams?.auctionRefinanceStartTime) {
+        const { floorPrice, currentLoanAmount } =
+          parseRefinanceAuctionsInfo(auction);
+
+        return parseFloat(currentLoanAmount) < parseFloat(floorPrice);
+      }
+      return auction;
+    });
+  }, [filteredStakedNFTs]);
 
   return {
-    data: auctions,
+    data: filteredValidAuctions,
     loading: isLoading || isFetching,
     hideAuction,
   };
