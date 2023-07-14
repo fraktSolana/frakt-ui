@@ -80,7 +80,7 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
         selected: !!selection?.length,
       }}
       activeRowParams={{
-        field: 'gracePeriod',
+        field: 'isGracePeriod',
         value: true,
         className: 'graceRowClassName',
         cardClassName: styles.graced,
