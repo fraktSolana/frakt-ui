@@ -27,6 +27,11 @@ type LiquidateBondOnAuction = (props: {
   oracleFloor: string;
   whitelistEntry: string;
   repayAccounts: RepayAccounts[];
+  banxStakePubkey?: string;
+  adventureSubscriptionsPubkeys?: {
+    adventure: web3.PublicKey;
+    adventureSubscription: web3.PublicKey;
+  }[];
 }) => Promise<boolean>;
 
 export const liquidateBondOnAuction: LiquidateBondOnAuction = async ({
@@ -41,6 +46,8 @@ export const liquidateBondOnAuction: LiquidateBondOnAuction = async ({
   oracleFloor,
   whitelistEntry,
   repayAccounts,
+  banxStakePubkey,
+  adventureSubscriptionsPubkeys,
 }): Promise<boolean> => {
   const { instructions, signers } = await txn({
     programId: new web3.PublicKey(process.env.BONDS_PROGRAM_PUBKEY),
@@ -59,8 +66,12 @@ export const liquidateBondOnAuction: LiquidateBondOnAuction = async ({
       whitelistEntry: new web3.PublicKey(whitelistEntry),
       admin: new web3.PublicKey(process.env.BONDS_ADMIN_PUBKEY),
       repayAccounts: repayAccounts,
-      banxStake: EMPTY_PUBKEY,
-      subscriptionsAndAdventures: [],
+      banxStake: banxStakePubkey
+        ? new web3.PublicKey(banxStakePubkey)
+        : EMPTY_PUBKEY,
+      subscriptionsAndAdventures: adventureSubscriptionsPubkeys
+        ? adventureSubscriptionsPubkeys
+        : [],
     },
     sendTxn: sendTxnPlaceHolder,
   });
