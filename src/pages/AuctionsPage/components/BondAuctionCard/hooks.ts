@@ -22,7 +22,7 @@ export const useBondAuctionCard = (
     openLoadingModal();
 
     try {
-      const { nftMint, bondParams } = auction;
+      const { nftMint, bondParams, banxStake, adventureStakes } = auction;
 
       const {
         fbondPubkey,
@@ -60,6 +60,15 @@ export const useBondAuctionCard = (
         oracleFloor,
         whitelistEntry,
         repayAccounts: convertedRepayAccounts,
+        banxStakePubkey: banxStake ? banxStake.publicKey : undefined,
+        adventureSubscriptionsPubkeys: adventureStakes
+          ? adventureStakes.map((adventureSubscription) => ({
+              adventure: new web3.PublicKey(adventureSubscription.adventure),
+              adventureSubscription: new web3.PublicKey(
+                adventureSubscription.publicKey,
+              ),
+            }))
+          : undefined,
       });
 
       if (result) {

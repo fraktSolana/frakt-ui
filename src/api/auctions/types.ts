@@ -1,4 +1,8 @@
 import { DeltaType } from '@frakters/raffle-sdk/lib/raffle-core/types';
+import {
+  AdventureSubscription,
+  BanxStake,
+} from 'fbonds-core/lib/fbond-protocol/types';
 
 interface RepayAccount {
   bondTradeTransaction: string;
@@ -50,6 +54,8 @@ export interface AuctionItem {
     repayValue?: number;
     hadoMarket?: string;
   };
+  banxStake: BanxStake;
+  adventureStakes: AdventureSubscription[];
 }
 
 export interface AuctionHistoryItem {
