@@ -11,15 +11,13 @@ import { NotifyType } from '@frakt/utils/solanaUtils';
 import { Market, Pair } from '@frakt/api/bonds';
 
 import {
+  STANDART_INTEREST_PERCENT,
   makeCreatePairTransaction,
   makeRemoveOrderTransaction,
   useMarketPairs,
 } from '@frakt/utils/bonds';
 
-import {
-  LOAN_TO_VALUE_RATIO,
-  OFFER_INTEREST_PERCENTAGE,
-} from './usePlaceOfferTab';
+import { LOAN_TO_VALUE_RATIO } from './usePlaceOfferTab';
 
 export const useOfferTransactions = ({
   wallet,
@@ -119,7 +117,7 @@ export const useOfferTransactions = ({
 
   const onCreateOffer = async (): Promise<void> => {
     if (!isEmpty(market) && wallet.publicKey) {
-      const rawMaxLoanValue = loanValue * (1 + OFFER_INTEREST_PERCENTAGE / 1e2);
+      const rawMaxLoanValue = loanValue * (1 + STANDART_INTEREST_PERCENT / 1e2);
 
       const createTransactionParams = {
         marketPubkey: new web3.PublicKey(market.marketPubkey),
@@ -127,7 +125,7 @@ export const useOfferTransactions = ({
         maxLoanValue: rawMaxLoanValue,
         maxLTV: LOAN_TO_VALUE_RATIO,
         solDeposit: offerSize,
-        interest: OFFER_INTEREST_PERCENTAGE,
+        interest: STANDART_INTEREST_PERCENT,
         marketFloor: market.oracleFloor.floor,
         bondFeature,
       };
@@ -147,11 +145,11 @@ export const useOfferTransactions = ({
 
   const onEditOffer = async (): Promise<void> => {
     if (!isEmpty(market) && !isEmpty(pair) && wallet.publicKey) {
-      const rawMaxLoanValue = loanValue * (1 + OFFER_INTEREST_PERCENTAGE / 1e2);
+      const rawMaxLoanValue = loanValue * (1 + STANDART_INTEREST_PERCENT / 1e2);
 
       const editTransactionParams = {
         solDeposit: offerSize,
-        interest: OFFER_INTEREST_PERCENTAGE,
+        interest: STANDART_INTEREST_PERCENT,
         marketFloor: market.oracleFloor.floor,
         maxLoanValue: rawMaxLoanValue,
         pair,
