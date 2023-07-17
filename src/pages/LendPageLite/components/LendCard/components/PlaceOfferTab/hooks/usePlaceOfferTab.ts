@@ -12,7 +12,6 @@ import { RBOption } from '@frakt/components/RadioButton';
 import { useOfferTransactions } from './useOfferTransactions';
 import { calculateLoanValue } from './../helpers';
 
-export const OFFER_INTEREST_PERCENTAGE = 3;
 export const LOAN_TO_VALUE_RATIO = 100;
 export const DURATION_IN_DAYS = 7;
 
