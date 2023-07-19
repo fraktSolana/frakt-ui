@@ -1,14 +1,19 @@
 import { SearchOutlined } from '@ant-design/icons';
 
-import { CloseCircle } from '@frakt/icons';
-
 import Button from '../Button';
 
 import styles from './SearchSelect.module.scss';
+import { CloseCircle } from '@frakt/icons';
 
-export const PrefixInput = ({ onClick, collapsible = false }) => (
+export const PrefixInput = ({
+  onClick,
+  collapsed = false,
+}: {
+  onClick: () => void;
+  collapsed: boolean;
+}) => (
   <div className={styles.prefix}>
-    {!collapsible ? (
+    {collapsed ? (
       <SearchOutlined />
     ) : (
       <Button type="tertiary" onClick={onClick} className={styles.closeButton}>
@@ -17,7 +22,6 @@ export const PrefixInput = ({ onClick, collapsible = false }) => (
     )}
   </div>
 );
-
 export const SelectLabels = ({ labels = [] }) => (
   <div className={styles.labels}>
     {labels.map((label) => (

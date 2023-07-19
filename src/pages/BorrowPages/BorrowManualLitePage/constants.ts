@@ -10,3 +10,8 @@ export const DURATION_TABS: Tab[] = [
     value: '0',
   },
 ];
+
+export const defaultSortOption = {
+  label: 'Borrow',
+  value: 'maxLoanValue_desc',
+};

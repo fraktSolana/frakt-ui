@@ -1,7 +1,8 @@
-import { ColumnsType, ColumnType } from 'antd/es/table';
+import { ColumnType } from 'antd/es/table';
 import { SortOrder } from 'antd/lib/table/interface';
 
-import { Loan, LoanType } from '@frakt/api/loans';
+import Checkbox from '@frakt/components/Checkbox';
+import { Loan } from '@frakt/api/loans';
 import {
   createHighlitedPercentValueJSX,
   createPercentValueJSX,
@@ -12,9 +13,11 @@ import {
 import { useSelectedLoans } from '../../loansState';
 import {
   DurationCell,
-  MoreActionsCell,
+  RepayCell,
   CollectionInfoCell,
-  StakingLoanCell,
+  HeaderRepayCell,
+  RefinanceCell,
+  HeaderRefinanceCell,
 } from './LoansTableCells';
 
 import styles from './LoansTable.module.scss';
@@ -25,158 +28,153 @@ export type SortColumns = {
   isCardView: boolean;
 }[];
 
-export const TableList = ({ isCardView }) => {
-  const { findLoanInSelection } = useSelectedLoans();
+export const getTableColumns = ({ isCardView, onSelectAll, duration }) => {
+  const { selection, findLoanInSelection, toggleLoanInSelection } =
+    useSelectedLoans();
 
-  const COLUMNS: ColumnsType<Loan> = [
-    {
-      title: (column) => (
-        <div className={styles.rowCenter}>
-          <HeaderCell
-            column={column}
-            label="Collateral"
-            value="collateral"
-            hiddenSort
-          />
-        </div>
-      ),
-      render: (_, { nft, pubkey }) => (
-        <CollectionInfoCell
-          nftName={nft.name}
-          nftImage={nft.imageUrl}
-          selected={!!findLoanInSelection(pubkey)}
+  const NAME_COLUMN: ColumnType<Loan> = {
+    title: (column) => (
+      <div className={styles.headerTitleRow}>
+        <Checkbox
+          className={styles.checkbox}
+          classNameInnerContent={styles.checkboxHeaderInnerContent}
+          onChange={onSelectAll}
+          checked={!!selection?.length}
         />
-      ),
-    },
-    {
-      key: 'loanValue',
-      dataIndex: 'loanValue',
-      title: (column) => (
         <HeaderCell
           column={column}
-          label="Borrowed"
-          value="loanValue"
+          label="Collateral"
+          value="collateral"
           hiddenSort
         />
-      ),
-      render: (_, { loanValue }) => createSolValueJSX(loanValue),
-      sorter: ({ loanValue: loanValueA }, { loanValue: loanValueB }) =>
-        loanValueA - loanValueB,
-      showSorterTooltip: false,
-    },
-    {
-      key: 'repayValue',
-      dataIndex: 'repayValue',
-      title: (column) => (
-        <HeaderCell
-          column={column}
-          label="Debt"
-          value="repayValue"
-          hiddenSort
-        />
-      ),
-      render: (_, { repayValue }) => createSolValueJSX(repayValue),
-      sorter: ({ repayValue: repayValueA }, { repayValue: repayValueB }) =>
-        repayValueA - repayValueB,
-      showSorterTooltip: false,
-    },
-    {
-      key: 'liquidationPrice',
-      dataIndex: 'liquidationPrice',
-      title: (column) => (
-        <HeaderCell
-          column={column}
-          label="Liquidation price"
-          value="liquidationPrice"
-          hiddenSort
-        />
-      ),
-      render: (_, { classicParams }) =>
-        createSolValueJSX(classicParams?.priceBased?.liquidationPrice),
-      sorter: (
-        { classicParams: classicParamsA },
-        { classicParams: classicParamsB },
-      ) =>
-        classicParamsA?.priceBased?.liquidationPrice -
-        classicParamsB?.priceBased?.liquidationPrice,
-      showSorterTooltip: false,
-    },
-    {
-      key: 'interest',
-      dataIndex: 'interest',
-      title: (column) => (
-        <HeaderCell
-          column={column}
-          label="Borrow interest"
-          value="interest"
-          hiddenSort
-        />
-      ),
-      render: (_, { classicParams }) =>
-        createPercentValueJSX(classicParams?.priceBased?.borrowAPRPercent),
-      sorter: (
-        { classicParams: classicParamsA },
-        { classicParams: classicParamsB },
-      ) =>
-        classicParamsA?.priceBased?.borrowAPRPercent -
-        classicParamsB?.priceBased?.borrowAPRPercent,
-      showSorterTooltip: false,
-    },
-    {
-      key: 'health',
-      dataIndex: 'health',
-      title: (column) => (
-        <HeaderCell column={column} label="Health" value="health" hiddenSort />
-      ),
-      render: (_, { classicParams }) =>
-        createHighlitedPercentValueJSX(classicParams?.priceBased?.health),
-      sorter: (
-        { classicParams: classicParamsA },
-        { classicParams: classicParamsB },
-      ) =>
-        classicParamsA?.priceBased?.health - classicParamsB?.priceBased?.health,
-      showSorterTooltip: false,
-    },
-    {
-      key: 'duration',
-      dataIndex: 'duration',
-      title: (column) => (
-        <HeaderCell
-          column={column}
-          label="Duration"
-          value="duration"
-          hiddenSort
-        />
-      ),
-      render: (_, loan) => <DurationCell loan={loan} />,
-      showSorterTooltip: false,
-      defaultSortOrder: 'ascend',
-      sorter: (loanA, loanB) => {
-        if (loanA.loanType === LoanType.PRICE_BASED) return 1;
-        if (loanB.loanType === LoanType.PRICE_BASED) return -1;
+      </div>
+    ),
+    render: (_, loan) => (
+      <CollectionInfoCell
+        nftName={loan.nft.name}
+        nftImage={loan.nft.imageUrl}
+        selected={!!findLoanInSelection(loan.pubkey)}
+        onChangeCheckbox={() => toggleLoanInSelection(loan)}
+        isCardView={isCardView}
+      />
+    ),
+  };
 
-        const timeToRepayA =
-          loanA?.classicParams?.timeBased?.expiredAt ||
-          loanA?.bondParams?.expiredAt;
+  const BORROWED_COLUMN: ColumnType<Loan> = {
+    key: 'loanValue',
+    dataIndex: 'loanValue',
+    title: (column) => (
+      <HeaderCell
+        column={column}
+        label="Borrowed"
+        value="loanValue"
+        hiddenSort
+      />
+    ),
+    render: (_, { loanValue }) => createSolValueJSX(loanValue),
+    sorter: true,
+    showSorterTooltip: false,
+  };
 
-        const timeToRepayB =
-          loanB?.classicParams?.timeBased?.expiredAt ||
-          loanB?.bondParams?.expiredAt;
+  const DEBT_COLUMN: ColumnType<Loan> = {
+    key: 'repayValue',
+    dataIndex: 'repayValue',
+    title: (column) => (
+      <HeaderCell column={column} label="Debt" value="repayValue" hiddenSort />
+    ),
+    render: (_, { repayValue }) => createSolValueJSX(repayValue),
+    sorter: true,
+    showSorterTooltip: false,
+  };
 
-        return timeToRepayA - timeToRepayB;
-      },
-    },
-    {
-      render: (_, loan) => (
-        <StakingLoanCell loan={loan} isCardView={isCardView} />
-      ),
-    },
-    {
-      render: (_, loan) => (
-        <MoreActionsCell isCardView={isCardView} loan={loan} />
-      ),
-    },
-  ];
+  const LIQUIDATION_PRICE_COLUMN: ColumnType<Loan> = {
+    key: 'liquidationPrice',
+    dataIndex: 'liquidationPrice',
+    title: (column) => (
+      <HeaderCell
+        column={column}
+        label="Liquidation price"
+        value="liquidationPrice"
+        hiddenSort
+      />
+    ),
+    render: (_, { classicParams }) =>
+      createSolValueJSX(classicParams?.priceBased?.liquidationPrice),
+    sorter: true,
+    showSorterTooltip: false,
+  };
 
-  return COLUMNS;
+  const INTEREST_COLUMN: ColumnType<Loan> = {
+    key: 'interest',
+    dataIndex: 'interest',
+    title: (column) => (
+      <HeaderCell
+        column={column}
+        label="Borrow interest"
+        value="interest"
+        hiddenSort
+      />
+    ),
+    render: (_, { classicParams }) =>
+      createPercentValueJSX(classicParams?.priceBased?.borrowAPRPercent),
+    sorter: true,
+    showSorterTooltip: false,
+  };
+
+  const HEALTH_COLUMN: ColumnType<Loan> = {
+    key: 'health',
+    dataIndex: 'health',
+    title: (column) => (
+      <HeaderCell column={column} label="Health" value="health" hiddenSort />
+    ),
+    render: (_, { classicParams }) =>
+      createHighlitedPercentValueJSX(classicParams?.priceBased?.health),
+
+    sorter: true,
+    showSorterTooltip: false,
+  };
+
+  const DURATION_COLUMN: ColumnType<Loan> = {
+    key: 'duration',
+    dataIndex: 'duration',
+    title: (column) => (
+      <HeaderCell
+        column={column}
+        label="Duration"
+        value="duration"
+        hiddenSort
+      />
+    ),
+    render: (_, loan) => <DurationCell loan={loan} />,
+    sorter: true,
+    showSorterTooltip: false,
+  };
+
+  const REPAY_COLUMN: ColumnType<Loan> & { united: boolean } = {
+    title: () => !isCardView && <HeaderRepayCell />,
+    render: (_, loan) => <RepayCell isCardView={isCardView} loan={loan} />,
+    width: 130,
+    united: true,
+  };
+
+  const REFINANCE_COLUMN: ColumnType<Loan> & { united: boolean } = {
+    title: () => !isCardView && <HeaderRefinanceCell />,
+    render: (_, loan) => <RefinanceCell isCardView={isCardView} loan={loan} />,
+    width: 130,
+    united: true,
+  };
+
+  const isPerpetual = duration === '0';
+
+  return [
+    NAME_COLUMN,
+    BORROWED_COLUMN,
+    DEBT_COLUMN,
+    !isPerpetual ? DURATION_COLUMN : null,
+    isPerpetual ? LIQUIDATION_PRICE_COLUMN : null,
+    isPerpetual ? INTEREST_COLUMN : null,
+    isPerpetual ? HEALTH_COLUMN : null,
+    !isPerpetual ? REFINANCE_COLUMN : null,
+    REPAY_COLUMN,
+  ].filter(Boolean);
 };

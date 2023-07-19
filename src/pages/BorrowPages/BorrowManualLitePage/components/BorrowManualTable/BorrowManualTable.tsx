@@ -1,9 +1,10 @@
 import { ChangeEvent, FC } from 'react';
 import { debounce } from 'lodash';
 
-import Table, { PartialBreakpoints } from '@frakt/components/Table';
-import { BorrowNft, LoanDuration } from '@frakt/api/nft';
+import Table, { PartialBreakpoints, SortParams } from '@frakt/components/Table';
 import { useTable, useTableView } from '@frakt/components/Table/hooks';
+import { SearchSelectProps } from '@frakt/components/SearchSelect';
+import { BorrowNft, LoanDuration } from '@frakt/api/nft';
 
 import { getTableColumns } from './columns';
 import styles from './BorrowManualTable.module.scss';
@@ -25,6 +26,8 @@ export interface BorrowManualTableProps {
   setSearch: (nextValue: string) => void;
   onRowClick: (nft: BorrowNftData) => void;
   activeNftMint?: string;
+  sortParams: SortParams;
+  searchSelectParams: SearchSelectProps<any>;
 }
 
 export const BorrowManualTable: FC<BorrowManualTableProps> = ({
@@ -35,6 +38,8 @@ export const BorrowManualTable: FC<BorrowManualTableProps> = ({
   setSearch,
   onRowClick,
   activeNftMint,
+  sortParams,
+  searchSelectParams,
 }) => {
   const { viewState } = useTableView();
 
@@ -64,9 +69,10 @@ export const BorrowManualTable: FC<BorrowManualTableProps> = ({
       className={styles.rootTable}
       viewParams={{
         showCard: viewState === 'card',
-        showSorting: false,
-        showSearching: true,
+        showSearching: false,
       }}
+      searchSelectParams={searchSelectParams}
+      sortParams={sortParams}
       cardClassName={styles.cardClassName}
       activeRowParams={{
         className: styles.activeRowClassName,

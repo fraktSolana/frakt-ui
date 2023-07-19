@@ -1,6 +1,10 @@
 import { FC } from 'react';
 
-import Table, { PartialBreakpoints } from '@frakt/components/Table';
+import Table, {
+  PartialBreakpoints,
+  SortParams,
+  ToggleParams,
+} from '@frakt/components/Table';
 import { LiquidityPool } from '@frakt/api/pools';
 
 import {
@@ -15,7 +19,10 @@ export interface PoolsTableProps {
   data: ReadonlyArray<LiquidityPool>;
   loading?: boolean;
   className?: string;
+  classNameSortView?: string;
   breakpoints?: PartialBreakpoints;
+  sortParams: SortParams;
+  toggleParams: ToggleParams;
 }
 
 export const PoolsTable: FC<PoolsTableProps> = ({
@@ -23,6 +30,9 @@ export const PoolsTable: FC<PoolsTableProps> = ({
   className,
   loading,
   breakpoints,
+  sortParams,
+  toggleParams,
+  classNameSortView,
 }) => {
   const { viewState } = useTableView();
   const isCardView = viewState === 'card';
@@ -32,17 +42,13 @@ export const PoolsTable: FC<PoolsTableProps> = ({
   const columns = getTableColumns(isCardView);
   const { table } = useTable({
     data: filteredData,
-    filterField: ['userDeposit', 'depositAmount'],
     columns,
-    defaultField: 'totalLiquidity',
     loading,
   });
 
   const viewParams = {
     showCard: isCardView,
-    showSorting: true,
     showSearching: true,
-    showToggle: true,
   };
 
   return (
@@ -51,7 +57,10 @@ export const PoolsTable: FC<PoolsTableProps> = ({
       breakpoints={breakpoints}
       search={{ onChange: handleSearchChange }}
       className={className}
+      classNameSortView={classNameSortView}
       viewParams={viewParams}
+      sortParams={sortParams}
+      toggleParams={toggleParams}
     />
   );
 };

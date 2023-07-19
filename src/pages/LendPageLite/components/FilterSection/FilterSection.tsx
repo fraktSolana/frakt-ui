@@ -1,61 +1,71 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { MarketPreview } from '@frakt/api/bonds';
+import { convertAprToApy } from '@frakt/utils';
 import Toggle from '@frakt/components/Toggle';
 import {
   SearchSelectProps,
   SearchSelect,
 } from '@frakt/components/SearchSelect';
+import {
+  SortDropdown,
+  SortDropdownProps,
+} from '@frakt/components/SortDropdown';
 
-import { DropdownSort, SortValue } from './DropdownSort';
 import styles from './FilterSection.module.scss';
 
 interface FilterSectionProps {
   marketsPreview: MarketPreview[];
   selectedMarkets: string[];
   onFilterChange: (values: string[]) => void;
-  handleSortChange: (value: SortValue) => void;
   checked: boolean;
   onToggleChange: () => void;
+  sortParams: SortDropdownProps;
 }
 
 const FilterSection: FC<FilterSectionProps> = ({
   marketsPreview,
   selectedMarkets,
-  handleSortChange,
   onToggleChange,
   onFilterChange,
   checked,
+  sortParams,
 }) => {
   const { connected } = useWallet();
+  const [collapsed, setCollapsed] = useState<boolean>(true);
 
   const searchSelectProps: SearchSelectProps<MarketPreview> = {
     options: marketsPreview,
     selectedOptions: selectedMarkets,
     placeholder: 'Select a collection',
-    labels: ['Collections', 'APR'],
+    labels: ['Collections', 'APY'],
     optionKeys: {
       labelKey: 'collectionName',
       valueKey: 'marketPubkey',
       imageKey: 'collectionImage',
       secondLabelKey: {
         key: 'apy',
-        symbol: '%',
+        format: (value: number) =>
+          `${convertAprToApy(value / 100 || 0)?.toFixed(0)} %`,
       },
     },
     onFilterChange,
+    onChangeCollapsed: setCollapsed,
+    collapsed,
   };
 
   return (
     <div className={styles.wrapper}>
       <SearchSelect<MarketPreview> {...searchSelectProps} />
-      <div className={styles.sortWrapper}>
-        {connected && (
-          <Toggle label="Mine" value={checked} onChange={onToggleChange} />
-        )}
-        <DropdownSort onSortChange={handleSortChange} />
-      </div>
+      {collapsed && (
+        <div className={styles.sortWrapper}>
+          {connected && (
+            <Toggle label="Mine" value={checked} onChange={onToggleChange} />
+          )}
+          <SortDropdown {...sortParams} />
+        </div>
+      )}
     </div>
   );
 };

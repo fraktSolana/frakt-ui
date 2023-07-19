@@ -8,7 +8,7 @@ import FiltersDropdown, {
   useFiltersModal,
 } from '@frakt/components/FiltersDropdown';
 
-import { useLoanCard } from '../../LoanCard/hooks';
+import { useLoansTransactions } from '../../LoansActiveTab/hooks/useLoansTransactions';
 
 import styles from '../LoansTable.module.scss';
 
@@ -16,7 +16,7 @@ export const StakingLoanCell: FC<{ loan: Loan; isCardView: boolean }> = ({
   loan,
   isCardView,
 }) => {
-  const { onCardinalUnstake } = useLoanCard(loan);
+  const { onCardinalUnstake } = useLoansTransactions(loan);
 
   const {
     visible: modalVisible,

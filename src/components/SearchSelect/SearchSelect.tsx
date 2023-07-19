@@ -4,7 +4,8 @@ import { SelectProps } from 'antd/lib/select';
 import classNames from 'classnames';
 import { Select } from 'antd';
 
-import { useOnClickOutside } from '@frakt/hooks';
+import { useOnClickOutside, useWindowSize } from '@frakt/hooks';
+import { TABLET_SIZE } from '@frakt/constants';
 import { Close } from '@frakt/icons';
 
 import { CollapsedContent, PrefixInput, SelectLabels } from './components';
@@ -21,9 +22,9 @@ export interface SearchSelectProps<T> extends SelectProps<T, unknown> {
   onFilterChange?: (values: string[]) => void;
   selectedOptions: string[];
   labels?: string[];
-  collapsible?: boolean;
   collapsed?: boolean;
   onChangeCollapsed?: (value: boolean) => void;
+  collapsedWidth?: number;
 }
 
 export const SearchSelect = <T extends {}>({
@@ -34,20 +35,25 @@ export const SearchSelect = <T extends {}>({
   onFilterChange,
   selectedOptions,
   labels,
-  collapsible = false,
   collapsed,
   onChangeCollapsed,
   className,
+  collapsedWidth,
   ...props
 }: SearchSelectProps<T>) => {
   const ref = useRef();
+
+  const { width } = useWindowSize();
+
+  const mobileWidth = collapsedWidth || TABLET_SIZE;
+  const isMobile = width <= mobileWidth;
 
   useOnClickOutside(
     ref,
     onChangeCollapsed ? () => onChangeCollapsed(true) : () => {},
   );
 
-  if (collapsed && collapsible)
+  if (collapsed && isMobile && onChangeCollapsed)
     return (
       <CollapsedContent
         selectedOptions={selectedOptions}
@@ -58,8 +64,8 @@ export const SearchSelect = <T extends {}>({
   return (
     <div className={classNames(styles.selectWrapper, className)} ref={ref}>
       <PrefixInput
+        collapsed={collapsed}
         onClick={() => onChangeCollapsed(!collapsed)}
-        collapsible={collapsible}
       />
       <Select
         value={selectedOptions}
@@ -68,7 +74,7 @@ export const SearchSelect = <T extends {}>({
         allowClear
         showSearch
         filterOption={filterOption}
-        defaultOpen={!collapsed && collapsible}
+        defaultOpen={!collapsed && isMobile}
         placeholder={placeholder}
         notFoundContent={null}
         className={styles.root}

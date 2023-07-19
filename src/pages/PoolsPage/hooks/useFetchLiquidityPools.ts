@@ -1,7 +1,8 @@
-import { LiquidityPool, fetchLiquidityPools } from '@frakt/api/pools';
-import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
+
+import { LiquidityPool, fetchLiquidityPools } from '@frakt/api/pools';
 
 export const useFetchLiquidityPools = ({ walletPublicKey }) => {
   const { search } = useLocation();

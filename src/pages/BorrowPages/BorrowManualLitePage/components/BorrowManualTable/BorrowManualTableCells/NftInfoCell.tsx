@@ -13,6 +13,10 @@ export const NftInfoCell: FC<NftInfoCellProps> = ({
   nftName,
   selected,
 }) => {
+  const [nftCollectionName, nftNumber] = nftName.split('#');
+
+  const displayNftNumber = nftNumber ? `#${nftNumber}` : '';
+
   return (
     <div className={styles.nftInfo}>
       <div className={styles.nftImageWrapper}>
@@ -20,7 +24,8 @@ export const NftInfoCell: FC<NftInfoCellProps> = ({
         {selected && <div className={styles.selectedCollectionOverlay}></div>}
       </div>
       <div className={styles.nftContent}>
-        <div className={styles.nftName}>{nftName}</div>
+        <div className={styles.nftName}>{nftCollectionName}</div>
+        <p className={styles.nftNumber}>{displayNftNumber}</p>
       </div>
     </div>
   );

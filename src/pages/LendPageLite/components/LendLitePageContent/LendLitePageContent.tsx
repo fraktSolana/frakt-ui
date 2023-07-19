@@ -21,7 +21,7 @@ const LendLitePageContent: FC = () => {
     onToggleChange,
     marketsToDisplay,
     handleFilterChange,
-    handleSortChange,
+    sortParams,
     showEmptyList,
     selectedMarkets,
   } = useFilteredMarkets();
@@ -43,7 +43,7 @@ const LendLitePageContent: FC = () => {
         marketsPreview={marketsPreview}
         onFilterChange={handleFilterChange}
         selectedMarkets={selectedMarkets}
-        handleSortChange={handleSortChange}
+        sortParams={sortParams}
         onToggleChange={onToggleChange}
         checked={checked}
       />

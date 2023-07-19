@@ -44,16 +44,18 @@
   justify-content: space-between;
   padding: 7px 16px;
   height: 32px;
-  width: 180px;
+  min-width: 190px;
+  width: 100%;
 
   @media (max-width: 650px) {
     padding: 7px 10px;
-    width: 150px;
+    min-width: 150px;
   }
 }
 .dropdownButton span {
   display: flex;
   align-items: center;
+  white-space: nowrap;
 }
 .dropdownButton,
 .button {

@@ -33,6 +33,7 @@ export interface Loan {
     mint: string;
     name: string;
     collectionName: string;
+    collectionImage: string;
     imageUrl: string;
   };
 

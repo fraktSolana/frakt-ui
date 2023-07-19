@@ -1,18 +1,21 @@
 import { useState } from 'react';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { BN } from '@frakt-protocol/frakt-sdk';
+import { map, sum } from 'lodash';
 
 import { usePartialRepayModal } from '@frakt/components/PartialRepayModal';
 import { stakeCardinal, unstakeCardinal } from '@frakt/utils/stake';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { Loan, RewardState, LoanType } from '@frakt/api/loans';
+import { paybackLoans } from '@frakt/utils/loans/paybackLoans';
+import { useConfetti } from '@frakt/components/Confetti';
 import { paybackLoan } from '@frakt/utils/loans';
 import { throwLogsError } from '@frakt/utils';
-import { useConfetti } from '@frakt/components/Confetti';
+import { useIsLedger } from '@frakt/store';
 
-import { useHiddenLoansPubkeys, useSelectedLoans } from '../../loansState';
+import { useHiddenLoansPubkeys, useSelectedLoans } from '../../../loansState';
 
-export const useLoanCard = (loan: Loan) => {
+export const useLoansTransactions = (loan: Loan) => {
   const wallet = useWallet();
   const { connection } = useConnection();
   const { setVisible } = useConfetti();
@@ -41,9 +44,7 @@ export const useLoanCard = (loan: Loan) => {
     addHiddenLoansPubkeys(pubkey);
   };
 
-  const showConfetti = (): void => {
-    setVisible(true);
-  };
+  const showConfetti = () => setVisible(true);
 
   const onPartialPayback = async (
     paybackAmount: BN,
@@ -78,29 +79,6 @@ export const useLoanCard = (loan: Loan) => {
       }
     } catch (error) {
       throwLogsError(error);
-    } finally {
-      setTransactionsLeft(null);
-      closeLoadingModal();
-    }
-  };
-
-  const onCardinalUnstake = async () => {
-    try {
-      const { pubkey, nft } = loan;
-
-      openLoadingModal();
-
-      await unstakeCardinal({
-        connection,
-        wallet,
-        nftMint: nft.mint,
-        loan: pubkey,
-      });
-
-      return true;
-    } catch (error) {
-      console.error(error);
-      return false;
     } finally {
       setTransactionsLeft(null);
       closeLoadingModal();
@@ -143,6 +121,29 @@ export const useLoanCard = (loan: Loan) => {
     }
   };
 
+  const onCardinalUnstake = async () => {
+    try {
+      const { pubkey, nft } = loan;
+
+      openLoadingModal();
+
+      await unstakeCardinal({
+        connection,
+        wallet,
+        nftMint: nft.mint,
+        loan: pubkey,
+      });
+
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    } finally {
+      setTransactionsLeft(null);
+      closeLoadingModal();
+    }
+  };
+
   const onCardinalStake = async (): Promise<void> => {
     try {
       const { pubkey, nft } = loan;
@@ -168,13 +169,63 @@ export const useLoanCard = (loan: Loan) => {
 
   return {
     onPartialPayback,
+    onPayback,
+
     closePartialRepayModal,
     partialRepayModalVisible,
-    onPayback,
-    onCardinalStake,
-    onCardinalUnstake,
-    closeLoadingModal,
     loadingModalVisible,
     transactionsLeft,
+
+    onCardinalStake,
+    onCardinalUnstake,
+  };
+};
+
+export const useBulkRepayTransaction = () => {
+  const wallet = useWallet();
+  const { connection } = useConnection();
+  const { setVisible } = useConfetti();
+
+  const { addHiddenLoansPubkeys } = useHiddenLoansPubkeys();
+  const { selection, clearSelection } = useSelectedLoans();
+
+  const { isLedger } = useIsLedger();
+
+  const showConfetti = () => setVisible(true);
+
+  const {
+    visible: loadingModalVisible,
+    open: openLoadingModal,
+    close: closeLoadingModal,
+  } = useLoadingModal();
+
+  const onBulkRepay = async (): Promise<void> => {
+    try {
+      openLoadingModal();
+
+      const result = await paybackLoans({
+        connection,
+        wallet,
+        loans: selection,
+        isLedger,
+      });
+
+      if (result) {
+        addHiddenLoansPubkeys(...selection.map(({ pubkey }) => pubkey));
+
+        clearSelection();
+        showConfetti();
+      }
+    } catch (error) {
+      throwLogsError(error);
+    } finally {
+      closeLoadingModal();
+    }
+  };
+
+  return {
+    onBulkRepay,
+    loadingModalVisible,
+    totalBorrowed: sum(map(selection, ({ repayValue }) => repayValue / 1e9)),
   };
 };

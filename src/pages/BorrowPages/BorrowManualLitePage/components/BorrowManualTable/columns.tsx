@@ -46,8 +46,7 @@ export const getTableColumns: GetTableColumns = ({
         selected={selected}
       />
     ),
-    // sorter: ({ nft: nftA }, { nft: nftB }) =>
-    //   nftB?.name?.localeCompare(nftA?.name),
+    sorter: true,
     showSorterTooltip: false,
   };
 
@@ -81,8 +80,7 @@ export const getTableColumns: GetTableColumns = ({
         hiddenSort
       />
     ),
-    // sorter: ({ loanValue: loanValueA }, { loanValue: loanValueB }) =>
-    //   loanValueB - loanValueA,
+    sorter: true,
     render: (_, { bondLoanValue }) => createSolValueJSX(bondLoanValue),
     showSorterTooltip: false,
   };
@@ -98,8 +96,7 @@ export const getTableColumns: GetTableColumns = ({
         hiddenSort
       />
     ),
-    // sorter: ({ loanValue: loanValueA }, { loanValue: loanValueB }) =>
-    //   loanValueB - loanValueA,
+    sorter: true,
     render: (_, { nft }) => {
       const { valuation, classicParams } = nft;
       const maxBorrowValuePriceBased =

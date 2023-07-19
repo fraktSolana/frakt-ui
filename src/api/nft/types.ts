@@ -10,6 +10,7 @@ export interface BorrowNft {
   banxStake?: string;
 
   collectionName: string;
+  collectionImage: string;
   imageUrl: string;
 
   valuation: number; // lamports
