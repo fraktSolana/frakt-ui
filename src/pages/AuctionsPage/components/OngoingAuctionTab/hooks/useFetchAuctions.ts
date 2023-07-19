@@ -28,15 +28,8 @@ export const useFetchAuctionsList = () => {
     data?.filter(({ nftMint }) => !hiddenAuctionsPubkeys.includes(nftMint)) ||
     [];
 
-  const filteredStakedNFTs = useMemo(() => {
-    return filteredAuctions.filter(
-      (auction: AuctionItem) =>
-        auction?.banxStake?.banxStakeState !== BanxStakeState.Staked,
-    );
-  }, [filteredAuctions]);
-
   const filteredValidAuctions = useMemo(() => {
-    return filteredStakedNFTs.filter((auction: AuctionItem) => {
+    return filteredAuctions.filter((auction: AuctionItem) => {
       if (auction?.bondParams?.auctionRefinanceStartTime) {
         const { floorPrice, currentLoanAmount } =
           parseRefinanceAuctionsInfo(auction);
@@ -45,7 +38,7 @@ export const useFetchAuctionsList = () => {
       }
       return auction;
     });
-  }, [filteredStakedNFTs]);
+  }, [filteredAuctions]);
 
   return {
     data: filteredValidAuctions,
