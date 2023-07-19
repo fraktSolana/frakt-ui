@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 
 import { useQuery } from '@tanstack/react-query';
@@ -39,6 +39,13 @@ const useTopNotification = () => {
       CSS_HEADER_HEIGHT_VAR,
       `${initialHeaderHeight.current + height}px`,
     );
+
+    return () => {
+      rootElement.style.setProperty(
+        CSS_HEADER_HEIGHT_VAR,
+        `${initialHeaderHeight.current}px`,
+      );
+    };
   }, [closed, topbarNotificationHtml]);
 
   useEffect(() => {
