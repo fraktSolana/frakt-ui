@@ -1,8 +1,9 @@
 .wrapper {
-  padding: 12px 32px;
+  padding: 4px 32px;
   background: var(--light-green-color);
   color: var(--black-color);
   display: flex;
+  font-family: var(--font-family-chakra);
   justify-content: flex-end;
   align-items: center;
   column-gap: 8px;
