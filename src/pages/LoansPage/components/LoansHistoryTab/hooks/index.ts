@@ -1,26 +1,28 @@
+import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { fetchLoansHistory } from '@frakt/api/loans';
-import { Sort } from '@frakt/components/Table';
+import { Option } from '@frakt/components/SortDropdown';
 
 const LIMIT = 10;
 
-export const useFetchLoansHistory = ({
-  queryData,
-  querySearch,
-}: {
-  queryData: Sort;
-  querySearch: string;
-}) => {
-  const { publicKey } = useWallet();
+const defaultSortOption = { label: 'When', value: 'date_desc' };
+
+export const useFetchLoansHistory = () => {
+  const { publicKey, connected } = useWallet();
+
+  const [querySearch, setQuerySearch] = useState<string>('');
+  const [sortOption, setSortOption] = useState<Option>(defaultSortOption);
+
+  const [name, order] = sortOption?.value?.split('_') || [];
 
   const fetchData = async ({ pageParam }: { pageParam: number }) => {
     const data = await fetchLoansHistory({
       skip: LIMIT * pageParam,
       limit: LIMIT,
-      sortBy: queryData?.field,
-      direction: queryData?.direction,
+      sortBy: name,
+      direction: order,
       walletPubkey: publicKey,
       querySearch,
     });
@@ -30,7 +32,7 @@ export const useFetchLoansHistory = ({
 
   const { data, fetchNextPage, isFetchingNextPage, isLoading, hasNextPage } =
     useInfiniteQuery({
-      queryKey: [publicKey, queryData, querySearch],
+      queryKey: [publicKey, sortOption, querySearch],
       queryFn: ({ pageParam = 0 }) => fetchData({ pageParam }),
       getPreviousPageParam: ({ pageParam }) => pageParam - 1 ?? undefined,
       getNextPageParam: ({ data, pageParam }) =>
@@ -38,7 +40,7 @@ export const useFetchLoansHistory = ({
       staleTime: 60 * 1000,
       cacheTime: 100_000,
       networkMode: 'offlineFirst',
-      keepPreviousData: true,
+      enabled: connected,
       refetchOnWindowFocus: false,
     });
 
@@ -50,5 +52,10 @@ export const useFetchLoansHistory = ({
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
+    setQuerySearch,
+    sortParam: {
+      onChange: setSortOption,
+      option: sortOption,
+    },
   };
 };

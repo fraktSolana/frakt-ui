@@ -2,12 +2,11 @@ import { useEffect, useState } from 'react';
 
 import HistoryTab from '@frakt/pages/MarketsPage/components/BondsOverview/components/HistoryTab/HistoryTab';
 import BondsTab from '@frakt/pages/MarketsPage/components/BondsOverview/components/BondsTab';
-import { SyntheticParams } from '@frakt/pages/MarketsPage/components/OrderBook/types';
 import { Tabs, useTabs } from '@frakt/components/Tabs';
 
+import OrderBookLite, { SyntheticParams } from '../OrderBookLite';
 import PlaceOfferTab from '../PlaceOfferTab';
 import { BONDS_TABS } from './constants';
-import OrderBook from '../OrderBook';
 
 import styles from './HiddenCollectionContent.module.scss';
 
@@ -79,7 +78,7 @@ const HiddenCollectionContent = ({
         />
         <div className={styles.tabContent}>{tabsComponents[tabValue]}</div>
       </div>
-      <OrderBook {...marketData} syntheticParams={syntheticParams} />
+      <OrderBookLite {...marketData} syntheticParams={syntheticParams} />
     </div>
   );
 };

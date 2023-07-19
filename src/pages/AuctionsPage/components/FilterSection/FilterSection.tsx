@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import classNames from 'classnames';
 
 import {
   SortDropdown,
@@ -31,22 +30,17 @@ const FilterSection = <T,>({
 
   return (
     <div className={styles.container}>
-      <div className={styles.searchAndFilterWrapper}>
-        <SearchSelect
-          {...searchProps}
-          onChangeCollapsed={setCollapsed}
-          className={styles.searchSelect}
-          collapsed={collapsed}
-          collapsible
-        />
-        {collapsed && <FilterDropdown {...filterProps} />}
-      </div>
-      <SortDropdown
-        className={classNames(styles.sortDropdown, {
-          [styles.hidden]: !collapsed,
-        })}
-        {...sortProps}
+      <SearchSelect
+        {...searchProps}
+        onChangeCollapsed={setCollapsed}
+        collapsed={collapsed}
       />
+      {collapsed && (
+        <div className={styles.sortAndFilterWrapper}>
+          <FilterDropdown {...filterProps} />
+          <SortDropdown className={styles.sortDropdown} {...sortProps} />
+        </div>
+      )}
     </div>
   );
 };

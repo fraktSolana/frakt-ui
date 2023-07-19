@@ -1,20 +1,18 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useParams } from 'react-router-dom';
+import { sortBy, get, isFunction } from 'lodash';
 import { create } from 'zustand';
 
 import { useMarketsPreview } from '@frakt/pages/MarketsPage/hooks';
 import { useSearchSelectedMarketsURLControl } from '@frakt/hooks';
+import { Option } from '@frakt/components/SortDropdown';
 import { MarketPreview } from '@frakt/api/bonds';
-import { compareNumbers } from '@frakt/utils';
 
 import { getFilteredMarkets, getMarketsToDisplay } from '../helpers';
-import { SortValue } from '../../FilterSection/DropdownSort';
+import { defaultSortOption, sortOptions } from '../constants';
 
 export const useFilteredMarkets = () => {
   const { publicKey } = useWallet();
-
-  const { sortValue, handleSortChange } = useSortState();
 
   const { selectedMarkets, setSelectedOptions } =
     useSearchSelectedMarketsURLControl();
@@ -24,7 +22,7 @@ export const useFilteredMarkets = () => {
 
   const filteredMarkets = getFilteredMarkets(marketsPreview, selectedMarkets);
   const marketsToDisplay = getMarketsToDisplay(marketsPreview, filteredMarkets);
-  const sortedMarkets = useSortMarkets(marketsToDisplay, sortValue);
+  const { sortedMarkets, sortParams } = useSortMarkets(marketsToDisplay);
 
   const handleFilterChange = (filteredOptions: string[]) => {
     setSelectedOptions(filteredOptions);
@@ -38,7 +36,7 @@ export const useFilteredMarkets = () => {
     checked,
     onToggleChange,
     marketsToDisplay: sortedMarkets,
-    handleSortChange,
+    sortParams,
     showEmptyList,
     handleFilterChange,
     selectedMarkets,
@@ -49,52 +47,48 @@ enum SortField {
   OFFER_TVL = 'offerTVL',
   LOANS_TVL = 'loansTVL',
   ACTIVE_LOANS = 'activeLoans',
-  APR = 'apr',
+  APY = 'apy',
 }
 
-enum SORT_ORDER {
-  ASC = 'asc',
-  DESC = 'desc',
-}
+const useSortMarkets = (markets: MarketPreview[]) => {
+  const [sortOption, setSortOption] = useState<Option>(defaultSortOption);
 
-const useSortMarkets = (
-  marketsToDisplay: MarketPreview[],
-  sortValue: SortValue,
-) => {
+  const sortOptionValue = sortOption?.value;
+
   const sortedMarkets = useMemo(() => {
-    if (!sortValue) {
-      return marketsToDisplay;
+    if (!sortOptionValue) {
+      return markets;
     }
 
-    const [name, order] = [sortValue.name, sortValue.order];
+    const [name, order] = sortOptionValue.split('_');
 
-    const sorted = [...marketsToDisplay].sort((a, b) => {
-      if (name === SortField.OFFER_TVL) {
-        return compareNumbers(
-          parseFloat(a.offerTVL),
-          parseFloat(b.offerTVL),
-          order === 'desc',
-        );
-      }
-      if (name === SortField.ACTIVE_LOANS) {
-        return compareNumbers(
-          a.activeBondsAmount,
-          b.activeBondsAmount,
-          order === 'desc',
-        );
-      }
-      if (name === SortField.APR) {
-        return compareNumbers(a.apy, b.apy, order === 'desc');
-      }
-      if (name === SortField.LOANS_TVL) {
-        return compareNumbers(a.loansTVL, b.loansTVL, order === 'desc');
-      }
+    type SortValueGetter = (market: MarketPreview) => string | number;
+
+    const sortValueMapping: Record<SortField, string | SortValueGetter> = {
+      [SortField.OFFER_TVL]: (loan: MarketPreview) => {
+        return parseFloat(loan.offerTVL) || 0;
+      },
+      [SortField.LOANS_TVL]: 'loansTVL',
+      [SortField.ACTIVE_LOANS]: 'activeBondsAmount',
+      [SortField.APY]: 'apy',
+    };
+
+    const sorted = sortBy(markets, (loan) => {
+      const sortValue = sortValueMapping[name];
+      return isFunction(sortValue) ? sortValue(loan) : get(loan, sortValue);
     });
 
-    return sorted;
-  }, [sortValue, marketsToDisplay]);
+    return order === 'desc' ? sorted.reverse() : sorted;
+  }, [sortOptionValue, markets]);
 
-  return sortedMarkets;
+  return {
+    sortedMarkets,
+    sortParams: {
+      option: sortOption,
+      onChange: setSortOption,
+      options: sortOptions,
+    },
+  };
 };
 
 interface ToggleState {
@@ -105,18 +99,4 @@ interface ToggleState {
 export const useToggleState = create<ToggleState>((set) => ({
   checked: false,
   onToggleChange: () => set((state) => ({ ...state, checked: !state.checked })),
-}));
-
-interface SortState {
-  sortValue: SortValue;
-  handleSortChange: (nextValue: SortValue) => void;
-}
-
-export const useSortState = create<SortState>((set) => ({
-  sortValue: {
-    name: SortField.LOANS_TVL,
-    order: SORT_ORDER.DESC,
-  },
-  handleSortChange: (nextValue) =>
-    set((state) => ({ ...state, sortValue: nextValue })),
 }));

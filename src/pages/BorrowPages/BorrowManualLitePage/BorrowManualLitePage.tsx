@@ -8,10 +8,12 @@ import { Loader } from '@frakt/components/Loader';
 import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
 import { BorrowMode } from '@frakt/pages/BorrowPages/types';
 
-import { Sidebar } from './components/Sidebar';
 import { BorrowManualTable } from './components/BorrowManualTable';
-import { useBorrowManualLitePage } from './hooks';
 import { RootHeader } from '../components/RootHeader';
+import { useBorrowManualLitePage } from './hooks';
+import { Sidebar } from './components/Sidebar';
+import { useSortWalletNFTs } from './hooks';
+
 import styles from './BorrowManualLitePage.module.scss';
 
 export const BorrowManualLitePage: FC = () => {
@@ -41,7 +43,10 @@ export const BorrowManualLitePage: FC = () => {
     resetCache,
     fetchMoreTrigger,
     goToProBorrowing,
+    searchSelectParams,
   } = useBorrowManualLitePage();
+
+  const { sortedNFTs, sortParams } = useSortWalletNFTs(nfts);
 
   return (
     <AppLayout>
@@ -66,7 +71,6 @@ export const BorrowManualLitePage: FC = () => {
             <>
               {!maxBorrowValueLoading && (
                 <div className={styles.tabsWrapper}>
-                  <h3 className={styles.subtitle}>Duration</h3>
                   <Tabs
                     tabs={durationTabs}
                     value={duration}
@@ -84,22 +88,24 @@ export const BorrowManualLitePage: FC = () => {
               {(dataLoading || maxBorrowValueLoading) && <Loader />}
 
               {!dataLoading && !!nfts && (
-                <div className={styles.tableWrapper}>
+                <>
                   <BorrowManualTable
-                    data={nfts.map((nft) => ({
+                    data={sortedNFTs.map((nft) => ({
                       nft,
                       active: currentNft?.mint === nft.mint,
                       selected: !!findNftInCart({ nftMint: nft.mint }),
                       bondFee: getBondFee(nft),
                       bondLoanValue: getBondLoanValue(nft),
                     }))}
+                    searchSelectParams={searchSelectParams}
                     duration={duration as LoanDuration}
                     setSearch={setSearch}
                     onRowClick={(nft) => onNftClick(nft?.nft)}
                     activeNftMint={currentNft?.mint}
+                    sortParams={sortParams}
                   />
                   <div ref={fetchMoreTrigger} />
-                </div>
+                </>
               )}
             </>
           )}

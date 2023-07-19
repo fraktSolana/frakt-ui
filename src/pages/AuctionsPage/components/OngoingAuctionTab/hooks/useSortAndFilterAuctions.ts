@@ -60,9 +60,9 @@ export const useSortAndFilterAuctions = (auctions: AuctionItem[]) => {
     auctions: sortedAuctions,
 
     sortProps: {
+      option: sortOption,
+      onChange: handleSortChange,
       options: sortOptions,
-      onSortChange: handleSortChange,
-      sortOption,
     },
     filterProps: {
       options: filterOptions,

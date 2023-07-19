@@ -14,3 +14,18 @@ export const calculateLoanValue = (offer: MarketOrder, marketFloor: number) => {
 
   return loanValue;
 };
+
+export const shouldShowDepositError = (
+  initialEditValues: { loanValue: string; loanAmount: string },
+  solanaBalance: number,
+  offerSize: number,
+) => {
+  const loanAmount = parseFloat(initialEditValues?.loanAmount) || 0;
+  const loanValue = parseFloat(initialEditValues?.loanValue) || 0;
+
+  const initialLoanSize = loanAmount * loanValue;
+  const totalAvailableSize = initialLoanSize + solanaBalance;
+
+  const isDepositErrorShown = totalAvailableSize < offerSize;
+  return isDepositErrorShown;
+};

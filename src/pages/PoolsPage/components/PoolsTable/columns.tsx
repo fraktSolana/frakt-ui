@@ -25,7 +25,7 @@ export const getTableColumns = (
     render: (_, liquidityPool) => (
       <CollectionInfoCell liquidityPool={liquidityPool} />
     ),
-    sorter: (a, b) => b.name.localeCompare(a.name),
+    sorter: true,
     showSorterTooltip: false,
   },
   {
@@ -35,7 +35,7 @@ export const getTableColumns = (
       createHeaderCell(column, 'Total liquidity', 'totalLiquidity'),
     render: (_, { totalLiquidity }) =>
       createSolValueJSX(parseFloat(totalLiquidity.toFixed(2)), false),
-    sorter: (a, b) => a.totalLiquidity - b.totalLiquidity,
+    sorter: true,
     showSorterTooltip: false,
   },
   {
@@ -49,7 +49,7 @@ export const getTableColumns = (
         'Yearly rewards based on the current utilization rate and borrow interest',
       ),
     render: (_, { depositApr }) => createPercentValueJSX(depositApr),
-    sorter: (a, b) => a.depositApr - b.depositApr,
+    sorter: true,
     showSorterTooltip: false,
   },
   {

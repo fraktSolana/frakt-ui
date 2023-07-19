@@ -1,150 +1,107 @@
-import { useRef } from 'react';
+import { useState } from 'react';
 import classNames from 'classnames';
 import { ColumnsType } from 'antd/es/table';
-import { DebouncedFunc } from 'lodash';
+import { DebouncedFunc, isEmpty } from 'lodash';
 
-import { useFiltersModal } from '@frakt/components/FiltersDropdown';
-import { CardView, TableView } from '@frakt/icons';
-import Checkbox from '@frakt/components/Checkbox';
-import { useOnClickOutside } from '@frakt/hooks';
+import { SortDropdown } from '@frakt/components/SortDropdown';
+import Toggle from '@frakt/components/Toggle';
 import Button from '@frakt/components/Button';
+import {
+  SearchSelect,
+  SearchSelectProps,
+} from '@frakt/components/SearchSelect';
 
-import { SortDropdown } from '../../components/SortDropdown';
-import { SelectLoansParams, Sort } from '../../types';
+import { switchButtonConfigurations } from './constants';
+import { SortParams, ToggleParams } from '../../types';
 import { Search } from '../../components/Search';
+import { parseTableColumn } from './helpers';
 import { useTableView } from '../../hooks';
 
 import styles from './SortView.module.scss';
 
 interface SortViewProps<T> {
   columns: ColumnsType<T>;
-  setSort: (nextSort: Sort) => void;
-  sort: Sort;
   search?: {
     placeHolderText?: string;
     onChange: DebouncedFunc<
       (event: React.ChangeEvent<HTMLInputElement>) => void
     >;
   };
-  selectLoansParams?: SelectLoansParams;
-  setQueryData: (nextSort: Sort) => void;
-  showSorting?: boolean;
+  sortParams: SortParams;
   showSearching?: boolean;
-  showToggle?: boolean;
-  isToggleChecked: boolean;
-  setIsToggleChecked: (value: boolean) => void;
+  searchSelectParams?: SearchSelectProps<T>;
+  toggleParams?: ToggleParams;
+  classNameSortView?: string;
 }
+
+type ViewState = 'card' | 'table';
 
 const SortView = <T extends unknown>({
   columns,
   search,
-  setSort,
-  sort,
-  selectLoansParams: selectParams,
-  setQueryData,
-  showSorting = false,
+  sortParams,
   showSearching = false,
-  showToggle = false,
-  isToggleChecked,
-  setIsToggleChecked,
+  searchSelectParams,
+  toggleParams,
+  classNameSortView,
 }: SortViewProps<T>) => {
   const { viewState, setViewState } = useTableView();
 
-  const {
-    visible: sortDropdownVisible,
-    close: closeDropdown,
-    toggle: toggleSortDropdown,
-  } = useFiltersModal();
+  const [collapsed, setCollapsed] = useState<boolean>(true);
 
-  const ref = useRef(null);
-  useOnClickOutside(ref, closeDropdown);
+  const sortableColumns = columns.filter(({ sorter }) => !!sorter);
+  const sortDropdownOptions = sortableColumns.map(parseTableColumn);
 
-  const handleViewStateChange = (state: 'card' | 'table') => {
+  const shouldShowSearchSelect = !isEmpty(searchSelectParams);
+  const shouldShowContent = shouldShowSearchSelect ? collapsed : true;
+
+  const handleViewStateChange = (state: ViewState) => {
     setViewState(state);
   };
 
-  const renderSearchInput = () => {
-    if (!showSearching) return null;
-
-    return (
-      <div className={styles.searchWrapper}>
-        {selectParams?.onChange && (
-          <Checkbox
-            className={styles.checkbox}
-            classNameInnerContent={styles.checkboxInnerContent}
-            onChange={selectParams.onChange}
-            checked={selectParams.selected}
-          />
-        )}
-        <Search
-          onChange={search?.onChange}
-          className={styles.searchInput}
-          placeHolderText={search?.placeHolderText}
-        />
-      </div>
-    );
-  };
-
-  const renderSwitchButtons = () => {
-    return (
-      <div className={styles.switchButtons}>
-        <Button
-          className={classNames(styles.switchViewButton, {
-            [styles.active]: viewState === 'card',
-          })}
-          onClick={() => handleViewStateChange('card')}
-          type="tertiary"
-        >
-          <CardView />
-        </Button>
-        <Button
-          className={classNames(styles.switchViewButton, {
-            [styles.active]: viewState === 'table',
-          })}
-          onClick={() => handleViewStateChange('table')}
-          type="tertiary"
-        >
-          <TableView />
-        </Button>
-      </div>
-    );
-  };
-
-  const renderSortDropdown = () => {
-    if (!showSorting) return null;
-
-    return (
-      <div ref={ref}>
-        <Button
-          className={styles.sortingButton}
-          type="tertiary"
-          onClick={toggleSortDropdown}
-        >
-          Sorting
-        </Button>
-        <SortDropdown
-          columns={columns}
-          setSort={setSort}
-          sort={sort}
-          visible={sortDropdownVisible}
-          setQueryData={setQueryData}
-          isToggleChecked={isToggleChecked}
-          setIsToggleChecked={setIsToggleChecked}
-          showToggle={showToggle}
-        />
-      </div>
-    );
-  };
-
   return (
-    <div className={styles.sortWrapper}>
-      {renderSearchInput()}
-      <div className={styles.rowGap}>
-        {renderSwitchButtons()}
-        {renderSortDropdown()}
-      </div>
+    <div className={classNames(styles.sortWrapper, classNameSortView)}>
+      {showSearching && <Search {...search} className={styles.searchInput} />}
+
+      {shouldShowSearchSelect && (
+        <SearchSelect
+          collapsed={collapsed}
+          onChangeCollapsed={setCollapsed}
+          className={styles.searchSelect}
+          {...searchSelectParams}
+        />
+      )}
+      {shouldShowContent && (
+        <div className={styles.rowGap}>
+          <SwitchModeButtons
+            onChange={handleViewStateChange}
+            viewState={viewState}
+          />
+          {!!toggleParams?.onChange && <Toggle {...toggleParams} />}
+          {!isEmpty(sortParams) && (
+            <SortDropdown {...sortParams} options={sortDropdownOptions} />
+          )}
+        </div>
+      )}
     </div>
   );
 };
 
 export default SortView;
+
+const SwitchModeButtons = ({ viewState = 'table', onChange = null }) => (
+  <div className={styles.switchButtons}>
+    {switchButtonConfigurations.map((config) => (
+      <Button
+        key={config.state}
+        className={classNames(styles.switchViewButton, {
+          [styles.active]: viewState === config.state,
+        })}
+        onClick={() => onChange(config.state)}
+        type="tertiary"
+      >
+        {config.icon}
+      </Button>
+    ))}
+  </div>
+);

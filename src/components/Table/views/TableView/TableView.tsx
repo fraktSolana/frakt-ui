@@ -35,7 +35,7 @@ const TableView = <T extends unknown>({
       })}
       rowClassName={(record) => getCardOrRowClassName(record, activeRowParams)}
       columns={columns as ColumnsType}
-      dataSource={data as any}
+      dataSource={[...data] as any}
       pagination={false}
       sortDirections={['descend', 'ascend']}
       style={onRowClick && { cursor: 'pointer' }}

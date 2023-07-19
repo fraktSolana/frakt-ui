@@ -7,6 +7,10 @@
     padding-inline-end: 8px;
     margin-bottom: -1px !important;
     align-items: center;
+
+    .ant-select {
+      width: -webkit-fill-available;
+    }
   }
 
   ::-webkit-scrollbar {
@@ -18,7 +22,7 @@
   background-color: var(--primary-background);
   color: var(--primary-text);
   margin-left: 32px;
-  width: 100%;
+  width: calc(100% - 32px);
 
   .ant-select-selection-item {
     border-radius: 100px;
@@ -83,7 +87,7 @@
   color: var(--primary-text) !important;
   border-radius: 0 !important;
 
-  top: 32px !important;
+  top: 47px !important;
   left: -32px !important;
 
   border: 1px solid var(--secondary-border);
@@ -128,14 +132,26 @@
 }
 
 .selectWrapper {
-  border-bottom: 1px solid var(--primary-border);
+  border-bottom: 0;
   position: relative;
-  max-width: 780px;
-  padding-bottom: 1px;
+  max-width: 725px;
+  height: 32px;
   width: 100%;
 
-  @media (max-width: 650px) {
-    width: 50%;
+  @media (max-width: 1280px) {
+    max-width: 620px;
+  }
+
+  @media (max-width: 1180px) {
+    max-width: 520px;
+  }
+
+  @media (max-width: 1080px) {
+    max-width: 420px;
+  }
+
+  @media (max-width: 960px) {
+    max-width: unset;
   }
 }
 
@@ -147,15 +163,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  top: -1px;
 
   svg {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
   }
 
   svg path {
-    fill: var(--primary-icon);
+    fill: var(--primary-border);
   }
 }
 
@@ -230,6 +245,9 @@
 .closeButton {
   border-color: var(--secondary-border);
   padding: 0;
+}
+.closeButton svg path {
+  fill: var(--primary-icon);
 }
 
 .tip {

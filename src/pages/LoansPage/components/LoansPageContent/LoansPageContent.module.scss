@@ -1,19 +1,57 @@
 .content {
-  border: 1px solid var(--primary-border);
   margin-top: 16px;
 }
 
 .tabContent {
   background: var(--primary-background);
+  border: 1px solid var(--primary-border);
+  border-top: 0;
+  padding: 24px;
+
+  @media (max-width: 960px) {
+    padding: 16px;
+  }
 }
 
-.tab {
+.tabs {
+  margin-top: 0;
   flex-wrap: nowrap;
-}
-.tab button {
-  border: 0;
   border-bottom: 1px solid var(--primary-border);
+  gap: 16px;
 }
-.tab button:first-child {
-  border-right: 1px solid var(--primary-border);
+
+.tabs button {
+  border-color: var(--primary-border);
+  border-bottom: 0;
+
+  &:first-child {
+    margin-left: 16px;
+  }
+
+  &:last-child {
+    margin-right: 16px;
+  }
+}
+
+.activeTab {
+  background: var(--primary-background);
+  position: relative;
+
+  &:after {
+    content: '';
+    display: block;
+    height: 5px;
+    width: 100%;
+    background: var(--primary-background);
+    position: absolute;
+    bottom: -2px;
+  }
+
+  &:first-child {
+    margin-left: 0 !important;
+  }
+
+  &:last-child {
+    margin-right: 0 !important;
+  }
 }

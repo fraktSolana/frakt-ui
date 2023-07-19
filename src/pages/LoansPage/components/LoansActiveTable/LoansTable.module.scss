@@ -13,13 +13,22 @@
   gap: 8px;
 }
 
+.headerTitleRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
 .rowFixedRight {
   @extend .rowCenter;
   justify-content: flex-end;
 }
 
 .collectionInfo {
+  display: flex;
+  align-items: center;
   @extend .rowCenter;
+  height: 38px;
 }
 .collectionName {
   color: var(--primary-text);
@@ -29,11 +38,13 @@
     width: 104px;
   }
 }
+
 .collectionImageWrapper {
   position: relative;
 }
 .collectionImage,
-.selectedCollectionOverlay {
+.selectedCollectionOverlay,
+.collectionImageWrapper {
   width: 26px;
   height: 26px;
 }
@@ -57,6 +68,16 @@
   }
 }
 
+.nftCollectionNames {
+  display: flex;
+  flex-direction: column;
+}
+.nftNumber {
+  color: var(--primary-text);
+  font: var(--font-text-9);
+  font-weight: 400;
+}
+
 .buttonWrapper {
   display: flex;
   gap: 8px;
@@ -69,7 +90,7 @@
 .repayButton {
   display: flex;
   height: 26px;
-  width: 60px;
+  width: 100%;
 }
 
 .moreActionsButton {
@@ -186,15 +207,20 @@
 }
 
 .checkbox {
-  height: 16px;
+  height: 18px;
+  padding-left: 18px;
 }
-.checkboxInnerContent::after {
+.checkboxInnerContent::after,
+.checkboxHeaderInnerContent:after {
   border-width: 0.75px;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   height: 0.75px;
   width: 6.75px;
+}
+.checkboxHeaderInnerContent {
+  top: -4px;
 }
 
 .badge {
@@ -219,4 +245,10 @@
 .graced {
   border: 1px solid var(--orange-color);
   box-shadow: inset 0px 0px 18px var(--orange-color);
+}
+
+.headerExtendButton,
+.headerRepayButton {
+  width: 130px;
+  height: 26px;
 }

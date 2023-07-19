@@ -15,16 +15,16 @@ export type Option = {
 };
 
 export interface SortDropdownProps {
-  sortOption: Option;
-  onSortChange: (option: Option) => void;
+  option: Option;
+  onChange: (option: Option) => void;
   options: Option[];
   className?: string;
   innerClassName?: string;
 }
 
 export const SortDropdown: FC<SortDropdownProps> = ({
-  sortOption,
-  onSortChange,
+  option: sortOption,
+  onChange,
   options,
   className,
   innerClassName,
@@ -41,7 +41,7 @@ export const SortDropdown: FC<SortDropdownProps> = ({
       <Button
         className={classNames(styles.button, { [styles.active]: isActive })}
         type="tertiary"
-        onClick={() => onSortChange({ value: sortOrder, label: option.label })}
+        onClick={() => onChange({ value: sortOrder, label: option.label })}
       >
         {option.label}
         <ArrowUp className={getSortOrderClassName(sortOrder)} />

@@ -1,3 +1,6 @@
+import { Option } from '../SortDropdown';
+import { TableProps } from './Table';
+
 interface Breakpoints {
   mobile: number;
   scrollX: number;
@@ -5,12 +8,26 @@ interface Breakpoints {
 }
 export type PartialBreakpoints = Partial<Breakpoints>;
 
+export type TablePropsWithSortProps<T> = TableProps<T>;
+
 interface SearchParams {
   searchField: string | string[];
   debounceWait: number;
   placeHolderText: string;
 }
 export type PartialSearchParams = Partial<SearchParams>;
+
+export interface SortParams {
+  onChange: (option: Option) => void;
+  option: Option;
+  className?: string;
+}
+
+export interface ToggleParams {
+  onChange: (value: boolean) => void;
+  checked: boolean;
+  label: string;
+}
 
 export interface ActiveRowParams {
   field?: string;
@@ -21,14 +38,7 @@ export interface ActiveRowParams {
 
 export interface ViewParams {
   showCard: boolean;
-  showSorting: boolean;
   showSearching: boolean;
-  showToggle?: boolean;
-}
-
-export interface SelectLoansParams {
-  onChange: () => void;
-  selected: boolean;
 }
 
 export interface Sort {

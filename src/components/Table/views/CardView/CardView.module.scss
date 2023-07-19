@@ -2,8 +2,6 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(272px, 2fr));
   gap: 16px;
-  padding: 24px;
-  padding-top: 0;
 
   @media (max-width: 960px) {
     grid-template-columns: repeat(auto-fill, minmax(220px, 2fr));
@@ -39,4 +37,15 @@
 
 .cardRowTitle {
   display: flex;
+}
+
+.cardRowGap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+
+  button {
+    width: 100%;
+  }
 }

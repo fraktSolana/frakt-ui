@@ -1,2 +1,2 @@
 export * from './useFetchAllLoans';
-export * from './useActiveLoans';
+export * from './useLoansTransactions';

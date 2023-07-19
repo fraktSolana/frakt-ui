@@ -3,9 +3,9 @@ import { FC } from 'react';
 import { LoansHistory } from '@frakt/api/loans';
 import Table, {
   PartialBreakpoints,
+  SortParams,
   useSearch,
   useTable,
-  Sort,
   useTableView,
 } from '@frakt/components/Table';
 
@@ -15,15 +15,15 @@ export interface LoansHistoryTableProps {
   data: ReadonlyArray<LoansHistory>;
   className?: string;
   breakpoints?: PartialBreakpoints;
-  setQueryData: (nextValue: Sort) => void;
   setQuerySearch: (nextValue: string) => void;
+  sortParams: SortParams;
 }
 
 export const LoansHistoryTable: FC<LoansHistoryTableProps> = ({
   data,
   className,
   breakpoints,
-  setQueryData,
+  sortParams,
   setQuerySearch,
 }) => {
   const { viewState } = useTableView();
@@ -41,13 +41,12 @@ export const LoansHistoryTable: FC<LoansHistoryTableProps> = ({
       {...table}
       viewParams={{
         showCard: viewState === 'card',
-        showSorting: true,
         showSearching: true,
       }}
       breakpoints={breakpoints}
       search={{ onChange }}
       className={className}
-      setQueryData={setQueryData}
+      sortParams={sortParams}
     />
   );
 };

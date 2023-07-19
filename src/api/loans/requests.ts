@@ -33,9 +33,9 @@ export const fetchLoansHistory: FetchLoansHistory = async ({
   walletPubkey,
   skip,
   limit = 10,
-  sortBy = 'date',
-  direction = 'desc',
-  querySearch = '',
+  sortBy,
+  direction,
+  querySearch,
 }) => {
   const { data } = await axios.get<LoansHistory[]>(
     `https://${BACKEND_DOMAIN}/history/loans/${walletPubkey?.toBase58()}?sort=${direction}&skip=${skip}&limit=${limit}&sortBy=${sortBy}&search=${querySearch}`,

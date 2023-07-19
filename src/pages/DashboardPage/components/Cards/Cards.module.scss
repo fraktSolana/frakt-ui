@@ -4,7 +4,18 @@
   flex-direction: column;
   position: relative;
   pointer-events: none;
+
+  @media (max-width: 960px) {
+    min-width: 168px;
+    max-width: 168px;
+  }
+
+  @media (max-width: 550px) {
+    min-width: 115px;
+    max-width: 115px;
+  }
 }
+
 .card.clicable {
   cursor: pointer;
   pointer-events: unset;
@@ -23,7 +34,18 @@
   padding: 8px;
   position: relative;
   flex-wrap: wrap;
+
+  @media (max-width: 1230px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  @media (max-width: 960px) {
+    flex-direction: row;
+    align-items: center;
+  }
 }
+
 .nftInfo.primary {
   padding-top: 40px;
 

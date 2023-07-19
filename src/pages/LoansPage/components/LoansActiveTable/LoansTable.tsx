@@ -1,7 +1,8 @@
-import { FC, useCallback } from 'react';
+import { FC, ReactNode, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import Table, { PartialBreakpoints } from '@frakt/components/Table';
+import Table, { PartialBreakpoints, SortParams } from '@frakt/components/Table';
+import { SearchSelectProps } from '@frakt/components/SearchSelect';
 import { Loan } from '@frakt/api/loans';
 import {
   useTable,
@@ -10,7 +11,8 @@ import {
 } from '@frakt/components/Table/hooks';
 
 import { useSelectedLoans } from '../../loansState';
-import { TableList } from './columns';
+import { getTableColumns } from './columns';
+
 import styles from './LoansTable.module.scss';
 
 export interface LoansActiveTableProps {
@@ -18,7 +20,11 @@ export interface LoansActiveTableProps {
   loading?: boolean;
   className?: string;
   breakpoints?: PartialBreakpoints;
+  searchSelectParams: SearchSelectProps<any>;
   cardClassName?: string;
+  sortParams: SortParams;
+  duration: string;
+  cardViewTableContent: ReactNode;
 }
 
 export const LoansActiveTable: FC<LoansActiveTableProps> = ({
@@ -27,6 +33,10 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
   loading,
   breakpoints,
   cardClassName,
+  sortParams,
+  duration,
+  searchSelectParams,
+  cardViewTableContent,
 }) => {
   const { toggleLoanInSelection } = useSelectedLoans();
   const { viewState } = useTableView();
@@ -46,7 +56,19 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
     searchField: ['nft', 'name'],
   });
 
-  const COLUMNS = TableList({ isCardView: viewState === 'card' });
+  const onSelectAll = (): void => {
+    if (selection?.length) {
+      clearSelection();
+    } else {
+      setSelection(filteredData as Loan[]);
+    }
+  };
+
+  const COLUMNS = getTableColumns({
+    isCardView: viewState === 'card',
+    onSelectAll,
+    duration,
+  });
 
   const { table } = useTable({
     data: filteredData,
@@ -55,29 +77,19 @@ export const LoansActiveTable: FC<LoansActiveTableProps> = ({
     loading,
   });
 
-  const onChangeCheckbox = (): void => {
-    if (selection?.length) {
-      clearSelection();
-    } else {
-      setSelection(filteredData as Loan[]);
-    }
-  };
-
   return (
     <Table
       {...table}
       breakpoints={breakpoints}
       search={{ onChange }}
+      sortParams={sortParams}
       className={className}
       cardClassName={cardClassName}
+      searchSelectParams={searchSelectParams}
+      cardViewTableContent={cardViewTableContent}
       viewParams={{
         showCard: viewState === 'card',
-        showSorting: true,
-        showSearching: true,
-      }}
-      selectLoansParams={{
-        onChange: onChangeCheckbox,
-        selected: !!selection?.length,
+        showSearching: false,
       }}
       activeRowParams={{
         field: 'isGracePeriod',

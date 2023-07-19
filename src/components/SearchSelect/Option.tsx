@@ -10,7 +10,7 @@ export interface OptionKeys {
   valueKey: string;
   secondLabelKey?: {
     key: string;
-    symbol?: string;
+    format?: (value: number | string) => string;
   };
   imageKey?: string;
 }
@@ -30,6 +30,8 @@ export const renderOption: FC<OptionProps> = ({
 
   const { [valueKey]: value, [labelKey]: label, [imageKey]: image } = option;
 
+  const secondValue = option[secondLabelKey.key];
+
   const isOptionSelected = includes(selectedOptions, label);
 
   return (
@@ -45,14 +47,20 @@ export const renderOption: FC<OptionProps> = ({
           </div>
           <p className={styles.label}>{label}</p>
         </div>
-        {option[secondLabelKey.key] ? (
-          <p className={styles.secondValue}>
-            {option[secondLabelKey.key]?.toFixed(0)} {secondLabelKey.symbol}
-          </p>
-        ) : (
-          <p>--</p>
-        )}
+        <SecondValue secondLabelKey={secondLabelKey} value={secondValue} />
       </div>
     </Select.Option>
   );
+};
+
+const SecondValue = ({ secondLabelKey, value }) => {
+  if (!value) {
+    return <p>--</p>;
+  }
+
+  const formattedValue = secondLabelKey.format
+    ? secondLabelKey.format(value)
+    : value;
+
+  return <p className={styles.secondValue}>{formattedValue}</p>;
 };

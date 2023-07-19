@@ -25,23 +25,11 @@
 }
 
 .loansTable :global {
-  padding: 0 23px;
+  border-top: 1px solid var(--primary-border);
 
-  @media (max-width: 960px) {
-    padding: 0 16px;
+  .ant-table-thead > tr > th {
+    padding: 16px 8px;
   }
-}
-
-.repayBulkWrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  row-gap: 12px;
-}
-
-.loanActiveTab {
-  padding-top: 16px;
 }
 
 .emptyList {
@@ -54,4 +42,52 @@
 
 .loaderWrapper {
   padding: 18px 0;
+}
+
+.tabsWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 400 14px var(--font-family-chakra);
+}
+
+.tab {
+  padding: 3px 20px;
+  outline: unset;
+  border: 1px solid var(--primary-border);
+  color: var(--black-color);
+  height: 32px;
+  cursor: pointer;
+  font: var(--font-text-4);
+  font-size: 14px;
+  background: unset;
+  border-radius: 100px;
+  width: 140px;
+}
+
+.tabActive {
+  color: #000;
+  background: var(--light-green-color);
+  border-color: var(--secondary-border);
+}
+
+.cardViewTableContent {
+  border-top: 1px solid var(--primary-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+}
+
+.repayButton {
+  height: 26px;
+  padding: 0;
+  min-width: 130px;
 }

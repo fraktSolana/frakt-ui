@@ -1,16 +1,17 @@
 .container {
+  border-bottom: 1px solid var(--primary-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 24px;
+  padding-bottom: 16px;
   width: 100%;
 }
 
-.searchAndFilterWrapper {
+.sortAndFilterWrapper {
   display: flex;
   align-items: center;
   gap: 16px;
-  width: 100%;
 
   @media (max-width: 650px) {
     gap: 8px;
@@ -23,21 +24,5 @@
 .sortDropdown.hidden {
   @media (max-width: 960px) {
     display: none;
-  }
-}
-
-.searchSelect {
-  width: 100%;
-
-  @media (max-width: 1240px) {
-    max-width: 600px;
-  }
-
-  @media (max-width: 1080px) {
-    max-width: 450px;
-  }
-
-  @media (max-width: 960px) {
-    max-width: unset;
   }
 }

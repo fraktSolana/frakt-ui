@@ -18,10 +18,11 @@ export const LoansPageContent: FC = () => {
   return (
     <div className={styles.content}>
       <Tabs
-        className={styles.tab}
+        className={styles.tabs}
         tabs={marketTabs}
         value={tabValue}
         setValue={setTabValue}
+        additionalClassNames={{ tabActiveClassName: styles.activeTab }}
       />
       <div className={styles.tabContent}>
         {tabValue === LoansTabsNames.ACTIVE && <LoansActiveTab />}
