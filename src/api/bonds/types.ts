@@ -51,6 +51,7 @@ interface MarketOracle {
 }
 
 export interface Market {
+  bestOffer: number;
   marketPubkey: string;
   collectionImage: string;
   collectionName: string;

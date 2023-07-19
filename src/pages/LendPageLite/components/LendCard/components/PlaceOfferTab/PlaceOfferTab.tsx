@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { DEFAULT_STANDART_INTEREST } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 
-import { SyntheticParams } from '@frakt/pages/MarketsPage/components/OrderBook/types';
 import RadioButtonField from '@frakt/pages/OfferPage/components/RadioButtonField';
 import { StatInfo, VALUES_TYPES } from '@frakt/components/StatInfo';
 import { LoadingModal } from '@frakt/components/LoadingModal';
@@ -9,8 +8,9 @@ import { InputErrorMessage } from '@frakt/components/Input';
 import { BASE_POINTS } from '@frakt/utils/bonds';
 import Button from '@frakt/components/Button';
 
-import { DEFAULTS_OPTIONS } from './constants';
 import OfferActionButtons from './components/OfferActionButtons';
+import { SyntheticParams } from '../OrderBookLite';
+import { DEFAULTS_OPTIONS } from './constants';
 import NumericInputField from '../NumericInput';
 import { usePlaceOfferTab } from './hooks';
 

@@ -4,13 +4,13 @@ import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 import { isEmpty } from 'lodash';
 
 import { parseMarketOrder } from '@frakt/pages/MarketsPage/components/OrderBook/helpers';
-import { SyntheticParams } from '@frakt/pages/MarketsPage/components/OrderBook/types';
 import { useMarket, useMarketPair } from '@frakt/utils/bonds';
 import { useSolanaBalance } from '@frakt/utils/accounts';
 import { RBOption } from '@frakt/components/RadioButton';
 
+import { calculateLoanValue, shouldShowDepositError } from './../helpers';
 import { useOfferTransactions } from './useOfferTransactions';
-import { calculateLoanValue } from './../helpers';
+import { SyntheticParams } from '../../OrderBookLite/types';
 
 export const LOAN_TO_VALUE_RATIO = 100;
 export const DURATION_IN_DAYS = 7;
@@ -42,7 +42,7 @@ export const usePlaceOfferTab = (
   };
 
   const [loanValueInput, setLoanValueInput] = useState<string>('0');
-  const [loansAmountInput, setLoansAmountInput] = useState<string>('0');
+  const [loansAmountInput, setLoansAmountInput] = useState<string>('1');
 
   const [bondFeature, setBondFeature] = useState<BondFeatures>(
     BondFeatures.AutoReceiveAndReceiveNft,
@@ -51,7 +51,21 @@ export const usePlaceOfferTab = (
   const [initialEditValues, setInitialEditValues] = useState(null);
   const [isOfferHasChanged, setIsOfferHasChanged] = useState<boolean>(false);
 
-  // Event handlers
+  useEffect(() => {
+    if (marketPubkey && solanaBalance && !isEdit && !isEmpty(market)) {
+      const transactionFee = 0.01;
+      const balanceAfterTransactionFee = solanaBalance - transactionFee;
+      const maxLoanValue =
+        balanceAfterTransactionFee < 0 ? 0 : balanceAfterTransactionFee;
+
+      const bestOfferInSol = market?.bestOffer / 1e9 || 0;
+
+      const defaultLoanValue = Math.min(maxLoanValue, bestOfferInSol) || 0;
+      const formattedLoanValue = defaultLoanValue?.toFixed(2);
+
+      setLoanValueInput(formattedLoanValue);
+    }
+  }, [marketPubkey, solanaBalance, isEdit, market]);
 
   const onBondFeatureChange = (nextValue: RBOption<BondFeatures>) => {
     setBondFeature(nextValue.value);
@@ -95,19 +109,17 @@ export const usePlaceOfferTab = (
 
   const offerSize = parseFloat(loanValueInput) * parseFloat(loansAmountInput);
 
-  const showDepositError = solanaBalance < offerSize;
-
   // Update synthetic params
 
   useEffect(() => {
-    setSyntheticParams({
-      ltv: LOAN_TO_VALUE_RATIO,
-      loanValue: parseFloat(loanValueInput),
-      loanAmount: parseFloat(loansAmountInput),
-      offerSize: offerSize * 1e9 || 0,
-      interest: 0,
-    });
-  }, [offerSize, loansAmountInput, loanValueInput]);
+    if (offerSize) {
+      setSyntheticParams({
+        loanValue: parseFloat(loanValueInput),
+        loanAmount: parseFloat(loansAmountInput),
+        offerSize: offerSize * 1e9 || 0,
+      });
+    }
+  }, [offerSize]);
 
   useEffect(() => {
     if (!isEmpty(initialEditValues) && isEdit) {
@@ -138,8 +150,15 @@ export const usePlaceOfferTab = (
       goToPlaceOffer,
     });
 
-  const disableEditOffer = !isOfferHasChanged;
-  const disablePlaceOffer = !offerSize && wallet?.connected;
+  const showDepositError = shouldShowDepositError(
+    initialEditValues,
+    solanaBalance,
+    offerSize,
+  );
+
+  const disableEditOffer = !isOfferHasChanged || showDepositError;
+  const disablePlaceOffer =
+    (!offerSize && wallet?.connected) || showDepositError;
 
   return {
     isEdit,

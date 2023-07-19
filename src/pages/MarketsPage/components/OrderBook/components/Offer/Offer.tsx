@@ -12,14 +12,11 @@ interface OfferProps {
   order: MarketOrder;
   bestOffer: MarketOrder;
   isOwnOrder: boolean;
-  editOrder?: () => void;
-  ltv?: number;
+  editOrder: () => void;
+  ltv: number;
   size: number;
-  interest?: number;
+  interest: number;
   duration: number;
-  loanValue?: number;
-  loanAmount?: number;
-  marketFloor?: number;
 }
 const Offer: FC<OfferProps> = ({
   order,
@@ -29,15 +26,7 @@ const Offer: FC<OfferProps> = ({
   ltv,
   size,
   interest,
-  duration,
-  loanValue,
-  loanAmount,
-  marketFloor,
 }) => {
-  const maxLoanValue = Math.min((loanValue / marketFloor) * 100, 100);
-
-  const shouldDisplayLTV = ltv !== undefined;
-  const shouldDisplayLoanValue = loanValue !== undefined;
   const isBestOffer = order.rawData.publicKey === bestOffer?.rawData.publicKey;
   const isOwnOffer = order.synthetic;
 
@@ -46,33 +35,23 @@ const Offer: FC<OfferProps> = ({
     [styles.highlightYourOffer]: isOwnOffer,
   });
 
+  const formattedInterest = (interest * 100)?.toFixed(2);
+
   return (
     <li className={listItemClassName}>
-      {shouldDisplayLTV && (
-        <ValueDisplay
-          value={ltv}
-          className={styles.ltv}
-          label="LTV"
-          maxPercent={27}
-          offset={74}
-        />
-      )}
-      {shouldDisplayLoanValue && (
-        <ValueDisplay
-          value={loanValue || 0}
-          className={styles.loanValue}
-          styleValue={maxLoanValue}
-          label="Offer"
-          maxPercent={36}
-          offset={110}
-          isSolPrice
-        />
-      )}
+      <ValueDisplay
+        value={ltv}
+        className={styles.ltv}
+        label="LTV"
+        maxPercent={27}
+        offset={74}
+      />
+
       <div className={styles.valueWrapper}>
         <div className={classNames(styles.value, styles.sizeValue)}>
           {size?.toFixed(2)}
         </div>
-        <LoanAmountOrInterest loanAmount={loanAmount} interest={interest} />
+        <p className={styles.value}>{formattedInterest}</p>
       </div>
       {isOwnOrder && editOrder && (
         <div className={styles.editButton} onClick={editOrder}>
@@ -84,18 +63,3 @@ const Offer: FC<OfferProps> = ({
 };
 
 export default Offer;
-
-const LoanAmountOrInterest = ({ loanAmount = 0, interest = 0 }) => {
-  if (interest) {
-    const formattedInterest = (interest * 100)?.toFixed(2);
-    return <p className={styles.value}>{formattedInterest}</p>;
-  }
-
-  const displayLoanAmount = loanAmount < 1 ? '< 1' : loanAmount || 0;
-
-  return (
-    <p className={classNames(styles.value, styles.loanAmountValue)}>
-      {displayLoanAmount}
-    </p>
-  );
-};
