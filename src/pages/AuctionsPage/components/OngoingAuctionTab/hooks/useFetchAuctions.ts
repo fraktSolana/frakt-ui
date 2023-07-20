@@ -34,7 +34,7 @@ export const useFetchAuctionsList = () => {
         const { floorPrice, currentLoanAmount } =
           parseRefinanceAuctionsInfo(auction);
 
-        return parseFloat(currentLoanAmount) < parseFloat(floorPrice);
+        return currentLoanAmount < floorPrice;
       }
       return auction;
     });
