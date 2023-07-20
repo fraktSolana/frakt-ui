@@ -143,11 +143,7 @@ const useSortedAuctions = (
 
         if (aAPY && !bAPY) return -1;
 
-        return compareNumbers(
-          parseFloat(aAPY),
-          parseFloat(bAPY),
-          order === 'desc',
-        );
+        return compareNumbers(aAPY, bAPY, order === 'desc');
       }
       if (name === SortField.PRINCIPLE) {
         const { newLoanAmount: aNewLoanAmount } =
