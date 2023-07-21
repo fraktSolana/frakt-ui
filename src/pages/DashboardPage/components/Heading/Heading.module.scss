@@ -6,6 +6,7 @@
 
 .title {
   font: var(--font-subtitle);
+  white-space: nowrap;
 
   @media (max-width: 1140px) {
     font-size: 24px;

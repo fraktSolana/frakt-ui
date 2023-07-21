@@ -28,14 +28,16 @@
 }
 
 .nftInfo {
+  position: relative;
+
+  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px;
-  position: relative;
   flex-wrap: wrap;
+  gap: 4px;
 
-  @media (max-width: 1230px) {
+  @media (max-width: 1290px) {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -76,7 +78,7 @@
 .label {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   color: var(--secondary-text);
   font: var(--font-text-6);
   text-transform: uppercase;

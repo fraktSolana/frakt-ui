@@ -23,7 +23,7 @@
   :global {
     cursor: default;
     .ant-table-tbody > tr > td:last-child {
-      width: 110px !important;
+      min-width: 110px !important;
     }
     .ant-table-thead > tr > th:first-child,
     .ant-table-tbody > tr > td:first-child {

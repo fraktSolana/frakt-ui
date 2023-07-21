@@ -59,7 +59,11 @@ const MobileContentView = ({
   collectionsStats,
 }: ContentViewProps) => (
   <div className={styles.mobileContainer}>
-    <Search title="1 click loan" onChange={setSearch} />
+    <Search
+      className={styles.search}
+      title="1 click loan"
+      onChange={setSearch}
+    />
     <NFTsList emptyMessageClassName={styles.emptyMessage} nfts={collections} />
     <CollectionsInfo collectionsStats={collectionsStats} />
   </div>

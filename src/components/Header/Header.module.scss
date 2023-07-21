@@ -27,9 +27,9 @@
   @include flex(row, nowrap, flex-start, center);
   gap: 16px;
 
-  // @media (max-width: 960px) {
-  //   gap: 8px;
-  // }
+  @media (max-width: 960px) {
+    gap: 8px;
+  }
 }
 
 .walletBtn {

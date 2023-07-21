@@ -6,22 +6,26 @@ html body .input {
   &:not(.ant-input-affix-wrapper-disabled):hover,
   &:hover {
     border: 0;
-    border-bottom: 1px solid var(--primary-border);
+    border-bottom: 1px solid var(--black-color);
   }
 
   &:global(.ant-input-affix-wrapper-focused:hover),
   &:global(.ant-input-affix-wrapper-focused) {
     box-shadow: none !important;
-    border-bottom: 1px solid var(--secondary-border);
+    border-bottom: 1px solid var(--black-color);
 
     :local(.search) {
       svg {
-        color: var(--secondary-border);
+        color: var(--black-color);
       }
     }
 
     input {
-      color: var(--secondary-border);
+      color: var(--black-color);
+
+      &::placeholder {
+        color: var(--secondary-text);
+      }
     }
   }
 
@@ -36,12 +40,12 @@ html body .input {
     }
   }
   input {
-    color: var(--secondary-text);
+    color: var(--black-color);
     font-size: 20px;
     font-family: var(--font-family-chakra);
 
     &::placeholder {
-      color: var(--secondary-text);
+      color: var(--black-color);
     }
   }
 }
@@ -50,7 +54,7 @@ html body .input {
   svg {
     font-size: 15px;
     transition: color var(--transition-1);
-    color: var(--secondary-text);
+    color: var(--black-color);
     margin-right: 5px;
   }
 }

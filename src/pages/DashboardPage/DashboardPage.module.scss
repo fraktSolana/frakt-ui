@@ -2,6 +2,10 @@ $contentHeight: 552px;
 
 .content {
   border: 1px solid var(--primary-border);
+  @media (max-width: 960px) {
+    border-left: 0;
+    border-right: 0;
+  }
 }
 
 .tabContent {
