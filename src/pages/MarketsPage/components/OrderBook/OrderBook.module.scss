@@ -37,6 +37,7 @@
     }
 
     &.active {
+      gap: 4px;
       top: calc(var(--header-height) + 92px);
     }
   }

@@ -18,6 +18,11 @@
 .content {
   background: var(--primary-background);
   border: 1px solid var(--primary-border);
+
+  @media screen and (max-width: 1050px) {
+    border-right: 0;
+    border-left: 0;
+  }
 }
 
 .tabContent {

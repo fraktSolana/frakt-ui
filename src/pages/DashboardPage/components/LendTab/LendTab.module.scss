@@ -49,8 +49,20 @@
 
 .search {
   @media ((max-width: 1240px) and (min-width: 961px)) {
-    @include flex-column;
-    align-items: flex-start !important;
+    & > span {
+      width: 160px;
+    }
+  }
+  @media (max-width: 550px) {
+    & > span {
+      width: 160px;
+    }
+  }
+
+  @media (max-width: 375px) {
+    & > span {
+      width: 140px;
+    }
   }
 }
 

@@ -7,6 +7,11 @@
   @media screen and (max-width: 1290px) {
     padding: 24px;
   }
+
+  @media screen and (max-width: 960px) {
+    border-right: 0;
+    border-left: 0;
+  }
 }
 
 .title {
