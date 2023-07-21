@@ -10,9 +10,8 @@ import { BorrowMode } from '@frakt/pages/BorrowPages/types';
 
 import { BorrowManualTable } from './components/BorrowManualTable';
 import { RootHeader } from '../components/RootHeader';
-import { useBorrowManualLitePage } from './hooks';
+import { useBorrowManualLitePage, useSortWalletNFTs } from './hooks';
 import { Sidebar } from './components/Sidebar';
-import { useSortWalletNFTs } from './hooks';
 
 import styles from './BorrowManualLitePage.module.scss';
 
