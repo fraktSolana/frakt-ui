@@ -48,7 +48,7 @@ export const AdventureSubscribeButton: FC<AdventuresComponentsProps> = ({
   const wallet = useWallet();
   const { isLedger } = useIsLedger();
 
-  const { refetch } = useAdventuresInfoQuery();
+  const { adventuresInfo, refetch } = useAdventuresInfoQuery();
 
   const stakedNfts = useMemo(() => {
     return nfts.filter(isNftStaked);
@@ -64,7 +64,8 @@ export const AdventureSubscribeButton: FC<AdventuresComponentsProps> = ({
       const subscribedNftsMints = subscribedNfts.map(({ mint }) => mint);
 
       await subscribeNfts({
-        adventure,
+        adventureToSubscribe: adventure,
+        allAdventures: adventuresInfo.adventures,
         nfts: stakedNfts.filter(
           ({ mint }) => !subscribedNftsMints.includes(mint),
         ),
@@ -116,6 +117,7 @@ export const AdventureSubscribeButton: FC<AdventuresComponentsProps> = ({
     stakedNfts,
     subscribedNfts,
     isLedger,
+    adventuresInfo,
   ]);
 
   const isParticipating = !!subscribedNfts.length;
