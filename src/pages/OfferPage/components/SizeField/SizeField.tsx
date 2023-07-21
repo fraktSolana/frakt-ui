@@ -112,7 +112,11 @@ const SizeField: FC<SizeFieldProps> = ({
               [styles.disabledTokens]: !tokensList || !onTokenChange,
             })}
           >
-            {currentToken ? '◎' : <div className={styles.noTokenImg} />}
+            {currentToken.name === 'SOL' ? (
+              '◎'
+            ) : (
+              <div className={styles.noTokenImg} />
+            )}
             <span
               className={classNames(styles.tokenName, {
                 [styles.tokenName_empty]: !currentToken,
