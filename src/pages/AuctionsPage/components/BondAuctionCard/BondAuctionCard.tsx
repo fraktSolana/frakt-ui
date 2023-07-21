@@ -6,9 +6,9 @@ import { LoadingModal } from '@frakt/components/LoadingModal';
 import { BondAuctionItem } from '@frakt/api/auctions';
 import { ArrowDownLeft } from '@frakt/icons';
 
-import { checkPriceThreshold, parseAuctionsInfo } from './helpers';
 import AuctionCardBackdrop from '../AuctionCardBackdrop';
 import AuctionNFTCardInfo from '../AuctionNFTCardInfo';
+import { parseAuctionsInfo } from './helpers';
 import { useBondAuctionCard } from './hooks';
 
 import styles from './BondAuctionCard.module.scss';
@@ -31,13 +31,10 @@ const BondAuctionCard: FC<BondAuctionCardProps> = ({
 
   const { floorPrice } = parseAuctionsInfo(auction);
 
-  const [isAuctionPriceBelowThreshold, setIsAuctionPriceBelowThreshold] =
-    useState<boolean>(false);
-
   return (
     <AuctionCardBackdrop
       onSubmit={onSubmit}
-      button={{ text: 'Buy', disabled: isAuctionPriceBelowThreshold }}
+      button={{ text: 'Buy' }}
       badge={{ text: 'Liquidate', icon: ArrowDownLeft }}
     >
       <AuctionNFTCardInfo {...auction} />
@@ -58,7 +55,6 @@ const BondAuctionCard: FC<BondAuctionCardProps> = ({
           initialPrice={floorPrice}
           percentage={DENOMINATOR_PERCENT}
           startTime={moment.unix(auction?.bondParams?.startAuctionTime)}
-          setIsAuctionPriceBelowThreshold={setIsAuctionPriceBelowThreshold}
         />
         <StatInfo
           flexType="row"
@@ -78,23 +74,15 @@ interface PriceSubtractionProps {
   initialPrice: string;
   percentage: number;
   startTime: moment.Moment;
-  setIsAuctionPriceBelowThreshold: (value: boolean) => void;
 }
 
 const PriceSubtraction: FC<PriceSubtractionProps> = ({
   initialPrice,
   percentage,
   startTime,
-  setIsAuctionPriceBelowThreshold,
 }) => {
   const initialPriceNumber = parseFloat(initialPrice);
   const [price, setPrice] = useState<number>(0);
-
-  const isBelowThreshold = checkPriceThreshold(parseFloat(initialPrice), price);
-
-  useEffect(() => {
-    setIsAuctionPriceBelowThreshold(isBelowThreshold);
-  }, [isBelowThreshold]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -114,7 +102,7 @@ const PriceSubtraction: FC<PriceSubtractionProps> = ({
     };
   }, [initialPrice, percentage, startTime]);
 
-  return (
-    <StatInfo flexType="row" label="Buy price" value={price?.toFixed(3)} />
-  );
+  const displayPrice = price > 0 ? price : 0;
+
+  return <StatInfo flexType="row" label="Buy price" value={displayPrice} />;
 };

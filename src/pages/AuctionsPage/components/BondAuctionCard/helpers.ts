@@ -8,12 +8,4 @@ const parseAuctionsInfo = (auction: AuctionItem) => {
   return { floorPrice };
 };
 
-const checkPriceThreshold = (
-  fullPrice: number,
-  currentPrice: number,
-): boolean => {
-  const threshold = fullPrice * 0.25;
-  return currentPrice < threshold;
-};
-
-export { parseAuctionsInfo, checkPriceThreshold };
+export { parseAuctionsInfo };
