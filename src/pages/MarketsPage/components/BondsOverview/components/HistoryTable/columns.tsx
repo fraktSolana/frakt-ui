@@ -84,6 +84,7 @@ export const COLUMNS: ColumnsType<BondHistory> = [
       />
     ),
     render: (_, { stats }) => createAutocompoundJSX(stats?.state),
+    width: 110,
   },
   {
     key: 'received',
@@ -113,5 +114,6 @@ export const COLUMNS: ColumnsType<BondHistory> = [
       createliquidatingAtJSX(stats?.when, eventSignature),
     showSorterTooltip: false,
     defaultSortOrder: 'descend',
+    width: 120,
   },
 ];
