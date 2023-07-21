@@ -47,7 +47,7 @@
   }
 
   .ant-select-selection-placeholder {
-    color: var(--secondary-text);
+    color: var(--black-color);
     font: var(--font-text-8);
     font-size: 14px;
   }
@@ -132,7 +132,6 @@
 }
 
 .selectWrapper {
-  border-bottom: 0;
   position: relative;
   max-width: 725px;
   height: 32px;
@@ -170,7 +169,7 @@
   }
 
   svg path {
-    fill: var(--primary-border);
+    fill: var(--black-color);
   }
 }
 
