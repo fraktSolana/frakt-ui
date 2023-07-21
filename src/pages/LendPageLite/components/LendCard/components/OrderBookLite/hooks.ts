@@ -8,7 +8,11 @@ import { useMarket } from '@frakt/utils/bonds';
 
 import { calculateLoanValue } from '../PlaceOfferTab';
 import { MarketOrder, UseOrderBookLite } from './types';
-import { groupOffers } from './helpers';
+import {
+  groupOffers,
+  getNormalizedLoanValue,
+  getNormalizedLoanAmount,
+} from './helpers';
 
 const MIN_SIZE_FOR_VIEW = 0.001;
 const SYNTHETIC_INTEREST = 0;
@@ -41,13 +45,9 @@ export const useOrderBookLite: UseOrderBookLite = ({
     };
   }, [marketPubkey, syntheticParams]);
 
-  const {
-    offers: offersRaw,
-    isLoading,
-    bestOffer,
-  } = useMarketOrders(orderBookParams);
+  const { offers: offersRaw, isLoading } = useMarketOrders(orderBookParams);
 
-  const filteredPositiveOffers: MarketOrder[] = useMemo(() => {
+  const offers: MarketOrder[] = useMemo(() => {
     return groupOffers(offersRaw as MarketOrder[], isOwnOrder).filter(
       (offer) => offer?.size > MIN_SIZE_FOR_VIEW || isOwnOrder(offer),
     );
@@ -56,7 +56,7 @@ export const useOrderBookLite: UseOrderBookLite = ({
   const sortedOffers = useMemo(() => {
     if (marketFloor) {
       return orderBy(
-        filteredPositiveOffers,
+        offers,
         (offer) => {
           const { synthetic, loanValue } = offer || {};
           return synthetic
@@ -66,8 +66,23 @@ export const useOrderBookLite: UseOrderBookLite = ({
         'desc',
       );
     }
-    return filteredPositiveOffers;
-  }, [marketFloor, filteredPositiveOffers]);
+    return offers;
+  }, [marketFloor, offers]);
+
+  const bestOffer = useMemo(() => {
+    const validOffers = sortedOffers.map((offer) => {
+      if (offer?.synthetic) return null;
+
+      const loanValue = getNormalizedLoanValue(offer, marketFloor);
+      const loanAmount = getNormalizedLoanAmount(offer, loanValue);
+
+      return { ...offer, loanAmount };
+    });
+
+    const bestOffer = validOffers.find((offer) => offer?.loanAmount >= 1);
+
+    return bestOffer;
+  }, [sortedOffers]);
 
   const [openOffersMobile, setOpenOffersMobile] = useState<boolean>(true);
 
@@ -79,7 +94,7 @@ export const useOrderBookLite: UseOrderBookLite = ({
     setPairPubkey(orderPubkey);
   };
 
-  const offersExist = Boolean(filteredPositiveOffers.length);
+  const offersExist = Boolean(offers.length);
   const isSelectedOffers = !!syntheticParams?.loanValue;
   const showOrderBook = !isLoading && offersExist;
   const showNoActiveOffers = !isLoading && !offersExist && !isSelectedOffers;
