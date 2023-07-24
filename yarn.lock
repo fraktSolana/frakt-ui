@@ -9538,6 +9538,10 @@ fb-watchman@^2.0.0:
   dependencies:
     bser "2.1.1"
 
+fbonds-core@0.5.97:
+  version "0.5.97"
+  resolved "https://registry.yarnpkg.com/fbonds-core/-/fbonds-core-0.5.97.tgz#a6c1dda13c8383bbf3854161fb1905ae56aa0c0f"
+  integrity sha512-CgMddIH5hZHufQmZpxTdUJa7ZwZVys1W1QJPUyqA5oXDI+2jJFMCY+PeAFz9ADGDotIb4+1AJOfMLfUUvbhRew==
 fbonds-core@0.5.96:
   version "0.5.96"
   resolved "https://registry.yarnpkg.com/fbonds-core/-/fbonds-core-0.5.96.tgz#b576a0fb00b9b5dd7a1a518da4fc5bc6526a423b"

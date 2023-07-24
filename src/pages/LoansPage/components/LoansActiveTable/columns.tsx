@@ -145,7 +145,7 @@ export const getTableColumns = ({ isCardView, onSelectAll, duration }) => {
         hiddenSort
       />
     ),
-    render: (_, loan) => <DurationCell loan={loan} />,
+    render: (_, loan) => <DurationCell loan={loan} showGraceBadge />,
     sorter: true,
     showSorterTooltip: false,
   };
