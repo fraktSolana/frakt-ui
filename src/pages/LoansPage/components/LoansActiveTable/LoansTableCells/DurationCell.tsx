@@ -9,9 +9,11 @@ import styles from '../LoansTable.module.scss';
 export const DurationCell = ({
   loan,
   className,
+  showGraceBadge = false,
 }: {
   loan: Loan;
   className?: string;
+  showGraceBadge?: boolean;
 }) => {
   const { loanType } = loan;
 
@@ -23,7 +25,9 @@ export const DurationCell = ({
 
   return (
     <div className={classNames(styles.value, className)}>
-      {!!loan?.isGracePeriod && <p className={styles.badgeOnGrace}>On grace</p>}
+      {!!loan?.isGracePeriod && showGraceBadge && (
+        <p className={styles.badgeOnGrace}>On grace</p>
+      )}
       {timeLeft.days}d<p>:</p>
       {timeLeft.hours}h<p>:</p>
       {timeLeft.minutes}m
