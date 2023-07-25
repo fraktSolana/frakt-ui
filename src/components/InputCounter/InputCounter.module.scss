@@ -1,0 +1,86 @@
+%resetInputStyles {
+  background: none;
+  border: none;
+  outline: none;
+}
+
+body input.valueInput {
+  @extend %resetInputStyles;
+}
+
+body input.valueInput:not(.styles_ant-input) {
+  &:hover,
+  &:active,
+  &:focus {
+    @extend %resetInputStyles;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.label {
+  color: var(--secondary-text);
+  font: var(--font-text-7);
+  text-transform: uppercase;
+  line-height: 18px;
+}
+
+.valueInput {
+  flex-grow: 1;
+  padding-left: 24px;
+  font: var(--font-btn-mid);
+  min-width: 48px;
+}
+
+.root {
+  background: var(--secondary-background);
+  border-bottom: 1px solid var(--primary-border);
+  display: flex;
+  justify-content: flex-end;
+  transition: border-color var(--transition-1);
+  max-width: 120px;
+  width: 100%;
+  padding: 0 8px;
+
+  position: relative;
+
+  input {
+    text-align: center;
+    padding: 8px 0;
+    width: 40px;
+  }
+}
+.inputError {
+  border-color: var(--red-error-color);
+}
+
+.selectTokenBtn {
+  @extend %resetInputStyles;
+
+  padding: 0 12px 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+}
+
+.counterButton {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  width: 24px;
+}
+
+.counterButton.disabled {
+  pointer-events: none;
+
+  svg path {
+    fill: var(--primary-border);
+  }
+}

@@ -80,7 +80,7 @@ export const OrderBookLabel = ({ hidden = false }) => (
       [styles.hidden]: hidden,
     })}
   >
-    <span>Loan amount</span>
+    <span>Number of loans</span>
   </div>
 );
 
