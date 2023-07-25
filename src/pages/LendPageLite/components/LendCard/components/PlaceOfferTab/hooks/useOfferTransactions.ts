@@ -6,7 +6,7 @@ import { isEmpty } from 'lodash';
 import { makeModifyPairTransactions } from '@frakt/utils/bonds/transactions/makeModifyPairTransactions';
 import { signAndConfirmTransaction } from '@frakt/utils/transactions';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
-import { throwLogsError, notify } from '@frakt/utils';
+import { logTxnError, notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { Market, Pair } from '@frakt/api/bonds';
 
@@ -78,7 +78,7 @@ export const useOfferTransactions = ({
 
       onAfterSuccess?.();
     } catch (error) {
-      throwLogsError(error);
+      logTxnError(error);
       notify({
         message: 'The transaction just failed :( Give it another try',
         type: NotifyType.ERROR,

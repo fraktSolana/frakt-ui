@@ -4,6 +4,7 @@ import { Bond, Market } from '@frakt/api/bonds';
 import { exitBond } from '@frakt/utils/bonds';
 
 import { BondCartOrder } from '@frakt/api/nft';
+import { logTxnError } from '@frakt/utils';
 
 export const useBondsTransactions = ({
   bonds,
@@ -21,9 +22,7 @@ export const useBondsTransactions = ({
     try {
       //
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn(error?.logs?.join('\n'));
-      console.error(error);
+      logTxnError(error);
     }
   };
 
@@ -31,9 +30,7 @@ export const useBondsTransactions = ({
     try {
       //
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn(error?.logs?.join('\n'));
-      console.error(error);
+      logTxnError(error);
     }
   };
 
@@ -57,9 +54,7 @@ export const useBondsTransactions = ({
         hideBond(bond?.fbond?.publicKey);
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn(error?.logs?.join('\n'));
-      console.error(error);
+      logTxnError(error);
     }
   };
 

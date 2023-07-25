@@ -15,9 +15,9 @@ import {
 } from '@frakt/utils/transactions';
 import { useBorrow } from '@frakt/pages/BorrowPages/cartState';
 import { Market } from '@frakt/api/bonds';
-import { notify } from '@frakt/utils';
+import { logTxnError, notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
-import { captureSentryError } from '@frakt/utils/sentry';
+import { captureSentryTxnError } from '@frakt/utils/sentry';
 import { makeProposeTransaction } from '@frakt/utils/loans';
 import { LoanType } from '@frakt/api/loans';
 import { BondCartOrder, BorrowNft } from '@frakt/api/nft';
@@ -149,8 +149,7 @@ const borrowSingle: BorrowSingle = async ({
         });
       },
       onError: (error) => {
-        // eslint-disable-next-line no-console
-        console.warn(error.logs?.join('\n'));
+        logTxnError(error);
         const isNotConfirmed = showSolscanLinkNotification(error);
 
         if (!isNotConfirmed) {
@@ -160,9 +159,9 @@ const borrowSingle: BorrowSingle = async ({
           });
         }
 
-        captureSentryError({
+        captureSentryTxnError({
           error,
-          wallet,
+          walletPubkey: wallet?.publicKey.toBase58(),
           transactionName: 'borrowSingleClassic',
         });
       },
@@ -199,8 +198,7 @@ const borrowSingle: BorrowSingle = async ({
       });
     },
     onError: (error) => {
-      // eslint-disable-next-line no-console
-      console.warn(error.logs?.join('\n'));
+      logTxnError(error);
       const isNotConfirmed = showSolscanLinkNotification(error);
       if (!isNotConfirmed) {
         notify({
@@ -208,9 +206,9 @@ const borrowSingle: BorrowSingle = async ({
           type: NotifyType.ERROR,
         });
       }
-      captureSentryError({
+      captureSentryTxnError({
         error,
-        wallet,
+        walletPubkey: wallet?.publicKey.toBase58(),
         transactionName: 'borrowSingleBond',
       });
     },

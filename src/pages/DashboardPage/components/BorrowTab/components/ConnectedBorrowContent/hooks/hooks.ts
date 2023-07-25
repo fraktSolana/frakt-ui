@@ -16,17 +16,17 @@ import {
   BondCartOrder,
 } from '@frakt/api/nft';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
-import { useDebounce } from '@frakt/hooks';
-import { captureSentryError } from '@frakt/utils/sentry';
-import { NFT } from '@frakt/pages/DashboardPage/types';
-import { notify, throwLogsError } from '@frakt/utils';
-import { NotifyType } from '@frakt/utils/solanaUtils';
-import { PATHS } from '@frakt/constants';
-import { showSolscanLinkNotification } from '@frakt/utils/transactions';
 import {
+  useDebounce,
   useVisibleMarketURLControl,
   useSearchSelectedMarketsURLControl,
 } from '@frakt/hooks';
+import { captureSentryTxnError } from '@frakt/utils/sentry';
+import { NFT } from '@frakt/pages/DashboardPage/types';
+import { notify, logTxnError } from '@frakt/utils';
+import { NotifyType } from '@frakt/utils/solanaUtils';
+import { PATHS } from '@frakt/constants';
+import { showSolscanLinkNotification } from '@frakt/utils/transactions';
 
 import { useNotConnectedBorrowContent } from '../../NotConnectedBorrowContent';
 import { filterPairs, getBondOrderParams, parseNFTs } from '../helpers';
@@ -221,8 +221,8 @@ const borrowSingle = async ({
         type: NotifyType.INFO,
       });
     },
-    onError: (error) => {
-      throwLogsError(error);
+    onError: (error: any) => {
+      logTxnError(error);
       const isNotConfirmed = showSolscanLinkNotification(error);
       if (!isNotConfirmed) {
         notify({
@@ -230,9 +230,9 @@ const borrowSingle = async ({
           type: NotifyType.ERROR,
         });
       }
-      captureSentryError({
+      captureSentryTxnError({
         error,
-        wallet,
+        walletPubkey: wallet?.publicKey?.toBase58(),
         transactionName: 'borrowSingleBond',
       });
     },

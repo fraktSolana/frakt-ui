@@ -1,11 +1,9 @@
 import * as Sentry from '@sentry/browser';
-// import * as ReactSentry from '@sentry/react';
-import { WalletContextState } from '@solana/wallet-adapter-react';
-// import { RouterHistory } from '@sentry/react/types/reactrouter';
-// import { Integrations } from '@sentry/tracing';
+import { Dictionary } from 'lodash';
+
 import { SENTRY_APP_DSN } from './constants';
 
-export const initSentry = (/*history: RouterHistory*/): void => {
+export const initSentry = () => {
   Sentry.init({
     dsn: SENTRY_APP_DSN,
     ignoreErrors: [
@@ -13,7 +11,7 @@ export const initSentry = (/*history: RouterHistory*/): void => {
       'We are unable to register the default service worker',
       'The notification permission was not granted and blocked instead',
       'The string did not match the expected pattern',
-      'WalletSignTransactionError: User rejected the request.',
+      'User rejected the request',
     ],
     defaultIntegrations: false,
 
@@ -25,36 +23,38 @@ export const initSentry = (/*history: RouterHistory*/): void => {
     //   }),
     // ],
 
-    tracesSampleRate: 1.0,
+    tracesSampleRate: 0.05,
   });
 };
 
-export const captureSentryError = ({
-  error,
-  wallet,
-  transactionName,
-  params,
-}: {
+type CaptureSentryTxnError = (props: {
   error: any;
-  wallet?: WalletContextState;
-  transactionName: string;
-  params?: any;
-}): void => {
-  const user = wallet?.publicKey?.toBase58();
+  walletPubkey?: string;
+  transactionName?: string;
+  params?: Dictionary<any>;
+}) => void;
 
-  if (user) {
-    Sentry.setUser({ id: user });
-  } else {
-    Sentry.setUser(null);
-  }
+export const captureSentryTxnError: CaptureSentryTxnError = ({
+  error,
+  walletPubkey = '',
+  transactionName = 'Unknown transaction',
+  params = {},
+}) => {
+  Sentry.captureException(error, (scope) => {
+    scope.clear();
 
-  Sentry.setTag('Transaction name', transactionName);
-  Sentry.setContext('Params', params);
-  Sentry.setExtra('Transaction logs: ', error?.logs?.join('\n'));
-  Sentry.configureScope((scope) => scope.setTransactionName(transactionName));
-  Sentry.captureException(error);
+    scope.setTransactionName(transactionName);
 
-  console.error(error);
-  // eslint-disable-next-line no-console
-  console.warn('Transaction logs: ', error?.logs?.join('\n'));
+    if (walletPubkey) {
+      scope.setUser({ id: walletPubkey });
+      scope.setTag('wallet', walletPubkey);
+    }
+
+    scope.setTag('transaction', transactionName);
+
+    scope.setExtra('Transaction params', JSON.stringify(params, null, ' '));
+    error?.logs && scope.setExtra('Transaction logs: ', error.logs.join('\n'));
+
+    return scope;
+  });
 };

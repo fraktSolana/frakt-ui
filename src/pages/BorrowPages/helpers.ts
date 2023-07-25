@@ -4,10 +4,10 @@ import { WalletContextState } from '@solana/wallet-adapter-react';
 import { BorrowNft } from '@frakt/api/nft';
 import { BASE_POINTS } from '@frakt/utils/bonds';
 import { CartOrder } from '@frakt/pages/BorrowPages/cartState';
-import { captureSentryError } from '@frakt/utils/sentry';
+import { captureSentryTxnError } from '@frakt/utils/sentry';
 import { showSolscanLinkNotification } from '@frakt/utils/transactions';
 import { LoanType } from '@frakt/api/loans';
-import { notify } from '@frakt/utils';
+import { logTxnError, notify } from '@frakt/utils';
 import { makeProposeTransaction } from '@frakt/utils/loans';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 
@@ -171,9 +171,8 @@ export const borrowBulk: BorrowBulk = async ({
         type: NotifyType.SUCCESS,
       });
     },
-    onError: (error) => {
-      // eslint-disable-next-line no-console
-      console.warn(error.logs?.join('\n'));
+    onError: (error: any) => {
+      logTxnError(error);
 
       const isNotConfirmed = showSolscanLinkNotification(error);
       if (!isNotConfirmed) {
@@ -183,10 +182,14 @@ export const borrowBulk: BorrowBulk = async ({
         });
       }
 
-      captureSentryError({
+      captureSentryTxnError({
         error,
-        wallet,
+        walletPubkey: wallet?.publicKey?.toBase58(),
         transactionName: 'borrowBulk',
+        params: {
+          orders,
+          isLedger,
+        },
       });
     },
   });

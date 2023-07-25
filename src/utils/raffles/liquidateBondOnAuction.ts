@@ -2,13 +2,10 @@ import { liquidateBondOnAuctionPnft as txn } from 'fbonds-core/lib/fbond-protoco
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
 
-import { notify, sendTxnPlaceHolder } from './../index';
-import { captureSentryError } from '../sentry';
+import { logTxnError, notify, sendTxnPlaceHolder } from './../index';
+import { captureSentryTxnError } from '../sentry';
 import { NotifyType } from '../solanaUtils';
-import {
-  showSolscanLinkNotification,
-  signAndConfirmTransaction,
-} from '../transactions';
+import { showSolscanLinkNotification } from '../transactions';
 import { InstructionsAndSigners } from 'fbonds-core/lib/fbond-protocol/types';
 import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from 'fbonds-core/lib/fbond-protocol/utils';
 import { RepayAccounts } from 'fbonds-core/lib/fbond-protocol/functions/bond/repayment';
@@ -108,8 +105,7 @@ export const liquidateBondOnAuction: LiquidateBondOnAuction = async ({
       });
     },
     onError: (error) => {
-      // eslint-disable-next-line no-console
-      console.warn(error.logs?.join('\n'));
+      logTxnError(error);
 
       const isNotConfirmed = showSolscanLinkNotification(error);
       if (!isNotConfirmed) {
@@ -119,9 +115,9 @@ export const liquidateBondOnAuction: LiquidateBondOnAuction = async ({
         });
       }
 
-      captureSentryError({
+      captureSentryTxnError({
         error,
-        wallet,
+        walletPubkey: wallet?.publicKey?.toBase58(),
         transactionName: 'liquidateBondOnAuction',
       });
     },

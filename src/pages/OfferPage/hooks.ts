@@ -16,7 +16,7 @@ import {
   useMarketPairs,
 } from '@frakt/utils/bonds';
 import { signAndConfirmTransaction } from '@frakt/utils/transactions';
-import { notify } from '@frakt/utils';
+import { logTxnError, notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { useNativeAccount } from '@frakt/utils/accounts';
 import { PATHS } from '@frakt/constants';
@@ -262,9 +262,7 @@ export const useOfferPage = () => {
 
         history.push(`${PATHS.BONDS}/${marketPubkey}`);
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn(error?.logs);
-        console.error(error);
+        logTxnError(error);
 
         notify({
           message: 'The transaction just failed :( Give it another try',
@@ -354,9 +352,7 @@ export const useOfferPage = () => {
 
         history.push(`${PATHS.BONDS}/${marketPubkey}`);
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn(error?.logs?.join('\n'));
-        console.error(error);
+        logTxnError(error);
 
         notify({
           message: 'The transaction just failed :( Give it another try',

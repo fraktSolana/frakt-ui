@@ -3,7 +3,6 @@ import { sum, map } from 'lodash';
 
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { paybackLoans } from '@frakt/utils/loans/paybackLoans';
-import { throwLogsError } from '@frakt/utils';
 import {
   useSelectedLoans,
   useHiddenLoansPubkeys,
@@ -47,7 +46,7 @@ export const useActiveLoans = () => {
         showConfetti();
       }
     } catch (error) {
-      throwLogsError(error);
+      console.error(error);
     } finally {
       closeLoadingModal();
     }
