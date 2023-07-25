@@ -182,13 +182,13 @@ export const subscribeNfts: SubscribeNfts = async ({
   const getSubsAndAdvsToUnsub = (nft: AdventureNft) => {
     if (!nft?.subscriptions) return [];
     return nft.subscriptions
-      .filter(({ adventure: adventurePubkey }) => {
+      .filter(({ adventure: adventurePubkey, unsubscribedAt, harvestedAt }) => {
         const targetAdventure = allAdventures.find(
           ({ publicKey }) => publicKey === adventurePubkey,
         );
         const isEnded =
           getAdventureStatus(targetAdventure) === AdventureStatus.ENDED;
-        return isEnded;
+        return isEnded && unsubscribedAt === 0 && harvestedAt === 0;
       })
       .map(({ adventure, publicKey }) => ({
         adventure: new web3.PublicKey(adventure),
