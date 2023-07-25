@@ -3,7 +3,7 @@ import { orderBy } from 'lodash';
 
 import { useMarketsPreview } from '@frakt/pages/MarketsPage/hooks';
 import { useDebounce, useWindowSize } from '@frakt/hooks';
-import { TABLET_SIZE } from '@frakt/constants';
+import { TABLET_WIDTH } from '@frakt/constants';
 
 import { parseMarketsPreview } from './helpers';
 
@@ -11,7 +11,7 @@ export const useNotConnectedBorrowContent = () => {
   const { marketsPreview, isLoading } = useMarketsPreview();
 
   const { width } = useWindowSize();
-  const isMobile = width <= TABLET_SIZE;
+  const isMobile = width <= TABLET_WIDTH;
 
   const [search, setSearch] = useState<string>('');
 

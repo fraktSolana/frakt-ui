@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { Select } from 'antd';
 
 import { useOnClickOutside, useWindowSize } from '@frakt/hooks';
-import { TABLET_SIZE } from '@frakt/constants';
+import { TABLET_WIDTH } from '@frakt/constants';
 import { Close } from '@frakt/icons';
 
 import { CollapsedContent, PrefixInput, SelectLabels } from './components';
@@ -45,7 +45,7 @@ export const SearchSelect = <T extends {}>({
 
   const { width } = useWindowSize();
 
-  const mobileWidth = collapsedWidth || TABLET_SIZE;
+  const mobileWidth = collapsedWidth || TABLET_WIDTH;
   const isMobile = width <= mobileWidth;
 
   useOnClickOutside(
