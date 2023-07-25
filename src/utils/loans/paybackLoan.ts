@@ -3,8 +3,8 @@ import { WalletContextState } from '@solana/wallet-adapter-react';
 
 import { Loan, LoanType } from '@frakt/api/loans';
 
-import { captureSentryError } from '../sentry';
-import { notify, throwLogsError } from '../';
+import { captureSentryTxnError } from '../sentry';
+import { notify, logTxnError } from '../';
 import { NotifyType } from '../solanaUtils';
 import {
   showSolscanLinkNotification,
@@ -56,6 +56,8 @@ export const paybackLoan: PaybackLoan = async ({
 
       return true;
     } catch (error) {
+      logTxnError(error);
+
       const isNotConfirmed = showSolscanLinkNotification(error);
 
       if (!isNotConfirmed) {
@@ -65,9 +67,9 @@ export const paybackLoan: PaybackLoan = async ({
         });
       }
 
-      captureSentryError({
+      captureSentryTxnError({
         error,
-        wallet,
+        walletPubkey: wallet?.publicKey?.toBase58(),
         transactionName: 'paybackLoan',
         params: { loan },
       });
@@ -108,7 +110,7 @@ export const paybackLoan: PaybackLoan = async ({
       });
     },
     onError: (error) => {
-      throwLogsError(error);
+      logTxnError(error);
 
       const isNotConfirmed = showSolscanLinkNotification(error);
       if (!isNotConfirmed) {
@@ -117,9 +119,9 @@ export const paybackLoan: PaybackLoan = async ({
           type: NotifyType.ERROR,
         });
       }
-      captureSentryError({
+      captureSentryTxnError({
         error,
-        wallet,
+        walletPubkey: wallet?.publicKey?.toBase58(),
         transactionName: 'paybackLoan',
       });
     },

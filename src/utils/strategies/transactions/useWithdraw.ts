@@ -1,5 +1,5 @@
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
-import { notify } from '@frakt/utils';
+import { logTxnError, notify } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { signAndConfirmTransaction } from '@frakt/utils/transactions';
 
@@ -49,9 +49,7 @@ export const useWithdraw: UseWithdraw = ({
 
         onCancel();
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn(error?.logs);
-        console.error(error);
+        logTxnError(error);
 
         notify({
           message: 'The transaction just failed :( Give it another try',

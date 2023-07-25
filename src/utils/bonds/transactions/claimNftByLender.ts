@@ -1,16 +1,12 @@
 import { claimNftByLenderPnft as txn } from 'fbonds-core/lib/fbond-protocol/functions/bond/liquidation';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
-import {
-  showSolscanLinkNotification,
-  signAndConfirmTransaction,
-} from '@frakt/utils/transactions';
+import { showSolscanLinkNotification } from '@frakt/utils/transactions';
 
-import { notify, sendTxnPlaceHolder } from '@frakt/utils';
+import { logTxnError, notify, sendTxnPlaceHolder } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
-import { captureSentryError } from '@frakt/utils/sentry';
+import { captureSentryTxnError } from '@frakt/utils/sentry';
 import { Bond } from '@frakt/api/bonds';
-import { EMPTY_PUBKEY } from 'fbonds-core/lib/fbond-protocol/constants';
 import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from 'fbonds-core/lib/fbond-protocol/utils';
 
 type ClaimNftByLender = (props: {
@@ -80,6 +76,8 @@ export const claimNftByLender: ClaimNftByLender = async ({
       });
     },
     onError: (error) => {
+      logTxnError(error);
+
       const isNotConfirmed = showSolscanLinkNotification(error);
 
       if (!isNotConfirmed) {
@@ -89,9 +87,9 @@ export const claimNftByLender: ClaimNftByLender = async ({
         });
       }
 
-      captureSentryError({
+      captureSentryTxnError({
         error,
-        wallet,
+        walletPubkey: wallet?.publicKey?.toBase58(),
         transactionName: 'claimNftByLender',
       });
     },

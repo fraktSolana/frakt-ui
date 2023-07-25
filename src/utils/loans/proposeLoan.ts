@@ -6,9 +6,9 @@ import {
   showSolscanLinkNotification,
 } from '@frakt/utils/transactions';
 
-import { captureSentryError } from '../sentry';
+import { captureSentryTxnError } from '../sentry';
 import { NotifyType } from '../solanaUtils';
-import { notify, SOL_TOKEN } from '../';
+import { logTxnError, notify, SOL_TOKEN } from '../';
 
 type ProposeLoan = (props: {
   connection: web3.Connection;
@@ -89,6 +89,8 @@ export const proposeLoan: ProposeLoan = async ({
 
     return true;
   } catch (error) {
+    logTxnError(error);
+
     const isNotConfirmed = showSolscanLinkNotification(error);
 
     if (!isNotConfirmed) {
@@ -98,9 +100,9 @@ export const proposeLoan: ProposeLoan = async ({
       });
     }
 
-    captureSentryError({
+    captureSentryTxnError({
       error,
-      wallet,
+      walletPubkey: wallet?.publicKey?.toBase58(),
       transactionName: 'proposeLoan',
       params: { nftMint, proposedNftPrice, isPriceBased, loanToValue },
     });

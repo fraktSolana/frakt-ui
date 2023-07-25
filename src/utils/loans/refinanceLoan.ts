@@ -7,13 +7,10 @@ import { Market } from '@frakt/api/bonds';
 import { Loan } from '@frakt/api/loans';
 
 import { makeRefinanceLoanTransaction } from './makeRefinanceLoanTransaction';
-import { captureSentryError } from '../sentry';
+import { captureSentryTxnError } from '../sentry';
 import { NotifyType } from '../solanaUtils';
-import { notify, throwLogsError } from '../';
-import {
-  showSolscanLinkNotification,
-  signAndSendV0TransactionWithLookupTables,
-} from '../transactions';
+import { notify, logTxnError } from '../';
+import { showSolscanLinkNotification } from '../transactions';
 import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from 'fbonds-core/lib/fbond-protocol/utils';
 
 type RefinanceLoan = (props: {
@@ -71,7 +68,7 @@ export const refinanceLoan: RefinanceLoan = async ({
       });
     },
     onError: (error) => {
-      throwLogsError(error);
+      logTxnError(error);
 
       const isNotConfirmed = showSolscanLinkNotification(error);
       if (!isNotConfirmed) {
@@ -80,9 +77,9 @@ export const refinanceLoan: RefinanceLoan = async ({
           type: NotifyType.ERROR,
         });
       }
-      captureSentryError({
+      captureSentryTxnError({
         error,
-        wallet,
+        walletPubkey: wallet?.publicKey?.toBase58(),
         transactionName: 'refinanceBond',
       });
     },

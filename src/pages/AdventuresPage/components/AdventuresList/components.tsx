@@ -8,10 +8,10 @@ import { Alert, MoneyBill, Timer, CircleCheck } from '@frakt/icons';
 import Button from '@frakt/components/Button';
 import { Adventure, BanxUser } from 'fbonds-core/lib/fbond-protocol/types';
 import { AdventureNft } from '@frakt/api/adventures';
-import { formatNumbersWithCommas, notify, throwLogsError } from '@frakt/utils';
+import { formatNumbersWithCommas, notify, logTxnError } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { showSolscanLinkNotification } from '@frakt/utils/transactions';
-import { captureSentryError } from '@frakt/utils/sentry';
+import { captureSentryTxnError } from '@frakt/utils/sentry';
 import { useIsLedger } from '@frakt/store';
 
 import styles from './AdventuresList.module.scss';
@@ -86,7 +86,7 @@ export const AdventureSubscribeButton: FC<AdventuresComponentsProps> = ({
           refetch();
         },
         onError: (error) => {
-          throwLogsError(error);
+          logTxnError(error);
 
           const isNotConfirmed = showSolscanLinkNotification(error);
           if (!isNotConfirmed) {
@@ -95,9 +95,9 @@ export const AdventureSubscribeButton: FC<AdventuresComponentsProps> = ({
               type: NotifyType.ERROR,
             });
           }
-          captureSentryError({
+          captureSentryTxnError({
             error,
-            wallet,
+            walletPubkey: wallet?.publicKey?.toBase58(),
             transactionName: 'adventuresSubscribe',
             params: {
               stakedNfts,
@@ -107,7 +107,7 @@ export const AdventureSubscribeButton: FC<AdventuresComponentsProps> = ({
         },
       });
     } catch (error) {
-      throwLogsError(error);
+      console.error(error);
     }
   }, [
     refetch,

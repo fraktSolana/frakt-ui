@@ -2,14 +2,10 @@ import { web3 } from '@frakt-protocol/frakt-sdk';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 
 import { Bond, Market } from '@frakt/api/bonds';
-import { notify, throwLogsError } from '@frakt/utils';
+import { notify, logTxnError } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
-import {
-  showSolscanLinkNotification,
-  signAndSendAllTransactionsInSequence,
-  signAndSendV0TransactionWithLookupTables,
-} from '@frakt/utils/transactions';
-import { captureSentryError } from '@frakt/utils/sentry';
+import { showSolscanLinkNotification } from '@frakt/utils/transactions';
+import { captureSentryTxnError } from '@frakt/utils/sentry';
 import { BondCartOrder } from '@frakt/api/nft';
 
 import { makeExitBondMultiOrdersTransactionV2 } from './makeExitBondTransaction';
@@ -74,7 +70,7 @@ export const exitBond: ExitBond = async ({
       });
     },
     onError: (error) => {
-      throwLogsError(error);
+      logTxnError(error);
 
       const isNotConfirmed = showSolscanLinkNotification(error);
       if (!isNotConfirmed) {
@@ -83,9 +79,9 @@ export const exitBond: ExitBond = async ({
           type: NotifyType.ERROR,
         });
       }
-      captureSentryError({
+      captureSentryTxnError({
         error,
-        wallet,
+        walletPubkey: wallet?.publicKey?.toBase58(),
         transactionName: 'exitLoan',
       });
     },

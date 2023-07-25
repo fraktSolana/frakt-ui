@@ -12,8 +12,8 @@ import Button from '@frakt/components/Button';
 import { AdventureNft, AdventuresInfo } from '@frakt/api/adventures';
 import { Tab, Tabs, useTabs } from '@frakt/components/Tabs';
 import { showSolscanLinkNotification } from '@frakt/utils/transactions';
-import { captureSentryError } from '@frakt/utils/sentry';
-import { notify, throwLogsError } from '@frakt/utils';
+import { captureSentryTxnError } from '@frakt/utils/sentry';
+import { notify, logTxnError } from '@frakt/utils';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { useIsLedger } from '@frakt/store';
 
@@ -188,7 +188,7 @@ const StakeContent: FC<StakeContent> = ({
           setIsOpen(false);
         },
         onError: (error) => {
-          throwLogsError(error);
+          logTxnError(error);
 
           const isNotConfirmed = showSolscanLinkNotification(error);
           if (!isNotConfirmed) {
@@ -197,18 +197,18 @@ const StakeContent: FC<StakeContent> = ({
               type: NotifyType.ERROR,
             });
           }
-          captureSentryError({
+          captureSentryTxnError({
             error,
-            wallet,
+            walletPubkey: wallet?.publicKey?.toBase58(),
             transactionName: 'adventuresStake',
             params: {
-              selectedNfts: JSON.stringify(selectedNfts, null, ' '),
+              selectedNfts,
             },
           });
         },
       });
     } catch (error) {
-      throwLogsError(error);
+      console.error(error);
     }
   };
 
@@ -315,7 +315,7 @@ const UnstakeContent: FC<UnstakeContent> = ({ nfts = [], setIsOpen }) => {
           setIsOpen(false);
         },
         onError: (error) => {
-          throwLogsError(error);
+          logTxnError(error);
 
           const isNotConfirmed = showSolscanLinkNotification(error);
           if (!isNotConfirmed) {
@@ -324,18 +324,18 @@ const UnstakeContent: FC<UnstakeContent> = ({ nfts = [], setIsOpen }) => {
               type: NotifyType.ERROR,
             });
           }
-          captureSentryError({
+          captureSentryTxnError({
             error,
-            wallet,
+            walletPubkey: wallet?.publicKey?.toBase58(),
             transactionName: 'adventuresUnstake',
             params: {
-              selectedNfts: JSON.stringify(selectedNfts, null, ' '),
+              selectedNfts,
             },
           });
         },
       });
     } catch (error) {
-      throwLogsError(error);
+      console.error(error);
     }
   };
 

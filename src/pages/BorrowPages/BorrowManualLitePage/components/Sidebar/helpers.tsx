@@ -7,8 +7,8 @@ import { BondCartOrder, BorrowNft, OrderParamsLite } from '@frakt/api/nft';
 import { calcPriceBasedUpfrontFee } from '@frakt/pages/BorrowPages/helpers';
 import { calcPriceBasedMaxLoanValue } from '@frakt/pages/BorrowPages/cartState';
 import { makeProposeTransaction } from '@frakt/utils/loans';
-import { notify } from '@frakt/utils';
-import { captureSentryError } from '@frakt/utils/sentry';
+import { logTxnError, notify } from '@frakt/utils';
+import { captureSentryTxnError } from '@frakt/utils/sentry';
 import { borrow as borrowBonds } from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { showSolscanLinkNotification } from '@frakt/utils/transactions';
@@ -246,9 +246,8 @@ export const borrow: Borrow = async ({
         type: NotifyType.SUCCESS,
       });
     },
-    onError: (error) => {
-      // eslint-disable-next-line no-console
-      console.warn(error.logs?.join('\n'));
+    onError: (error: any) => {
+      logTxnError(error);
 
       const isNotConfirmed = showSolscanLinkNotification(error);
       if (!isNotConfirmed) {
@@ -258,9 +257,9 @@ export const borrow: Borrow = async ({
         });
       }
 
-      captureSentryError({
+      captureSentryTxnError({
         error,
-        wallet,
+        walletPubkey: wallet?.publicKey?.toBase58(),
         transactionName: 'borrowBulk',
       });
     },

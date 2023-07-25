@@ -3,8 +3,8 @@ import { web3, loans, BN } from '@frakt-protocol/frakt-sdk';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 
 import { NotifyType } from '../solanaUtils';
-import { notify, SOL_TOKEN } from '../';
-import { captureSentryError } from '../sentry';
+import { logTxnError, notify, SOL_TOKEN } from '../';
+import { captureSentryTxnError } from '../sentry';
 import {
   mergeIxsIntoTxn,
   showSolscanLinkNotification,
@@ -62,8 +62,7 @@ export const proposeBulkLoan: ProposeLoan = async ({
       mergeIxsIntoTxn(ixsAndSigners),
     );
 
-    const { blockhash, lastValidBlockHeight } =
-      await connection.getLatestBlockhash();
+    const { blockhash } = await connection.getLatestBlockhash();
 
     txnData.forEach(({ transaction }) => {
       transaction.recentBlockhash = blockhash;
@@ -79,7 +78,7 @@ export const proposeBulkLoan: ProposeLoan = async ({
 
     const signedTransactions = await wallet.signAllTransactions(txn);
 
-    const txids = await Promise.all(
+    await Promise.all(
       signedTransactions.map((signedTransaction) =>
         connection.sendRawTransaction(signedTransaction.serialize()),
       ),
@@ -108,6 +107,8 @@ export const proposeBulkLoan: ProposeLoan = async ({
 
     return true;
   } catch (error) {
+    logTxnError(error);
+
     const isNotConfirmed = showSolscanLinkNotification(error);
 
     if (!isNotConfirmed) {
@@ -117,9 +118,9 @@ export const proposeBulkLoan: ProposeLoan = async ({
       });
     }
 
-    captureSentryError({
+    captureSentryTxnError({
       error,
-      wallet,
+      walletPubkey: wallet?.publicKey?.toBase58(),
       transactionName: 'proposeBulkLoan',
     });
 
