@@ -98,3 +98,16 @@ export const NoActiveOffers = ({
     <div className={styles.noDataSubtitle}>Good chance to be first!</div>
   </div>
 );
+
+export const CollapsedMobileContent = ({
+  collectionName,
+  collectionImage,
+}: {
+  collectionName: string;
+  collectionImage: string;
+}) => (
+  <div className={styles.collapsedMobileContent}>
+    <img className={styles.collapsedMobileImage} src={collectionImage} />
+    <p className={styles.collectionMobileTitle}>{collectionName} Offers</p>
+  </div>
+);

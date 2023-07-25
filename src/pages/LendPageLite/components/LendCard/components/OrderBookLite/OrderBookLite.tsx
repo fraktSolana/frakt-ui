@@ -6,6 +6,7 @@ import { useOrderBookLite } from './hooks';
 import { SyntheticParams } from './types';
 import {
   ChevronMobileButton,
+  CollapsedMobileContent,
   NoActiveOffers,
   OrderBookLabel,
   OrderBookList,
@@ -31,6 +32,8 @@ const OrderBookLite: FC<OrderBookProps> = (props) => {
     showNoActiveOffers,
     showOrderBook,
     showLoader,
+    collectionImage,
+    collectionName,
   } = useOrderBookLite({ ...props });
 
   return (
@@ -39,6 +42,10 @@ const OrderBookLite: FC<OrderBookProps> = (props) => {
         <ChevronMobileButton
           onToggleVisible={toggleOffers}
           active={!openOffersMobile}
+        />
+        <CollapsedMobileContent
+          collectionImage={collectionImage}
+          collectionName={collectionName}
         />
         <h5 className={styles.title}>Offers</h5>
         <OrderBookLabel hidden={openOffersMobile} />

@@ -4,12 +4,11 @@ import { isEmpty } from 'lodash';
 
 import { useFakeInfinityScroll } from '@frakt/components/InfinityScroll';
 import { useVisibleMarketURLControl } from '@frakt/hooks';
-import { Button } from '@frakt/components/Button';
 import { Loader } from '@frakt/components/Loader';
 
+import { EmptyList, MarketsList } from './components';
 import { useFilteredMarkets } from './hooks';
 import FilterSection from '../FilterSection';
-import LendCard from '../LendCard';
 
 import styles from './LendLitePageContent.module.scss';
 
@@ -26,7 +25,7 @@ const LendLitePageContent: FC = () => {
     selectedMarkets,
   } = useFilteredMarkets();
 
-  const { data, fetchMoreTrigger } = useFakeInfinityScroll({
+  const { data: markets, fetchMoreTrigger } = useFakeInfinityScroll({
     rawData: marketsToDisplay,
     enabled: !!marketsToDisplay?.length,
   });
@@ -50,17 +49,12 @@ const LendLitePageContent: FC = () => {
       {isLoading && isEmpty(marketsPreview) ? (
         <Loader />
       ) : (
-        <>
-          {data.map((market, id) => (
-            <LendCard
-              market={market}
-              key={`${market.marketPubkey}_${id}`}
-              isVisible={visibleCards.includes(market.collectionName)}
-              onCardClick={() => toggleVisibleCard(market.collectionName)}
-            />
-          ))}
-          <div ref={fetchMoreTrigger} />
-        </>
+        <MarketsList
+          markets={markets}
+          visibleCards={visibleCards}
+          toggleVisibleCard={toggleVisibleCard}
+          fetchMoreTrigger={fetchMoreTrigger}
+        />
       )}
       {showEmptyList && <EmptyList onClick={onToggleChange} />}
     </div>
@@ -68,16 +62,3 @@ const LendLitePageContent: FC = () => {
 };
 
 export default LendLitePageContent;
-
-const EmptyList = ({ onClick }: { onClick: () => void }) => (
-  <div className={styles.emptyList}>
-    <h4 className={styles.emptyListTitle}>You don’t have any deposits</h4>
-    <Button
-      type="secondary"
-      onClick={onClick}
-      className={styles.emptyListButton}
-    >
-      View collections
-    </Button>
-  </div>
-);

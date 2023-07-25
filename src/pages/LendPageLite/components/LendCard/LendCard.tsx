@@ -17,10 +17,16 @@ const STOP_WIDTH = 1240;
 interface LendCardProps {
   market: MarketPreview;
   isVisible: boolean;
+  visibleOrderBook: boolean;
   onCardClick: () => void;
 }
 
-const LendCard: FC<LendCardProps> = ({ isVisible, onCardClick, market }) => {
+const LendCard: FC<LendCardProps> = ({
+  isVisible,
+  onCardClick,
+  market,
+  visibleOrderBook,
+}) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -52,7 +58,10 @@ const LendCard: FC<LendCardProps> = ({ isVisible, onCardClick, market }) => {
         containerRef={containerRef}
       />
       {isVisible && (
-        <HiddenCollectionContent marketPubkey={market?.marketPubkey} />
+        <HiddenCollectionContent
+          visibleOrderBook={visibleOrderBook}
+          marketPubkey={market?.marketPubkey}
+        />
       )}
     </div>
   );
