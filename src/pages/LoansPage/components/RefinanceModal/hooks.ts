@@ -1,11 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
-import {
-  getBestOrdersByBorrowValue,
-  getBestOrdersForExit,
-  getBestOrdersForRefinance,
-} from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
+import { getBestOrdersByBorrowValue } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
-import { sumBy, get } from 'lodash';
+import { get } from 'lodash';
 
 import {
   convertTakenOrdersToOrderParams,
@@ -14,7 +10,6 @@ import {
 import { BASE_POINTS, useMarket, useMarketPairs } from '@frakt/utils/bonds';
 import { useLoadingModal } from '@frakt/components/LoadingModal';
 import { refinanceLoan } from '@frakt/utils/loans';
-import { throwLogsError } from '@frakt/utils';
 import { Loan } from '@frakt/api/loans';
 import { useConfetti } from '@frakt/components/Confetti';
 
@@ -43,11 +38,6 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
   useEffect(() => {
     if (!pairs.length) return;
 
-    const loanToValueBasePoints =
-      (loan.loanValue / (market?.oracleFloor?.floor ?? 0)) * BASE_POINTS;
-
-    console.log('new repay value: ', loan.repayValue);
-    // console.log("pairs: ", pairs)
     const bestOrdersForRefinance = getBestOrdersByBorrowValue({
       bondOffers: pairs,
       collectionFloor: market?.oracleFloor?.floor,
@@ -60,7 +50,6 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
   const onRefinance = async (): Promise<void> => {
     try {
       openLoadingModal();
-      console.log('BEST ORDERS FOR REFINANCE', bestOrders);
       const result = await refinanceLoan({
         wallet,
         connection,
@@ -77,7 +66,7 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
       }
       showConfetti();
     } catch (error) {
-      throwLogsError(error);
+      console.error(error);
     } finally {
       closeLoadingModal();
       setRefinanceModalVisible(false);
@@ -119,6 +108,7 @@ const useLoanData = (loan: Loan) => {
 
   const pairs = useMemo(() => {
     return isLoadingPairs ? [] : rawPairs.map(patchPairWithProtocolFee);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoadingPairs]);
 
   return {

@@ -248,10 +248,9 @@ export const calcWeightedAverage = (nums: number[], weights: number[]) => {
   return weightedAverage || 0;
 };
 
-export const throwLogsError = (msg: any) => {
-  console.error(msg);
-  // eslint-disable-next-line no-console
-  console.warn(msg?.logs?.join('\n'));
+export const logTxnError = (error: any) => {
+  console.error(error);
+  console.error(error?.logs?.join('\n'));
 };
 
 export const formatNumbersWithCommas = (value: number | string): string =>

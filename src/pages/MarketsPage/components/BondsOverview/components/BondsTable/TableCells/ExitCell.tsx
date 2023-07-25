@@ -7,7 +7,6 @@ import { convertTakenOrdersToOrderParams } from '@frakt/pages/BorrowPages/cartSt
 import { useBondsTransactions } from '@frakt/hooks';
 import { claimNftByLender, isReceiveNftFeature } from '@frakt/utils/bonds';
 import Button from '@frakt/components/Button';
-import { throwLogsError } from '@frakt/utils';
 import { Bond } from '@frakt/api/bonds';
 
 import { getMarketAndPairsByBond } from '../helpers';
@@ -52,7 +51,7 @@ export const ExitCell: FC<ExitCellProps> = ({ bond, bonds, hideBond }) => {
         hideBond(bond?.fbond?.publicKey);
       }
     } catch (error) {
-      throwLogsError(error);
+      console.error(error);
     }
   };
 

@@ -183,6 +183,7 @@ export const subscribeNfts: SubscribeNfts = async ({
   const getAdventureToUnsub = (nft: AdventureNft) => {
     if (!nft?.subscriptions) return [];
     const foundAdventureToUnsub = nft.subscriptions
+
       .filter(({ adventure: adventurePubkey, unsubscribedAt, harvestedAt }) => {
         const targetAdventure = allAdventures.find(
           ({ publicKey }) => publicKey === adventurePubkey,

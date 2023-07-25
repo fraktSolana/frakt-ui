@@ -5,9 +5,9 @@ import {
   showSolscanLinkNotification,
   signAndConfirmTransaction,
 } from '../transactions';
-import { captureSentryError } from '../sentry';
+import { captureSentryTxnError } from '../sentry';
 import { NotifyType } from '../solanaUtils';
-import { notify } from '../';
+import { logTxnError, notify } from '../';
 
 type DepositLiquidity = (props: {
   connection: web3.Connection;
@@ -49,6 +49,8 @@ export const depositLiquidity: DepositLiquidity = async ({
 
     return true;
   } catch (error) {
+    logTxnError(error);
+
     const isNotConfirmed = showSolscanLinkNotification(error);
 
     if (!isNotConfirmed) {
@@ -58,9 +60,9 @@ export const depositLiquidity: DepositLiquidity = async ({
       });
     }
 
-    captureSentryError({
+    captureSentryTxnError({
       error,
-      wallet,
+      walletPubkey: wallet?.publicKey?.toBase58(),
       transactionName: 'depositLiquidity',
       params: { liquidityPool, amount },
     });
