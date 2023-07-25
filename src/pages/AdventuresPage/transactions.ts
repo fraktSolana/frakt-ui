@@ -9,6 +9,7 @@ import { Adventure } from 'fbonds-core/lib/fbond-protocol/types';
 
 import { getAdventureStatus, isSubscriptionActive } from './helpers';
 import { AdventureStatus } from './types';
+import { chunk } from 'lodash';
 
 const BONDS_PROGRAM_PUBKEY = new web3.PublicKey(
   process.env.BONDS_PROGRAM_PUBKEY,
@@ -195,16 +196,17 @@ export const subscribeNfts: SubscribeNfts = async ({
   //       adventureSubscription: new web3.PublicKey(publicKey),
   //     })).slice(0, 1);
   // };
+
   const getAdventureToUnsub = (nft: AdventureNft) => {
     if (!nft?.subscriptions) return [];
     const foundAdventureToUnsub = nft.subscriptions
-      .filter(({ adventure: adventurePubkey }) => {
+      .filter(({ adventure: adventurePubkey, unsubscribedAt, harvestedAt }) => {
         const targetAdventure = allAdventures.find(
           ({ publicKey }) => publicKey === adventurePubkey,
         );
         const isEnded =
           getAdventureStatus(targetAdventure) === AdventureStatus.ENDED;
-        return isEnded;
+        return isEnded && unsubscribedAt === 0 && harvestedAt === 0;
       })
       .map(({ adventure, publicKey }) => ({
         adventureUnsub: new web3.PublicKey(adventure),
@@ -220,23 +222,43 @@ export const subscribeNfts: SubscribeNfts = async ({
         };
   };
 
+  const nftChunks = chunk(nfts, 2);
+
+  console.log('nftChunks: ', nftChunks.slice(0, 1));
+  console.log(
+    JSON.stringify(
+      nftChunks
+        .map((nfts) =>
+          nfts.map((nft) => ({
+            subscriptionWeeks: staking.helpers.adventureTimestampToWeeks(
+              adventureToSubscribe.periodStartedAt,
+            ),
+            banxStakeSub: new web3.PublicKey(nft.banxStake.publicKey),
+
+            ...getAdventureToUnsub(nft),
+          })),
+        )
+        .slice(0, 1),
+      null,
+      2,
+    ),
+  );
+
   const txnsData = await Promise.all(
-    nfts.map((nft) =>
+    nftChunks.map((nfts) =>
       staking.adventure.subAndUnsubOrHarvestWeeksEnhanced({
         accounts: {
           userPubkey: wallet.publicKey,
         },
         args: {
-          subAndUnsubParams: [
-            {
-              subscriptionWeeks: staking.helpers.adventureTimestampToWeeks(
-                adventureToSubscribe.periodStartedAt,
-              ),
-              banxStakeSub: new web3.PublicKey(nft.banxStake.publicKey),
+          subAndUnsubParams: nfts.map((nft) => ({
+            subscriptionWeeks: staking.helpers.adventureTimestampToWeeks(
+              adventureToSubscribe.periodStartedAt,
+            ),
+            banxStakeSub: new web3.PublicKey(nft.banxStake.publicKey),
 
-              ...getAdventureToUnsub(nft),
-            },
-          ],
+            ...getAdventureToUnsub(nft),
+          })),
         },
         connection,
         programId: BONDS_PROGRAM_PUBKEY,
