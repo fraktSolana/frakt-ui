@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 import { MarketPreview } from '@frakt/api/bonds';
-import { TABLET_SIZE } from '@frakt/constants';
+import { TABLET_WIDTH } from '@frakt/constants';
 import Button from '@frakt/components/Button';
 import { useWindowSize } from '@frakt/hooks';
 
@@ -36,7 +36,7 @@ export const MarketsList: FC<MarketsListProps> = ({
   fetchMoreTrigger,
 }) => {
   const { width } = useWindowSize();
-  const isMobile = width < TABLET_SIZE;
+  const isMobile = width < TABLET_WIDTH;
 
   return (
     <>
