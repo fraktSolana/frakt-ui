@@ -2,6 +2,7 @@
 const Webpack = require('webpack');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 const path = require('path');
 
 require('dotenv').config({ path: './.env.local' });
@@ -22,6 +23,7 @@ module.exports = {
     maxEntrypointSize: 512000,
     maxAssetSize: 512000,
   },
+  devtool: 'source-map',
   module: {
     rules: [
       {
@@ -118,6 +120,11 @@ module.exports = {
     },
   },
   plugins: [
+    sentryWebpackPlugin({
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+    }),
     new HTMLWebpackPlugin({
       template: './public/index.html',
       favicon: './public/favicon.ico',

@@ -4,9 +4,9 @@ import { WalletContextState } from '@solana/wallet-adapter-react';
 import { Loan, LoanType } from '@frakt/api/loans';
 
 import { showSolscanLinkNotification } from '../transactions';
-import { captureSentryError } from '../sentry';
+import { captureSentryTxnError } from '../sentry';
 import { NotifyType } from '../solanaUtils';
-import { notify } from '../';
+import { logTxnError, notify } from '../';
 import { MAX_ACCOUNTS_IN_FAST_TRACK, makeRepayBondTransaction } from '../bonds';
 import { makePaybackLoanTransaction } from './makePaybackLoanTransaction';
 import { signAndSendV0TransactionWithLookupTablesSeparateSignatures } from 'fbonds-core/lib/fbond-protocol/utils';
@@ -43,8 +43,8 @@ export const paybackLoans: PaybackLoans = async ({
         .filter((loan) => loan.loanType === LoanType.BOND)
         .map(async (loan) => {
           const {
-            createLookupTableTxn,
-            extendLookupTableTxns,
+            // createLookupTableTxn,
+            // extendLookupTableTxns,
             repayIxsAndSigners,
           } = await makeRepayBondTransaction({
             loan,
@@ -122,8 +122,7 @@ export const paybackLoans: PaybackLoans = async ({
       });
     },
     onError: (error) => {
-      // eslint-disable-next-line no-console
-      console.warn(error.logs?.join('\n'));
+      logTxnError(error);
 
       const isNotConfirmed = showSolscanLinkNotification(error);
       if (!isNotConfirmed) {
@@ -133,9 +132,9 @@ export const paybackLoans: PaybackLoans = async ({
         });
       }
 
-      captureSentryError({
+      captureSentryTxnError({
         error,
-        wallet,
+        walletPubkey: wallet?.publicKey?.toBase58(),
         transactionName: 'paybackLoans',
       });
     },

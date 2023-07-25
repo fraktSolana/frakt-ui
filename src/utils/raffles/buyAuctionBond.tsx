@@ -2,9 +2,9 @@ import { buyAuctionBond as txn } from '@frakters/raffle-sdk/lib/raffle-core/func
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
 
-import { captureSentryError } from '../sentry';
+import { captureSentryTxnError } from '../sentry';
 import { NotifyType } from '../solanaUtils';
-import { notify } from './../index';
+import { logTxnError, notify } from './../index';
 import {
   showSolscanLinkNotification,
   signAndConfirmTransaction,
@@ -53,6 +53,8 @@ export const buyAuctionBond: BuyAuctionBond = async ({
 
     return true;
   } catch (error) {
+    logTxnError(error);
+
     const isNotConfirmed = showSolscanLinkNotification(error);
 
     if (!isNotConfirmed) {
@@ -62,9 +64,9 @@ export const buyAuctionBond: BuyAuctionBond = async ({
       });
     }
 
-    captureSentryError({
+    captureSentryTxnError({
       error,
-      wallet,
+      walletPubkey: wallet?.publicKey?.toBase58(),
       transactionName: 'participateInRaffle',
     });
 

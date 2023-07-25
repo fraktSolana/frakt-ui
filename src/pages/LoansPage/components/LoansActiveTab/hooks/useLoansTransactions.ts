@@ -10,7 +10,6 @@ import { Loan, RewardState, LoanType } from '@frakt/api/loans';
 import { paybackLoans } from '@frakt/utils/loans/paybackLoans';
 import { useConfetti } from '@frakt/components/Confetti';
 import { paybackLoan } from '@frakt/utils/loans';
-import { throwLogsError } from '@frakt/utils';
 import { useIsLedger } from '@frakt/store';
 
 import { useHiddenLoansPubkeys, useSelectedLoans } from '../../../loansState';
@@ -78,7 +77,7 @@ export const useLoansTransactions = (loan: Loan) => {
         removeTokenOptimistic(loan.pubkey);
       }
     } catch (error) {
-      throwLogsError(error);
+      console.error(error);
     } finally {
       setTransactionsLeft(null);
       closeLoadingModal();
@@ -114,7 +113,7 @@ export const useLoansTransactions = (loan: Loan) => {
       showConfetti();
       removeTokenOptimistic(loan.pubkey);
     } catch (error) {
-      throwLogsError(error);
+      console.error(error);
     } finally {
       setTransactionsLeft(null);
       closeLoadingModal();
@@ -161,7 +160,7 @@ export const useLoansTransactions = (loan: Loan) => {
         throw new Error('Staking failed');
       }
     } catch (error) {
-      throwLogsError(error);
+      console.error(error);
     } finally {
       closeLoadingModal();
     }
@@ -217,7 +216,7 @@ export const useBulkRepayTransaction = () => {
         showConfetti();
       }
     } catch (error) {
-      throwLogsError(error);
+      console.error(error);
     } finally {
       closeLoadingModal();
     }

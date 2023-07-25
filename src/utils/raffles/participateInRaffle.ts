@@ -6,9 +6,9 @@ import {
   showSolscanLinkNotification,
   signAndConfirmTransaction,
 } from '../transactions';
-import { captureSentryError } from '../sentry';
+import { captureSentryTxnError } from '../sentry';
 import { NotifyType } from '../solanaUtils';
-import { notify } from './../index';
+import { logTxnError, notify } from './../index';
 
 type ParticipateInRaffle = (props: {
   connection: web3.Connection;
@@ -49,6 +49,8 @@ export const participateInRaffle: ParticipateInRaffle = async ({
 
     return true;
   } catch (error) {
+    logTxnError(error);
+
     const isNotConfirmed = showSolscanLinkNotification(error);
 
     if (!isNotConfirmed) {
@@ -58,9 +60,9 @@ export const participateInRaffle: ParticipateInRaffle = async ({
       });
     }
 
-    captureSentryError({
+    captureSentryTxnError({
       error,
-      wallet,
+      walletPubkey: wallet?.publicKey?.toBase58(),
       transactionName: 'participateInRaffle',
     });
 
