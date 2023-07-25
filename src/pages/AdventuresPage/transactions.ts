@@ -180,23 +180,6 @@ export const subscribeNfts: SubscribeNfts = async ({
   onError,
   isLedger = false,
 }): Promise<boolean> => {
-  // const getSubsAndAdvsToUnsub = (nft: AdventureNft) => {
-  //   if (!nft?.subscriptions) return [];
-  //   return nft.subscriptions
-  //     .filter(({ adventure: adventurePubkey }) => {
-  //       const targetAdventure = allAdventures.find(
-  //         ({ publicKey }) => publicKey === adventurePubkey,
-  //       );
-  //       const isEnded =
-  //         getAdventureStatus(targetAdventure) === AdventureStatus.ENDED;
-  //       return isEnded;
-  //     })
-  //     .map(({ adventure, publicKey }) => ({
-  //       adventure: new web3.PublicKey(adventure),
-  //       adventureSubscription: new web3.PublicKey(publicKey),
-  //     })).slice(0, 1);
-  // };
-
   const getAdventureToUnsub = (nft: AdventureNft) => {
     if (!nft?.subscriptions) return [];
     const foundAdventureToUnsub = nft.subscriptions
@@ -222,27 +205,7 @@ export const subscribeNfts: SubscribeNfts = async ({
         };
   };
 
-  const nftChunks = chunk(nfts, 2);
-
-  console.log('nftChunks: ', nftChunks.slice(0, 1));
-  console.log(
-    JSON.stringify(
-      nftChunks
-        .map((nfts) =>
-          nfts.map((nft) => ({
-            subscriptionWeeks: staking.helpers.adventureTimestampToWeeks(
-              adventureToSubscribe.periodStartedAt,
-            ),
-            banxStakeSub: new web3.PublicKey(nft.banxStake.publicKey),
-
-            ...getAdventureToUnsub(nft),
-          })),
-        )
-        .slice(0, 1),
-      null,
-      2,
-    ),
-  );
+  const nftChunks = chunk(nfts, 9);
 
   const txnsData = await Promise.all(
     nftChunks.map((nfts) =>
