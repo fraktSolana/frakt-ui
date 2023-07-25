@@ -205,7 +205,7 @@ export const subscribeNfts: SubscribeNfts = async ({
         };
   };
 
-  const nftChunks = chunk(nfts, 9);
+  const nftChunks = chunk(nfts, 8);
 
   const txnsData = await Promise.all(
     nftChunks.map((nfts) =>
