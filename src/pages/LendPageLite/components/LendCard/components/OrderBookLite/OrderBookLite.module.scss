@@ -15,7 +15,7 @@
   text-align: right;
 
   @media screen and (max-width: 960px) {
-    text-align: center;
+    display: none;
   }
 }
 
@@ -174,4 +174,22 @@
   margin-top: 8px;
   font: var(--font-text-4);
   text-align: center;
+}
+
+.collapsedMobileContent {
+  display: none;
+
+  @media (max-width: 960px) {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+}
+.collapsedMobileImage {
+  width: 40px;
+  height: 40px;
+}
+.collectionMobileTitle {
+  font: var(--font-text-5);
+  font-size: 16px;
 }

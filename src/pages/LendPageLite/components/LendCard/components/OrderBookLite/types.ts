@@ -53,4 +53,6 @@ export type UseOrderBookLite = ({
   isSelectedOffers: boolean;
   toggleOffers: () => void;
   orderBookParams: OrderBookParams;
+  collectionName: string;
+  collectionImage: string;
 };

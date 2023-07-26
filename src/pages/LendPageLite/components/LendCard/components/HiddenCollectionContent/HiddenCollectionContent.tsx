@@ -18,8 +18,10 @@ enum CollectionTabsNames {
 
 const HiddenCollectionContent = ({
   marketPubkey,
+  visibleOrderBook,
 }: {
   marketPubkey: string;
+  visibleOrderBook: boolean;
 }) => {
   const [pairPubkey, setPairPubkey] = useState<string>('');
   const [syntheticParams, setSyntheticParams] = useState<SyntheticParams>(null);
@@ -78,7 +80,9 @@ const HiddenCollectionContent = ({
         />
         <div className={styles.tabContent}>{tabsComponents[tabValue]}</div>
       </div>
-      <OrderBookLite {...marketData} syntheticParams={syntheticParams} />
+      {visibleOrderBook && (
+        <OrderBookLite {...marketData} syntheticParams={syntheticParams} />
+      )}
     </div>
   );
 };

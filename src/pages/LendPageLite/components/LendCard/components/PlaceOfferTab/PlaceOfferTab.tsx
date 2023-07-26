@@ -15,6 +15,7 @@ import NumericInputField from '../NumericInput';
 import { usePlaceOfferTab } from './hooks';
 
 import styles from './PlaceOfferTab.module.scss';
+import InputCounter from '@frakt/components/InputCounter';
 
 const PlaceOfferTab = ({
   setSyntheticParams,
@@ -57,7 +58,7 @@ const PlaceOfferTab = ({
       <div className={styles.radiobuttonsWrapper}>
         <RadioButtonField
           tooltipText="When funding full loans, lenders have the option to get defaulted NFTs instead of the SOL recovered from the liquidation"
-          label="Defaults"
+          label="If full loan liquidated"
           currentOption={{
             label: `${bondFeature}`,
             value: bondFeature,
@@ -71,18 +72,15 @@ const PlaceOfferTab = ({
       </div>
       <div className={styles.fields}>
         <NumericInputField
-          label="Loan value"
+          label="Offer"
           onChange={setLoanValueInput}
           value={loanValueInput}
           hasError={showDepositError}
         />
-        <NumericInputField
-          label="Loan amount"
+        <InputCounter
+          label="Number of loans"
           onChange={setLoansAmountInput}
           value={loansAmountInput}
-          integerOnly={true}
-          showIcon={false}
-          placeholder="0"
         />
       </div>
       <InputErrorMessage hasError={showDepositError} message="Not enough SOL" />

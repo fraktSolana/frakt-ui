@@ -106,6 +106,9 @@ export const useOrderBookLite: UseOrderBookLite = ({
     showLoader,
     offersExist,
 
+    collectionImage: market?.collectionImage || '',
+    collectionName: market?.collectionName || '',
+
     openOffersMobile,
     toggleOffers,
 

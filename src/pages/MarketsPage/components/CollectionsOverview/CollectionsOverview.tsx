@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
@@ -24,6 +24,13 @@ const CollectionsOverview: FC = () => {
 
   const expandActiveCollection = () => history.push(PATHS.BONDS);
 
+  const sortedMarketsByLoansTVL = useMemo(() => {
+    const sortedMarkets = [...marketsPreview].sort(
+      (marketA, marketB) => marketB.loansTVL - marketA.loansTVL,
+    );
+    return sortedMarkets;
+  }, [marketsPreview]);
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.scrollContainer}>
@@ -45,7 +52,7 @@ const CollectionsOverview: FC = () => {
             [styles.chartMarketTable]: isVisible && marketPubkey,
           })}
           loading={isLoading}
-          data={marketsPreview}
+          data={sortedMarketsByLoansTVL}
           breakpoints={{ scrollX: width < SMALL_DESKTOP_SIZE && 744 }}
           marketPubkey={marketPubkey}
         />

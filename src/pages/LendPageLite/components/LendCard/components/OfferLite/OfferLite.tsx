@@ -35,7 +35,7 @@ const OfferLite: FC<OfferLiteProps> = ({
   const maxLoanValue = Math.min((loanValue / marketFloor) * 100, 100);
 
   const displayLoanAmount = loanAmount < 1 ? '< 1' : loanAmount || 0;
-  const displaySize = isOwnOrder ? `/ ${size?.toFixed(2)} ◎` : '';
+  const displaySize = isOwnOrder ? `/ size ${size?.toFixed(2)}◎` : '';
 
   const listItemClassName = classNames(styles.listItem, {
     [styles.highlightBest]: isBestOffer,
