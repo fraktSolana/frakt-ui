@@ -54,7 +54,6 @@ export const TableList = ({ onChange }) => {
       render: (value) => createActiveLoansJSX(value),
       sorter: (a, b) => sortingFavoriteList(a, b, 'activeBondsAmount'),
       showSorterTooltip: false,
-      defaultSortOrder: 'descend',
       width: 95,
     },
     {
