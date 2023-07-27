@@ -25,10 +25,15 @@ export const OrderBookList: FC<OrderBookListProps> = ({
     const loanValueLamports = getNormalizedLoanValue(offer, marketFloor);
     const loanAmount = getNormalizedLoanAmount(offer, loanValueLamports);
 
+    const syntheticSize = offer.loanAmount * offer.loanValue;
+    const size = offer.synthetic
+      ? syntheticSize
+      : (loanValueLamports / 1e9) * loanAmount;
+
     return (
       <OfferLite
         key={idx}
-        size={offer?.size}
+        size={size || 0}
         order={offer}
         bestOffer={bestOffer}
         loanAmount={loanAmount}

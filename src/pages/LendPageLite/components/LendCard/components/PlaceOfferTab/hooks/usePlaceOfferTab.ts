@@ -1,19 +1,23 @@
 import { useEffect, useState } from 'react';
-import { useWallet, useConnection } from '@solana/wallet-adapter-react';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
 import { isEmpty } from 'lodash';
 
 import { parseMarketOrder } from '@frakt/pages/MarketsPage/components/OrderBook/helpers';
-import { useMarket, useMarketPair } from '@frakt/utils/bonds';
+import { useMarket, useMarketPairs } from '@frakt/utils/bonds';
 import { useSolanaBalance } from '@frakt/utils/accounts';
 import { RBOption } from '@frakt/components/RadioButton';
 
-import { calculateLoanValue, shouldShowDepositError } from './../helpers';
 import { useOfferTransactions } from './useOfferTransactions';
-import { SyntheticParams } from '../../OrderBookLite/types';
-
-export const LOAN_TO_VALUE_RATIO = 100;
-export const DURATION_IN_DAYS = 7;
+import { useOfferHasChanged } from './useOfferHasChanged';
+import { SyntheticParams } from '../../OrderBookLite';
+import { DEFAULT_BOND_FEATURE } from '../constants';
+import { InitialEditValues } from './../types';
+import {
+  calculateDefaultLoanValue,
+  parseInitialEditValues,
+  shouldShowDepositError,
+} from './../helpers';
 
 export const usePlaceOfferTab = (
   marketPubkey: string,
@@ -21,134 +25,122 @@ export const usePlaceOfferTab = (
   pairPubkey: string,
   setPairPubkey: (pubkey: string) => void,
 ) => {
-  const { connection } = useConnection();
-  const wallet = useWallet();
-
+  const { connected } = useWallet();
   const { balance: solanaBalance } = useSolanaBalance();
 
   const { market, isLoading: marketLoading } = useMarket({ marketPubkey });
-  const { pair, isLoading: pairLoading } = useMarketPair({ pairPubkey });
+  const { pairs, isLoading: pairLoading } = useMarketPairs({ marketPubkey });
+
+  const pair = pairs.find((pair) => pair.publicKey === pairPubkey);
   const initialPairValues = parseMarketOrder(pair);
 
-  const isLoading = pairPubkey
-    ? !initialPairValues?.duration || pairLoading || marketLoading
-    : marketLoading;
-
+  const isLoading = pairPubkey ? pairLoading || marketLoading : marketLoading;
   const isEdit = !!pairPubkey;
+
+  const [loanValueInput, setLoanValueInput] = useState<string>('0');
+  const [loansAmountInput, setLoansAmountInput] = useState<string>('1');
+  const [initialEditValues, setInitialEditValues] =
+    useState<InitialEditValues>(null);
+  const [bondFeature, setBondFeature] =
+    useState<BondFeatures>(DEFAULT_BOND_FEATURE);
+
+  const onBondFeatureChange = (nextValue: RBOption<BondFeatures>) => {
+    setBondFeature(nextValue.value);
+  };
+
+  const onLoanValueChange = (nextValue: string) => {
+    setLoanValueInput(nextValue);
+  };
+
+  const onLoanAmountChange = (nextValue: string) => {
+    setLoansAmountInput(nextValue);
+  };
+
+  const onClearFields = () => {
+    setBondFeature(DEFAULT_BOND_FEATURE);
+    setLoansAmountInput('1');
+  };
 
   const goToPlaceOffer = () => {
     setPairPubkey('');
     onClearFields();
   };
 
-  const [loanValueInput, setLoanValueInput] = useState<string>('0');
-  const [loansAmountInput, setLoansAmountInput] = useState<string>('1');
-
-  const [bondFeature, setBondFeature] = useState<BondFeatures>(
-    BondFeatures.AutoReceiveAndReceiveNft,
-  );
-
-  const [initialEditValues, setInitialEditValues] = useState(null);
-  const [isOfferHasChanged, setIsOfferHasChanged] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (marketPubkey && solanaBalance && !isEdit && !isEmpty(market)) {
-      const transactionFee = 0.01;
-      const balanceAfterTransactionFee = solanaBalance - transactionFee;
-      const maxLoanValue =
-        balanceAfterTransactionFee < 0 ? 0 : balanceAfterTransactionFee;
-
-      const bestOfferInSol = market?.bestOffer / 1e9 || 0;
-
-      const defaultLoanValue = Math.min(maxLoanValue, bestOfferInSol) || 0;
-      const formattedLoanValue = defaultLoanValue?.toFixed(2);
-
-      setLoanValueInput(formattedLoanValue);
-    }
-  }, [marketPubkey, solanaBalance, isEdit, market]);
-
-  const onBondFeatureChange = (nextValue: RBOption<BondFeatures>) => {
-    setBondFeature(nextValue.value);
-  };
-
-  const onClearFields = () => {
-    setBondFeature(BondFeatures.AutoReceiveAndReceiveNft);
-    setLoanValueInput('0');
-    setLoansAmountInput('0');
-  };
-
   // Initialization
 
-  useEffect(() => {
-    if (isEdit && !isLoading) {
-      initializeFields();
-    }
-  }, [isEdit, isLoading, pair]);
+  //? set best offer value for new offer
 
-  const initializeFields = () => {
-    const { rawData } = initialPairValues;
+  const handleDefaultLoanValue = () => {
+    const defaultLoanValue = calculateDefaultLoanValue(
+      solanaBalance,
+      market.bestOffer,
+    );
 
-    const marketFloor = market?.oracleFloor?.floor;
-    const loanValue = calculateLoanValue(initialPairValues, marketFloor);
-    const loanAmount = (
-      rawData.fundsSolOrTokenBalance / loanValue || 0
-    )?.toFixed(0);
+    setLoanValueInput(defaultLoanValue);
+  };
 
-    const updatedLoanValue = (loanValue / 1e9)?.toFixed(2);
+  const handleInitializeFields = () => {
+    const { loanAmount, loanValue, bondFeature } = parseInitialEditValues({
+      initialPairValues,
+      marketFloor: market.oracleFloor?.floor,
+    });
 
     setLoansAmountInput(loanAmount);
-    setLoanValueInput(updatedLoanValue);
-
-    setBondFeature(rawData?.bondFeature);
-
-    setInitialEditValues({
-      loanAmount,
-      loanValue: updatedLoanValue,
-    });
+    setLoanValueInput(loanValue);
+    setBondFeature(bondFeature);
+    setInitialEditValues({ loanAmount, loanValue });
   };
+
+  useEffect(() => {
+    const hasMarketData = !isEmpty(market) && !isLoading;
+    const shouldHandleDefaultLoanValue = !!solanaBalance && !isEdit;
+
+    if (!hasMarketData) return;
+
+    if (shouldHandleDefaultLoanValue) {
+      handleDefaultLoanValue();
+      return;
+    }
+
+    if (isEdit) {
+      handleInitializeFields();
+    }
+  }, [solanaBalance, market, isLoading, pairPubkey]);
 
   const offerSize = parseFloat(loanValueInput) * parseFloat(loansAmountInput);
 
   // Update synthetic params
-
   useEffect(() => {
-    if (offerSize) {
+    const loanValue = parseFloat(loanValueInput);
+    const loanAmount = parseFloat(loansAmountInput);
+    const offerSizeLamports = offerSize * 1e9 || 0;
+
+    if (loanValue) {
       setSyntheticParams({
-        loanValue: parseFloat(loanValueInput),
-        loanAmount: parseFloat(loansAmountInput),
-        offerSize: offerSize * 1e9 || 0,
+        loanValue,
+        loanAmount,
+        offerSize: offerSizeLamports,
       });
-    }
-  }, [offerSize]);
-
-  useEffect(() => {
-    if (!isEmpty(initialEditValues) && isEdit) {
-      const currentValues = {
-        loanAmount: loansAmountInput,
-        loanValue: loanValueInput,
-      };
-
-      const hasChanged = Object.values(currentValues).some(
-        (value, index) => value !== Object.values(initialEditValues)[index],
-      );
-
-      setIsOfferHasChanged(hasChanged);
     }
   }, [loanValueInput, loansAmountInput]);
 
   const { onCreateOffer, onEditOffer, onRemoveOffer, loadingModalVisible } =
     useOfferTransactions({
-      wallet,
-      connection,
       loanValue: parseFloat(loanValueInput),
       market,
-      durationInDays: DURATION_IN_DAYS,
       bondFeature,
       offerSize,
       pair,
       onAfterCreateTransaction: onClearFields,
       goToPlaceOffer,
     });
+
+  const isOfferHasChanged = useOfferHasChanged(
+    initialEditValues,
+    isEdit,
+    loanValueInput,
+    loansAmountInput,
+  );
 
   const showDepositError = shouldShowDepositError(
     initialEditValues,
@@ -157,26 +149,34 @@ export const usePlaceOfferTab = (
   );
 
   const disableEditOffer = !isOfferHasChanged || showDepositError;
-  const disablePlaceOffer =
-    (!offerSize && wallet?.connected) || showDepositError;
+  const disablePlaceOffer = (!offerSize && connected) || showDepositError;
 
   return {
     isEdit,
-    bondFeature,
-    onBondFeatureChange,
-    loanValueInput,
-    loansAmountInput,
     offerSize,
-    onCreateOffer,
-    onEditOffer,
-    onRemoveOffer,
-    loadingModalVisible,
+    bondFeature,
+
+    onBondFeatureChange,
     goToPlaceOffer,
-    onClearFields,
+
+    loadingModalVisible,
     showDepositError,
     disablePlaceOffer,
     disableEditOffer,
-    setLoanValueInput,
-    setLoansAmountInput,
+
+    onCreateOffer,
+    onEditOffer,
+    onRemoveOffer,
+
+    loanValueInputParams: {
+      onChange: onLoanValueChange,
+      value: loanValueInput,
+      hasError: showDepositError,
+    },
+
+    loanAmountInputParams: {
+      onChange: onLoanAmountChange,
+      value: loansAmountInput,
+    },
   };
 };
