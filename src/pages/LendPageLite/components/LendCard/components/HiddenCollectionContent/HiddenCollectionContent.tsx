@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
-
 import HistoryTab from '@frakt/pages/MarketsPage/components/BondsOverview/components/HistoryTab/HistoryTab';
 import BondsTab from '@frakt/pages/MarketsPage/components/BondsOverview/components/BondsTab';
-import { Tabs, useTabs } from '@frakt/components/Tabs';
+import { Loader } from '@frakt/components/Loader';
+import { Tabs } from '@frakt/components/Tabs';
 
-import OrderBookLite, { SyntheticParams } from '../OrderBookLite';
+import { useHiddenCollectionContent } from './hooks';
+import OrderBookLite from '../OrderBookLite';
 import PlaceOfferTab from '../PlaceOfferTab';
-import { BONDS_TABS } from './constants';
 
 import styles from './HiddenCollectionContent.module.scss';
 
@@ -23,33 +22,11 @@ const HiddenCollectionContent = ({
   marketPubkey: string;
   visibleOrderBook: boolean;
 }) => {
-  const [pairPubkey, setPairPubkey] = useState<string>('');
-  const [syntheticParams, setSyntheticParams] = useState<SyntheticParams>(null);
-
-  const marketData = {
-    pairPubkey,
-    marketPubkey,
-    setSyntheticParams,
-    setPairPubkey,
-  };
-
-  const {
-    tabs: bondTabs,
-    value: tabValue,
-    setValue: setTabValue,
-  } = useTabs({
-    tabs: BONDS_TABS,
-    defaultValue: BONDS_TABS[0].value,
-  });
-
-  useEffect(() => {
-    if (pairPubkey) {
-      setTabValue(BONDS_TABS.at(-1).value);
-    }
-  }, [pairPubkey]);
+  const { marketParams, tabsParams, syntheticParams, isLoading } =
+    useHiddenCollectionContent(marketPubkey);
 
   const tabsComponents = {
-    [CollectionTabsNames.OFFER]: <PlaceOfferTab {...marketData} />,
+    [CollectionTabsNames.OFFER]: <PlaceOfferTab {...marketParams} />,
     [CollectionTabsNames.HISTORY]: (
       <HistoryTab
         tableParams={{ classNames: styles.historyTable, scrollX: 650 }}
@@ -70,18 +47,24 @@ const HiddenCollectionContent = ({
 
   return (
     <div className={styles.content}>
-      <div>
-        <Tabs
-          className={styles.tabs}
-          tabs={bondTabs}
-          value={tabValue}
-          setValue={setTabValue}
-          additionalClassNames={{ tabActiveClassName: styles.activeTab }}
-        />
-        <div className={styles.tabContent}>{tabsComponents[tabValue]}</div>
-      </div>
+      {!isLoading && (
+        <div>
+          <Tabs
+            {...tabsParams}
+            className={styles.tabs}
+            additionalClassNames={{ tabActiveClassName: styles.activeTab }}
+          />
+
+          <div className={styles.tabContent}>
+            {tabsComponents[tabsParams.value]}
+          </div>
+        </div>
+      )}
+
+      {isLoading && <Loader />}
+
       {visibleOrderBook && (
-        <OrderBookLite {...marketData} syntheticParams={syntheticParams} />
+        <OrderBookLite {...marketParams} syntheticParams={syntheticParams} />
       )}
     </div>
   );

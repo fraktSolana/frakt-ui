@@ -2,55 +2,67 @@ import classNames from 'classnames';
 
 import { colorByPercentOffers, getColorByPercent } from '@frakt/utils/bonds';
 import { MarketPreview } from '@frakt/api/bonds';
+import { convertAprToApy } from '@frakt/utils';
 
 import styles from './TableCells.module.scss';
 
-export const createSolValueJSX = (value?: string) => (
-  <span className={styles.value}>{value}◎</span>
-);
+export const createOfferTvlJSX = (market: MarketPreview) => {
+  const { offerTVL, activeOfferAmount } = market || {};
 
-export const createActiveLoansJSX = (value = 0) => (
-  <span className={styles.value}>{value || 0}</span>
-);
-
-export const createOfferTvlJSX = (value?: string) => (
-  <span className={styles.value}>{parseFloat(value)?.toFixed(1)}◎</span>
-);
-
-export const createBestOfferJSX = (market: MarketPreview) => {
-  const colorLTV =
-    getColorByPercent(market?.bestLTV, colorByPercentOffers) ||
-    colorByPercentOffers[100];
+  const formattedBestOffer = parseFloat(offerTVL).toFixed(2);
 
   return (
     <div className={styles.column}>
-      <span className={styles.value}>
-        {(market?.bestOffer / 1e9 || 0).toFixed(1)}◎
-      </span>
-      <span style={{ color: colorLTV }} className={styles.smallValue}>
-        LTV {market?.bestLTV?.toFixed(0)} %
+      <span className={styles.value}>{formattedBestOffer}◎</span>
+      <span className={styles.smallValue}>in {activeOfferAmount} offers</span>
+    </div>
+  );
+};
+
+export const createActiveLoansJSX = (market: MarketPreview) => {
+  const { loansTVL, activeBondsAmount } = market || {};
+
+  const formattedBestOffer = (loansTVL / 1e9 || 0).toFixed(2);
+
+  return (
+    <div className={styles.column}>
+      <span className={styles.value}>{formattedBestOffer}◎</span>
+      <span className={styles.smallValue}>in {activeBondsAmount} loans</span>
+    </div>
+  );
+};
+
+export const createBestOfferJSX = (market: MarketPreview) => {
+  const { bestLTV, bestOffer } = market || {};
+
+  const colorLTV =
+    getColorByPercent(bestLTV, colorByPercentOffers) ||
+    colorByPercentOffers[100];
+
+  const formattedBestOffer = (bestOffer / 1e9 || 0).toFixed(1);
+  const formattedBestLTV = bestLTV?.toFixed(0);
+
+  return (
+    <div className={styles.column}>
+      <span className={styles.value}>{formattedBestOffer}◎</span>
+      <span className={styles.smallValue} style={{ color: colorLTV }}>
+        LTV {formattedBestLTV} %
       </span>
     </div>
   );
 };
 
-export const createDurationJSX = (value: number[]) => {
-  const durations = value.sort((a, b) => b - a);
+export const createDurationJSX = (durations: number[]) => (
+  <span className={styles.value}>{durations?.length ? `7 days` : '--'}</span>
+);
+
+export const createApyJSX = (apr = 0) => {
+  const apy = convertAprToApy(apr / 100) || 0;
+  const formattedAPY = apy.toFixed(0);
+
   return (
-    <span className={styles.value}>
-      {durations?.length ? `${durations?.join(' / ')} days` : '--'}
+    <span className={classNames(styles.value, styles.upToLtvColor)}>
+      up to {formattedAPY} %
     </span>
   );
 };
-
-export const createHighestLtvJSX = (value = 0) => (
-  <span className={classNames(styles.value, styles.highestLtvColor)}>
-    {value?.toFixed(0)} %
-  </span>
-);
-
-export const createAprJSX = (value) => (
-  <span className={classNames(styles.value, styles.upToLtvColor)}>
-    up to {(value || 0).toFixed(0)} %
-  </span>
-);

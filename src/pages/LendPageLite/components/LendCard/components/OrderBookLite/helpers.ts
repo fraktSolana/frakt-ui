@@ -50,12 +50,20 @@ export const getNormalizedLoanAmount = (
   return synthetic ? loanAmount : roundedLoanAmount;
 };
 
-export const getNormalizeSize = (offer: MarketOrder) => {
-  const { synthetic, loanValue, loanAmount, size: offerSize } = offer;
+export const getBestOffer = (
+  offers: MarketOrder[],
+  marketFloor: number,
+): MarketOrder | null => {
+  const validOffers = offers.map((offer) => {
+    if (offer?.synthetic) return null;
 
-  const syntheticSize = loanValue * loanAmount;
+    const loanValue = getNormalizedLoanValue(offer, marketFloor);
+    const loanAmount = getNormalizedLoanAmount(offer, loanValue);
 
-  const size = synthetic ? syntheticSize : offerSize;
+    return { ...offer, loanAmount };
+  });
 
-  return size || 0;
+  const bestOffer = validOffers.find((offer) => offer?.loanAmount >= 1);
+
+  return bestOffer;
 };

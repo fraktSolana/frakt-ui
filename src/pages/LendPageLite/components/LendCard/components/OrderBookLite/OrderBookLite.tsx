@@ -2,6 +2,7 @@ import { FC } from 'react';
 import classNames from 'classnames';
 
 import { Loader } from '@frakt/components/Loader';
+
 import { useOrderBookLite } from './hooks';
 import { SyntheticParams } from './types';
 import {

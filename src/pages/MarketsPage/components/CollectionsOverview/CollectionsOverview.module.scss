@@ -1,116 +1,110 @@
-.wrapper {
-  background: var(--primary-background);
-  border: 1px solid var(--primary-border);
-  border-bottom: 0;
-  display: flex;
-  gap: 24px;
-  padding: 24px;
-  padding-bottom: 0;
-  min-height: 382px;
+$table-body-height: 310px;
+$table-wrapper-height: 350px;
+$table-row-height: 42px;
 
-  @media (max-width: 1300px) {
-    gap: 0;
-    flex-direction: column;
-  }
-
-  @media screen and (max-width: 960px) {
-    border-right: 0;
-    border-left: 0;
-  }
-
-  @media (max-width: 960px) {
-    padding: 16px;
+@mixin table-column-padding($child, $left, $right) {
+  .ant-table-tbody > tr > td:#{$child},
+  .ant-table-thead > tr > th:#{$child} {
+    padding-left: $left;
+    padding-right: $right;
   }
 }
 
-.scrollContainer {
-  overflow: hidden;
-  min-width: 315px;
-  width: 100%;
-}
-
-.title {
-  color: var(--primary-text);
-  font: var(--font-text-2);
-  font-size: 20px;
-  line-height: 24px;
-  padding-bottom: 16px;
-}
-
-// Reset default ant-design styles
-.marketTable :global {
-  .ant-table-thead > tr > th {
-    border: 0 !important;
-    padding-top: 0 !important;
-  }
-  .ant-table-thead > tr > th:first-child {
-    padding-bottom: 0 !important;
-  }
-  .ant-table-thead > tr > th:first-child {
-    padding-bottom: 0 !important;
-  }
-  .ant-table-thead > tr > th:last-child,
-  .ant-table-tbody > tr > td:last-child {
-    padding-right: 0;
-  }
-  ::-webkit-scrollbar {
-    height: 0px;
+@mixin table-collapsed-display($display-value) {
+  .ant-table-thead > tr > th:nth-child(n + 3),
+  .ant-table-tbody > tr > td:nth-child(n + 3) {
+    display: #{$display-value} !important;
   }
 }
 
 .marketTable :global {
-  height: 320px;
+  @include table-column-padding(first-child, 24px, 0);
+  @include table-column-padding(last-child, 0, 24px);
+
   display: block !important;
+  height: $table-body-height;
 
   .ant-table-content {
-    max-height: 315px !important;
+    max-height: $table-body-height;
     overflow: auto !important;
   }
 
-  .ant-table table {
-    table-layout: fixed !important;
+  .ant-table-thead > tr > th {
+    border: 0;
+    min-width: 110px;
+    max-width: 110px;
   }
 
-  @media (min-width: 1300px) {
-    .ant-table-tbody > tr > td:first-child {
-      max-width: 560px !important;
-      width: 100% !important;
-    }
-    .ant-table-tbody > tr > td {
-      height: 54px;
-    }
+  .ant-table-tbody > tr > td {
+    height: $table-row-height;
+  }
+
+  .ant-table-row > td {
+    background: var(--table-row-bg);
+  }
+
+  ::-webkit-scrollbar {
+    height: 0px;
   }
 
   @media (max-width: 960px) {
-    .ant-table-thead > tr > th {
-      padding-left: 0;
-    }
-    .ant-table-tbody > tr > td:first-child {
-      padding-right: 0;
-    }
+    @include table-column-padding(first-child, 16px, 0);
+    @include table-column-padding(last-child, 0, 16px);
   }
 }
 
 .collapsedMarketTable :global {
-  .ant-table-thead > tr > th:nth-child(n + 3),
-  .ant-table-tbody > tr > td:nth-child(n + 3) {
-    display: none !important;
-  }
-  .ant-table-tbody > tr > td {
-    vertical-align: middle !important;
-  }
+  @include table-collapsed-display(none);
+  @include table-column-padding(first-child, 8px, 0);
 
-  @media (min-width: 1300px) {
-    .ant-table table {
-      table-layout: auto !important;
-    }
+  .ant-table-content {
+    padding-left: 24px;
   }
 
   @media (max-width: 1300px) {
-    .ant-table-thead > tr > th:nth-child(n + 3),
-    .ant-table-tbody > tr > td:nth-child(n + 3) {
-      display: table-cell !important;
+    @include table-collapsed-display(table-cell);
+  }
+
+  @media (max-width: 960px) {
+    .ant-table-content {
+      padding-left: 16px;
     }
+  }
+}
+
+.wrapper {
+  background: var(--primary-background);
+  border: 1px solid var(--primary-border);
+  border-bottom: 0;
+
+  display: flex;
+  gap: 24px;
+  padding: 16px 0 0;
+  min-height: $table-wrapper-height;
+
+  @media (max-width: 1300px) {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  @media (max-width: 960px) {
+    border-width: 1px 0 1px;
+  }
+}
+
+.scrollContainer {
+  width: 100%;
+}
+
+.hoveredTableRow :global {
+  .ant-table-row:not(:hover) {
+    * > span {
+      color: var(--table-row-hover-1) !important;
+    }
+  }
+
+  .ant-table-row:hover > td {
+    background: var(--table-row-hover) !important;
   }
 }
 
@@ -126,13 +120,17 @@
 
 .headerWrapper {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
+  justify-content: flex-end;
+
+  @media (max-width: 1300px) {
+    padding-right: 24px;
+  }
+
+  @media (max-width: 960px) {
+    padding-right: 16px;
+  }
 }
 
 .expandButton {
-  cursor: pointer;
-  font-size: 14px;
   height: 26px;
-  width: 100px;
 }

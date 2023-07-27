@@ -11,6 +11,9 @@ import { Loan } from '@frakt/api/loans';
 import { DurationCell } from '../LoansActiveTable';
 
 import styles from './RefinanceModal.module.scss';
+import { useSolanaBalance } from '@frakt/utils/accounts';
+
+const REFINANCE_FEE = 4e7;
 
 interface RefinanceModalProps {
   visible: boolean;
@@ -31,6 +34,15 @@ const RefinanceModal: FC<RefinanceModalProps> = ({
   bestLoanParams,
 }) => {
   const difference = loan?.repayValue - bestLoanParams?.borrowed;
+  const { balance: balanceLamports } = useSolanaBalance();
+  const balance = balanceLamports * 1e9;
+  const minBalanceForRefinance = difference + REFINANCE_FEE;
+
+  const showWarningText = balance < minBalanceForRefinance;
+  const warningText = `Ensure to have ${formatValue(
+    minBalanceForRefinance,
+    1e9,
+  )} sol to refinance`;
 
   return (
     <Modal
@@ -91,9 +103,9 @@ const RefinanceModal: FC<RefinanceModalProps> = ({
           }}
           type="secondary"
           className={styles.button}
-          disabled={!bestLoanParams?.debt}
+          disabled={!bestLoanParams?.debt || showWarningText}
         >
-          Extend
+          {showWarningText ? warningText : 'Extend'}
         </Button>
       </div>
     </Modal>

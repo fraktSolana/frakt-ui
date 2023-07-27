@@ -1,5 +1,5 @@
 import { BondFeatures } from 'fbonds-core/lib/fbond-protocol/types';
-import { WalletContextState } from '@solana/wallet-adapter-react';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { web3 } from 'fbonds-core';
 import { isEmpty } from 'lodash';
 
@@ -17,31 +17,28 @@ import {
   useMarketPairs,
 } from '@frakt/utils/bonds';
 
-import { LOAN_TO_VALUE_RATIO } from './usePlaceOfferTab';
+import { DURATION_IN_DAYS, LOAN_TO_VALUE_RATIO } from '../constants';
 
 export const useOfferTransactions = ({
-  wallet,
-  connection,
   market,
   loanValue,
-  durationInDays,
   bondFeature,
   offerSize,
   pair,
   onAfterCreateTransaction,
   goToPlaceOffer,
 }: {
-  wallet: WalletContextState;
-  connection: web3.Connection;
   market: Market;
   loanValue: number;
-  durationInDays: number;
   bondFeature: BondFeatures;
   offerSize: number;
   pair: Pair;
   onAfterCreateTransaction: () => void;
   goToPlaceOffer: () => void;
 }) => {
+  const wallet = useWallet();
+  const { connection } = useConnection();
+
   const { hidePair, refetch: refetchMarketPairs } = useMarketPairs({
     marketPubkey: market?.marketPubkey,
   });
@@ -121,7 +118,7 @@ export const useOfferTransactions = ({
 
       const createTransactionParams = {
         marketPubkey: new web3.PublicKey(market.marketPubkey),
-        maxDuration: durationInDays,
+        maxDuration: DURATION_IN_DAYS,
         maxLoanValue: rawMaxLoanValue,
         maxLTV: LOAN_TO_VALUE_RATIO,
         solDeposit: offerSize,
@@ -153,7 +150,7 @@ export const useOfferTransactions = ({
         marketFloor: market.oracleFloor.floor,
         maxLoanValue: rawMaxLoanValue,
         pair,
-        maxDuration: durationInDays,
+        maxDuration: DURATION_IN_DAYS,
         maxLTV: LOAN_TO_VALUE_RATIO,
       };
 

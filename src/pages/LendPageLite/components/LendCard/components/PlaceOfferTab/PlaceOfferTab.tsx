@@ -5,6 +5,7 @@ import RadioButtonField from '@frakt/pages/OfferPage/components/RadioButtonField
 import { StatInfo, VALUES_TYPES } from '@frakt/components/StatInfo';
 import { LoadingModal } from '@frakt/components/LoadingModal';
 import { InputErrorMessage } from '@frakt/components/Input';
+import InputCounter from '@frakt/components/InputCounter';
 import { BASE_POINTS } from '@frakt/utils/bonds';
 import Button from '@frakt/components/Button';
 
@@ -15,7 +16,6 @@ import NumericInputField from '../NumericInput';
 import { usePlaceOfferTab } from './hooks';
 
 import styles from './PlaceOfferTab.module.scss';
-import InputCounter from '@frakt/components/InputCounter';
 
 const PlaceOfferTab = ({
   setSyntheticParams,
@@ -32,10 +32,6 @@ const PlaceOfferTab = ({
     isEdit,
     bondFeature,
     onBondFeatureChange,
-    loanValueInput,
-    loansAmountInput,
-    setLoanValueInput,
-    setLoansAmountInput,
     offerSize,
     onCreateOffer,
     onEditOffer,
@@ -45,6 +41,8 @@ const PlaceOfferTab = ({
     showDepositError,
     disablePlaceOffer,
     disableEditOffer,
+    loanValueInputParams,
+    loanAmountInputParams,
   } = usePlaceOfferTab(
     marketPubkey,
     setSyntheticParams,
@@ -73,15 +71,10 @@ const PlaceOfferTab = ({
       <div className={styles.fields}>
         <NumericInputField
           label="Offer"
-          onChange={setLoanValueInput}
-          value={loanValueInput}
+          {...loanValueInputParams}
           hasError={showDepositError}
         />
-        <InputCounter
-          label="Number of loans"
-          onChange={setLoansAmountInput}
-          value={loansAmountInput}
-        />
+        <InputCounter label="Number of loans" {...loanAmountInputParams} />
       </div>
       <InputErrorMessage hasError={showDepositError} message="Not enough SOL" />
       <OfferSummary offerSize={offerSize} />
