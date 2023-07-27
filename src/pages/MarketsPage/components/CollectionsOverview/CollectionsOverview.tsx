@@ -1,16 +1,16 @@
-import { FC, useMemo } from 'react';
+import { FC } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
-import { useWindowSize } from '@frakt/hooks';
+import { useHoverObserver, useWindowSize } from '@frakt/hooks';
+import { Button } from '@frakt/components/Button';
+import { PATHS } from '@frakt/constants';
 
 import Chart, { useChartVisible } from './components/Chart';
 import { MarketTable } from './components/MarketTable';
 import { useMarketsPreview } from '../../hooks';
 
 import styles from './CollectionsOverview.module.scss';
-import { PATHS } from '@frakt/constants';
-import { Button } from '@frakt/components/Button';
 
 const SMALL_DESKTOP_SIZE = 1300;
 
@@ -22,20 +22,14 @@ const CollectionsOverview: FC = () => {
 
   const { isVisible } = useChartVisible();
 
-  const expandActiveCollection = () => history.push(PATHS.BONDS);
+  const isHovered = useHoverObserver('.ant-table-cell-row-hover');
 
-  const sortedMarketsByLoansTVL = useMemo(() => {
-    const sortedMarkets = [...marketsPreview].sort(
-      (marketA, marketB) => marketB.loansTVL - marketA.loansTVL,
-    );
-    return sortedMarkets;
-  }, [marketsPreview]);
+  const expandActiveCollection = () => history.push(PATHS.BONDS);
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.scrollContainer}>
         <div className={styles.headerWrapper}>
-          <h3 className={styles.title}>Collections</h3>
           {marketPubkey && !isLoading && (
             <Button
               onClick={expandActiveCollection}
@@ -50,9 +44,10 @@ const CollectionsOverview: FC = () => {
           className={classNames(styles.marketTable, {
             [styles.collapsedMarketTable]: marketPubkey,
             [styles.chartMarketTable]: isVisible && marketPubkey,
+            [styles.hoveredTableRow]: isHovered,
           })}
           loading={isLoading}
-          data={sortedMarketsByLoansTVL}
+          data={marketsPreview}
           breakpoints={{ scrollX: width < SMALL_DESKTOP_SIZE && 744 }}
           marketPubkey={marketPubkey}
         />

@@ -3,14 +3,13 @@ import { SortOrder } from 'antd/lib/table/interface';
 
 import { Search } from '@frakt/components/Table/components/Search';
 import { MarketPreview } from '@frakt/api/bonds';
-import { convertAprToApy } from '@frakt/utils';
 
 import {
   TitleCell,
   HeaderTitleCell,
   createOfferTvlJSX,
   createDurationJSX,
-  createAprJSX,
+  createApyJSX,
   createActiveLoansJSX,
   createBestOfferJSX,
 } from './TableCells';
@@ -38,56 +37,24 @@ export const TableList = ({ onChange }) => {
           onChange={onChange}
         />
       ),
-      render: (_, market: MarketPreview) => <TitleCell market={market} />,
-      width: 150,
+      render: (_, market) => <TitleCell market={market} />,
     },
     {
-      key: 'activeBondsAmount',
-      dataIndex: 'activeBondsAmount',
+      key: 'loansTVL',
+      dataIndex: 'loansTVL',
       title: (column) => (
         <HeaderTitleCell
           sortColumns={column?.sortColumns}
-          label="Active loans"
-          value="activeBondsAmount"
+          label="Loans TVL"
+          value="loansTVL"
         />
       ),
-      render: (value) => createActiveLoansJSX(value),
-      sorter: (a, b) => sortingFavoriteList(a, b, 'activeBondsAmount'),
+      render: (_, market) => createActiveLoansJSX(market),
+      sorter: (a, b) => sortingFavoriteList(a, b, 'loansTVL'),
       showSorterTooltip: false,
-      width: 95,
+      defaultSortOrder: 'descend',
     },
-    {
-      key: 'bestOffer',
-      dataIndex: 'bestOffer',
-      title: (column) => (
-        <HeaderTitleCell
-          sortColumns={column?.sortColumns}
-          label="Best offer"
-          value="bestOffer"
-          tooltipText="Total liquidity currently available in active offers"
-        />
-      ),
-      sorter: (a, b) => sortingFavoriteList(a, b, 'offerTVL', formateToNumbers),
-      render: (_, market) => createBestOfferJSX(market),
-      showSorterTooltip: false,
-      width: 95,
-    },
-    {
-      key: 'apy',
-      dataIndex: 'apy',
-      title: (column) => (
-        <HeaderTitleCell
-          sortColumns={column?.sortColumns}
-          label="APY"
-          value="apy"
-          tooltipText="Interest (in %) for the duration of this loan"
-        />
-      ),
-      render: (value) => createAprJSX(convertAprToApy(value / 100)),
-      sorter: (a, b) => sortingFavoriteList(a, b, 'apy'),
-      showSorterTooltip: false,
-      width: 95,
-    },
+
     {
       key: 'offerTVL',
       dataIndex: 'offerTVL',
@@ -100,9 +67,24 @@ export const TableList = ({ onChange }) => {
         />
       ),
       sorter: (a, b) => sortingFavoriteList(a, b, 'offerTVL', formateToNumbers),
-      render: (value) => createOfferTvlJSX(value),
+      render: (_, market) => createOfferTvlJSX(market),
       showSorterTooltip: false,
-      width: 95,
+    },
+    {
+      key: 'bestOffer',
+      dataIndex: 'bestOffer',
+      title: (column) => (
+        <HeaderTitleCell
+          sortColumns={column?.sortColumns}
+          label="Best offer"
+          value="bestOffer"
+          tooltipText="Total liquidity currently available in active offers"
+        />
+      ),
+      sorter: (a, b) =>
+        sortingFavoriteList(a, b, 'bestOffer', formateToNumbers),
+      render: (_, market) => createBestOfferJSX(market),
+      showSorterTooltip: false,
     },
     {
       key: 'duration',
@@ -117,7 +99,21 @@ export const TableList = ({ onChange }) => {
       sorter: (a, b) => sortingFavoriteList(a, b, 'duration', formateDuration),
       render: (value) => createDurationJSX(value),
       showSorterTooltip: false,
-      width: 70,
+    },
+    {
+      key: 'apy',
+      dataIndex: 'apy',
+      title: (column) => (
+        <HeaderTitleCell
+          sortColumns={column?.sortColumns}
+          label="APY"
+          value="apy"
+          tooltipText="Interest (in %) for the duration of this loan"
+        />
+      ),
+      render: (value) => createApyJSX(value),
+      sorter: (a, b) => sortingFavoriteList(a, b, 'apy'),
+      showSorterTooltip: false,
     },
   ];
 

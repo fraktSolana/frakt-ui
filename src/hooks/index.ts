@@ -21,3 +21,4 @@ export { useBondsTransactions } from './useBondTransactions';
 export { useTheme } from './useTheme';
 export { useVisibleMarketURLControl } from './useVisibleMarketsStore';
 export { useSearchSelectedMarketsURLControl } from './useSearchSelectedMarkets';
+export { useHoverObserver } from './useHoverObserver';
