@@ -42,11 +42,7 @@ export const AdventureSubscribeButton: FC<AdventuresComponentsProps> = ({
   setNftsModalOpen,
 }) => {
   const adventureStatus = getAdventureStatus(adventure);
-  // const isUpcoming = adventureStatus === AdventureStatus.UPCOMING;
-  //TODO: Temporary solution. Remove this on Sunday
-  const isUpcoming =
-    adventure.periodStartedAt === 1690189200 ||
-    adventureStatus === AdventureStatus.UPCOMING;
+  const isUpcoming = adventureStatus === AdventureStatus.UPCOMING;
 
   const { connection } = useConnection();
   const wallet = useWallet();
