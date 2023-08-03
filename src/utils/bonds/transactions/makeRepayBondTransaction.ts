@@ -10,11 +10,6 @@ import {
 } from 'fbonds-core/lib/fbond-protocol/functions/bond/repayment';
 import { InstructionsAndSigners } from '@frakt/utils/transactions';
 import { chunk } from 'lodash';
-import { findAssociatedTokenAddress } from 'fbonds-core/lib/common';
-import {
-  getAsset,
-  getAssetProof,
-} from 'fbonds-core/lib/fbond-protocol/helpers';
 
 type MakeRepayBondTransaction = (params: {
   loan: Loan;
@@ -52,10 +47,6 @@ export const makeRepayBondTransaction: MakeRepayBondTransaction = async ({
                 dataHash: loan.cnftParams.dataHash,
                 creatorHash: loan.cnftParams.creatorHash,
                 leafId: loan.cnftParams.leafId,
-                proof: await getAssetProof(
-                  loan.nft.mint,
-                  'https://rpc.helius.xyz/?api-key=6bad2ffe-d003-11ed-afa1-0242ac120002',
-                ),
               },
             },
             addComputeUnits: true,

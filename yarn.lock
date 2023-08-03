@@ -9621,10 +9621,10 @@ fb-watchman@^2.0.0:
   dependencies:
     bser "2.1.1"
 
-fbonds-core@0.5.89-beta.19:
-  version "0.5.89-beta.19"
-  resolved "https://registry.yarnpkg.com/fbonds-core/-/fbonds-core-0.5.89-beta.19.tgz#65e7b429c21a0eeedcc2b02fa2bfbe846199d0a9"
-  integrity sha512-SCSs0sFuD1hySYrPh9AejMOI0jDl6rkidnlpI2mTR9ZGTDZRLjlzEXZHzrOaipGP0mvZrrV5f1UsNziKhJUuxA==
+fbonds-core@0.5.106-beta.1:
+  version "0.5.106-beta.1"
+  resolved "https://registry.yarnpkg.com/fbonds-core/-/fbonds-core-0.5.106-beta.1.tgz#3b6d95380617e366b09b16512ecd599329ddd996"
+  integrity sha512-r43SKRL10hp/mlWSas3Ami1WphRNkpC6I4sXcQkqR4PBIlXioFvyCVMrkk/+0GTCL6pNmx7osWhcUEwuBCLQZw==
   dependencies:
     "@metaplex-foundation/mpl-token-metadata" "^2.8.1"
     "@project-serum/anchor" "^0.26.0"

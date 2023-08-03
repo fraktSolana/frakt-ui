@@ -8,9 +8,9 @@ export const CollateralCell: FC<{ lightMeta: LightMeta }> = ({ lightMeta }) => {
   return (
     <div className={styles.fixedLeftRow}>
       <div className={styles.imageWrapper}>
-        <img src={lightMeta?.imageUrl} className={styles.nftImage} />
+        <img src={lightMeta.imageUrl} className={styles.nftImage} />
       </div>
-      <div className={styles.nftName}>{lightMeta?.name}</div>
+      <div className={styles.nftName}>{lightMeta.name}</div>
     </div>
   );
 };
