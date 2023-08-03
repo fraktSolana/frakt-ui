@@ -6,7 +6,10 @@ import {
 } from '@solana/wallet-adapter-react';
 import { useHistory } from 'react-router-dom';
 import { web3 } from 'fbonds-core';
-import { borrow } from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
+import {
+  borrow,
+  borrowCnft,
+} from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
 
 import { PATHS } from '@frakt/constants';
 import {
@@ -23,6 +26,7 @@ import { LoanType } from '@frakt/api/loans';
 import { BondCartOrder, BorrowNft } from '@frakt/api/nft';
 import { useLoadingModalState } from '@frakt/components/LoadingModal';
 import { IS_TEST_TRANSACTION } from '@frakt/config';
+import { getAssetProof } from 'fbonds-core/lib/fbond-protocol/helpers';
 
 export const useSidebar = () => {
   const {
@@ -175,42 +179,93 @@ const borrowSingle: BorrowSingle = async ({
     ),
   };
 
-  await borrow({
-    isTest: IS_TEST_TRANSACTION,
+  if (nft.cnftParams) {
+    const proof = await getAssetProof(
+      nft.mint,
+      'https://rpc.helius.xyz/?api-key=6bad2ffe-d003-11ed-afa1-0242ac120002',
+    );
+    await borrowCnft({
+      isTest: IS_TEST_TRANSACTION,
 
-    notBondTxns: [],
-    orders: [order],
-    connection,
-    wallet,
-    isLedger: false,
-    skipPreflight: false,
-
-    onAfterSend: () => {
-      notify({
-        message: 'Transactions sent!',
-        type: NotifyType.INFO,
-      });
-    },
-    onSuccess: () => {
-      notify({
-        message: 'Borrowed successfully!',
-        type: NotifyType.SUCCESS,
-      });
-    },
-    onError: (error) => {
-      logTxnError(error);
-      const isNotConfirmed = showSolscanLinkNotification(error);
-      if (!isNotConfirmed) {
+      notBondTxns: [],
+      orders: [order],
+      connection,
+      wallet,
+      isLedger: false,
+      skipPreflight: false,
+      cnftParams: {
+        dataHash: nft.cnftParams.dataHash,
+        creatorHash: nft.cnftParams.creatorHash,
+        leafId: nft.cnftParams.leafId,
+        proof,
+      },
+      treePubkey: nft.bondParams.whitelistEntry.whitelistedAddress,
+      onAfterSend: () => {
         notify({
-          message: 'The transaction just failed :( Give it another try',
-          type: NotifyType.ERROR,
+          message: 'Transactions sent!',
+          type: NotifyType.INFO,
         });
-      }
-      captureSentryTxnError({
-        error,
-        walletPubkey: wallet?.publicKey.toBase58(),
-        transactionName: 'borrowSingleBond',
-      });
-    },
-  });
+      },
+      onSuccess: () => {
+        notify({
+          message: 'Borrowed successfully!',
+          type: NotifyType.SUCCESS,
+        });
+      },
+      onError: (error) => {
+        logTxnError(error);
+        const isNotConfirmed = showSolscanLinkNotification(error);
+        if (!isNotConfirmed) {
+          notify({
+            message: 'The transaction just failed :( Give it another try',
+            type: NotifyType.ERROR,
+          });
+        }
+        captureSentryTxnError({
+          error,
+          walletPubkey: wallet?.publicKey.toBase58(),
+          transactionName: 'borrowSingleBond',
+        });
+      },
+    });
+  } else {
+    await borrow({
+      isTest: IS_TEST_TRANSACTION,
+
+      notBondTxns: [],
+      orders: [order],
+      connection,
+      wallet,
+      isLedger: false,
+      skipPreflight: false,
+
+      onAfterSend: () => {
+        notify({
+          message: 'Transactions sent!',
+          type: NotifyType.INFO,
+        });
+      },
+      onSuccess: () => {
+        notify({
+          message: 'Borrowed successfully!',
+          type: NotifyType.SUCCESS,
+        });
+      },
+      onError: (error) => {
+        logTxnError(error);
+        const isNotConfirmed = showSolscanLinkNotification(error);
+        if (!isNotConfirmed) {
+          notify({
+            message: 'The transaction just failed :( Give it another try',
+            type: NotifyType.ERROR,
+          });
+        }
+        captureSentryTxnError({
+          error,
+          walletPubkey: wallet?.publicKey.toBase58(),
+          transactionName: 'borrowSingleBond',
+        });
+      },
+    });
+  }
 };

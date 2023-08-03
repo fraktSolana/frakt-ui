@@ -48,7 +48,7 @@ export const fetchWalletBorrowNfts: FetchWalletBorrowNfts = async ({
   return data.map((nft) => ({
     ...nft,
     maxLoanValue:
-      nft.maxLoanValue > nft.classicParams.maxLoanValue
+      nft.maxLoanValue > nft.classicParams?.maxLoanValue
         ? patchBorrowValueWithProtocolFee(nft.maxLoanValue)
         : nft.maxLoanValue,
   }));

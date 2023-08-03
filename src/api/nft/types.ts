@@ -54,6 +54,12 @@ export interface BorrowNft {
     durations: Array<number>; //? days
     floorPrice: number; // sol lamports
   };
+
+  cnftParams?: {
+    dataHash: string;
+    creatorHash: string;
+    leafId: number;
+  };
 }
 
 export interface BondCartOrder {
