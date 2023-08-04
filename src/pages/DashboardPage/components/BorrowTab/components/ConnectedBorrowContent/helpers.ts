@@ -68,6 +68,9 @@ const parseNFTs = (nfts: BorrowNft[]): NFT[] => {
         fraktMarketPubkey: nft.bondParams?.fraktMarket,
         oracleFloorPubkey: nft.bondParams?.oracleFloor,
         whitelistEntryPubkey: nft.bondParams.whitelistEntry?.publicKey,
+        cnftParams: nft.cnftParams,
+        whitelistedAddressPubkey:
+          nft.bondParams.whitelistEntry?.whitelistedAddress,
       };
     });
 };

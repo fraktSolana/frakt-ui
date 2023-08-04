@@ -7,7 +7,7 @@ import { web3 } from '@frakt-protocol/frakt-sdk';
 import { useQuery } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
 import { orderBy } from 'lodash';
-import { borrow } from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
+import { borrowCnft as borrow } from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
 
 import { fetchMarketPairs, fetchCertainMarket } from '@frakt/api/bonds';
 import {
@@ -198,6 +198,7 @@ const borrowSingle = async ({
         whitelistEntry: {
           publicKey: nft.whitelistEntryPubkey,
           fraktMarket: nft.fraktMarketPubkey,
+          whitelistedAddress: nft.whitelistedAddressPubkey,
         },
         oracleFloor: nft.oracleFloorPubkey,
       },
@@ -205,6 +206,7 @@ const borrowSingle = async ({
     bondOrderParams: bondOrderParams.filter(
       (orderParam) => orderParam.orderSize > 0,
     ),
+    cnftParams: nft.cnftParams,
   };
   return await borrow({
     isTest: IS_TEST_TRANSACTION,
