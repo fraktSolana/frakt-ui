@@ -210,7 +210,7 @@ const borrowSingle = async ({
   };
   return await borrow({
     isTest: IS_TEST_TRANSACTION,
-
+    maxAccountsInCnft: 36,
     notBondTxns: [],
     orders: [order],
     connection,

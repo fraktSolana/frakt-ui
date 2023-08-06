@@ -236,7 +236,7 @@ export const borrow: Borrow = async ({
 
   return await borrowBondsCnft({
     isTest: IS_TEST_TRANSACTION,
-
+    maxAccountsInCnft: 36,
     notBondTxns: [...notBondTransactionsAndSigners.flat()],
     orders: bondOrders,
     connection,

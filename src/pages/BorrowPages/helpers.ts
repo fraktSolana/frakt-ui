@@ -157,7 +157,7 @@ export const borrowBulk: BorrowBulk = async ({
     orders: bondOrders,
     isLedger,
     skipPreflight: false,
-
+    maxAccountsInCnft: 36,
     connection,
     wallet,
     onAfterSend: () => {

@@ -181,7 +181,7 @@ const borrowSingle: BorrowSingle = async ({
 
   await borrowCnft({
     isTest: IS_TEST_TRANSACTION,
-
+    maxAccountsInCnft: 36,
     notBondTxns: [],
     orders: [order],
     connection,
