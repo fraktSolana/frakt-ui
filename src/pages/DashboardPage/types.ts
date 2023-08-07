@@ -12,4 +12,10 @@ export interface NFT {
   oracleFloorPubkey?: string;
   whitelistEntryPubkey?: string;
   bestOffer?: number;
+  cnftParams?: {
+    dataHash: string;
+    creatorHash: string;
+    leafId: number;
+  };
+  whitelistedAddressPubkey?: string;
 }

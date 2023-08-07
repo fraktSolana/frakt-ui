@@ -71,6 +71,13 @@ export interface Loan {
     expiredAt: number; //? unix timestamp
     activeTrades: BondTradeTransactionV2[];
   };
+
+  cnftParams?: {
+    dataHash: string;
+    creatorHash: string;
+    leafId: number;
+    tree: string;
+  };
 }
 
 export interface LoansHistory {

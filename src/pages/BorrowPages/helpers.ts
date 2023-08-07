@@ -12,7 +12,7 @@ import { makeProposeTransaction } from '@frakt/utils/loans';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 
 import { BondOrderParams } from './cartState';
-import { borrow } from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
+import { borrowCnft } from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
 import { IS_TEST_TRANSACTION } from '@frakt/config';
 
 type CalcLtv = (props: {
@@ -148,15 +148,16 @@ export const borrowBulk: BorrowBulk = async ({
       bondOrderParams: order.bondOrderParams.orderParams.filter(
         (orderParam) => orderParam.orderSize > 0,
       ),
+      cnftParams: order.borrowNft.cnftParams,
     }));
 
-  return borrow({
+  return borrowCnft({
     isTest: IS_TEST_TRANSACTION,
     notBondTxns: notBondTransactionsAndSigners.flat(),
     orders: bondOrders,
     isLedger,
     skipPreflight: false,
-
+    maxAccountsInCnft: 36,
     connection,
     wallet,
     onAfterSend: () => {

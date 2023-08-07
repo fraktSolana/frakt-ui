@@ -9,7 +9,10 @@ import { calcPriceBasedMaxLoanValue } from '@frakt/pages/BorrowPages/cartState';
 import { makeProposeTransaction } from '@frakt/utils/loans';
 import { logTxnError, notify } from '@frakt/utils';
 import { captureSentryTxnError } from '@frakt/utils/sentry';
-import { borrow as borrowBonds } from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
+import {
+  borrow as borrowBonds,
+  borrowCnft as borrowBondsCnft,
+} from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
 import { NotifyType } from '@frakt/utils/solanaUtils';
 import { showSolscanLinkNotification } from '@frakt/utils/transactions';
 import { IS_TEST_TRANSACTION } from '@frakt/config';
@@ -194,6 +197,11 @@ export interface LiteOrder {
   loanValue: number; //? lamports. Max for timeBased, selected for priceBased and Bonds
   borrowNft: BorrowNft;
   bondOrderParams?: BondCartOrder[];
+  cnftParams?: {
+    dataHash: string;
+    creatorHash: string;
+    leafId: number;
+  };
 }
 
 type Borrow = (props: {
@@ -226,14 +234,15 @@ export const borrow: Borrow = async ({
   );
   const bondOrders = orders.filter((order) => order.loanType === LoanType.BOND);
 
-  return await borrowBonds({
+  return await borrowBondsCnft({
     isTest: IS_TEST_TRANSACTION,
+    maxAccountsInCnft: 36,
     notBondTxns: [...notBondTransactionsAndSigners.flat()],
     orders: bondOrders,
-    isLedger,
-    skipPreflight: false,
     connection,
     wallet,
+    isLedger: false,
+    skipPreflight: false,
     onAfterSend: () => {
       notify({
         message: 'Transactions sent!',
@@ -246,9 +255,8 @@ export const borrow: Borrow = async ({
         type: NotifyType.SUCCESS,
       });
     },
-    onError: (error: any) => {
+    onError: (error) => {
       logTxnError(error);
-
       const isNotConfirmed = showSolscanLinkNotification(error);
       if (!isNotConfirmed) {
         notify({
@@ -256,10 +264,9 @@ export const borrow: Borrow = async ({
           type: NotifyType.ERROR,
         });
       }
-
       captureSentryTxnError({
         error,
-        walletPubkey: wallet?.publicKey?.toBase58(),
+        walletPubkey: wallet?.publicKey.toBase58(),
         transactionName: 'borrowBulk',
       });
     },

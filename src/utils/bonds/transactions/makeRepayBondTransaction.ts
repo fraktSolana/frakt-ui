@@ -5,11 +5,11 @@ import { web3 } from 'fbonds-core';
 import { BONDS_ADMIN_PUBKEY, BONDS_PROGRAM_PUBKEY } from '../constants';
 import {
   repayFbondToTradeTransactions,
+  repayFbondToTradeTransactionsCnft,
   repayStakedBanx,
 } from 'fbonds-core/lib/fbond-protocol/functions/bond/repayment';
 import { InstructionsAndSigners } from '@frakt/utils/transactions';
 import { chunk } from 'lodash';
-import { findAssociatedTokenAddress } from 'fbonds-core/lib/common';
 
 type MakeRepayBondTransaction = (params: {
   loan: Loan;
@@ -35,31 +35,63 @@ export const makeRepayBondTransaction: MakeRepayBondTransaction = async ({
   const { instructions, signers, addressesForLookupTable } =
     !loan.bondParams.banxStake ||
     loan.bondParams.banxStake === '11111111111111111111111111111111'
-      ? await repayFbondToTradeTransactions({
-          args: {
-            repayAccounts: loan.bondParams.activeTrades.map((trade) => ({
-              bondTradeTransaction: new web3.PublicKey(trade.publicKey),
-              user: new web3.PublicKey(trade.user),
-              bondOffer: new web3.PublicKey(trade.bondOffer),
-            })),
-          },
-          addComputeUnits: true,
-          accounts: {
-            admin: new web3.PublicKey(BONDS_ADMIN_PUBKEY),
-            fbond: new web3.PublicKey(loan.pubkey),
-            // fbond: new web3.PublicKey(loan),
+      ? loan.cnftParams
+        ? await repayFbondToTradeTransactionsCnft({
+            args: {
+              repayAccounts: loan.bondParams.activeTrades.map((trade) => ({
+                bondTradeTransaction: new web3.PublicKey(trade.publicKey),
+                user: new web3.PublicKey(trade.user),
+                bondOffer: new web3.PublicKey(trade.bondOffer),
+              })),
+              cnftParams: {
+                dataHash: loan.cnftParams.dataHash,
+                creatorHash: loan.cnftParams.creatorHash,
+                leafId: loan.cnftParams.leafId,
+              },
+            },
+            addComputeUnits: true,
+            accounts: {
+              admin: new web3.PublicKey(BONDS_ADMIN_PUBKEY),
+              fbond: new web3.PublicKey(loan.pubkey),
+              // fbond: new web3.PublicKey(loan),
 
-            userPubkey: wallet.publicKey,
-            collateralTokenMint: new web3.PublicKey(loan.nft.mint),
-            collateralTokenAccount: new web3.PublicKey(
-              loan.bondParams.collateralTokenAccount,
-            ),
-          },
+              userPubkey: wallet.publicKey,
+              collateralTokenMint: new web3.PublicKey(loan.nft.mint),
+              collateralTokenAccount: new web3.PublicKey(
+                loan.bondParams.collateralTokenAccount,
+              ),
+              tree: new web3.PublicKey(loan.cnftParams.tree),
+            },
 
-          connection,
-          programId: BONDS_PROGRAM_PUBKEY,
-          sendTxn: sendTxnPlaceHolder,
-        })
+            connection,
+            programId: BONDS_PROGRAM_PUBKEY,
+            sendTxn: sendTxnPlaceHolder,
+          })
+        : await repayFbondToTradeTransactions({
+            args: {
+              repayAccounts: loan.bondParams.activeTrades.map((trade) => ({
+                bondTradeTransaction: new web3.PublicKey(trade.publicKey),
+                user: new web3.PublicKey(trade.user),
+                bondOffer: new web3.PublicKey(trade.bondOffer),
+              })),
+            },
+            addComputeUnits: true,
+            accounts: {
+              admin: new web3.PublicKey(BONDS_ADMIN_PUBKEY),
+              fbond: new web3.PublicKey(loan.pubkey),
+              // fbond: new web3.PublicKey(loan),
+
+              userPubkey: wallet.publicKey,
+              collateralTokenMint: new web3.PublicKey(loan.nft.mint),
+              collateralTokenAccount: new web3.PublicKey(
+                loan.bondParams.collateralTokenAccount,
+              ),
+            },
+
+            connection,
+            programId: BONDS_PROGRAM_PUBKEY,
+            sendTxn: sendTxnPlaceHolder,
+          })
       : await repayStakedBanx({
           args: {
             repayAccounts: loan.bondParams.activeTrades.map((trade) => ({
