@@ -17,7 +17,10 @@ import { InstructionsAndSigners } from '@frakt/utils/transactions';
 import { PUBKEY_PLACEHOLDER, sendTxnPlaceHolder } from '..';
 import { BONDS_ADMIN_PUBKEY, BONDS_PROGRAM_PUBKEY } from '../bonds';
 import { chunk } from 'lodash';
-import { refinanceToBondOffersV2 } from 'fbonds-core/lib/fbond-protocol/functions/bond/repayment';
+import {
+  refinanceToBondOffersV2,
+  refinanceToBondOffersV2Cnft,
+} from 'fbonds-core/lib/fbond-protocol/functions/bond/repayment';
 
 type MakeRefinanceLoanTransaction = (props: {
   connection: web3.Connection;
@@ -68,45 +71,81 @@ export const makeRefinanceLoanTransaction: MakeRefinanceLoanTransaction =
       fbondTokenMint,
       collateralBox,
       addressesForLookupTable,
-    } = await refinanceToBondOffersV2({
-      programId: BONDS_PROGRAM_PUBKEY,
-      connection,
-      args: {
-        nextBoxIndex: '0',
-        sellBondParamsAndAccounts: sellBondParamsAndAccounts.filter(
-          (param) => param.amountToSell > 0,
-        ),
-        repayAccounts: loan.bondParams.activeTrades.map((trade) => ({
-          bondTradeTransaction: new web3.PublicKey(trade.publicKey),
-          user: new web3.PublicKey(trade.user),
-          bondOffer: new web3.PublicKey(trade.bondOffer),
-        })),
-      },
-      accounts: {
-        userPubkey: wallet?.publicKey,
-        fbond: new web3.PublicKey(loan.pubkey),
-        collateralTokenMint: new web3.PublicKey(loan.nft.mint),
-        collateralTokenAccount: new web3.PublicKey(
-          loan.bondParams.collateralTokenAccount,
-        ),
-        adminPubkey: BONDS_ADMIN_PUBKEY,
+    } = loan.cnftParams
+      ? await refinanceToBondOffersV2Cnft({
+          programId: BONDS_PROGRAM_PUBKEY,
+          connection,
+          args: {
+            nextBoxIndex: '0',
+            sellBondParamsAndAccounts: sellBondParamsAndAccounts.filter(
+              (param) => param.amountToSell > 0,
+            ),
+            repayAccounts: loan.bondParams.activeTrades.map((trade) => ({
+              bondTradeTransaction: new web3.PublicKey(trade.publicKey),
+              user: new web3.PublicKey(trade.user),
+              bondOffer: new web3.PublicKey(trade.bondOffer),
+            })),
+          },
+          accounts: {
+            userPubkey: wallet?.publicKey,
+            fbond: new web3.PublicKey(loan.pubkey),
+            adminPubkey: BONDS_ADMIN_PUBKEY,
 
-        fraktMarket: new web3.PublicKey(market.fraktMarket.publicKey),
-        oracleFloor: new web3.PublicKey(
-          market.oracleFloor?.publicKey || PUBKEY_PLACEHOLDER,
-        ),
-        whitelistEntry: new web3.PublicKey(
-          market.whitelistEntry?.publicKey || PUBKEY_PLACEHOLDER,
-        ),
-        hadoMarket: new web3.PublicKey(market.marketPubkey),
+            fraktMarket: new web3.PublicKey(market.fraktMarket.publicKey),
+            oracleFloor: new web3.PublicKey(
+              market.oracleFloor?.publicKey || PUBKEY_PLACEHOLDER,
+            ),
+            whitelistEntry: new web3.PublicKey(
+              market.whitelistEntry?.publicKey || PUBKEY_PLACEHOLDER,
+            ),
+            hadoMarket: new web3.PublicKey(market.marketPubkey),
 
-        protocolFeeReceiver: new web3.PublicKey(
-          BONDS_ADMIN_PUBKEY || PUBKEY_PLACEHOLDER,
-        ),
-      },
-      addComputeUnits: true,
-      sendTxn: sendTxnPlaceHolder,
-    });
+            protocolFeeReceiver: new web3.PublicKey(
+              BONDS_ADMIN_PUBKEY || PUBKEY_PLACEHOLDER,
+            ),
+          },
+          addComputeUnits: true,
+          sendTxn: sendTxnPlaceHolder,
+        })
+      : await refinanceToBondOffersV2({
+          programId: BONDS_PROGRAM_PUBKEY,
+          connection,
+          args: {
+            nextBoxIndex: '0',
+            sellBondParamsAndAccounts: sellBondParamsAndAccounts.filter(
+              (param) => param.amountToSell > 0,
+            ),
+            repayAccounts: loan.bondParams.activeTrades.map((trade) => ({
+              bondTradeTransaction: new web3.PublicKey(trade.publicKey),
+              user: new web3.PublicKey(trade.user),
+              bondOffer: new web3.PublicKey(trade.bondOffer),
+            })),
+          },
+          accounts: {
+            userPubkey: wallet?.publicKey,
+            fbond: new web3.PublicKey(loan.pubkey),
+            collateralTokenMint: new web3.PublicKey(loan.nft.mint),
+            collateralTokenAccount: new web3.PublicKey(
+              loan.bondParams.collateralTokenAccount,
+            ),
+            adminPubkey: BONDS_ADMIN_PUBKEY,
+
+            fraktMarket: new web3.PublicKey(market.fraktMarket.publicKey),
+            oracleFloor: new web3.PublicKey(
+              market.oracleFloor?.publicKey || PUBKEY_PLACEHOLDER,
+            ),
+            whitelistEntry: new web3.PublicKey(
+              market.whitelistEntry?.publicKey || PUBKEY_PLACEHOLDER,
+            ),
+            hadoMarket: new web3.PublicKey(market.marketPubkey),
+
+            protocolFeeReceiver: new web3.PublicKey(
+              BONDS_ADMIN_PUBKEY || PUBKEY_PLACEHOLDER,
+            ),
+          },
+          addComputeUnits: true,
+          sendTxn: sendTxnPlaceHolder,
+        });
 
     const slot = await connection.getSlot();
 

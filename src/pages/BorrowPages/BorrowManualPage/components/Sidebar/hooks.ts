@@ -6,7 +6,10 @@ import {
 } from '@solana/wallet-adapter-react';
 import { useHistory } from 'react-router-dom';
 import { web3 } from 'fbonds-core';
-import { borrow } from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
+import {
+  borrow,
+  borrowCnft,
+} from 'fbonds-core/lib/fbond-protocol/functions/bond/creation';
 
 import { PATHS } from '@frakt/constants';
 import {
@@ -173,11 +176,12 @@ const borrowSingle: BorrowSingle = async ({
     bondOrderParams: bondOrderParams.filter(
       (orderParam) => orderParam.orderSize > 0,
     ),
+    cnftParams: nft.cnftParams,
   };
 
-  await borrow({
+  await borrowCnft({
     isTest: IS_TEST_TRANSACTION,
-
+    maxAccountsInCnft: 36,
     notBondTxns: [],
     orders: [order],
     connection,

@@ -145,7 +145,7 @@ export const generateSelectOptions: GenerateSelectOptions = ({
   //     });
   // }
 
-  if (nft.maxLoanValue > nft.classicParams.maxLoanValue)
+  if (nft.maxLoanValue > nft.classicParams?.maxLoanValue || 0)
     options = [...options, ...bondOptions, ...timeBasedOptions];
   else options = [...options, ...timeBasedOptions, ...bondOptions];
 

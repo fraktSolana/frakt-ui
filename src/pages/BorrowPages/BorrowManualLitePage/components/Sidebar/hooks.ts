@@ -68,6 +68,7 @@ export const useSidebar = ({
                 (orderParam) => orderParam.orderSize > 0,
               )
             : null,
+          cnftParams: nft.cnftParams,
         };
       });
 
