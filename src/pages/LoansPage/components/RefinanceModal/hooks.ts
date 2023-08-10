@@ -1,5 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
-import { getBestOrdersByBorrowValue } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
+import {
+  getBestOrdersByBorrowValue,
+  getMaxBorrowValueOptimized,
+} from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { get } from 'lodash';
 
@@ -38,10 +41,15 @@ export const useLoanTransactions = ({ loan }: { loan: Loan }) => {
   useEffect(() => {
     if (!pairs.length) return;
 
+    const maxBorrowValue = getMaxBorrowValueOptimized({
+      bondOffers: pairs,
+      collectionFloor: market?.oracleFloor?.floor,
+    });
+
     const bestOrdersForRefinance = getBestOrdersByBorrowValue({
       bondOffers: pairs,
       collectionFloor: market?.oracleFloor?.floor,
-      borrowValue: loan.repayValue,
+      borrowValue: maxBorrowValue,
     });
 
     setBestOrders(bestOrdersForRefinance);
