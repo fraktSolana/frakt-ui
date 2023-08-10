@@ -34,6 +34,7 @@ const RefinanceModal: FC<RefinanceModalProps> = ({
   bestLoanParams,
 }) => {
   const difference = loan?.repayValue - bestLoanParams?.borrowed;
+  const negativeDifference = difference > 0;
   const { balance: balanceLamports } = useSolanaBalance();
   const balance = balanceLamports * 1e9;
   const minBalanceForRefinance = difference + REFINANCE_FEE;
@@ -90,10 +91,12 @@ const RefinanceModal: FC<RefinanceModalProps> = ({
         </div>
         <div className={styles.loanDifferenceWrapper}>
           {renderColumnValue(
-            'Difference you will pay',
+            negativeDifference
+              ? 'Difference you will pay'
+              : 'Difference you will receive',
             formatValue(Math.abs(difference), 1e9),
             true,
-            difference > 0 && styles.negative,
+            negativeDifference && styles.negative,
           )}
         </div>
         <Button
