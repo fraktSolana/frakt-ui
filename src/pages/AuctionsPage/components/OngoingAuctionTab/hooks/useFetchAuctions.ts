@@ -1,12 +1,8 @@
-import { useMemo } from 'react';
-import { BanxStakeState } from 'fbonds-core/lib/fbond-protocol/types';
 import { useQuery } from '@tanstack/react-query';
 import { create } from 'zustand';
 import produce from 'immer';
 
 import { AuctionItem, fetchAllAuctions } from '@frakt/api/auctions';
-
-import { parseRefinanceAuctionsInfo } from '../../RefinanceAuctionCard';
 
 export const useFetchAuctionsList = () => {
   const { hiddenAuctionsPubkeys, hideAuction } = useHiddenAuctionPubkeys();
@@ -28,20 +24,8 @@ export const useFetchAuctionsList = () => {
     data?.filter(({ nftMint }) => !hiddenAuctionsPubkeys.includes(nftMint)) ||
     [];
 
-  const filteredValidAuctions = useMemo(() => {
-    return filteredAuctions.filter((auction: AuctionItem) => {
-      if (auction?.bondParams?.auctionRefinanceStartTime) {
-        const { floorPrice, currentLoanAmount } =
-          parseRefinanceAuctionsInfo(auction);
-
-        return currentLoanAmount < floorPrice;
-      }
-      return auction;
-    });
-  }, [filteredAuctions]);
-
   return {
-    data: filteredValidAuctions,
+    data: filteredAuctions,
     loading: isLoading || isFetching,
     hideAuction,
   };
