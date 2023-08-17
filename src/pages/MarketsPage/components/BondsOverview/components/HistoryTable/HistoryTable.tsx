@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 
 import Table, { useTable, PartialBreakpoints } from '@frakt/components/Table';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -7,6 +7,7 @@ import { BondHistory } from '@frakt/api/bonds';
 import { COLUMNS } from './columns';
 
 import styles from './TableCells/TableCells.module.scss';
+import { orderBy } from 'lodash';
 
 export interface BondsTableProps {
   data: ReadonlyArray<BondHistory>;
@@ -21,9 +22,20 @@ export const HistoryTable: FC<BondsTableProps> = ({
   className,
   breakpoints,
 }) => {
+  const sortedData = useMemo(() => {
+    return orderBy(
+      data,
+      [
+        (stats) => stats.stats.when,
+        (stats) => (stats.stats.state === 'creation' ? 0 : 1),
+      ],
+      ['desc', 'asc'],
+    );
+  }, [data]);
+
   const { publicKey } = useWallet();
   const { table, search } = useTable({
-    data,
+    data: sortedData,
     columns: COLUMNS,
     loading,
   });
