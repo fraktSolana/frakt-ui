@@ -1,4 +1,7 @@
-import { claimNftByLenderPnft as txn } from 'fbonds-core/lib/fbond-protocol/functions/bond/liquidation';
+import {
+  claimNftByLenderCnft,
+  claimNftByLenderPnft,
+} from 'fbonds-core/lib/fbond-protocol/functions/bond/liquidation';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { web3 } from '@frakt-protocol/frakt-sdk';
 import { showSolscanLinkNotification } from '@frakt/utils/transactions';
@@ -24,34 +27,55 @@ export const claimNftByLender: ClaimNftByLender = async ({
 }): Promise<boolean> => {
   const { fbond, collateralBox, autocompoundDeposits } = bond;
 
-  const { instructions, signers } = await txn({
-    programId: new web3.PublicKey(process.env.BONDS_PROGRAM_PUBKEY),
-    connection,
-    addComputeUnits: true,
-    accounts: {
-      userPubkey: wallet.publicKey,
-      fbond: new web3.PublicKey(fbond.publicKey),
-      collateralBox: new web3.PublicKey(collateralBox.publicKey),
-      collateralTokenMint: new web3.PublicKey(
-        collateralBox.collateralTokenMint,
-      ),
-      collateralTokenAccount: new web3.PublicKey(
-        collateralBox.collateralTokenAccount,
-      ),
-      collateralOwner: new web3.PublicKey(fbond.fbondIssuer),
-      bondTradeTransactionV2: new web3.PublicKey(
-        autocompoundDeposits[0].publicKey,
-      ),
-      banxStake: new web3.PublicKey(bond.fbond.banxStake),
-      subscriptionsAndAdventures: bond.adventureSubscriptions.map(
-        (subscription) => ({
-          adventureSubscription: new web3.PublicKey(subscription.publicKey),
-          adventure: new web3.PublicKey(subscription.adventure),
-        }),
-      ),
-    },
-    sendTxn: sendTxnPlaceHolder,
-  });
+  const { instructions, signers } = collateralBox.nft.cnftParams
+    ? await claimNftByLenderCnft({
+        programId: new web3.PublicKey(process.env.BONDS_PROGRAM_PUBKEY),
+        connection,
+        addComputeUnits: true,
+
+        args: {
+          cnftParams: collateralBox.nft.cnftParams,
+        },
+        accounts: {
+          userPubkey: wallet.publicKey,
+          fbond: new web3.PublicKey(fbond.publicKey),
+          collateralBox: new web3.PublicKey(collateralBox.publicKey),
+          nftMint: new web3.PublicKey(collateralBox.collateralTokenMint),
+          bondTradeTransactionV2: new web3.PublicKey(
+            autocompoundDeposits[0].publicKey,
+          ),
+          tree: new web3.PublicKey(collateralBox.nft.cnftParams.tree),
+        },
+        sendTxn: sendTxnPlaceHolder,
+      })
+    : await claimNftByLenderPnft({
+        programId: new web3.PublicKey(process.env.BONDS_PROGRAM_PUBKEY),
+        connection,
+        addComputeUnits: true,
+        accounts: {
+          userPubkey: wallet.publicKey,
+          fbond: new web3.PublicKey(fbond.publicKey),
+          collateralBox: new web3.PublicKey(collateralBox.publicKey),
+          collateralTokenMint: new web3.PublicKey(
+            collateralBox.collateralTokenMint,
+          ),
+          collateralTokenAccount: new web3.PublicKey(
+            collateralBox.collateralTokenAccount,
+          ),
+          collateralOwner: new web3.PublicKey(fbond.fbondIssuer),
+          bondTradeTransactionV2: new web3.PublicKey(
+            autocompoundDeposits[0].publicKey,
+          ),
+          banxStake: new web3.PublicKey(bond.fbond.banxStake),
+          subscriptionsAndAdventures: bond.adventureSubscriptions.map(
+            (subscription) => ({
+              adventureSubscription: new web3.PublicKey(subscription.publicKey),
+              adventure: new web3.PublicKey(subscription.adventure),
+            }),
+          ),
+        },
+        sendTxn: sendTxnPlaceHolder,
+      });
   return await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
     skipTimeout: true,
     notBondTxns: [],
