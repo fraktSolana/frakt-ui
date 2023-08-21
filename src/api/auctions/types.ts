@@ -1,4 +1,5 @@
 import { DeltaType } from '@frakters/raffle-sdk/lib/raffle-core/types';
+import { CnftParams } from 'fbonds-core/lib/fbond-protocol/functions/bond/creation/createBondAndSellToOffersCnft';
 import {
   AdventureSubscription,
   BanxStake,
@@ -16,6 +17,7 @@ export interface AuctionItem {
   nftImageUrl: string;
   nftCollectionName: string;
 
+  cnftParams?: CnftParams;
   classicParams?: {
     auctionPubkey: string;
 
