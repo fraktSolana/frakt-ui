@@ -140,6 +140,12 @@ interface CollateralBox {
     mint: string;
     name: string;
     imageUrl: string;
+    cnftParams?: {
+      dataHash: string;
+      creatorHash: string;
+      leafId: number;
+      tree: string;
+    };
   };
 }
 

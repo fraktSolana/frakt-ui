@@ -22,7 +22,8 @@ export const useBondAuctionCard = (
     openLoadingModal();
 
     try {
-      const { nftMint, bondParams, banxStake, adventureStakes } = auction;
+      const { nftMint, bondParams, banxStake, adventureStakes, cnftParams } =
+        auction;
 
       const {
         fbondPubkey,
@@ -69,6 +70,7 @@ export const useBondAuctionCard = (
               ),
             }))
           : undefined,
+        cnftParams,
       });
 
       if (result) {
