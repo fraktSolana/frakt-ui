@@ -1,12 +1,50 @@
 import { useEffect, useState } from 'react';
+
 import { Connection, clusterApiUrl } from '@solana/web3.js';
 import { useQuery } from '@tanstack/react-query';
 
-export const useBestWorkingRPC = ({
+interface GetBestWorkingEndpointProps {
+  endpoints: Array<string>;
+  fallbackEndpoint?: string;
+  logErrors?: boolean;
+}
+
+const getBestWorkingEndpoint = async ({
+  endpoints,
+  fallbackEndpoint = clusterApiUrl('mainnet-beta'),
+  logErrors = false,
+}: GetBestWorkingEndpointProps) => {
+  for (const endpoint of endpoints) {
+    try {
+      await new Connection(endpoint, {
+        disableRetryOnRateLimit: true,
+      }).getLatestBlockhash();
+      return endpoint;
+    } catch (error) {
+      if (logErrors) {
+        // eslint-disable-next-line no-console
+        console.warn(`RPC endpoint doesnt work\n${endpoint}`);
+      }
+    }
+  }
+
+  return fallbackEndpoint;
+};
+
+type UseBestWorkingRPC = ({
+  endpoints,
+  fallbackEndpoint,
+  logErrors,
+}: GetBestWorkingEndpointProps) => {
+  endpoint: string | null;
+  isLoading: boolean;
+};
+
+export const useBestWorkingRPC: UseBestWorkingRPC = ({
   endpoints,
   fallbackEndpoint = clusterApiUrl('mainnet-beta'),
   logErrors,
-}: GetBestWorkingEndpointProps) => {
+}) => {
   const { data: endpoint, isLoading } = useQuery(
     ['bestWorkingRPC'],
     () =>
@@ -20,14 +58,14 @@ export const useBestWorkingRPC = ({
       refetchOnWindowFocus: false,
     },
   );
-  return { endpoint, isLoading };
+  return { endpoint: endpoint ?? null, isLoading };
 };
 
-export const useBestWorkingRPCPure = ({
+export const useBestWorkingRPCPure: UseBestWorkingRPC = ({
   endpoints,
   fallbackEndpoint = clusterApiUrl('mainnet-beta'),
   logErrors,
-}: GetBestWorkingEndpointProps) => {
+}) => {
   const [endpoint, setEndpoint] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -54,41 +92,3 @@ export const useBestWorkingRPCPure = ({
 
   return { endpoint, isLoading };
 };
-
-const getBestWorkingEndpoint = async ({
-  endpoints,
-  fallbackEndpoint = clusterApiUrl('mainnet-beta'),
-  logErrors = false,
-}: GetBestWorkingEndpointProps) => {
-  const results: Array<CheckEndpointResult> = await Promise.all(
-    endpoints.map((endpoint) =>
-      new Connection(endpoint, { disableRetryOnRateLimit: true })
-        .getLatestBlockhash()
-        .then(() => ({ endpoint, error: null }))
-        .catch(() => ({
-          endpoint: null,
-          error: `RPC endpoint doesnt work\n${endpoint}`,
-        })),
-    ),
-  );
-
-  if (logErrors) {
-    // eslint-disable-next-line no-console
-    results.forEach(({ error }) => !!error && console.warn(error));
-  }
-
-  return (
-    results.find(({ endpoint }) => !!endpoint)?.endpoint ?? fallbackEndpoint
-  );
-};
-
-interface CheckEndpointResult {
-  endpoint: string | null;
-  error: string | null;
-}
-
-interface GetBestWorkingEndpointProps {
-  endpoints: Array<string>;
-  fallbackEndpoint?: string;
-  logErrors?: boolean;
-}
