@@ -215,15 +215,14 @@ export const subscribeNfts: SubscribeNfts = async ({
           userPubkey: wallet.publicKey,
         },
         args: {
-          subAndUnsubParams: [],
-          //  nfts.map((nft) => ({
-          //   subscriptionWeeks: staking.helpers.adventureTimestampToWeeks(
-          //     adventureToSubscribe.periodStartedAt,
-          //   ),
-          //   banxStakeSub: new web3.PublicKey(nft.banxStake.publicKey),
+          subAndUnsubParams: nfts.map((nft) => ({
+            subscriptionWeeks: staking.helpers.adventureTimestampToWeeks(
+              adventureToSubscribe.periodStartedAt,
+            ),
+            banxStakeSub: new web3.PublicKey(nft.banxStake.publicKey),
 
-          //   ...getAdventureToUnsub(nft),
-          // })),
+            // ...getAdventureToUnsub(nft),
+          })),
         },
         connection,
         programId: BONDS_PROGRAM_PUBKEY,
