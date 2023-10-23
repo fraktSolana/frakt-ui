@@ -1,4 +1,4 @@
-import { uniq, maxBy } from 'lodash';
+import { /* uniq */ maxBy } from 'lodash';
 import classNames from 'classnames';
 import { getMaxBorrowValueOptimized } from 'fbonds-core/lib/fbond-protocol/utils/cartManagerV2';
 
@@ -75,7 +75,7 @@ type GenerateSelectOptions = (props: {
 }) => SelectValue[];
 export const generateSelectOptions: GenerateSelectOptions = ({
   nft,
-  bondsParams,
+  // bondsParams,
 }) => {
   let options: SelectValue[] = [];
 
@@ -85,38 +85,22 @@ export const generateSelectOptions: GenerateSelectOptions = ({
   const bondsAvailable = !!nft?.bondParams?.marketPubkey;
   const nftHasLimit = nft?.classicParams?.isLimitExceeded;
 
-  const bondOptions = bondsParams?.pairs
-    ? uniq(
-        bondsParams?.pairs.map(
-          (pair) => pair?.validation?.durationFilter / (24 * 60 * 60),
-        ),
-      )
-        .sort((a, b) => a - b)
-        .map((period) => ({
-          label: `${period} days`,
-          value: {
-            type: LoanType.BOND,
-            duration: period,
-          },
-        }))
-    : [];
-  // if (bondsParams?.pairs) {
-  //   const availablePeriods = uniq(
-  //     bondsParams?.pairs.map(
-  //       (pair) => pair?.validation?.durationFilter / (24 * 60 * 60),
-  //     ),
-  //   ).sort((a, b) => a - b);
+  // const bondOptions = bondsParams?.pairs
+  //   ? uniq(
+  //       bondsParams?.pairs.map(
+  //         (pair) => pair?.validation?.durationFilter / (24 * 60 * 60),
+  //       ),
+  //     )
+  //       .sort((a, b) => a - b)
+  //       .map((period) => ({
+  //         label: `${period} days`,
+  //         value: {
+  //           type: LoanType.BOND,
+  //           duration: period,
+  //         },
+  //       }))
+  //   : [];
 
-  //   availablePeriods.forEach((period) => {
-  //     options.push({
-  //       label: `${period} days`,
-  //       value: {
-  //         type: LoanType.BOND,
-  //         duration: period,
-  //       },
-  //     });
-  //   });
-  // }
   const timeBasedOptions =
     !bondsAvailable || timeBasedDiscountAvailable
       ? [
@@ -146,22 +130,22 @@ export const generateSelectOptions: GenerateSelectOptions = ({
   // }
 
   if (nft.maxLoanValue > nft.classicParams?.maxLoanValue || 0)
-    options = [...options, ...bondOptions, ...timeBasedOptions];
-  else options = [...options, ...timeBasedOptions, ...bondOptions];
+    options = [...options /* ...bondOptions, */, ...timeBasedOptions];
+  else options = [...options, ...timeBasedOptions /* ...bondOptions, */];
 
-  if (nft?.classicParams?.priceBased) {
-    options = [
-      ...options,
-      {
-        label: `Perpetual ${nftHasLimit ? '- limit exceeded' : ''}`,
-        value: {
-          type: LoanType.PRICE_BASED,
-          duration: null,
-        },
-        disabled: nftHasLimit,
-      },
-    ];
-  }
+  // if (nft?.classicParams?.priceBased) {
+  //   options = [
+  //     ...options,
+  //     {
+  //       label: `Perpetual ${nftHasLimit ? '- limit exceeded' : ''}`,
+  //       value: {
+  //         type: LoanType.PRICE_BASED,
+  //         duration: null,
+  //       },
+  //       disabled: nftHasLimit,
+  //     },
+  //   ];
+  // }
   return options;
 };
 

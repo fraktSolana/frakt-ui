@@ -92,13 +92,20 @@ export const DepositCell: FC<DepositCellProps> = ({
           [styles.cardView]: isCardView,
         })}
       >
-        <Button
-          className={styles.button}
-          type="secondary"
-          onClick={() => openPoolModal(TabsNames.DEPOSIT)}
-        >
-          {wallet.connected && !!depositAmount ? 'Manage' : 'Deposit'}
-        </Button>
+        {depositAmount ? (
+          <Button
+            type="secondary"
+            className={styles.button}
+            onClick={() => openPoolModal(TabsNames.WITHDRAW)}
+          >
+            Withdraw
+          </Button>
+        ) : (
+          <Button type="secondary" className={styles.button} disabled>
+            Deposit
+          </Button>
+        )}
+
         {renderHarvestButton()}
       </div>
       <PoolModal

@@ -73,7 +73,7 @@ export const NAVIGATION_LINKS: Navigation[] = [
   },
   {
     pathname: PATHS.BORROW_ROOT,
-    to: PATHS.BORROW_LITE,
+    to: PATHS.BORROW_MANUAL,
     label: 'Borrow',
     event: 'navigation-borrow',
     icon: Borrow,

@@ -13,8 +13,12 @@ import { NftCard } from './components/NftCard/';
 import styles from './BorrowManualPage.module.scss';
 import { Sidebar } from './components/Sidebar';
 import { useBorrow } from '../cartState';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { ConnectWalletSection } from '@frakt/components/ConnectWalletSection';
 
 export const BorrowManualPage: FC = () => {
+  const { connected } = useWallet();
+
   const {
     cartOrders,
     onSelectNft,
@@ -66,37 +70,44 @@ export const BorrowManualPage: FC = () => {
               : 'Select NFTs to borrow against'
           }
         />
-        <Filters
-          setSearch={setSearchDebounced}
-          onSortChange={({ name, order }) => {
-            setSortName(name);
-            setSortOrder(order);
-          }}
-        />
-        <InfinityScroll
-          itemsToShow={nfts.length}
-          next={fetchNextPage}
-          wrapperClassName={styles.nftsList}
-          isLoading={initialLoading}
-          customLoader={<p className={styles.loader}>loading your jpegs</p>}
-        >
-          {nfts.map((nft) => (
-            <NftCard
-              key={nft.mint}
-              nft={nft}
-              onClick={() => onNftClick(nft)}
-              selected={
-                !!findOrderInCart({ nftMint: nft.mint }) ||
-                currentNft?.mint === nft.mint
-              }
-              highlighted={currentNft?.mint === nft.mint}
-              disabled={
-                nft?.classicParams?.isLimitExceeded &&
-                !nft?.bondParams?.marketPubkey
-              }
+
+        {!connected ? (
+          <ConnectWalletSection text="Connect your wallet to see your nfts" />
+        ) : (
+          <>
+            <Filters
+              setSearch={setSearchDebounced}
+              onSortChange={({ name, order }) => {
+                setSortName(name);
+                setSortOrder(order);
+              }}
             />
-          ))}
-        </InfinityScroll>
+            <InfinityScroll
+              itemsToShow={nfts.length}
+              next={fetchNextPage}
+              wrapperClassName={styles.nftsList}
+              isLoading={initialLoading}
+              customLoader={<p className={styles.loader}>loading your jpegs</p>}
+            >
+              {nfts.map((nft) => (
+                <NftCard
+                  key={nft.mint}
+                  nft={nft}
+                  onClick={() => onNftClick(nft)}
+                  selected={
+                    !!findOrderInCart({ nftMint: nft.mint }) ||
+                    currentNft?.mint === nft.mint
+                  }
+                  highlighted={currentNft?.mint === nft.mint}
+                  disabled={
+                    nft?.classicParams?.isLimitExceeded &&
+                    !nft?.bondParams?.marketPubkey
+                  }
+                />
+              ))}
+            </InfinityScroll>
+          </>
+        )}
       </div>
     </AppLayout>
   );
