@@ -49,6 +49,7 @@ export const usePoolModal: UsePoolModal = ({ visible, depositAmount }) => {
     {
       label: 'Deposit',
       value: 'deposit',
+      disabled: true,
     },
     {
       label: 'Withdraw',
