@@ -97,9 +97,7 @@ export const liquidateBondOnAuction: LiquidateBondOnAuction = async ({
           banxStake: banxStakePubkey
             ? new web3.PublicKey(banxStakePubkey)
             : EMPTY_PUBKEY,
-          subscriptionsAndAdventures: adventureSubscriptionsPubkeys
-            ? adventureSubscriptionsPubkeys
-            : [],
+          subscriptionsAndAdventures: [],
         },
         sendTxn: sendTxnPlaceHolder,
       });
